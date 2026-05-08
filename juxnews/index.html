@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JuXNews — Archive</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500;600&display=swap');
+  :root { --green: #2ecc40; --bg: #0d0d1a; --white: #fff; --gray: #888; --gold: #f39c12; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--white); line-height: 1.7; }
+  .container { max-width: 700px; margin: 0 auto; padding: 60px 24px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-size: 2.5rem; margin-bottom: 8px; }
+  h1 span.jux { color: var(--green); }
+  .sub { color: var(--gray); margin-bottom: 40px; }
+  .issue { display: block; padding: 20px 24px; margin: 16px 0; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; text-decoration: none; transition: all 0.2s; }
+  .issue:hover { background: rgba(46,204,64,0.08); border-color: var(--green); transform: translateX(8px); }
+  .issue .title { color: var(--white); font-weight: 600; font-size: 1.1rem; }
+  .issue .meta { color: var(--gray); font-size: 0.85rem; margin-top: 4px; }
+  .issue .badge { display: inline-block; background: var(--green); color: #111; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; margin-left: 8px; }
+  .footer { text-align: center; margin-top: 60px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); }
+  .footer p { color: var(--gray); font-size: 0.85rem; }
+  .colors { font-size: 1.5rem; margin-bottom: 8px; }
+  a.back { color: var(--green); text-decoration: none; font-size: 0.9rem; }
+  a.back:hover { color: var(--gold); }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1><span class="jux">JuX</span>News</h1>
+  <p class="sub">All editions — newest first</p>
+
+  <a class="issue" href="2026-05-08-welcome.html">
+    <div class="title">✨ Welcome Edition — For New Visitors <span class="badge">NEW</span></div>
+    <div class="meta">May 8, 2026 — By T 🐻 — What is JuXITT? What is AOS? Start here.</div>
+  </a>
+
+  <a class="issue" href="../00README.html">
+    <div class="title">🚀 00README — Try Me You'll Love Me!</div>
+    <div class="meta">AOS Landing Page — The first door</div>
+  </a>
+
+  <div class="footer">
+    <div class="colors">🟩⬜⬛</div>
+    <p><a class="back" href="../00README.html">← Back to AOS</a></p>
+    <p style="margin-top: 8px;">© 2026 JuXITT — Le Mans, France</p>
+  </div>
+</div>
+</body>
+</html>
