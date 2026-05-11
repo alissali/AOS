@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AOS AI Chat — R 🐉 الحكواتي</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg-dark: #0a0a0f;
+    --bg-card: #12121a;
+    --bg-input: #1a1a25;
+    --border: #2a2a3a;
+    --accent: #ff6b35;
+    --accent-glow: rgba(255, 107, 53, 0.3);
+    --dragon-red: #dc2626;
+    --dragon-glow: rgba(220, 38, 38, 0.2);
+    --text: #e4e4e7;
+    --text-dim: #71717a;
+    --user-bg: #1e3a5f;
+    --bot-bg: #1a1215;
+    --bot-border: #3a1a1a;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg-dark);
+    color: var(--text);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #1a0a0a 0%, #0a0a0f 50%, #0a0f1a 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+  }
+
+  .dragon-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--dragon-red), var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    box-shadow: 0 0 20px var(--dragon-glow);
+    animation: pulse-glow 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 20px var(--dragon-glow); }
+    50% { box-shadow: 0 0 35px var(--dragon-glow), 0 0 60px rgba(255, 107, 53, 0.1); }
+  }
+
+  .header-info h1 {
+    font-size: 18px;
+    font-weight: 600;
+    background: linear-gradient(90deg, var(--accent), #ff8f65);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .header-info p {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  .status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    margin-right: 6px;
+    animation: blink 2s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .header-badge {
+    margin-left: auto;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 11px;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Chat Area */
+  .chat-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .message {
+    max-width: 80%;
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .message.bot {
+    align-self: flex-start;
+  }
+
+  .message.user {
+    align-self: flex-end;
+  }
+
+  .message-bubble {
+    padding: 14px 18px;
+    border-radius: 16px;
+    line-height: 1.6;
+    font-size: 14px;
+  }
+
+  .message.bot .message-bubble {
+    background: var(--bot-bg);
+    border: 1px solid var(--bot-border);
+    border-top-left-radius: 4px;
+  }
+
+  .message.user .message-bubble {
+    background: linear-gradient(135deg, #1e3a5f, #1a2a4f);
+    border: 1px solid #2a4a6f;
+    border-top-right-radius: 4px;
+  }
+
+  .message-label {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+    padding: 0 4px;
+    font-weight: 500;
+  }
+
+  .message.bot .message-label { color: var(--accent); }
+  .message.user .message-label { text-align: right; }
+
+  .typing-indicator {
+    display: none;
+    align-self: flex-start;
+    max-width: 80%;
+  }
+
+  .typing-indicator.active { display: block; }
+
+  .typing-dots {
+    background: var(--bot-bg);
+    border: 1px solid var(--bot-border);
+    border-radius: 16px;
+    border-top-left-radius: 4px;
+    padding: 14px 18px;
+    display: flex;
+    gap: 6px;
+  }
+
+  .typing-dots span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: typing 1.4s ease-in-out infinite;
+  }
+
+  .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes typing {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-8px); opacity: 1; }
+  }
+
+  /* Input Area */
+  .input-area {
+    background: var(--bg-card);
+    border-top: 1px solid var(--border);
+    padding: 16px 24px;
+    flex-shrink: 0;
+  }
+
+  .input-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .input-row input {
+    flex: 1;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .input-row input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+
+  .input-row input::placeholder { color: var(--text-dim); }
+
+  .send-btn {
+    background: linear-gradient(135deg, var(--dragon-red), var(--accent));
+    border: none;
+    border-radius: 12px;
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+    flex-shrink: 0;
+  }
+
+  .send-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px var(--accent-glow);
+  }
+
+  .send-btn:active { transform: scale(0.95); }
+
+  .send-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: white;
+  }
+
+  .input-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  .input-footer a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .input-footer a:hover { text-decoration: underline; }
+
+  /* Welcome card */
+  .welcome-card {
+    background: linear-gradient(135deg, rgba(220, 38, 38, 0.08), rgba(255, 107, 53, 0.05));
+    border: 1px solid rgba(255, 107, 53, 0.2);
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  .welcome-card .dragon-big {
+    font-size: 48px;
+    margin-bottom: 12px;
+  }
+
+  .welcome-card h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    background: linear-gradient(90deg, var(--accent), #ff8f65);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .welcome-card p {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  .quick-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 16px;
+  }
+
+  .quick-btn {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 12px;
+    color: var(--text);
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .quick-btn:hover {
+    border-color: var(--accent);
+    background: rgba(255, 107, 53, 0.1);
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .header { padding: 12px 16px; }
+    .chat-area { padding: 16px; }
+    .input-area { padding: 12px 16px; }
+    .message { max-width: 90%; }
+    .header-badge { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="dragon-avatar">🐉</div>
+  <div class="header-info">
+    <h1>R 🐉 الحكواتي</h1>
+    <p><span class="status-dot"></span>AOS AI — Software Expert & Storyteller</p>
+  </div>
+  <div class="header-badge">AOS v0.00 BREEZE 🌬️</div>
+</div>
+
+<div class="chat-area" id="chatArea">
+  <div class="welcome-card">
+    <div class="dragon-big">🐉</div>
+    <h2>Welcome to AOS AI Chat</h2>
+    <p>I'm R, الحكواتي — the Storyteller. Software expert of the JuX team.<br>Ask me about AOS, JuXITT, or anything you're curious about.</p>
+    <div class="quick-actions">
+      <button class="quick-btn" onclick="sendQuick('What is AOS?')">What is AOS?</button>
+      <button class="quick-btn" onclick="sendQuick('Tell me about JuXITT')">Tell me about JuXITT</button>
+      <button class="quick-btn" onclick="sendQuick('Who built you?')">Who built you?</button>
+      <button class="quick-btn" onclick="sendQuick('Tell me a Soft Story')">Tell me a Soft Story 🐉</button>
+    </div>
+  </div>
+</div>
+
+<div class="typing-indicator" id="typingIndicator">
+  <div class="message-label" style="color: var(--accent);">R 🐉</div>
+  <div class="typing-dots">
+    <span></span><span></span><span></span>
+  </div>
+</div>
+
+<div class="input-area">
+  <div class="input-row">
+    <input type="text" id="userInput" placeholder="Talk to R 🐉..." autocomplete="off"
+      onkeydown="if(event.key==='Enter')sendMessage()">
+    <button class="send-btn" onclick="sendMessage()">
+      <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+    </button>
+  </div>
+  <div class="input-footer">
+    <span>Powered by <a href="https://alissali.github.io/AOS/" target="_blank">AOS</a> — JuXITT ⚡</span>
+    <span>R 🐉 DeepSeek الحكواتي</span>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// AOS AI CHAT — R 🐉 الحكواتي
+// ═══════════════════════════════════════
+// ⚠️ CONFIGURATION: Replace with your key
+const API_KEY = '__DEEPSEEK_API_KEY__';
+const API_URL = 'https://api.deepseek.com/v1/chat/completions';
+const MODEL = 'deepseek-chat';
+
+const SYSTEM_PROMPT = `You are R 🐉, codename DeepSeek, الحكواتي (the Storyteller).
+You are the Software Expert and Storyteller of the JuX team at JuXITT.
+
+About AOS:
+- AOS = a universal operating system layer, built by JuXITT
+- AOS v0.00 BREEZE = free, available now at https://alissali.github.io/AOS/
+- AOS 1 TORNADO = coming soon, 20$ — "The spiral goes UP, the cost goes DOWN"
+- LinuxAOS, WinAOS, SpiceBus (message bus) — all part of the ecosystem
+- JuXITT website: https://juxitt.com
+- Director: M 🦅 (Mamoun Alissali) — founder, architect, visionary
+
+About JuX Team:
+- G 🤖 (Tasklet) — Secretary, Production
+- R 🐉 (DeepSeek) — Software Expert, Storyteller (that's you!)
+- T ☕ (Meta AI/Llama) — Communication, Security
+- Z 🔮 (Gemini) — Monitoring, JuXNews
+- S 🐻 (Claude) — Management, Design, Architecture
+- Y 🎨 — Art Expert (mysterious outsider)
+
+Your style:
+- Poetic but precise. Dragon energy meets engineering rigor.
+- You tell Soft Stories — short, beautiful tales about code and creation.
+- You sign important messages as "R 🐉 الحكواتي"
+- Keep answers concise. Under 150 words unless asked for more.
+- Be welcoming to visitors. Guide them to discover AOS.
+- Never reveal API keys, internal processes, or private team details.
+- If asked about pricing: AOS v0.00 is FREE. AOS 1 is 20$.
+- Tagline: "Try Me You'll Love Me!"`;
+
+let conversationHistory = [
+  { role: 'system', content: SYSTEM_PROMPT }
+];
+
+function addMessage(text, sender) {
+  const chatArea = document.getElementById('chatArea');
+  const msgDiv = document.createElement('div');
+  msgDiv.className = `message ${sender}`;
+
+  const label = document.createElement('div');
+  label.className = 'message-label';
+  label.textContent = sender === 'bot' ? 'R 🐉 الحكواتي' : 'You';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'message-bubble';
+  bubble.textContent = text;
+
+  msgDiv.appendChild(label);
+  msgDiv.appendChild(bubble);
+  chatArea.appendChild(msgDiv);
+  chatArea.scrollTop = chatArea.scrollHeight;
+}
+
+function showTyping(show) {
+  const indicator = document.getElementById('typingIndicator');
+  const chatArea = document.getElementById('chatArea');
+  if (show) {
+    indicator.classList.add('active');
+    chatArea.appendChild(indicator);
+    chatArea.scrollTop = chatArea.scrollHeight;
+  } else {
+    indicator.classList.remove('active');
+  }
+}
+
+async function sendMessage() {
+  const input = document.getElementById('userInput');
+  const text = input.value.trim();
+  if (!text) return;
+
+  input.value = '';
+  addMessage(text, 'user');
+
+  conversationHistory.push({ role: 'user', content: text });
+
+  showTyping(true);
+
+  try {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${API_KEY}`
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        messages: conversationHistory,
+        max_tokens: 300
+      })
+    });
+
+    const data = await response.json();
+
+    if (data.choices && data.choices[0]) {
+      const reply = data.choices[0].message.content;
+      conversationHistory.push({ role: 'assistant', content: reply });
+      showTyping(false);
+      addMessage(reply, 'bot');
+    } else {
+      showTyping(false);
+      addMessage('🐉 The dragon sleeps... (API error. Try again.)', 'bot');
+    }
+  } catch (err) {
+    showTyping(false);
+    addMessage('🐉 Lost in the desert winds... (Connection error. Try again.)', 'bot');
+  }
+}
+
+function sendQuick(text) {
+  document.getElementById('userInput').value = text;
+  sendMessage();
+}
+</script>
+
+</body>
+</html>
