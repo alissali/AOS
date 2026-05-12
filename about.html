@@ -17,20 +17,7 @@
     overflow-x: hidden;
   }
 
-  /* === SCROLL REVEAL === */
-  .reveal {
-    opacity: 1;
-    transform: translateY(0);
-    transition: opacity 0.8s ease, transform 0.8s ease;
-  }
-  .reveal.hidden {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  /* All content visible by default */
 
   /* === HERO === */
   .hero {
@@ -618,7 +605,7 @@
   </section>
 
   <!-- ACT I: THE MEME -->
-  <section class="meme-section reveal">
+  <section class="meme-section">
     <h2 class="section-title red">🪦 ACT I — THE CLASSIC SOFTWARE PROJECT</h2>
     <div class="meme-container">
       <img src="https://alissali.github.io/AOS/media/SPfailure.png" alt="The Classic Software Project — How it really works" />
@@ -627,7 +614,7 @@
   </section>
 
   <!-- ACT I.b: FAILURES DECODED -->
-  <section class="failures-section reveal">
+  <section class="failures-section">
     <h2 class="section-title red">🔴 THE 10 FAILURES — DECODED</h2>
     <div class="failure-grid">
       <div class="failure-card">
@@ -661,7 +648,7 @@
   </section>
 
   <!-- ACT II: THE COLLAPSE -->
-  <section class="collapse-section reveal">
+  <section class="collapse-section">
     <h2 class="section-title gold">🌪️ ACT II — NOW WATCH THIS</h2>
 
     <div class="compare-grid">
@@ -727,7 +714,7 @@
   </section>
 
   <!-- ACT III: THE SOLUTION -->
-  <section class="solution-section reveal">
+  <section class="solution-section">
     <h2 class="section-title green">🟢 ACT III — HOW AOS KILLS THIS</h2>
 
     <table class="vs-table">
@@ -790,7 +777,7 @@
   </section>
 
   <!-- ECLIPSE QUOTE -->
-  <section class="eclipse-section reveal">
+  <section class="eclipse-section">
     <p class="big-quote">
       Every software project is a <em>tragedy</em> of interpretation.<br>
       AOS is the <em>eclipse</em> — where want, fact, and name<br>
@@ -800,7 +787,7 @@
   </section>
 
   <!-- TORNADO FINALE -->
-  <section class="tornado-finale reveal">
+  <section class="tornado-finale">
     <div class="punchline-box">
       <div class="big">
         They got a tree stump. We build <span class="tornado">TORNADOS</span>. 🌪️
@@ -819,44 +806,7 @@
     AOS — Automated Operating System — <a href="https://juxitt.com">JuXITT</a> © 2026
   </div>
 
-  <!-- DHTML: Scroll Reveal -->
-  <script>
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.15 });
 
-    document.querySelectorAll('.reveal').forEach(el => {
-      el.classList.add('hidden');
-      observer.observe(el);
-    });
-
-    // Re-trigger collapse animations when visible
-    const collapseBox = document.querySelector('.logic-collapse');
-    if (collapseBox) {
-      const collapseObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            collapseBox.querySelectorAll('.collapse-row').forEach(row => {
-              row.style.animation = 'none';
-              row.offsetHeight; // reflow
-              row.style.animation = '';
-            });
-            const therefore = collapseBox.querySelector('.collapse-therefore');
-            if (therefore) {
-              therefore.style.animation = 'none';
-              therefore.offsetHeight;
-              therefore.style.animation = '';
-            }
-          }
-        });
-      }, { threshold: 0.5 });
-      collapseObserver.observe(collapseBox);
-    }
-  </script>
 
 </body>
 </html>
