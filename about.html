@@ -19,9 +19,13 @@
 
   /* === SCROLL REVEAL === */
   .reveal {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.hidden {
     opacity: 0;
     transform: translateY(40px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
   }
   .reveal.visible {
     opacity: 1;
@@ -825,7 +829,10 @@
       });
     }, { threshold: 0.15 });
 
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    document.querySelectorAll('.reveal').forEach(el => {
+      el.classList.add('hidden');
+      observer.observe(el);
+    });
 
     // Re-trigger collapse animations when visible
     const collapseBox = document.querySelector('.logic-collapse');
