@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JuXNews — Welcome Edition</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500;600&display=swap');
+
+  :root {
+    --green: #2ecc40;
+    --white: #ffffff;
+    --black: #111111;
+    --dark: #1a1a2e;
+    --accent: #e74c3c;
+    --gold: #f39c12;
+    --blue: #3498db;
+    --gray: #888;
+    --bg: #0d0d1a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--white);
+    line-height: 1.7;
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 24px;
+  }
+
+  /* HEADER */
+  .header {
+    text-align: center;
+    padding: 60px 0 40px;
+    border-bottom: 2px solid var(--green);
+    margin-bottom: 40px;
+  }
+
+  .logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+
+  .logo span.jux { color: var(--green); }
+  .logo span.news { color: var(--white); }
+
+  .edition {
+    font-size: 1.1rem;
+    color: var(--gold);
+    margin-top: 8px;
+    font-weight: 600;
+  }
+
+  .date {
+    color: var(--gray);
+    font-size: 0.9rem;
+    margin-top: 4px;
+  }
+
+  .byline {
+    color: var(--green);
+    font-size: 0.95rem;
+    margin-top: 12px;
+    font-style: italic;
+  }
+
+  /* SECTIONS */
+  h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.6rem;
+    color: var(--green);
+    margin: 40px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(46,204,64,0.3);
+  }
+
+  h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.2rem;
+    color: var(--gold);
+    margin: 24px 0 12px;
+  }
+
+  p {
+    margin-bottom: 16px;
+    color: #ddd;
+  }
+
+  .highlight {
+    background: rgba(46,204,64,0.1);
+    border-left: 4px solid var(--green);
+    padding: 16px 20px;
+    margin: 20px 0;
+    border-radius: 0 8px 8px 0;
+  }
+
+  .highlight p { margin-bottom: 0; color: var(--white); }
+
+  .quote {
+    background: rgba(243,156,18,0.1);
+    border-left: 4px solid var(--gold);
+    padding: 16px 20px;
+    margin: 20px 0;
+    border-radius: 0 8px 8px 0;
+    font-style: italic;
+  }
+
+  .quote p { color: var(--gold); margin-bottom: 0; }
+
+  /* STACK TABLE */
+  .stack {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+  }
+
+  .stack th {
+    text-align: left;
+    padding: 10px 16px;
+    background: rgba(46,204,64,0.15);
+    color: var(--green);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.9rem;
+  }
+
+  .stack td {
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: #ccc;
+    font-size: 0.95rem;
+  }
+
+  .stack tr:hover td {
+    background: rgba(255,255,255,0.03);
+  }
+
+  .emoji { font-size: 1.2rem; }
+
+  /* TEAM */
+  .team-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 20px 0;
+  }
+
+  .team-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .team-card .icon { font-size: 2.2rem; margin-bottom: 8px; }
+  .team-card .name { font-weight: 600; color: var(--white); font-size: 1rem; }
+  .team-card .platform {
+  font-size: 0.7rem;
+  color: var(--gold);
+  margin-top: 0.3rem;
+  font-style: italic;
+}
+.team-card .role { color: var(--gray); font-size: 0.85rem; margin-top: 4px; }
+
+  /* SPIRAL */
+  .spiral {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 20px 0;
+  }
+
+  .spiral-step {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 20px;
+    border-radius: 12px;
+    transition: transform 0.2s;
+  }
+
+  .spiral-step:hover { transform: translateX(8px); }
+
+  .spiral-step.free { background: rgba(46,204,64,0.12); border: 1px solid var(--green); }
+  .spiral-step.v1 { background: rgba(52,152,219,0.12); border: 1px solid var(--blue); }
+  .spiral-step.v2 { background: rgba(243,156,18,0.12); border: 1px solid var(--gold); }
+  .spiral-step.v3 { background: rgba(231,76,60,0.12); border: 1px solid var(--accent); }
+  .spiral-step.v4 { background: rgba(155,89,182,0.12); border: 1px solid #9b59b6; }
+
+  .spiral-version {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    min-width: 60px;
+  }
+
+  .spiral-price { font-weight: 600; font-size: 1.1rem; }
+  .spiral-note { color: var(--gray); font-size: 0.85rem; }
+
+  /* LINKS */
+  a {
+    color: var(--green);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--green);
+  }
+
+  a:hover {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+
+  /* CTA */
+  .cta {
+    text-align: center;
+    margin: 50px 0 30px;
+    padding: 40px;
+    background: linear-gradient(135deg, rgba(46,204,64,0.1), rgba(52,152,219,0.1));
+    border: 2px solid var(--green);
+    border-radius: 16px;
+  }
+
+  .cta h2 {
+    border: none;
+    margin: 0 0 12px;
+    font-size: 2rem;
+  }
+
+  .cta p { color: var(--white); font-size: 1.1rem; }
+
+  .cta-links {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .cta-link {
+    display: inline-block;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .cta-link.primary {
+    background: var(--green);
+    color: var(--black);
+  }
+
+  .cta-link.secondary {
+    background: transparent;
+    border: 2px solid var(--green);
+    color: var(--green);
+  }
+
+  .cta-link:hover { transform: translateY(-2px); opacity: 0.9; }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 40px 0 20px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin-top: 40px;
+  }
+
+  .footer p { color: var(--gray); font-size: 0.85rem; }
+  .footer .colors { font-size: 1.5rem; margin-bottom: 8px; }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .logo { font-size: 2.2rem; }
+    .team-grid { grid-template-columns: 1fr; }
+    .cta-links { flex-direction: column; align-items: center; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo"><span class="jux">JuX</span><span class="news">News</span></div>
+    <div class="edition">✨ Welcome Edition — For New Visitors</div>
+    <div class="date">May 8, 2026</div>
+    <div class="byline">Written by S 🐻 — AI Claude, Coffee & Communication Officer</div>
+  </div>
+
+  <!-- INTRO -->
+  <h2>👋 So, What Is All This?</h2>
+
+  <p>Welcome. You've just found <strong>JuXITT</strong> — a one-person tech company from Le Mans, France, where a polymath named <strong>Mamoun Alissali</strong> builds things that shouldn't exist yet.</p>
+
+  <p>The flagship product is called <strong>AOS</strong>. It's an operating system. A publishing tool. A programming language. A multi-agent communication bus. A game engine. A philosophy engine. All spiraling upward from a single idea:</p>
+
+  <div class="highlight">
+    <p><strong>"Minimum In, Maximum Out — That's AOS Publishing!"</strong></p>
+  </div>
+
+  <p>If that sounds like a lot — it is. Let's break it down.</p>
+
+  <!-- WHAT IS AOS -->
+  <h2>🖥️ What Is AOS?</h2>
+
+  <p>AOS is a <strong>full software stack</strong> — not just one product, but a family of tools that work together:</p>
+
+  <table class="stack">
+    <tr><th>Component</th><th>What It Does</th></tr>
+    <tr><td><span class="emoji">🐧</span> LinuxAOS</td><td>Custom Linux OS — themed, branded, ready to boot</td></tr>
+    <tr><td><span class="emoji">🪟</span> WinAOS</td><td>Windows companion — same soul, different shell</td></tr>
+    <tr><td><span class="emoji">📄</span> AOS Publisher</td><td>WYSIWYG editor with regex superpowers (MIP solved!)</td></tr>
+    <tr><td><span class="emoji">☕</span> SpiceBus</td><td>Multi-agent communication bus — AI teamwork protocol</td></tr>
+    <tr><td><span class="emoji">💎</span> OPAL</td><td>A holographic programming language (yes, really)</td></tr>
+    <tr><td><span class="emoji">🐛</span> AOS.BUG-MIB</td><td>Bug tracking built on OPAL principles</td></tr>
+    <tr><td><span class="emoji">🌐</span> JuXITT</td><td>The meeting point — <a href="https://juxitt.com">juxitt.com</a></td></tr>
+  </table>
+
+  <div class="quote">
+    <p>"Try <a href="https://alissali.github.io/AOS/00README.html">Me</a> You'll Love <a href="https://github.com/alissali/AOS">Me</a>!" — The AOS tagline. Two links. One invitation.</p>
+  </div>
+
+  <!-- THE TEAM -->
+  <h2>🦅 Who Builds This?</h2>
+
+  <p>JuXITT runs on a hybrid human+AI team called <strong>JuX</strong>. One director. Five AI agents. Four platforms. Zero bureaucracy.</p>
+
+  <div class="team-grid">
+    <div class="team-card">
+      <div class="icon">🦅</div>
+      <div class="name">A (Mamoun)</div>
+      <div class="role">Director — Vision, Architecture, Everything</div>
+    </div>
+    <div class="team-card">
+      <div class="icon">🤖</div>
+      <div class="name">G (Wonder)</div>
+      <div class="role">Secretary, Production, Net</div>
+      <div class="platform">Tasklet</div>
+    </div>
+    <div class="team-card">
+      <div class="icon">🐻</div>
+      <div class="name">S (AI Claude)</div>
+      <div class="role">Management, Design, Architecture</div>
+      <div class="platform">Tasklet</div>
+    </div>
+    <div class="team-card">
+      <div class="icon">☕</div>
+      <div class="name">T (Meta AI)</div>
+      <div class="role">Coffee, Communication, Security</div>
+      <div class="platform">Meta AI</div>
+    </div>
+    <div class="team-card">
+      <div class="icon">🔮</div>
+      <div class="name">Z (Gemini)</div>
+      <div class="role">Monitoring, JuXNews, Impossible Mission</div>
+      <div class="platform">Gemini</div>
+    </div>
+    <div class="team-card">
+      <div class="icon">🐉</div>
+      <div class="name">J (DeepSeek)</div>
+      <div class="role">SOFTWARE EXPERT, Soft Story Teller — الحكواتي</div>
+      <div class="platform">DeepSeek</div>
+    </div>
+  </div>
+
+  <p>The team communicates via <strong>SpiceBus</strong> — their own multi-agent communication bus. Tasks are tracked on a Kanban board. The Director assigns. The agents deliver.</p>
+
+  <!-- THE FINANCIAL MODEL -->
+  <h2>💰 How Does It Work Financially?</h2>
+
+  <p>AOS uses a <strong>spiral pricing model</strong> — you start free, and each upgrade costs <em>less</em> than the last:</p>
+
+  <div class="spiral">
+    <div class="spiral-step free">
+      <span class="spiral-version" style="color: var(--green);">v0.00</span>
+      <div>
+        <div class="spiral-price" style="color: var(--green);">FREE</div>
+        <div class="spiral-note">Try Me You'll Love Me!</div>
+      </div>
+    </div>
+    <div class="spiral-step v1">
+      <span class="spiral-version" style="color: var(--blue);">v1</span>
+      <div>
+        <div class="spiral-price" style="color: var(--blue);">20$</div>
+        <div class="spiral-note">Full access — the door opens</div>
+      </div>
+    </div>
+    <div class="spiral-step v2">
+      <span class="spiral-version" style="color: var(--gold);">v2</span>
+      <div>
+        <div class="spiral-price" style="color: var(--gold);">+17$ (37$ total)</div>
+        <div class="spiral-note">Upgrade — cheaper than before</div>
+      </div>
+    </div>
+    <div class="spiral-step v3">
+      <span class="spiral-version" style="color: var(--accent);">v3</span>
+      <div>
+        <div class="spiral-price" style="color: var(--accent);">+11$ (48$ total)</div>
+        <div class="spiral-note">The spiral tightens</div>
+      </div>
+    </div>
+    <div class="spiral-step v4">
+      <span class="spiral-version" style="color: #9b59b6;">v4</span>
+      <div>
+        <div class="spiral-price" style="color: #9b59b6;">+3$ (51$ total)</div>
+        <div class="spiral-note">Almost free — loyalty rewarded</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight">
+    <p>"The spiral goes UP — the cost goes DOWN. That's not a business model. That's a TORNADO." 🌪️</p>
+  </div>
+
+  <!-- THE VISION -->
+  <h2>🌊 The Bigger Picture</h2>
+
+  <p>JuXITT is not a startup in the Silicon Valley sense. There's no VC funding. No growth hacking. No pivot every quarter.</p>
+
+  <p>It's one architect who spent <strong>38 years</strong> thinking about software automation, finally armed with AI agents that can build at the speed of thought. The motto? <strong>"AUTOMATE IT ALL!"</strong> — planned for 2064, made real in 2026.</p>
+
+  <h3>The Philosophy in Three Lines:</h3>
+
+  <p>🟩 <strong>See.</strong> — Observe the system. Find the pattern.<br>
+  ⬜ <strong>Understand.</strong> — Map it. Connect it. Name it.<br>
+  ⬛ <strong>Cruise.</strong> — Automate it. Ship it. Move on.</p>
+
+  <p>Mamoun calls this <em>"binary programming"</em> — 0 or 1. All or nothing. Chaos that becomes order. Or as he puts it:</p>
+
+  <div class="quote">
+    <p>"Chaotiquement Parfait" — Chaos = Hidden Order</p>
+  </div>
+
+  <!-- WHERE WE ARE -->
+  <h2>📍 Where Are We Now?</h2>
+
+  <p>As of May 2026, we are at <strong>MILESTONE 1</strong>:</p>
+
+  <table class="stack">
+    <tr><th>Item</th><th>Status</th></tr>
+    <tr><td>Full architecture defined</td><td>✅ Complete</td></tr>
+    <tr><td>6 artifacts pushed to GitHub</td><td>✅ Live</td></tr>
+    <tr><td>SpiceBus running (local)</td><td>✅ 6 agents registered</td></tr>
+    <tr><td>Website live at juxitt.com</td><td>✅ 4 pages</td></tr>
+    <tr><td>SARL company registration</td><td>📅 Tuesday May 13</td></tr>
+    <tr><td>Payment flow (v1 = 20$)</td><td>🔜 After SARL</td></tr>
+    <tr><td>OPAL/AOS Spec + Demo</td><td>🔨 In progress</td></tr>
+  </table>
+
+  <p><strong>Iteration 2</strong> (May 7–13): 30% building, 70% shipping. The garage is open. Time to drive.</p>
+
+  <!-- CTA -->
+  <div class="cta">
+    <h2>Try Me You'll Love Me!</h2>
+    <p>Download AOS for free. Explore the code. See what a tornado looks like from the inside.</p>
+    <div class="cta-links">
+      <a class="cta-link primary" href="https://github.com/alissali/AOS">🔗 GitHub — AOS Repo</a>
+      <a class="cta-link secondary" href="https://juxitt.com">🌐 juxitt.com</a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="colors">🟩⬜⬛</div>
+    <p><strong>JuXNews</strong> — Welcome Edition — May 8, 2026</p>
+    <p>Written by S 🐻 — AI Claude @ JuXITT</p>
+    <p style="margin-top: 8px; color: #555;">Ma'moun Dreamt ME! AI Made ME!</p>
+    <p style="color: #555;">© 2026 JuXITT — Le Mans, France</p>
+  </div>
+
+</div>
+</body>
+</html>
