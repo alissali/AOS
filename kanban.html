@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AOS Kanban 🌪️</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0a;--card:#1a1a1a;--card-hover:#222;--border:#2a2a2a;
+  --cyan:#00d4ff;--p1:#ff4444;--p2:#ffaa00;--p3:#00d4ff;--p4:#666;
+  --text:#e0e0e0;--text-dim:#888;--radius:10px;
+}
+html{font-family:'Inter',system-ui,-apple-system,sans-serif;font-size:14px;color:var(--text);background:var(--bg)}
+body{min-height:100vh;display:flex;flex-direction:column}
+
+/* ── Header ── */
+.header{background:#111;border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;position:sticky;top:0;z-index:100}
+.header h1{font-size:1.5rem;font-weight:800;letter-spacing:-.5px;white-space:nowrap}
+.header h1 .cyan{color:var(--cyan)}
+.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-left:auto}
+select,button{font-family:inherit;font-size:.85rem;padding:7px 14px;border-radius:6px;border:1px solid var(--border);background:#1a1a1a;color:var(--text);cursor:pointer;transition:border-color .2s}
+select:hover,button:hover{border-color:var(--cyan)}
+button.primary{background:var(--cyan);color:#000;font-weight:600;border:none}
+button.primary:hover{background:#00bfe6}
+
+/* ── Progress ── */
+.progress-wrap{width:100%;padding:0 24px;margin:10px 0 4px}
+.progress-bar{height:6px;background:#1a1a1a;border-radius:3px;overflow:hidden;position:relative}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--cyan),#00ffc8);border-radius:3px;transition:width .6s ease}
+.stats{padding:2px 24px 8px;font-size:.78rem;color:var(--text-dim);display:flex;gap:16px;flex-wrap:wrap}
+
+/* ── Board ── */
+.board{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding:16px 24px;flex:1;align-items:start}
+@media(max-width:1024px){.board{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.board{grid-template-columns:1fr}}
+
+.column{background:#111;border:1px solid var(--border);border-radius:var(--radius);display:flex;flex-direction:column;min-height:200px}
+.column.drag-over{border-color:var(--cyan);box-shadow:0 0 20px rgba(0,212,255,.15)}
+.col-header{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0}
+.col-header h2{font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.col-header .badge{background:var(--cyan);color:#000;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:10px;min-width:22px;text-align:center}
+.col-cards{padding:10px;display:flex;flex-direction:column;gap:8px;flex:1;min-height:60px}
+
+/* ── Cards ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;cursor:grab;transition:transform .15s,box-shadow .15s,opacity .15s;position:relative}
+.card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.4);border-color:#333}
+.card.dragging{opacity:.4;transform:scale(.96)}
+.card.done-card{opacity:.5}
+.card .card-top{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.card .actor{font-size:1.1rem}
+.card .priority{font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:4px;color:#000;text-transform:uppercase}
+.card .priority.p1{background:var(--p1);color:#fff}
+.card .priority.p2{background:var(--p2)}
+.card .priority.p3{background:var(--p3)}
+.card .priority.p4{background:var(--p4);color:#ccc}
+.card .task-text{font-size:.85rem;line-height:1.4;word-break:break-word}
+.card .card-id{font-size:.7rem;color:var(--text-dim);margin-top:6px}
+
+/* ── Modal ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:#1a1a1a;border:1px solid var(--border);border-radius:var(--radius);padding:28px;width:420px;max-width:92vw}
+.modal h2{font-size:1.1rem;margin-bottom:18px;font-weight:700}
+.modal label{display:block;font-size:.8rem;color:var(--text-dim);margin-bottom:4px;margin-top:12px}
+.modal input,.modal select,.modal textarea{width:100%;font-family:inherit;font-size:.9rem;padding:9px 12px;border-radius:6px;border:1px solid var(--border);background:#111;color:var(--text);resize:vertical}
+.modal textarea{min-height:70px}
+.modal .actions{display:flex;gap:10px;margin-top:20px;justify-content:flex-end}
+
+/* ── Footer ── */
+.footer{text-align:center;padding:16px;font-size:.72rem;color:var(--text-dim);border-top:1px solid var(--border)}
+.footer a{color:var(--cyan);text-decoration:none}
+.footer a:hover{text-decoration:underline}
+
+/* ── Animations ── */
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.card{animation:fadeIn .3s ease both}
+.spin{animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1><span class="cyan">AOS</span> Kanban 🌪️</h1>
+  <div class="controls">
+    <select id="filterActor"><option value="ALL">All Actors</option></select>
+    <button id="btnAdd" class="primary">＋ New Task</button>
+    <button id="btnRefresh" title="Refresh from Sheet">🔄 Refresh</button>
+  </div>
+</div>
+
+<div class="progress-wrap"><div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div></div>
+<div class="stats" id="statsBar"></div>
+
+<div class="board" id="board">
+  <div class="column" data-status="BACKLOG"><div class="col-header"><h2>📋 Backlog</h2><span class="badge" id="cnt-BACKLOG">0</span></div><div class="col-cards" data-status="BACKLOG"></div></div>
+  <div class="column" data-status="TODO"><div class="col-header"><h2>📝 Todo</h2><span class="badge" id="cnt-TODO">0</span></div><div class="col-cards" data-status="TODO"></div></div>
+  <div class="column" data-status="IN PROGRESS"><div class="col-header"><h2>⚡ In Progress</h2><span class="badge" id="cnt-IN PROGRESS">0</span></div><div class="col-cards" data-status="IN PROGRESS"></div></div>
+  <div class="column" data-status="DONE"><div class="col-header"><h2>✅ Done</h2><span class="badge" id="cnt-DONE">0</span></div><div class="col-cards" data-status="DONE"></div></div>
+</div>
+
+<!-- Add Task Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h2>🌪️ New Task</h2>
+    <label>Actor</label>
+    <select id="mActor">
+      <option value="A🦅">A🦅 — Eagle</option>
+      <option value="G🤖">G🤖 — Bot</option>
+      <option value="S🐻">S🐻 — Bear</option>
+      <option value="T☕">T☕ — Coffee</option>
+      <option value="Z🔮">Z🔮 — Crystal</option>
+      <option value="R🐉">R🐉 — Dragon</option>
+    </select>
+    <label>Priority</label>
+    <select id="mPriority">
+      <option value="P1">P1 — Critical</option>
+      <option value="P2">P2 — High</option>
+      <option value="P3">P3 — Medium</option>
+      <option value="P4">P4 — Low</option>
+    </select>
+    <label>Status</label>
+    <select id="mStatus">
+      <option value="BACKLOG">Backlog</option>
+      <option value="TODO" selected>Todo</option>
+      <option value="IN PROGRESS">In Progress</option>
+    </select>
+    <label>Task Description</label>
+    <textarea id="mTask" placeholder="What needs to be done?"></textarea>
+    <div class="actions">
+      <button id="btnCancel">Cancel</button>
+      <button id="btnSave" class="primary">Add Task</button>
+    </div>
+  </div>
+</div>
+
+<div class="footer">AOS Kanban v1.0 — Powered by <a href="https://juxitt.com" target="_blank">JuXITT.com</a> 🌪️</div>
+
+<script>
+// ── Baked-in fallback data ──
+const FALLBACK_DATA = [
+  {id:"KMP2XJQZF",actor:"G🤖",priority:"P2",task:"Docs",status:"TODO",created:"2026-05-12",updated:"2026-05-12"},
+  {id:"K002",actor:"A🦅",priority:"P1",task:"/about on juxitt.com → redirect to alissali.github.io/AOS/",status:"TODO",created:"2026-05-12",updated:"2026-05-12"},
+  {id:"K003",actor:"A🦅",priority:"P2",task:"Fix 3 typos (homepage + /fascination)",status:"TODO",created:"2026-05-12",updated:"2026-05-12"},
+  {id:"K004",actor:"A🦅",priority:"P2",task:"Science Council — first session Sat 17 May",status:"TODO",created:"2026-05-12",updated:"2026-05-12"},
+  {id:"K005",actor:"A🦅",priority:"P2",task:"A → R🐉: Brief Visit JuXATT",status:"BACKLOG",created:"2026-05-12",updated:"2026-05-12"},
+  {id:"K006",actor:"A🦅",priority:"P2",task:"A → R🐉: Set Up Qassyoun",status:"BACKLOG",created:"2026-05-12",updated:"2026-05-12"},
+  {id:"K007",actor:"A🦅",priority:"P2",task:"WinAOS!",status:"IN PROGRESS",created:"2026-05-12",updated:"2026-05-12"},
+  {id:"K008",actor:"G🤖",priority:"P1",task:"Push SpiceBus to GitHub",status:"TODO",created:"2026-05-12",updated:"2026-05-12"},
+  {id:"K009",actor:"G🤖",priority:"P4",task:"SpiceBus cloud deployment",status:"BACKLOG",created:"2026-05-12",updated:"2026-05-12"},
+  {id:"K010",actor:"R🐉",priority:"P1",task:"TEMPLAR-SS demo — strikes 6-42 remaining",status:"IN PROGRESS",created:"2026-05-12",updated:"2026-05-12"},
+  {id:"K011",actor:"S🐻",priority:"P1",task:"OPAL/AOS Spec document",status:"TODO",created:"2026-05-12",updated:"2026-05-12"},
+  {id:"K012",actor:"T☕",priority:"P2",task:"Paste pricing HTML → /set-me-free",status:"TODO",created:"2026-05-12",updated:"2026-05-12"},
+  {id:"K013",actor:"Z🔮",priority:"P2",task:"JuXNews next edition",status:"TODO",created:"2026-05-12",updated:"2026-05-12"},
+  {id:"K014",actor:"A🦅",priority:"P1",task:"/set-me-free — add video embed below Ma'moun dreamt...",status:"TODO",created:"2026-05-12",updated:"2026-05-12"},
+  {id:"K015",actor:"G🤖",priority:"P1",task:"SCRUM dispatched to all 6 agents",status:"DONE",created:"2026-05-12",updated:"2026-05-12"},
+  {id:"K016",actor:"G🤖",priority:"P1",task:"SCRUM protocol updated (new IDs, R/A)",status:"DONE",created:"2026-05-12",updated:"2026-05-12"},
+  {id:"K017",actor:"T☕",priority:"P1",task:"Communication Pack (LinkedIn, Elevator Pitch, Press Release)",status:"DONE",created:"2026-05-12",updated:"2026-05-12"},
+  {id:"K018",actor:"R🐉",priority:"P1",task:"TEMPLAR-SS Strikes 1-5 produced",status:"DONE",created:"2026-05-12",updated:"2026-05-12"},
+  {id:"K019",actor:"G🤖",priority:"P1",task:"strategy.html (AOSStrategy--AvoidThis) → GitHub Pages",status:"DONE",created:"2026-05-12",updated:"2026-05-12"},
+  {id:"K020",actor:"G🤖",priority:"P1",task:"about.html (Logic Collapse DHTML v2) → GitHub Pages",status:"DONE",created:"2026-05-12",updated:"2026-05-12"},
+  {id:"K021",actor:"G🤖",priority:"P2",task:"Docs posted to Slack channels + AOS Docs Index",status:"DONE",created:"2026-05-12",updated:"2026-05-12"},
+  {id:"K022",actor:"G🤖",priority:"P1",task:"Science Council trigger scheduled (Sat 20:00 Paris)",status:"DONE",created:"2026-05-12",updated:"2026-05-12"},
+  {id:"K023",actor:"G🤖",priority:"P1",task:"Interactive Kanban Board (Sheet + App + Slack sync)",status:"DONE",created:"2026-05-12",updated:"2026-05-12"},
+  {id:"K024",actor:"A🦅",priority:"P1",task:"Communication Operational — CHECK by Wed 13 May 20:00",status:"TODO",created:"2026-05-12",updated:"2026-05-12"},
+  {id:"K025",actor:"S🐻",priority:"P1",task:"Communication Operational — CHECK by Wed 13 May 20:00",status:"TODO",created:"2026-05-12",updated:"2026-05-12"}
+];
+
+const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1cYJssbMDH_uCjSsX-urNSvSPDNUu3psS8mQDTJfWSYA/gviz/tq?tqx=out:json&sheet=Kanban';
+const LS_KEY = 'aos_kanban_overrides';
+const LS_LOCAL_KEY = 'aos_kanban_local_tasks';
+const STATUSES = ['BACKLOG','TODO','IN PROGRESS','DONE'];
+
+let tasks = [];
+let activeFilter = 'ALL';
+
+// ── LocalStorage helpers ──
+function getOverrides(){ try{return JSON.parse(localStorage.getItem(LS_KEY)||'{}');}catch(e){return {};} }
+function saveOverrides(o){ localStorage.setItem(LS_KEY,JSON.stringify(o)); }
+function getLocalTasks(){ try{return JSON.parse(localStorage.getItem(LS_LOCAL_KEY)||'[]');}catch(e){return [];} }
+function saveLocalTasks(t){ localStorage.setItem(LS_LOCAL_KEY,JSON.stringify(t)); }
+
+// ── Parse Google Viz JSON ──
+function parseGviz(raw){
+  const json = JSON.parse(raw.substring(raw.indexOf('(')+1, raw.lastIndexOf(')')));
+  const cols = json.table.cols.map(c=>c.label);
+  return json.table.rows.map(r=>{
+    const obj={};
+    r.c.forEach((cell,i)=>{ obj[cols[i]] = cell ? (cell.v||'') : ''; });
+    return {id:obj['ID']||'',actor:obj['Actor']||'',priority:obj['Priority']||'P4',task:obj['Task']||'',status:obj['Status']||'BACKLOG',created:obj['Created']||'',updated:obj['Updated']||''};
+  }).filter(t=>t.id);
+}
+
+// ── Fetch live data ──
+async function fetchSheet(){
+  try{
+    const r = await fetch(SHEET_URL);
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const text = await r.text();
+    return parseGviz(text);
+  }catch(e){
+    console.warn('Sheet fetch failed, using fallback:',e);
+    return null;
+  }
+}
+
+// ── Merge data ──
+function mergeData(base){
+  const overrides = getOverrides();
+  const merged = base.map(t=>({...t, status: overrides[t.id] || t.status}));
+  const localTasks = getLocalTasks();
+  return [...merged, ...localTasks];
+}
+
+// ── Render ──
+function render(){
+  const filtered = activeFilter==='ALL' ? tasks : tasks.filter(t=>t.actor===activeFilter);
+  const counts={BACKLOG:0,TODO:0,'IN PROGRESS':0,DONE:0};
+
+  document.querySelectorAll('.col-cards').forEach(col=>{
+    col.innerHTML='';
+    const status = col.dataset.status;
+    const cards = filtered.filter(t=>t.status===status);
+    counts[status] = cards.length;
+    // Sort by priority
+    cards.sort((a,b)=>{
+      const pv=p=>{const n=parseInt(p.replace('P',''));return isNaN(n)?9:n;};
+      return pv(a.priority)-pv(b.priority);
+    });
+    cards.forEach((t,i)=>{
+      const card = document.createElement('div');
+      card.className = 'card' + (status==='DONE'?' done-card':'');
+      card.draggable = true;
+      card.dataset.id = t.id;
+      card.style.animationDelay = (i*0.04)+'s';
+      const pClass = t.priority.toLowerCase();
+      card.innerHTML = `<div class="card-top"><span class="actor">${esc(t.actor)}</span><span class="priority ${pClass}">${esc(t.priority)}</span></div><div class="task-text">${esc(t.task)}</div><div class="card-id">${esc(t.id)}</div>`;
+      // Drag events
+      card.addEventListener('dragstart',e=>{
+        card.classList.add('dragging');
+        e.dataTransfer.setData('text/plain',t.id);
+        e.dataTransfer.effectAllowed='move';
+      });
+      card.addEventListener('dragend',()=>card.classList.remove('dragging'));
+      col.appendChild(card);
+    });
+  });
+
+  // Counts
+  STATUSES.forEach(s=>{
+    const el=document.getElementById('cnt-'+s);
+    if(el) el.textContent=counts[s];
+  });
+
+  // Progress
+  const total=filtered.length;
+  const done=counts.DONE;
+  const pct=total?Math.round(done/total*100):0;
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('statsBar').innerHTML=
+    `<span>Total: <b>${total}</b></span><span>Done: <b>${done}</b> (${pct}%)</span><span>In Progress: <b>${counts['IN PROGRESS']}</b></span><span>Todo: <b>${counts.TODO}</b></span><span>Backlog: <b>${counts.BACKLOG}</b></span>`;
+}
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// ── Drop zones ──
+document.querySelectorAll('.col-cards').forEach(zone=>{
+  zone.addEventListener('dragover',e=>{e.preventDefault();e.dataTransfer.dropEffect='move';zone.closest('.column').classList.add('drag-over');});
+  zone.addEventListener('dragleave',e=>{if(!zone.contains(e.relatedTarget))zone.closest('.column').classList.remove('drag-over');});
+  zone.addEventListener('drop',e=>{
+    e.preventDefault();
+    zone.closest('.column').classList.remove('drag-over');
+    const id=e.dataTransfer.getData('text/plain');
+    const newStatus=zone.dataset.status;
+    // Update task
+    const t=tasks.find(x=>x.id===id);
+    if(t && t.status!==newStatus){
+      t.status=newStatus;
+      // Save to overrides or local
+      const localTasks=getLocalTasks();
+      const localIdx=localTasks.findIndex(x=>x.id===id);
+      if(localIdx>=0){localTasks[localIdx].status=newStatus;saveLocalTasks(localTasks);}
+      else{const o=getOverrides();o[id]=newStatus;saveOverrides(o);}
+      render();
+    }
+  });
+});
+
+// ── Filter ──
+function populateFilter(){
+  const actors=[...new Set(tasks.map(t=>t.actor))].sort();
+  const sel=document.getElementById('filterActor');
+  sel.innerHTML='<option value="ALL">All Actors</option>';
+  actors.forEach(a=>{sel.innerHTML+=`<option value="${esc(a)}">${esc(a)}</option>`;});
+  sel.value=activeFilter;
+}
+document.getElementById('filterActor').addEventListener('change',e=>{activeFilter=e.target.value;render();});
+
+// ── Refresh ──
+document.getElementById('btnRefresh').addEventListener('click',async()=>{
+  const btn=document.getElementById('btnRefresh');
+  btn.innerHTML='<span class="spin" style="display:inline-block">🔄</span>';
+  btn.disabled=true;
+  const live=await fetchSheet();
+  if(live){tasks=mergeData(live);}
+  populateFilter();render();
+  btn.innerHTML='🔄 Refresh';btn.disabled=false;
+});
+
+// ── Modal ──
+document.getElementById('btnAdd').addEventListener('click',()=>document.getElementById('modalOverlay').classList.add('open'));
+document.getElementById('btnCancel').addEventListener('click',()=>document.getElementById('modalOverlay').classList.remove('open'));
+document.getElementById('modalOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.classList.remove('open');});
+
+document.getElementById('btnSave').addEventListener('click',()=>{
+  const actor=document.getElementById('mActor').value;
+  const priority=document.getElementById('mPriority').value;
+  const status=document.getElementById('mStatus').value;
+  const taskText=document.getElementById('mTask').value.trim();
+  if(!taskText){alert('Please enter a task description.');return;}
+  const id='K'+Date.now().toString(36).toUpperCase();
+  const now=new Date().toISOString().slice(0,10);
+  const newTask={id,actor,priority,task:taskText,status,created:now,updated:now};
+  tasks.push(newTask);
+  const local=getLocalTasks();local.push(newTask);saveLocalTasks(local);
+  document.getElementById('mTask').value='';
+  document.getElementById('modalOverlay').classList.remove('open');
+  populateFilter();render();
+});
+
+// ── Init ──
+(async()=>{
+  const live=await fetchSheet();
+  tasks=mergeData(live||FALLBACK_DATA);
+  populateFilter();render();
+})();
+</script>
+</body>
+</html>
