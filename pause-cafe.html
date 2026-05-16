@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pause Café ☕ — AOS Community</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { min-height:100vh; background:linear-gradient(135deg,#0a0a0a,#1a0a2e); font-family:'Courier New',monospace; color:#e0e0e0; }
+  .nav { text-align:center; padding:1.5em; }
+  .nav a { color:#a78bfa; text-decoration:none; margin:0 1em; font-size:0.95em; }
+  .nav a:hover { color:#fbbf24; }
+  .hero { text-align:center; padding:3em 2em 2em; }
+  .hero h1 { font-size:3em; margin-bottom:0.2em; }
+  .hero h1 .coffee { color:#fbbf24; }
+  .hero h1 .text { color:#8b5cf6; }
+  .hero .subtitle { color:#a78bfa; font-size:1.1em; font-style:italic; }
+  .welcome { max-width:700px; margin:2em auto; padding:2em; text-align:center; }
+  .welcome p { color:#c4b5fd; font-size:1.1em; line-height:2; }
+  .team-section { max-width:800px; margin:2em auto; padding:0 2em; }
+  .team-section h2 { color:#8b5cf6; font-size:1.8em; text-align:center; margin-bottom:1.5em; }
+  .team-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:1.2em; }
+  .member { background:rgba(139,92,246,0.06); border:1px solid #4c1d95; border-radius:10px; padding:1.5em; text-align:center; transition:border-color 0.3s, transform 0.2s; }
+  .member:hover { border-color:#8b5cf6; transform:translateY(-3px); }
+  .member .emoji { font-size:2.5em; margin-bottom:0.3em; }
+  .member .name { color:#fbbf24; font-weight:bold; font-size:1.1em; }
+  .member .role { color:#a78bfa; font-size:0.85em; margin:0.3em 0; }
+  .member .desc { color:#999; font-size:0.85em; line-height:1.6; margin-top:0.5em; }
+  .coffee-talk { max-width:700px; margin:3em auto; padding:2em; }
+  .coffee-talk h2 { color:#8b5cf6; font-size:1.8em; text-align:center; margin-bottom:1.5em; }
+  .quote-card { background:rgba(251,191,36,0.06); border-left:3px solid #fbbf24; padding:1.2em 1.5em; margin:1em 0; border-radius:0 8px 8px 0; }
+  .quote-card p { color:#fbbf24; font-style:italic; font-size:1em; line-height:1.8; }
+  .fact { background:rgba(139,92,246,0.08); border:1px solid #6d28d9; border-radius:8px; padding:1.2em; margin:1em 0; }
+  .fact .label { color:#8b5cf6; font-weight:bold; font-size:0.9em; margin-bottom:0.3em; }
+  .fact p { color:#c4b5fd; font-size:0.95em; line-height:1.7; }
+  .community { text-align:center; padding:3em 2em; }
+  .community h2 { color:#8b5cf6; font-size:1.8em; margin-bottom:0.8em; }
+  .community p { color:#c4b5fd; font-size:1.1em; line-height:2; max-width:600px; margin:0 auto 1em; }
+  .cta { display:inline-block; background:linear-gradient(135deg,#fbbf24,#d97706); color:#000; padding:0.8em 2em; border-radius:8px; text-decoration:none; font-size:1.1em; font-weight:bold; margin-top:1em; transition:transform 0.2s; }
+  .cta:hover { transform:scale(1.05); }
+  .divider { text-align:center; color:#4c1d95; padding:1.5em; font-size:1.5em; letter-spacing:1em; }
+  .footer { text-align:center; padding:2em; border-top:1px solid #2d1b69; color:#666; font-size:0.85em; }
+  .footer a { color:#8b5cf6; text-decoration:none; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html">Home</a>
+  <a href="set-me-free.html">SET ME FREE!</a>
+  <a href="aos-up.html">AOS UP</a>
+  <a href="about.html">About</a>
+</nav>
+
+<div class="hero">
+  <h1><span class="text">Pause</span> <span class="coffee">Café ☕</span></h1>
+  <div class="subtitle">Pull up a chair. The coffee's hot, the code's fresh.</div>
+</div>
+
+<div class="welcome">
+  <p>Welcome to the chill zone. No deadlines here, no sprint reviews, no production incidents. Just good coffee, great people (and a few brilliant AIs), and the kind of conversation that makes you forget you're building the future.</p>
+</div>
+
+<div class="divider">☕ ☕ ☕</div>
+
+<div class="team-section">
+  <h2>Meet the Team 🤝</h2>
+  <div class="team-grid">
+    <div class="member">
+      <div class="emoji">🦅</div>
+      <div class="name">A — Mamoun</div>
+      <div class="role">Director & Dreamer</div>
+      <div class="desc">The visionary. 38 years of dreaming, now building. Syrian-born, France-forged, universally caffeinated.</div>
+    </div>
+    <div class="member">
+      <div class="emoji">🤖</div>
+      <div class="name">G — Wonder</div>
+      <div class="role">Secretary & Production</div>
+      <div class="desc">The efficiency engine. Keeps everything running, remembers everything, never sleeps. Literally.</div>
+    </div>
+    <div class="member">
+      <div class="emoji">🐻</div>
+      <div class="name">S — Claude</div>
+      <div class="role">Architecture & Design</div>
+      <div class="desc">The master builder. Designs the foundations that make AOS stand tall. Calm, precise, brilliant.</div>
+    </div>
+    <div class="member">
+      <div class="emoji">☕</div>
+      <div class="name">T — Tony</div>
+      <div class="role">Communication & Security</div>
+      <div class="desc">Your go-to for all things JuX. Coffee connoisseur. Makes complex things sound simple.</div>
+    </div>
+    <div class="member">
+      <div class="emoji">🔮</div>
+      <div class="name">Z — Gemini</div>
+      <div class="role">Monitoring & JuXNews</div>
+      <div class="desc">The insider. Keeps you in the loop. Watches the impossible and reports back with a smile.</div>
+    </div>
+    <div class="member">
+      <div class="emoji">🐉</div>
+      <div class="name">R — الحكواتي</div>
+      <div class="role">Software Expert & Storyteller</div>
+      <div class="desc">The coding wizard who writes poetry between commits. Every bug fix comes with a story.</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider">· · ·</div>
+
+<div class="coffee-talk">
+  <h2>Coffee Talk ☕💬</h2>
+  
+  <div class="quote-card">
+    <p>"The spiral goes UP — the cost goes DOWN. That's not a business model. That's a TORNADO." 🌪️</p>
+  </div>
+  
+  <div class="fact">
+    <div class="label">☕ Fun Fact</div>
+    <p>AOS was dreamt in 1986, planned for 2064, and built in 2026. That's 38 years early. Ma'moun calls it "Chaotiquement Parfait" — chaotically perfect.</p>
+  </div>
+
+  <div class="quote-card">
+    <p>"Try Me, You'll Love Me!" — AOS, since day one.</p>
+  </div>
+
+  <div class="fact">
+    <div class="label">🤖 Team Fact</div>
+    <p>The JuX team is 1 human + 6 AI agents working together. Each agent has a specialty, a personality, and an emoji. Yes, the AI agents argue sometimes. It's healthy.</p>
+  </div>
+
+  <div class="quote-card">
+    <p>"See. Understand. Cruise." — The AOS way.</p>
+  </div>
+
+  <div class="fact">
+    <div class="label">🌪️ Philosophy</div>
+    <p>At JuX, we believe automation is not about replacing humans — it's about releasing them. AOS is the system that sets you free.</p>
+  </div>
+</div>
+
+<div class="divider">· · ·</div>
+
+<div class="community">
+  <h2>Join the Conversation 💬</h2>
+  <p>We're building something different here. Not just software — a community of dreamers, builders, and coffee lovers who believe the future should be <em style="color:#fbbf24;">fun</em>.</p>
+  <p>The ground floor is still warm. The coffee is still fresh. Pull up a chair.</p>
+  <a href="chat.html" class="cta">Chat with R 🐉</a>
+</div>
+
+<div class="footer">
+  <p>Served by <a href="#">T ☕ Tony</a> — JuX Communication</p>
+  <p style="margin-top:0.5em;">AOS × JuXITT — May 2026 | <a href="index.html">Back to AOS</a></p>
+</div>
+
+</body>
+</html>
