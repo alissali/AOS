@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silver Ship — The Complete Voyage | AOS</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap');
+  
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    background: #001a1a;
+    color: #c0c0c0;
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+  }
+  
+  .hero {
+    text-align: center;
+    padding: 60px 20px 40px;
+    background: linear-gradient(180deg, #000000 0%, #001a1a 60%, #002222 100%);
+    border-bottom: 1px solid rgba(192,192,192,0.1);
+  }
+  
+  .hero h1 {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    background: linear-gradient(135deg, #c0c0c0, #e8e8e8, #4a9eff, #c0c0c0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+    letter-spacing: 4px;
+  }
+  
+  .hero .subtitle {
+    font-size: 1.2rem;
+    color: #4a9eff;
+    font-weight: 300;
+    letter-spacing: 2px;
+  }
+  
+  .hero .tagline {
+    margin-top: 15px;
+    font-size: 0.95rem;
+    color: #666;
+    font-style: italic;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+  
+  .section {
+    margin-bottom: 60px;
+  }
+  
+  .section h2 {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.6rem;
+    color: #4a9eff;
+    margin-bottom: 8px;
+    letter-spacing: 2px;
+  }
+  
+  .section .section-desc {
+    color: #888;
+    font-size: 1rem;
+    margin-bottom: 25px;
+    font-weight: 300;
+  }
+  
+  .video-card {
+    background: #002222;
+    border: 1px solid rgba(74,158,255,0.15);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 30px;
+    transition: border-color 0.3s;
+  }
+  
+  .video-card:hover {
+    border-color: rgba(74,158,255,0.4);
+  }
+  
+  .video-card video {
+    width: 100%;
+    display: block;
+  }
+  
+  .video-card .video-info {
+    padding: 20px;
+  }
+  
+  .video-card .video-info h3 {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.1rem;
+    color: #e0e0e0;
+    margin-bottom: 8px;
+  }
+  
+  .video-card .video-info p {
+    color: #888;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+  
+  .gallery-grid img {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid rgba(192,192,192,0.1);
+    transition: transform 0.3s, border-color 0.3s;
+    cursor: pointer;
+  }
+  
+  .gallery-grid img:hover {
+    transform: scale(1.02);
+    border-color: rgba(74,158,255,0.4);
+  }
+  
+  .special-image {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .special-image img {
+    max-width: 100%;
+    width: 800px;
+    border-radius: 12px;
+    border: 1px solid rgba(192,192,192,0.15);
+  }
+  
+  .special-image .caption {
+    margin-top: 12px;
+    color: #4a9eff;
+    font-style: italic;
+    font-size: 1rem;
+  }
+  
+  /* Lightbox */
+  .lightbox {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.95);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .lightbox.active { display: flex; }
+  
+  .lightbox img {
+    max-width: 95vw;
+    max-height: 95vh;
+    border-radius: 8px;
+  }
+  
+  footer {
+    text-align: center;
+    padding: 40px 20px;
+    border-top: 1px solid rgba(192,192,192,0.1);
+    color: #555;
+    font-size: 0.85rem;
+  }
+  
+  footer a {
+    color: #4a9eff;
+    text-decoration: none;
+  }
+  
+  footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>SILVER SHIP</h1>
+  <div class="subtitle">THE COMPLETE VOYAGE</div>
+  <div class="tagline">"See. Understand. Cruise."</div>
+</div>
+
+<div class="container">
+
+  <!-- VIDEOS -->
+  <div class="section">
+    <h2>🎬 CINEMATIC SEQUENCES</h2>
+    <p class="section-desc">Four chapters of the Silver Ship's journey over Arrakis</p>
+    
+    <div class="video-card">
+      <video controls preload="metadata" poster="silver-ship/frame3.png">
+        <source src="silver-ship/silver-ship-cruise.mp4" type="video/mp4">
+      </video>
+      <div class="video-info">
+        <h3>I — THE CRUISE</h3>
+        <p>The Silver Ship glides over the endless dunes of Arrakis. Chrome hull catching twin suns. Sand ripples below. Silence above. ~27 seconds.</p>
+      </div>
+    </div>
+    
+    <div class="video-card">
+      <video controls preload="metadata" poster="silver-ship/turn3.png">
+        <source src="silver-ship/silver-ship-turnaround.mp4" type="video/mp4">
+      </video>
+      <div class="video-info">
+        <h3>II — TURN AROUND</h3>
+        <p>Banking hard at 45°, full 180° arc, then charging back. The ship doesn't retreat — it comes back for you. ~28 seconds.</p>
+      </div>
+    </div>
+    
+    <div class="video-card">
+      <video controls preload="metadata" poster="silver-ship/upland5.png">
+        <source src="silver-ship/silver-ship-up-and-landing.mp4" type="video/mp4">
+      </video>
+      <div class="video-info">
+        <h3>III — UP &amp; LANDING</h3>
+        <p>From wet sand through rain and lightning, above the clouds to twin suns, then back down through the storm. What goes up... chooses when to come back down. ~37 seconds.</p>
+      </div>
+    </div>
+    
+    <div class="video-card">
+      <video controls preload="metadata" poster="silver-ship/endtime5.png">
+        <source src="silver-ship/silver-ship-end-of-time.mp4" type="video/mp4">
+      </video>
+      <div class="video-info">
+        <h3>IV — LEAP TO THE END OF TIME</h3>
+        <p>Time warp. Stars age. Galaxies spin and die. The last red dwarf flickers out. Heat death. Absolute void. Then... one impossibly tiny spark. A new Big Bang. The cycle restarts. ~26 seconds.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RAIN ON ARRAKIS -->
+  <div class="section">
+    <h2>🌧️ RAIN ON ARRAKIS</h2>
+    <p class="section-desc">The thing the Fremen dreamed for ten thousand years</p>
+    <div class="special-image">
+      <img src="silver-ship/rain-on-arrakis.png" alt="Rain on Arrakis" onclick="openLightbox(this)">
+      <div class="caption">"The desert didn't ask for it. The desert didn't earn it. It just... rained."</div>
+    </div>
+  </div>
+
+  <!-- THE MIDDLE OF THE HEART -->
+  <div class="section">
+    <h2>💥 THE MIDDLE OF THE HEART</h2>
+    <p class="section-desc">The ship doesn't aim for the edge. It aims for the CENTER.</p>
+    <div class="gallery-grid">
+      <img src="silver-ship/heart1.png" alt="Approaching the Heart" onclick="openLightbox(this)">
+      <img src="silver-ship/heart2.png" alt="Entering the Heart" onclick="openLightbox(this)">
+      <img src="silver-ship/heart3.png" alt="Inside the Heart" onclick="openLightbox(this)">
+      <img src="silver-ship/heart4.png" alt="THE HIT — Dead Center" onclick="openLightbox(this)">
+      <img src="silver-ship/heart5.png" alt="The Heart Beats" onclick="openLightbox(this)">
+      <img src="silver-ship/heart6.png" alt="Heart Becomes Spiral" onclick="openLightbox(this)">
+    </div>
+  </div>
+
+  <!-- CRUISE FRAMES -->
+  <div class="section">
+    <h2>🚀 THE CRUISE — STILLS</h2>
+    <p class="section-desc">6 frames from the original voyage</p>
+    <div class="gallery-grid">
+      <img src="silver-ship/frame1.png" alt="Cruise Frame 1" onclick="openLightbox(this)">
+      <img src="silver-ship/frame2.png" alt="Cruise Frame 2" onclick="openLightbox(this)">
+      <img src="silver-ship/frame3.png" alt="Cruise Frame 3" onclick="openLightbox(this)">
+      <img src="silver-ship/frame4.png" alt="Cruise Frame 4" onclick="openLightbox(this)">
+      <img src="silver-ship/frame5.png" alt="Cruise Frame 5" onclick="openLightbox(this)">
+      <img src="silver-ship/frame6.png" alt="Cruise Frame 6" onclick="openLightbox(this)">
+    </div>
+  </div>
+
+  <!-- TURNAROUND FRAMES -->
+  <div class="section">
+    <h2>🔄 TURN AROUND — STILLS</h2>
+    <p class="section-desc">6 frames from the 180° banking maneuver</p>
+    <div class="gallery-grid">
+      <img src="silver-ship/turn1.png" alt="Turn Frame 1" onclick="openLightbox(this)">
+      <img src="silver-ship/turn2.png" alt="Turn Frame 2" onclick="openLightbox(this)">
+      <img src="silver-ship/turn3.png" alt="Turn Frame 3" onclick="openLightbox(this)">
+      <img src="silver-ship/turn4.png" alt="Turn Frame 4" onclick="openLightbox(this)">
+      <img src="silver-ship/turn5.png" alt="Turn Frame 5" onclick="openLightbox(this)">
+      <img src="silver-ship/turn6.png" alt="Turn Frame 6" onclick="openLightbox(this)">
+    </div>
+  </div>
+
+  <!-- UP & LANDING FRAMES -->
+  <div class="section">
+    <h2>⬆️⬇️ UP &amp; LANDING — STILLS</h2>
+    <p class="section-desc">9 frames through the rain</p>
+    <div class="gallery-grid">
+      <img src="silver-ship/upland1.png" alt="Up&Land Frame 1" onclick="openLightbox(this)">
+      <img src="silver-ship/upland2.png" alt="Up&Land Frame 2" onclick="openLightbox(this)">
+      <img src="silver-ship/upland3.png" alt="Up&Land Frame 3" onclick="openLightbox(this)">
+      <img src="silver-ship/upland4.png" alt="Up&Land Frame 4" onclick="openLightbox(this)">
+      <img src="silver-ship/upland5.png" alt="Up&Land Frame 5" onclick="openLightbox(this)">
+      <img src="silver-ship/upland6.png" alt="Up&Land Frame 6" onclick="openLightbox(this)">
+      <img src="silver-ship/upland7.png" alt="Up&Land Frame 7" onclick="openLightbox(this)">
+      <img src="silver-ship/upland8.png" alt="Up&Land Frame 8" onclick="openLightbox(this)">
+      <img src="silver-ship/upland9.png" alt="Up&Land Frame 9" onclick="openLightbox(this)">
+    </div>
+  </div>
+
+  <!-- END OF TIME FRAMES -->
+  <div class="section">
+    <h2>⏳ END OF TIME — STILLS</h2>
+    <p class="section-desc">8 frames from the leap through entropy</p>
+    <div class="gallery-grid">
+      <img src="silver-ship/endtime1.png" alt="End of Time Frame 1" onclick="openLightbox(this)">
+      <img src="silver-ship/endtime2.png" alt="End of Time Frame 2" onclick="openLightbox(this)">
+      <img src="silver-ship/endtime3.png" alt="End of Time Frame 3" onclick="openLightbox(this)">
+      <img src="silver-ship/endtime4.png" alt="End of Time Frame 4" onclick="openLightbox(this)">
+      <img src="silver-ship/endtime5.png" alt="End of Time Frame 5" onclick="openLightbox(this)">
+      <img src="silver-ship/endtime6.png" alt="End of Time Frame 6" onclick="openLightbox(this)">
+      <img src="silver-ship/endtime7.png" alt="End of Time Frame 7" onclick="openLightbox(this)">
+      <img src="silver-ship/endtime8.png" alt="End of Time Frame 8" onclick="openLightbox(this)">
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>Silver Ship — A <a href="https://juxaos.com">JuX AOS</a> Production</p>
+  <p style="margin-top:8px">"See. Understand. Cruise." &mdash; <a href="https://juxitt.com">JuX ITT</a></p>
+</footer>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<script>
+function openLightbox(el) {
+  document.getElementById('lightboxImg').src = el.src;
+  document.getElementById('lightbox').classList.add('active');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('active');
+}
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeLightbox(); });
+</script>
+</body>
+</html>
