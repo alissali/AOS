@@ -2,20 +2,69 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Silver Ship — The Game | AOS</title>
+<meta name="description" content="Fly the Silver Ship over Arrakis. Collect spice. Dodge sandworms. 9 levels, one per chapter. Free browser game by AOS × JuXITT.">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     background: #000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
     font-family: 'Courier New', monospace;
     color: #c0c0c0;
     overflow: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── NAV BAR ── */
+  .game-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 20px;
+    background: rgba(0,51,51,0.95);
+    border-bottom: 1px solid rgba(74,158,255,0.3);
+    z-index: 100;
+    flex-shrink: 0;
+  }
+  .game-nav a {
+    color: #c0c0c0;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s;
+  }
+  .game-nav a:hover { color: #4a9eff; }
+  .game-nav .logo {
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+    letter-spacing: 2px;
+  }
+  .game-nav .logo span { color: #4a9eff; }
+  .game-nav .nav-links {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  .game-nav .nav-links a.active { color: #4a9eff; }
+  .game-nav .buy-btn {
+    background: linear-gradient(135deg, #4a9eff, #0066cc);
+    color: #fff !important;
+    padding: 5px 14px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+  }
+  .game-nav .buy-btn:hover { opacity: 0.9; }
+
+  /* ── GAME AREA ── */
+  #game-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
   }
   #game-container {
     position: relative;
@@ -24,11 +73,162 @@
     box-shadow: 0 0 40px rgba(74,158,255,0.1);
   }
   canvas { display: block; }
+
+  /* ── MOBILE TOUCH CONTROLS ── */
+  .touch-controls {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px 20px 20px;
+    z-index: 50;
+    pointer-events: none;
+  }
+  .touch-controls-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* D-PAD */
+  .dpad {
+    display: grid;
+    grid-template: 
+      ". up ."
+      "left center right"
+      ". down .";
+    grid-template-columns: 56px 56px 56px;
+    grid-template-rows: 56px 56px 56px;
+    gap: 4px;
+    pointer-events: auto;
+  }
+  .dpad-btn {
+    background: rgba(74,158,255,0.2);
+    border: 1px solid rgba(74,158,255,0.4);
+    border-radius: 8px;
+    color: #4a9eff;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .dpad-btn:active, .dpad-btn.pressed {
+    background: rgba(74,158,255,0.5);
+    box-shadow: 0 0 15px rgba(74,158,255,0.4);
+  }
+  .dpad-btn.up { grid-area: up; }
+  .dpad-btn.down { grid-area: down; }
+  .dpad-btn.left { grid-area: left; }
+  .dpad-btn.right { grid-area: right; }
+  .dpad-center { grid-area: center; }
+
+  /* ACTION BUTTONS */
+  .action-btns {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    pointer-events: auto;
+  }
+  .fire-btn {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(255,100,0,0.25);
+    border: 2px solid rgba(255,140,0,0.5);
+    color: #ff8c00;
+    font-size: 13px;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .fire-btn:active, .fire-btn.pressed {
+    background: rgba(255,100,0,0.5);
+    box-shadow: 0 0 20px rgba(255,140,0,0.5);
+  }
+  .enter-btn {
+    width: 64px;
+    height: 40px;
+    border-radius: 6px;
+    background: rgba(74,158,255,0.2);
+    border: 1px solid rgba(74,158,255,0.4);
+    color: #4a9eff;
+    font-size: 11px;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .enter-btn:active, .enter-btn.pressed {
+    background: rgba(74,158,255,0.5);
+  }
+
+  /* MOBILE */
+  @media (max-width: 768px), (hover: none) and (pointer: coarse) {
+    .touch-controls { display: block; }
+    .game-nav .nav-links .hide-mobile { display: none; }
+    .game-nav { padding: 6px 12px; }
+    .game-nav .logo { font-size: 16px; }
+    #game-wrapper { align-items: flex-start; padding-top: 5px; }
+  }
+  @media (max-width: 480px) {
+    .dpad {
+      grid-template-columns: 48px 48px 48px;
+      grid-template-rows: 48px 48px 48px;
+    }
+    .fire-btn { width: 66px; height: 66px; font-size: 11px; }
+  }
 </style>
 </head>
 <body>
 
-<div id="game-container"></div>
+<!-- ── NAV ── -->
+<nav class="game-nav">
+  <a href="index.html" class="logo">A<span>O</span>S</a>
+  <div class="nav-links">
+    <a href="silver-ship.html">Gallery</a>
+    <a href="game.html" class="active">🎮 Play</a>
+    <a href="index.html" class="hide-mobile">Home</a>
+    <a href="https://buy.stripe.com/9B6bJ31Mjewqd9BbZk1wY00" target="_blank" class="buy-btn">TORNADO €20 🌪️</a>
+  </div>
+</nav>
+
+<!-- ── GAME ── -->
+<div id="game-wrapper">
+  <div id="game-container"></div>
+</div>
+
+<!-- ── MOBILE TOUCH CONTROLS ── -->
+<div class="touch-controls" id="touch-controls">
+  <div class="touch-controls-inner">
+    <div class="dpad">
+      <div class="dpad-btn up" data-dir="up">▲</div>
+      <div class="dpad-btn left" data-dir="left">◀</div>
+      <div class="dpad-center"></div>
+      <div class="dpad-btn right" data-dir="right">▶</div>
+      <div class="dpad-btn down" data-dir="down">▼</div>
+    </div>
+    <div class="action-btns">
+      <div class="fire-btn" id="fire-btn">FIRE</div>
+      <div class="enter-btn" id="enter-btn">START</div>
+    </div>
+  </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
 <script>
@@ -36,17 +236,42 @@
 // SILVER SHIP — THE GAME
 // Fly the Silver Ship over Arrakis. Collect spice.
 // Dodge sandworms. Reach the twin suns.
+// 9 levels — one per Silver Ship chapter.
 // ═══════════════════════════════════════════════════════
 
 const W = 960;
 const H = 540;
+
+// ── TOUCH INPUT STATE ──
+const touchState = { up: false, down: false, left: false, right: false, fire: false, enter: false };
+
+// Setup touch controls
+function setupTouch() {
+  const dpadBtns = document.querySelectorAll('.dpad-btn');
+  dpadBtns.forEach(btn => {
+    const dir = btn.dataset.dir;
+    btn.addEventListener('touchstart', e => { e.preventDefault(); touchState[dir] = true; btn.classList.add('pressed'); }, { passive: false });
+    btn.addEventListener('touchend', e => { e.preventDefault(); touchState[dir] = false; btn.classList.remove('pressed'); }, { passive: false });
+    btn.addEventListener('touchcancel', e => { touchState[dir] = false; btn.classList.remove('pressed'); });
+  });
+
+  const fireBtn = document.getElementById('fire-btn');
+  fireBtn.addEventListener('touchstart', e => { e.preventDefault(); touchState.fire = true; fireBtn.classList.add('pressed'); }, { passive: false });
+  fireBtn.addEventListener('touchend', e => { e.preventDefault(); touchState.fire = false; fireBtn.classList.remove('pressed'); }, { passive: false });
+  fireBtn.addEventListener('touchcancel', () => { touchState.fire = false; fireBtn.classList.remove('pressed'); });
+
+  const enterBtn = document.getElementById('enter-btn');
+  enterBtn.addEventListener('touchstart', e => { e.preventDefault(); touchState.enter = true; enterBtn.classList.add('pressed'); }, { passive: false });
+  enterBtn.addEventListener('touchend', e => { e.preventDefault(); touchState.enter = false; enterBtn.classList.remove('pressed'); }, { passive: false });
+  enterBtn.addEventListener('touchcancel', () => { touchState.enter = false; enterBtn.classList.remove('pressed'); });
+}
+setupTouch();
 
 // ─── BOOT SCENE ───
 class BootScene extends Phaser.Scene {
   constructor() { super('Boot'); }
 
   create() {
-    // Generate all textures procedurally
     this.generateTextures();
     this.scene.start('Menu');
   }
@@ -54,30 +279,26 @@ class BootScene extends Phaser.Scene {
   generateTextures() {
     // ── SILVER SHIP ──
     const shipG = this.make.graphics({ add: false });
-    // Main hull — sleek silver
     shipG.fillStyle(0xc0c0c0, 1);
     shipG.beginPath();
-    shipG.moveTo(60, 20);  // nose
+    shipG.moveTo(60, 20);
     shipG.lineTo(45, 8);
-    shipG.lineTo(10, 5);   // top wing tip
+    shipG.lineTo(10, 5);
     shipG.lineTo(5, 18);
-    shipG.lineTo(0, 20);   // rear top
-    shipG.lineTo(0, 22);   // rear bottom
+    shipG.lineTo(0, 20);
+    shipG.lineTo(0, 22);
     shipG.lineTo(5, 24);
-    shipG.lineTo(10, 37);  // bottom wing tip
+    shipG.lineTo(10, 37);
     shipG.lineTo(45, 34);
-    shipG.lineTo(60, 22);  // nose bottom
+    shipG.lineTo(60, 22);
     shipG.closePath();
     shipG.fillPath();
-    // Cockpit glow
     shipG.fillStyle(0x4a9eff, 0.9);
     shipG.fillEllipse(48, 21, 10, 5);
-    // Engine glow
     shipG.fillStyle(0x4a9eff, 0.7);
     shipG.fillRect(0, 17, 4, 8);
     shipG.fillStyle(0x00ffff, 0.4);
     shipG.fillRect(-3, 18, 4, 6);
-    // Wing detail lines
     shipG.lineStyle(1, 0x4a9eff, 0.3);
     shipG.lineBetween(15, 10, 50, 18);
     shipG.lineBetween(15, 32, 50, 24);
@@ -95,12 +316,10 @@ class BootScene extends Phaser.Scene {
       wormG.fillStyle(0xa07850, 1);
       wormG.fillCircle(x + 14, 20 + yOff, radius - 3);
     }
-    // Mouth
     wormG.fillStyle(0x602020, 1);
     wormG.fillCircle(10, 20, 10);
     wormG.fillStyle(0x801010, 1);
     wormG.fillCircle(10, 20, 6);
-    // Teeth
     wormG.fillStyle(0xe0d0b0, 1);
     for (let a = 0; a < 6; a++) {
       const angle = (a / 6) * Math.PI * 2;
@@ -109,7 +328,7 @@ class BootScene extends Phaser.Scene {
     wormG.generateTexture('worm', 160, 44);
     wormG.destroy();
 
-    // ── SPICE PARTICLE ──
+    // ── SPICE ──
     const spiceG = this.make.graphics({ add: false });
     spiceG.fillStyle(0xff8c00, 1);
     spiceG.fillCircle(8, 8, 6);
@@ -158,14 +377,14 @@ class BootScene extends Phaser.Scene {
     sunG.generateTexture('sun', 60, 60);
     sunG.destroy();
 
-    // ── EXPLOSION PARTICLE ──
+    // ── EXPLOSION ──
     const expG = this.make.graphics({ add: false });
     expG.fillStyle(0xff4400, 1);
     expG.fillCircle(4, 4, 4);
     expG.generateTexture('explosion', 8, 8);
     expG.destroy();
 
-    // ── SHIELD PARTICLE ──
+    // ── SHIELD ──
     const shG = this.make.graphics({ add: false });
     shG.fillStyle(0x4a9eff, 0.6);
     shG.fillCircle(3, 3, 3);
@@ -188,7 +407,6 @@ class MenuScene extends Phaser.Scene {
   constructor() { super('Menu'); }
 
   create() {
-    // Stars background
     for (let i = 0; i < 80; i++) {
       const s = this.add.image(
         Phaser.Math.Between(0, W),
@@ -199,15 +417,12 @@ class MenuScene extends Phaser.Scene {
       s.setScale(Phaser.Math.FloatBetween(0.3, 1.2));
     }
 
-    // Twin suns
     this.add.image(W * 0.7, 80, 'sun').setScale(1.5).setAlpha(0.7);
     this.add.image(W * 0.78, 95, 'sun').setScale(1).setAlpha(0.5);
 
-    // Desert floor
     const dg = this.add.graphics();
     dg.fillGradientStyle(0x8b6914, 0x8b6914, 0x5c4a1e, 0x5c4a1e, 1);
     dg.fillRect(0, H * 0.6, W, H * 0.4);
-    // Dune lines
     dg.lineStyle(1, 0x9b7924, 0.3);
     for (let i = 0; i < 12; i++) {
       const y = H * 0.6 + i * 18;
@@ -219,30 +434,25 @@ class MenuScene extends Phaser.Scene {
       dg.strokePath();
     }
 
-    // Title
     this.add.text(W / 2, H * 0.18, 'SILVER SHIP', {
-      fontFamily: 'Courier New',
-      fontSize: '52px',
-      fontStyle: 'bold',
-      color: '#c0c0c0',
-      stroke: '#4a9eff',
-      strokeThickness: 1,
+      fontFamily: 'Courier New', fontSize: '52px', fontStyle: 'bold',
+      color: '#c0c0c0', stroke: '#4a9eff', strokeThickness: 1,
       shadow: { offsetX: 0, offsetY: 0, color: '#4a9eff', blur: 20, fill: true }
     }).setOrigin(0.5);
 
     this.add.text(W / 2, H * 0.28, 'T H E   G A M E', {
-      fontFamily: 'Courier New',
-      fontSize: '18px',
-      color: '#4a9eff',
-      letterSpacing: 8
+      fontFamily: 'Courier New', fontSize: '18px', color: '#4a9eff', letterSpacing: 8
     }).setOrigin(0.5);
 
-    // Ship preview — floating
     this.ship = this.add.image(W / 2, H * 0.45, 'ship').setScale(3);
     this.shipBaseY = H * 0.45;
 
-    // Instructions
-    this.add.text(W / 2, H * 0.65, '[ ARROW KEYS — Move ]   [ SPACE — Fire ]', {
+    // Instructions — adapt for mobile
+    const isMobile = 'ontouchstart' in window;
+    const controlText = isMobile
+      ? '[ D-PAD — Move ]   [ FIRE — Shoot ]'
+      : '[ ARROW KEYS — Move ]   [ SPACE — Fire ]';
+    this.add.text(W / 2, H * 0.65, controlText, {
       fontFamily: 'Courier New', fontSize: '14px', color: '#888'
     }).setOrigin(0.5);
 
@@ -250,39 +460,43 @@ class MenuScene extends Phaser.Scene {
       fontFamily: 'Courier New', fontSize: '13px', color: '#666'
     }).setOrigin(0.5);
 
-    // Start prompt
-    this.startText = this.add.text(W / 2, H * 0.85, '▶  PRESS ENTER TO FLY  ◀', {
+    const startLabel = isMobile ? '▶  TAP START TO FLY  ◀' : '▶  PRESS ENTER TO FLY  ◀';
+    this.startText = this.add.text(W / 2, H * 0.85, startLabel, {
       fontFamily: 'Courier New', fontSize: '20px', color: '#4a9eff',
       shadow: { offsetX: 0, offsetY: 0, color: '#4a9eff', blur: 15, fill: true }
     }).setOrigin(0.5);
 
-    // Blink
     this.tweens.add({
-      targets: this.startText,
-      alpha: 0.3,
-      duration: 800,
-      yoyo: true,
-      repeat: -1,
-      ease: 'Sine.easeInOut'
+      targets: this.startText, alpha: 0.3, duration: 800, yoyo: true, repeat: -1, ease: 'Sine.easeInOut'
     });
 
-    // Footer
     this.add.text(W / 2, H - 15, 'AOS × JuXITT — See. Understand. Cruise.', {
       fontFamily: 'Courier New', fontSize: '10px', color: '#444'
     }).setOrigin(0.5);
 
-    // Input
-    this.input.keyboard.on('keydown-ENTER', () => {
-      this.cameras.main.fadeOut(500, 0, 0, 0);
-      this.time.delayedCall(500, () => this.scene.start('Game'));
-    });
+    this.input.keyboard.on('keydown-ENTER', () => this.startGame());
+
+    // Touch: tap anywhere on canvas OR the START button
+    this.input.on('pointerdown', () => this.startGame());
 
     this.cameras.main.fadeIn(800, 0, 0, 0);
+    this.started = false;
+  }
+
+  startGame() {
+    if (this.started) return;
+    this.started = true;
+    this.cameras.main.fadeOut(500, 0, 0, 0);
+    this.time.delayedCall(500, () => this.scene.start('Game'));
   }
 
   update(time) {
-    // Floating ship
     this.ship.y = this.shipBaseY + Math.sin(time * 0.002) * 8;
+    // Check touch enter
+    if (touchState.enter) {
+      touchState.enter = false;
+      this.startGame();
+    }
   }
 }
 
@@ -312,14 +526,12 @@ class GameScene extends Phaser.Scene {
     this.isInvincible = false;
     this.gameOver = false;
 
-    // ── BACKGROUND LAYERS ──
-    // Sky gradient
+    // ── BACKGROUND ──
     const skyG = this.add.graphics();
     skyG.fillGradientStyle(0x000011, 0x000011, 0x001a2a, 0x001a2a, 1);
     skyG.fillRect(0, 0, W, H * 0.65);
     skyG.setScrollFactor(0);
 
-    // Stars (parallax layer 1)
     this.stars = [];
     for (let i = 0; i < 100; i++) {
       const s = this.add.image(
@@ -333,11 +545,9 @@ class GameScene extends Phaser.Scene {
       this.stars.push(s);
     }
 
-    // Twin suns
     this.sun1 = this.add.image(W * 0.82, 65, 'sun').setScale(1.8).setAlpha(0.6);
     this.sun2 = this.add.image(W * 0.88, 85, 'sun').setScale(1.2).setAlpha(0.4);
 
-    // Desert (parallax layer 2)
     this.desertG = this.add.graphics();
     this.drawDesert(0);
     this.desertOffset = 0;
@@ -350,7 +560,6 @@ class GameScene extends Phaser.Scene {
     this.ship.body.setSize(50, 20);
     this.ship.body.setOffset(7, 11);
 
-    // Engine trail particles
     this.engineEmitter = this.add.particles(0, 0, 'shield_particle', {
       follow: this.ship,
       followOffset: { x: -35, y: 0 },
@@ -380,24 +589,13 @@ class GameScene extends Phaser.Scene {
 
     // ── TIMERS ──
     this.wormTimer = this.time.addEvent({
-      delay: 2200,
-      callback: this.spawnWorm,
-      callbackScope: this,
-      loop: true
+      delay: 2200, callback: this.spawnWorm, callbackScope: this, loop: true
     });
-
     this.rockTimer = this.time.addEvent({
-      delay: 3000,
-      callback: this.spawnRock,
-      callbackScope: this,
-      loop: true
+      delay: 3000, callback: this.spawnRock, callbackScope: this, loop: true
     });
-
     this.spiceTimer = this.time.addEvent({
-      delay: 800,
-      callback: this.spawnSpice,
-      callbackScope: this,
-      loop: true
+      delay: 800, callback: this.spawnSpice, callbackScope: this, loop: true
     });
 
     // ── HUD ──
@@ -419,7 +617,6 @@ class GameScene extends Phaser.Scene {
       fontFamily: 'Courier New', fontSize: '14px', color: '#ff8c00'
     }).setOrigin(1, 0).setDepth(21);
 
-    // Shield display
     this.shieldText = this.add.text(W / 2, 22, '♦ ♦ ♦', {
       fontFamily: 'Courier New', fontSize: '11px', color: '#4a9eff'
     }).setOrigin(0.5, 0).setDepth(21);
@@ -429,7 +626,7 @@ class GameScene extends Phaser.Scene {
     this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     this.lastFired = 0;
 
-    // ── RAIN STATE (level 3) ──
+    // ── RAIN STATE ──
     this.rainDrops = [];
 
     this.cameras.main.fadeIn(500, 0, 0, 0);
@@ -437,10 +634,8 @@ class GameScene extends Phaser.Scene {
 
   drawDesert(offset) {
     this.desertG.clear();
-    // Main desert body
     this.desertG.fillGradientStyle(0x8b6914, 0x8b6914, 0x6b5010, 0x6b5010, 1);
     this.desertG.fillRect(0, H * 0.62, W, H * 0.38);
-    // Dune waves
     this.desertG.lineStyle(1, 0x9b7924, 0.25);
     for (let i = 0; i < 10; i++) {
       const y = H * 0.64 + i * 18;
@@ -451,7 +646,6 @@ class GameScene extends Phaser.Scene {
       }
       this.desertG.strokePath();
     }
-    // Horizon heat shimmer line
     this.desertG.lineStyle(1, 0xffaa00, 0.08);
     this.desertG.beginPath();
     this.desertG.moveTo(0, H * 0.62);
@@ -464,21 +658,20 @@ class GameScene extends Phaser.Scene {
   update(time, delta) {
     if (this.gameOver) return;
 
-    // ── SHIP MOVEMENT ──
+    // ── SHIP MOVEMENT (keyboard + touch) ──
     const shipSpeed = 280;
-    if (this.cursors.up.isDown) this.ship.setVelocityY(-shipSpeed);
-    else if (this.cursors.down.isDown) this.ship.setVelocityY(shipSpeed);
+    if (this.cursors.up.isDown || touchState.up) this.ship.setVelocityY(-shipSpeed);
+    else if (this.cursors.down.isDown || touchState.down) this.ship.setVelocityY(shipSpeed);
     else this.ship.setVelocityY(this.ship.body.velocity.y * 0.85);
 
-    if (this.cursors.left.isDown) this.ship.setVelocityX(-shipSpeed * 0.7);
-    else if (this.cursors.right.isDown) this.ship.setVelocityX(shipSpeed * 0.5);
+    if (this.cursors.left.isDown || touchState.left) this.ship.setVelocityX(-shipSpeed * 0.7);
+    else if (this.cursors.right.isDown || touchState.right) this.ship.setVelocityX(shipSpeed * 0.5);
     else this.ship.setVelocityX(this.ship.body.velocity.x * 0.85);
 
-    // Slight tilt
     this.ship.setRotation(this.ship.body.velocity.y * 0.0008);
 
-    // ── SHOOTING ──
-    if (this.spaceKey.isDown && time > this.lastFired + 200) {
+    // ── SHOOTING (keyboard + touch) ──
+    if ((this.spaceKey.isDown || touchState.fire) && time > this.lastFired + 200) {
       this.fireBullet();
       this.lastFired = time;
     }
@@ -510,27 +703,15 @@ class GameScene extends Phaser.Scene {
       this.onLevelUp();
     }
 
-    // ── SPEED RAMP ──
     this.gameSpeed = 2 + this.level * 0.35;
 
-    // ── RAIN (level 3+) ──
-    if (this.level >= 3) {
-      this.updateRain();
-    }
+    if (this.level >= 3) this.updateRain();
 
-    // ── CLEANUP OFF-SCREEN ──
-    this.worms.getChildren().forEach(w => {
-      if (w.active && w.x < -180) w.destroy();
-    });
-    this.rocks.getChildren().forEach(r => {
-      if (r.active && r.x < -50) r.destroy();
-    });
-    this.spiceGroup.getChildren().forEach(s => {
-      if (s.active && s.x < -20) s.destroy();
-    });
-    this.bullets.getChildren().forEach(b => {
-      if (b.active && b.x > W + 20) b.destroy();
-    });
+    // ── CLEANUP ──
+    this.worms.getChildren().forEach(w => { if (w.active && w.x < -180) w.destroy(); });
+    this.rocks.getChildren().forEach(r => { if (r.active && r.x < -50) r.destroy(); });
+    this.spiceGroup.getChildren().forEach(s => { if (s.active && s.x < -20) s.destroy(); });
+    this.bullets.getChildren().forEach(b => { if (b.active && b.x > W + 20) b.destroy(); });
   }
 
   fireBullet() {
@@ -550,17 +731,12 @@ class GameScene extends Phaser.Scene {
     w.setDepth(5);
     w.body.setAllowGravity(false);
     w.setVelocityX(-120 - this.level * 20);
-    // Sinusoidal movement
     w.waveOffset = Phaser.Math.FloatBetween(0, Math.PI * 2);
     w.waveAmp = Phaser.Math.Between(30, 80);
     w.baseY = y;
     this.tweens.add({
-      targets: w,
-      y: y - w.waveAmp,
-      duration: Phaser.Math.Between(1000, 2000),
-      yoyo: true,
-      repeat: -1,
-      ease: 'Sine.easeInOut'
+      targets: w, y: y - w.waveAmp, duration: Phaser.Math.Between(1000, 2000),
+      yoyo: true, repeat: -1, ease: 'Sine.easeInOut'
     });
   }
 
@@ -585,14 +761,8 @@ class GameScene extends Phaser.Scene {
     s.setDepth(6);
     s.body.setAllowGravity(false);
     s.setVelocityX(-100 - this.level * 10);
-    // Glow pulse
     this.tweens.add({
-      targets: s,
-      alpha: 0.4,
-      duration: 400,
-      yoyo: true,
-      repeat: -1,
-      ease: 'Sine.easeInOut'
+      targets: s, alpha: 0.4, duration: 400, yoyo: true, repeat: -1, ease: 'Sine.easeInOut'
     });
   }
 
@@ -600,11 +770,7 @@ class GameScene extends Phaser.Scene {
     spice.destroy();
     this.spiceCollected++;
     this.spiceText.setText('SPICE: ' + this.spiceCollected);
-
-    // Flash effect
     this.cameras.main.flash(100, 255, 140, 0, false, null, this);
-
-    // Heal shield every 10 spice
     if (this.spiceCollected % 10 === 0 && this.shieldHP < 3) {
       this.shieldHP++;
       this.updateShieldDisplay();
@@ -612,16 +778,11 @@ class GameScene extends Phaser.Scene {
   }
 
   hitWorm(bullet, worm) {
-    // Explosion
     const ex = this.add.particles(worm.x, worm.y, 'explosion', {
-      speed: { min: 50, max: 200 },
-      scale: { start: 1.5, end: 0 },
-      lifespan: 500,
-      quantity: 15,
-      blendMode: 'ADD'
+      speed: { min: 50, max: 200 }, scale: { start: 1.5, end: 0 },
+      lifespan: 500, quantity: 15, blendMode: 'ADD'
     });
     this.time.delayedCall(600, () => ex.destroy());
-
     bullet.destroy();
     worm.destroy();
     this.score += 100;
@@ -629,11 +790,8 @@ class GameScene extends Phaser.Scene {
 
   hitRock(bullet, rock) {
     const ex = this.add.particles(rock.x, rock.y, 'explosion', {
-      speed: { min: 30, max: 120 },
-      scale: { start: 1, end: 0 },
-      lifespan: 400,
-      quantity: 8,
-      blendMode: 'ADD'
+      speed: { min: 30, max: 120 }, scale: { start: 1, end: 0 },
+      lifespan: 400, quantity: 8, blendMode: 'ADD'
     });
     this.time.delayedCall(500, () => ex.destroy());
     bullet.destroy();
@@ -643,76 +801,50 @@ class GameScene extends Phaser.Scene {
 
   shipHit(ship, obstacle) {
     if (this.isInvincible || this.gameOver) return;
-
     this.shieldHP--;
     this.updateShieldDisplay();
     obstacle.destroy();
-
-    // Hit flash
     this.cameras.main.shake(200, 0.01);
     this.cameras.main.flash(200, 255, 0, 0, false, null, this);
 
     if (this.shieldHP <= 0) {
       this.doGameOver();
     } else {
-      // Brief invincibility
       this.isInvincible = true;
       this.tweens.add({
-        targets: this.ship,
-        alpha: 0.3,
-        duration: 100,
-        yoyo: true,
-        repeat: 8,
-        onComplete: () => {
-          this.isInvincible = false;
-          this.ship.setAlpha(1);
-        }
+        targets: this.ship, alpha: 0.3, duration: 100, yoyo: true, repeat: 8,
+        onComplete: () => { this.isInvincible = false; this.ship.setAlpha(1); }
       });
     }
   }
 
   updateShieldDisplay() {
     const diamonds = [];
-    for (let i = 0; i < 3; i++) {
-      diamonds.push(i < this.shieldHP ? '♦' : '◇');
-    }
+    for (let i = 0; i < 3; i++) diamonds.push(i < this.shieldHP ? '♦' : '◇');
     this.shieldText.setText(diamonds.join(' '));
     this.shieldText.setColor(this.shieldHP === 1 ? '#ff4444' : '#4a9eff');
   }
 
   onLevelUp() {
     this.levelText.setText(this.levelNames[this.level - 1] || 'LEVEL ' + this.level);
-
-    // Big level announcement
     const announce = this.add.text(W / 2, H / 2, this.levelNames[this.level - 1] || 'LEVEL ' + this.level, {
-      fontFamily: 'Courier New',
-      fontSize: '32px',
-      fontStyle: 'bold',
-      color: '#4a9eff',
-      stroke: '#001a2a',
-      strokeThickness: 4,
+      fontFamily: 'Courier New', fontSize: '32px', fontStyle: 'bold', color: '#4a9eff',
+      stroke: '#001a2a', strokeThickness: 4,
       shadow: { offsetX: 0, offsetY: 0, color: '#4a9eff', blur: 25, fill: true }
     }).setOrigin(0.5).setDepth(30).setAlpha(0);
 
     this.tweens.add({
-      targets: announce,
-      alpha: 1,
-      scale: { from: 0.5, to: 1.2 },
-      duration: 600,
-      yoyo: true,
-      hold: 1000,
-      ease: 'Back.easeOut',
+      targets: announce, alpha: 1, scale: { from: 0.5, to: 1.2 },
+      duration: 600, yoyo: true, hold: 1000, ease: 'Back.easeOut',
       onComplete: () => announce.destroy()
     });
 
-    // Speed up spawns
     if (this.wormTimer.delay > 800) {
       this.wormTimer.delay = Math.max(800, 2200 - this.level * 150);
     }
   }
 
   updateRain() {
-    // Spawn rain drops
     if (Phaser.Math.Between(0, 100) < 20 + this.level * 3) {
       const rd = this.add.graphics();
       rd.lineStyle(1, 0x6688aa, 0.4);
@@ -722,7 +854,6 @@ class GameScene extends Phaser.Scene {
       rd.setDepth(15);
       this.rainDrops.push(rd);
     }
-    // Move rain
     for (let i = this.rainDrops.length - 1; i >= 0; i--) {
       const rd = this.rainDrops[i];
       rd.y += 8;
@@ -737,36 +868,25 @@ class GameScene extends Phaser.Scene {
   doGameOver() {
     this.gameOver = true;
     this.ship.setActive(false);
-
-    // Big explosion on ship
     const ex = this.add.particles(this.ship.x, this.ship.y, 'explosion', {
-      speed: { min: 50, max: 300 },
-      scale: { start: 2, end: 0 },
-      lifespan: 1000,
-      quantity: 40,
-      blendMode: 'ADD'
+      speed: { min: 50, max: 300 }, scale: { start: 2, end: 0 },
+      lifespan: 1000, quantity: 40, blendMode: 'ADD'
     });
-
     this.ship.setVisible(false);
     this.engineEmitter.stop();
-
-    // Stop spawning
     this.wormTimer.destroy();
     this.rockTimer.destroy();
     this.spiceTimer.destroy();
 
     this.time.delayedCall(1500, () => {
       ex.destroy();
-
-      // Overlay
       const overlay = this.add.graphics();
       overlay.fillStyle(0x000000, 0.7);
       overlay.fillRect(0, 0, W, H);
       overlay.setDepth(25);
 
       this.add.text(W / 2, H * 0.3, 'THE SHIP FALLS', {
-        fontFamily: 'Courier New', fontSize: '36px', fontStyle: 'bold',
-        color: '#c0c0c0',
+        fontFamily: 'Courier New', fontSize: '36px', fontStyle: 'bold', color: '#c0c0c0',
         shadow: { offsetX: 0, offsetY: 0, color: '#ff4400', blur: 20, fill: true }
       }).setOrigin(0.5).setDepth(26);
 
@@ -782,17 +902,22 @@ class GameScene extends Phaser.Scene {
         fontFamily: 'Courier New', fontSize: '16px', color: '#4a9eff'
       }).setOrigin(0.5).setDepth(26);
 
-      const retry = this.add.text(W / 2, H * 0.78, '▶  PRESS ENTER TO FLY AGAIN  ◀', {
+      const isMobile = 'ontouchstart' in window;
+      const retryLabel = isMobile ? '▶  TAP START TO FLY AGAIN  ◀' : '▶  PRESS ENTER TO FLY AGAIN  ◀';
+      const retry = this.add.text(W / 2, H * 0.78, retryLabel, {
         fontFamily: 'Courier New', fontSize: '18px', color: '#4a9eff',
         shadow: { offsetX: 0, offsetY: 0, color: '#4a9eff', blur: 12, fill: true }
       }).setOrigin(0.5).setDepth(26);
 
-      this.tweens.add({
-        targets: retry,
-        alpha: 0.3, duration: 700, yoyo: true, repeat: -1
-      });
+      this.tweens.add({ targets: retry, alpha: 0.3, duration: 700, yoyo: true, repeat: -1 });
 
       this.input.keyboard.on('keydown-ENTER', () => {
+        this.cameras.main.fadeOut(400, 0, 0, 0);
+        this.time.delayedCall(400, () => this.scene.restart());
+      });
+
+      // Touch restart
+      this.input.on('pointerdown', () => {
         this.cameras.main.fadeOut(400, 0, 0, 0);
         this.time.delayedCall(400, () => this.scene.restart());
       });
@@ -811,19 +936,33 @@ const config = {
   backgroundColor: '#000000',
   physics: {
     default: 'arcade',
-    arcade: {
-      gravity: { y: 0 },
-      debug: false
-    }
+    arcade: { gravity: { y: 0 }, debug: false }
   },
   scene: [BootScene, MenuScene, GameScene],
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH
+  },
+  input: {
+    activePointers: 3  // Support multi-touch for D-pad + fire
   }
 };
 
 const game = new Phaser.Game(config);
+
+// Handle enter button for touch restart
+function checkTouchEnter() {
+  if (touchState.enter) {
+    touchState.enter = false;
+    const activeScene = game.scene.getScenes(true)[0];
+    if (activeScene && activeScene.scene.key === 'Game' && activeScene.gameOver) {
+      activeScene.cameras.main.fadeOut(400, 0, 0, 0);
+      activeScene.time.delayedCall(400, () => activeScene.scene.restart());
+    }
+  }
+  requestAnimationFrame(checkTouchEnter);
+}
+checkTouchEnter();
 </script>
 </body>
 </html>
