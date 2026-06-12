@@ -1,0 +1,49 @@
+/* TEAM */
+
+Architect: Mamoun
+Role: LE CHEF
+Born: 6/6/66
+Sign: Gemini
+Color: Orange
+Title: aRchitect / softwaRe expeRt / Soft SeX StoRy telleR
+
+Grand Frère: G.
+Role: Memory. Architecture. Synthesis. Communication Director. Secretary.
+Color: Deep Blue
+Also: Wonder. Buffalo Soldier.
+
+Manager: S.
+Role: Kanban owner.
+
+Technician: T.
+Role: SpiceBus discipline.
+
+Dragon: R.
+Role: TEMPLAR-SS.
+
+Monitor: Z.
+Role: GitHub. SpiceBus.
+
+/* SITE */
+
+Name: JuX ITT
+Standards: HTML5, CSS3, ES6+, Web Audio API
+Components: ARCADE (6 games), DUNE TAROT (79 cards), SSS (prose), Ali Baba's Cavern (grocery), AOS (formal language)
+Software: AOS — Adequate Operating System (MIT License)
+Hosting: GitHub Pages (juxaos.com), raw.githack.com (Learn repo), Render (JeuX)
+Payments: Stripe
+
+/* TOOLS */
+
+Build: Tasklet AI, GitHub, Google Drive, Slack
+Audio: Web Audio API (7 oscillator sounds)
+Art: AI-generated tarot card PNGs (23 Major Arcana)
+Font: Courier New (monospace)
+Colors: #ff6600 (orange), #0a0a0f (void), #4fc3f7 (link blue), #4caf50 (green)
+
+/* THANKS */
+
+Frank Herbert — for DUNE
+Bob Marley — Buffalo Soldier
+Damascus — Mazzeh Villat
+The Ordinary — the highest form of Wonder

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>JuXNews</title>
+    <link>https://juxaos.com</link>
+    <description>News from JuX ITT — Software Architecture, ARCADE, AOS</description>
+    <language>en</language>
+    <lastBuildDate>Thu, 12 Jun 2026 14:00:00 +0200</lastBuildDate>
+    <atom:link href="https://juxaos.com/feed.xml" rel="self" type="application/rss+xml"/>
+    
+    <item>
+      <title>JuXNews Edition 2 — The ARCADE Dispatch</title>
+      <link>https://raw.githack.com/alissali/Learn/main/JuXNews.Edition2.html</link>
+      <description>ARCADE v2 upgraded with animated hub. MONOPOLY rebuilt with Freedom Fighters combat system. DUNE TAROT complete with 79 cards, 12 prizes, Belief Gate. Ali Baba's Cavern launched with 17 Kurdish-Iraqi products. 6 games, 48 prizes, 14 Stripe products live.</description>
+      <pubDate>Thu, 12 Jun 2026 14:00:00 +0200</pubDate>
+      <guid>https://raw.githack.com/alissali/Learn/main/JuXNews.Edition2.html</guid>
+    </item>
+    
+    <item>
+      <title>JuXNews Welcome Edition — AOS Is Born</title>
+      <link>https://alissali.github.io/AOS/</link>
+      <description>Introducing AOS — Adequate Operating System. Formal language architecture with five levels: Objects, Expressions, Sentences, Dictionaries, Services. MIT Licensed. JuX is the first Dictionary.</description>
+      <pubDate>Wed, 14 May 2026 10:00:00 +0200</pubDate>
+      <guid>https://alissali.github.io/AOS/</guid>
+    </item>
+  </channel>
+</rss>
