@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JuX — THE REGISTRY — 78 Live Links</title>
+<meta name="description" content="Complete directory of every JuX artifact on the internet. 78 live links. 12 categories.">
+<meta property="og:title" content="JuX — THE REGISTRY">
+<meta property="og:description" content="78 live links. 12 categories. The complete JuX universe.">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://juxaos.com/registry.html">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23e8a045' x='25' y='25' width='50' height='50' rx='4' transform='rotate(45 50 50)'/></svg>">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a12;color:#e8d5c0;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+.hdr{text-align:center;padding:40px 20px 20px;border-bottom:2px solid #e8a045}
+.hdr h1{color:#e8a045;font-size:2em;letter-spacing:6px;font-family:Georgia,serif}
+.hdr p{color:#888;font-size:.85em;margin-top:8px}
+.counter{display:flex;justify-content:center;gap:20px;padding:20px;flex-wrap:wrap}
+.counter .c{background:rgba(15,15,25,.9);border:1px solid #1a1a2e;border-radius:10px;padding:15px 25px;text-align:center}
+.counter .v{color:#e8a045;font-size:2em;font-weight:bold}
+.counter .l{color:#666;font-size:.7em;letter-spacing:2px;margin-top:3px}
+.filter{text-align:center;padding:15px 20px}
+.filter input{background:#111;border:1px solid #333;color:#e8d5c0;padding:10px 20px;border-radius:20px;font-size:.9em;width:100%;max-width:400px;outline:none}
+.filter input:focus{border-color:#e8a045}
+.cats{max-width:900px;margin:0 auto;padding:0 20px 40px}
+.cat{margin:20px 0;border:1px solid #1a1a2e;border-radius:12px;overflow:hidden}
+.cat-hdr{background:rgba(15,15,25,.95);padding:15px 20px;cursor:pointer;display:flex;justify-content:between;align-items:center;user-select:none}
+.cat-hdr:hover{background:rgba(25,25,40,.95)}
+.cat-hdr h2{font-size:1em;color:#e8a045;flex:1}
+.cat-hdr .cnt{color:#666;font-size:.8em;margin-left:10px}
+.cat-hdr .arrow{color:#666;transition:transform .2s}
+.cat.open .arrow{transform:rotate(90deg)}
+.cat-body{display:none;padding:0}
+.cat.open .cat-body{display:block}
+.link{display:flex;align-items:center;padding:10px 20px;border-top:1px solid #0f0f1a;transition:background .15s}
+.link:hover{background:rgba(232,160,69,.05)}
+.link .name{flex:1;color:#e8d5c0;font-size:.85em}
+.link a{color:#4fc3f7;text-decoration:none;font-size:.75em;font-family:monospace;word-break:break-all}
+.link a:hover{color:#e8a045}
+.link .copy{background:none;border:1px solid #333;color:#888;padding:2px 8px;border-radius:4px;cursor:pointer;font-size:.7em;margin-left:8px;font-family:monospace}
+.link .copy:hover{border-color:#e8a045;color:#e8a045}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#e8a045;color:#0a0a12;padding:8px 20px;border-radius:6px;font-size:.85em;font-weight:bold;opacity:0;transition:opacity .3s;z-index:999;pointer-events:none}
+.toast.show{opacity:1}
+.footer{text-align:center;padding:20px;color:#333;font-size:.7em;border-top:1px solid #111}
+.footer a{color:#e8a045;text-decoration:none}
+@media(max-width:600px){.link{flex-direction:column;gap:5px}.link a{font-size:.7em}}
+</style>
+</head>
+<body>
+<div class="hdr">
+<h1>◆ THE REGISTRY ◆</h1>
+<p>Every JuX artifact on the internet. Collected. Organized. Linked.</p>
+</div>
+
+<div class="counter">
+<div class="c"><div class="v">78</div><div class="l">LIVE LINKS</div></div>
+<div class="c"><div class="v">12</div><div class="l">CATEGORIES</div></div>
+<div class="c"><div class="v">5</div><div class="l">PLATFORMS</div></div>
+<div class="c"><div class="v">4</div><div class="l">REPOS</div></div>
+</div>
+
+<div class="filter"><input type="text" id="search" placeholder="🔍 Search 78 links..."></div>
+
+<div class="cats" id="cats">
+
+<div class="cat open">
+<div class="cat-hdr" onclick="this.parentElement.classList.toggle('open')"><h2>🏠 JUXAOS.COM — GitHub Pages</h2><span class="cnt">20</span><span class="arrow">▶</span></div>
+<div class="cat-body">
+<div class="link"><span class="name">Gateway</span><a href="https://juxaos.com" target="_blank">juxaos.com</a><button class="copy" onclick="cp('https://juxaos.com')">copy</button></div>
+<div class="link"><span class="name">THE SHOP</span><a href="https://juxaos.com/shop.html" target="_blank">juxaos.com/shop.html</a><button class="copy" onclick="cp('https://juxaos.com/shop.html')">copy</button></div>
+<div class="link"><span class="name">About / MANIFESTO</span><a href="https://juxaos.com/about.html" target="_blank">juxaos.com/about.html</a><button class="copy" onclick="cp('https://juxaos.com/about.html')">copy</button></div>
+<div class="link"><span class="name">Press Kit</span><a href="https://juxaos.com/press.html" target="_blank">juxaos.com/press.html</a><button class="copy" onclick="cp('https://juxaos.com/press.html')">copy</button></div>
+<div class="link"><span class="name">Digital Business Card</span><a href="https://juxaos.com/card.html" target="_blank">juxaos.com/card.html</a><button class="copy" onclick="cp('https://juxaos.com/card.html')">copy</button></div>
+<div class="link"><span class="name">Status Monitor</span><a href="https://juxaos.com/status.html" target="_blank">juxaos.com/status.html</a><button class="copy" onclick="cp('https://juxaos.com/status.html')">copy</button></div>
+<div class="link"><span class="name">Command Center</span><a href="https://juxaos.com/command.html" target="_blank">juxaos.com/command.html</a><button class="copy" onclick="cp('https://juxaos.com/command.html')">copy</button></div>
+<div class="link"><span class="name">Link Tree</span><a href="https://juxaos.com/links.html" target="_blank">juxaos.com/links.html</a><button class="copy" onclick="cp('https://juxaos.com/links.html')">copy</button></div>
+<div class="link"><span class="name">Email Signature</span><a href="https://juxaos.com/jux-signature.html" target="_blank">juxaos.com/jux-signature.html</a><button class="copy" onclick="cp('https://juxaos.com/jux-signature.html')">copy</button></div>
+<div class="link"><span class="name">Privacy Policy</span><a href="https://juxaos.com/privacy.html" target="_blank">juxaos.com/privacy.html</a><button class="copy" onclick="cp('https://juxaos.com/privacy.html')">copy</button></div>
+<div class="link"><span class="name">Terms of Service</span><a href="https://juxaos.com/terms.html" target="_blank">juxaos.com/terms.html</a><button class="copy" onclick="cp('https://juxaos.com/terms.html')">copy</button></div>
+<div class="link"><span class="name">Thank You (post-purchase)</span><a href="https://juxaos.com/thanks.html" target="_blank">juxaos.com/thanks.html</a><button class="copy" onclick="cp('https://juxaos.com/thanks.html')">copy</button></div>
+<div class="link"><span class="name">Sitemap (HTML)</span><a href="https://juxaos.com/sitemap.html" target="_blank">juxaos.com/sitemap.html</a><button class="copy" onclick="cp('https://juxaos.com/sitemap.html')">copy</button></div>
+<div class="link"><span class="name">Sitemap (XML)</span><a href="https://juxaos.com/sitemap.xml" target="_blank">juxaos.com/sitemap.xml</a><button class="copy" onclick="cp('https://juxaos.com/sitemap.xml')">copy</button></div>
+<div class="link"><span class="name">404 Page</span><a href="https://juxaos.com/404.html" target="_blank">juxaos.com/404.html</a><button class="copy" onclick="cp('https://juxaos.com/404.html')">copy</button></div>
+<div class="link"><span class="name">robots.txt</span><a href="https://juxaos.com/robots.txt" target="_blank">juxaos.com/robots.txt</a><button class="copy" onclick="cp('https://juxaos.com/robots.txt')">copy</button></div>
+<div class="link"><span class="name">humans.txt</span><a href="https://juxaos.com/humans.txt" target="_blank">juxaos.com/humans.txt</a><button class="copy" onclick="cp('https://juxaos.com/humans.txt')">copy</button></div>
+<div class="link"><span class="name">RSS Feed</span><a href="https://juxaos.com/feed.xml" target="_blank">juxaos.com/feed.xml</a><button class="copy" onclick="cp('https://juxaos.com/feed.xml')">copy</button></div>
+<div class="link"><span class="name">PWA Manifest</span><a href="https://juxaos.com/manifest.json" target="_blank">juxaos.com/manifest.json</a><button class="copy" onclick="cp('https://juxaos.com/manifest.json')">copy</button></div>
+<div class="link"><span class="name">Service Worker</span><a href="https://juxaos.com/sw.js" target="_blank">juxaos.com/sw.js</a><button class="copy" onclick="cp('https://juxaos.com/sw.js')">copy</button></div>
+</div>
+</div>
+
+<div class="cat">
+<div class="cat-hdr" onclick="this.parentElement.classList.toggle('open')"><h2>🎮 ARCADE — 10 Pages</h2><span class="cnt">10</span><span class="arrow">▶</span></div>
+<div class="cat-body">
+<div class="link"><span class="name">ARCADE Hub</span><a href="https://raw.githack.com/alissali/Learn/main/ARCADE.html" target="_blank">ARCADE.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/Learn/main/ARCADE.html')">copy</button></div>
+<div class="link"><span class="name">Hall of Fame</span><a href="https://raw.githack.com/alissali/Learn/main/ARCADE.HALL.html" target="_blank">ARCADE.HALL.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/Learn/main/ARCADE.HALL.html')">copy</button></div>
+<div class="link"><span class="name">Stats Dashboard</span><a href="https://raw.githack.com/alissali/Learn/main/ARCADE.STATS.html" target="_blank">ARCADE.STATS.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/Learn/main/ARCADE.STATS.html')">copy</button></div>
+<div class="link"><span class="name">Challenge Cards</span><a href="https://raw.githack.com/alissali/Learn/main/ARCADE.CHALLENGE.html" target="_blank">ARCADE.CHALLENGE.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/Learn/main/ARCADE.CHALLENGE.html')">copy</button></div>
+<div class="link"><span class="name">Trailer</span><a href="https://raw.githack.com/alissali/Learn/main/ARCADE.TRAILER.html" target="_blank">ARCADE.TRAILER.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/Learn/main/ARCADE.TRAILER.html')">copy</button></div>
+<div class="link"><span class="name">Star Map</span><a href="https://raw.githack.com/alissali/Learn/main/ARCADE.MAP.html" target="_blank">ARCADE.MAP.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/Learn/main/ARCADE.MAP.html')">copy</button></div>
+<div class="link"><span class="name">Player Guide</span><a href="https://raw.githack.com/alissali/Learn/main/ARCADE.GUIDE.html" target="_blank">ARCADE.GUIDE.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/Learn/main/ARCADE.GUIDE.html')">copy</button></div>
+<div class="link"><span class="name">Print Poster</span><a href="https://raw.githack.com/alissali/Learn/main/ARCADE.POSTER.html" target="_blank">ARCADE.POSTER.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/Learn/main/ARCADE.POSTER.html')">copy</button></div>
+<div class="link"><span class="name">Tournament</span><a href="https://raw.githack.com/alissali/Learn/main/ARCADE.TOURNAMENT.html" target="_blank">ARCADE.TOURNAMENT.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/Learn/main/ARCADE.TOURNAMENT.html')">copy</button></div>
+<div class="link"><span class="name">Build Timeline</span><a href="https://raw.githack.com/alissali/Learn/main/ARCADE.TIMELINE.html" target="_blank">ARCADE.TIMELINE.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/Learn/main/ARCADE.TIMELINE.html')">copy</button></div>
+</div>
+</div>
+
+<div class="cat">
+<div class="cat-hdr" onclick="this.parentElement.classList.toggle('open')"><h2>🎲 GAMES</h2><span class="cnt">5</span><span class="arrow">▶</span></div>
+<div class="cat-body">
+<div class="link"><span class="name">MONOPOLY</span><a href="https://raw.githack.com/alissali/Learn/main/MONOPOLY.html" target="_blank">MONOPOLY.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/Learn/main/MONOPOLY.html')">copy</button></div>
+<div class="link"><span class="name">SNAKE</span><a href="https://raw.githack.com/alissali/Learn/main/SNAKE.html" target="_blank">SNAKE.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/Learn/main/SNAKE.html')">copy</button></div>
+<div class="link"><span class="name">JuXYams</span><a href="https://raw.githack.com/alissali/Learn/main/JuXYams.html" target="_blank">JuXYams.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/Learn/main/JuXYams.html')">copy</button></div>
+<div class="link"><span class="name">Hold'em Training</span><a href="https://raw.githack.com/alissali/Learn/main/HOLDEM.TRAINING.html" target="_blank">HOLDEM.TRAINING.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/Learn/main/HOLDEM.TRAINING.html')">copy</button></div>
+<div class="link"><span class="name">Hold'em Training (AR)</span><a href="https://raw.githack.com/alissali/Learn/main/HOLDEM.TRAINING.AR.html" target="_blank">HOLDEM.TRAINING.AR.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/Learn/main/HOLDEM.TRAINING.AR.html')">copy</button></div>
+</div>
+</div>
+
+<div class="cat">
+<div class="cat-hdr" onclick="this.parentElement.classList.toggle('open')"><h2>🔮 DUNE TAROT</h2><span class="cnt">3</span><span class="arrow">▶</span></div>
+<div class="cat-body">
+<div class="link"><span class="name">DUNE TAROT Reader</span><a href="https://raw.githack.com/alissali/Learn/main/DUNE.TAROT.html" target="_blank">DUNE.TAROT.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/Learn/main/DUNE.TAROT.html')">copy</button></div>
+<div class="link"><span class="name">DUNE TAROT Game</span><a href="https://raw.githack.com/alissali/Learn/main/DUNE.TAROT.GAME.html" target="_blank">DUNE.TAROT.GAME.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/Learn/main/DUNE.TAROT.GAME.html')">copy</button></div>
+<div class="link"><span class="name">DUNE TAROT PORN</span><a href="https://raw.githack.com/alissali/Learn/main/DUNE.TAROT.PORN.html" target="_blank">DUNE.TAROT.PORN.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/Learn/main/DUNE.TAROT.PORN.html')">copy</button></div>
+</div>
+</div>
+
+<div class="cat">
+<div class="cat-hdr" onclick="this.parentElement.classList.toggle('open')"><h2>📖 STORIES</h2><span class="cnt">3</span><span class="arrow">▶</span></div>
+<div class="cat-body">
+<div class="link"><span class="name">SSS Storefront</span><a href="https://raw.githack.com/alissali/Learn/main/SSS.html" target="_blank">SSS.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/Learn/main/SSS.html')">copy</button></div>
+<div class="link"><span class="name">IRULAN</span><a href="https://raw.githack.com/alissali/Learn/main/IRULAN.SS.html" target="_blank">IRULAN.SS.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/Learn/main/IRULAN.SS.html')">copy</button></div>
+<div class="link"><span class="name">OCB Verses</span><a href="https://raw.githack.com/alissali/Learn/main/OCB.VERSES.html" target="_blank">OCB.VERSES.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/Learn/main/OCB.VERSES.html')">copy</button></div>
+</div>
+</div>
+
+<div class="cat">
+<div class="cat-hdr" onclick="this.parentElement.classList.toggle('open')"><h2>🧆 CAVERN</h2><span class="cnt">2</span><span class="arrow">▶</span></div>
+<div class="cat-body">
+<div class="link"><span class="name">Ali Baba's Cavern</span><a href="https://raw.githack.com/alissali/Learn/main/CAVERN.html" target="_blank">CAVERN.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/Learn/main/CAVERN.html')">copy</button></div>
+<div class="link"><span class="name">Cavern Menu Card</span><a href="https://raw.githack.com/alissali/Learn/main/CAVERN.MENU.html" target="_blank">CAVERN.MENU.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/Learn/main/CAVERN.MENU.html')">copy</button></div>
+</div>
+</div>
+
+<div class="cat">
+<div class="cat-hdr" onclick="this.parentElement.classList.toggle('open')"><h2>🌐 JuX UNIVERSE</h2><span class="cnt">4</span><span class="arrow">▶</span></div>
+<div class="cat-body">
+<div class="link"><span class="name">Universe Map</span><a href="https://raw.githack.com/alissali/Learn/main/UNIVERSE.html" target="_blank">UNIVERSE.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/Learn/main/UNIVERSE.html')">copy</button></div>
+<div class="link"><span class="name">JuXNews Welcome Edition</span><a href="https://alissali.github.io/AOS/" target="_blank">alissali.github.io/AOS/</a><button class="copy" onclick="cp('https://alissali.github.io/AOS/')">copy</button></div>
+<div class="link"><span class="name">JuXNews Edition 2</span><a href="https://raw.githack.com/alissali/Learn/main/JuXNews.Edition2.html" target="_blank">JuXNews.Edition2.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/Learn/main/JuXNews.Edition2.html')">copy</button></div>
+<div class="link"><span class="name">JuXNews Edition 3</span><a href="https://raw.githack.com/alissali/Learn/main/JuXNews.Edition3.html" target="_blank">JuXNews.Edition3.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/Learn/main/JuXNews.Edition3.html')">copy</button></div>
+</div>
+</div>
+
+<div class="cat">
+<div class="cat-hdr" onclick="this.parentElement.classList.toggle('open')"><h2>⚙️ AOS — Adequate Operating System</h2><span class="cnt">14</span><span class="arrow">▶</span></div>
+<div class="cat-body">
+<div class="link"><span class="name">AOS Spec</span><a href="https://raw.githack.com/alissali/AOS/main/AOS.SPEC.html" target="_blank">AOS.SPEC.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/AOS/main/AOS.SPEC.html')">copy</button></div>
+<div class="link"><span class="name">AOS Landing</span><a href="https://raw.githack.com/alissali/AOS/main/AOS.html" target="_blank">AOS.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/AOS/main/AOS.html')">copy</button></div>
+<div class="link"><span class="name">AOS Download</span><a href="https://raw.githack.com/alissali/AOS/main/AOS.DOWNLOAD.html" target="_blank">AOS.DOWNLOAD.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/AOS/main/AOS.DOWNLOAD.html')">copy</button></div>
+<div class="link"><span class="name">AOS In Action</span><a href="https://raw.githack.com/alissali/AOS/main/AOS.INACTION.html" target="_blank">AOS.INACTION.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/AOS/main/AOS.INACTION.html')">copy</button></div>
+<div class="link"><span class="name">AOS Pricing</span><a href="https://raw.githack.com/alissali/AOS/main/AOS.PRICING.html" target="_blank">AOS.PRICING.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/AOS/main/AOS.PRICING.html')">copy</button></div>
+<div class="link"><span class="name">AOS 42 Demo</span><a href="https://raw.githack.com/alissali/AOS/main/AOS.42.DEMO.html" target="_blank">AOS.42.DEMO.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/AOS/main/AOS.42.DEMO.html')">copy</button></div>
+<div class="link"><span class="name">AOS Arabic Dictionary</span><a href="https://raw.githack.com/alissali/AOS/main/AOS.ARABIC.DICTIONARY.html" target="_blank">AOS.ARABIC.DICTIONARY.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/AOS/main/AOS.ARABIC.DICTIONARY.html')">copy</button></div>
+<div class="link"><span class="name">AOS Arabic Engine</span><a href="https://raw.githack.com/alissali/AOS/main/AOS.ARABIC.ENGINE.html" target="_blank">AOS.ARABIC.ENGINE.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/AOS/main/AOS.ARABIC.ENGINE.html')">copy</button></div>
+<div class="link"><span class="name">AOS Bug MIB</span><a href="https://raw.githack.com/alissali/AOS/main/BUG-UBUNTU-SS.html" target="_blank">BUG-UBUNTU-SS.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/AOS/main/BUG-UBUNTU-SS.html')">copy</button></div>
+<div class="link"><span class="name">Set Me Free</span><a href="https://raw.githack.com/alissali/AOS/main/set-me-free.html" target="_blank">set-me-free.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/AOS/main/set-me-free.html')">copy</button></div>
+<div class="link"><span class="name">MNMNM</span><a href="https://raw.githack.com/alissali/AOS/main/MNMNM.html" target="_blank">MNMNM.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/AOS/main/MNMNM.html')">copy</button></div>
+<div class="link"><span class="name">JuX Artifact</span><a href="https://raw.githack.com/alissali/AOS/main/JuX.ARTIFACT.html" target="_blank">JuX.ARTIFACT.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/AOS/main/JuX.ARTIFACT.html')">copy</button></div>
+<div class="link"><span class="name">JuXITT Core</span><a href="https://raw.githack.com/alissali/AOS/main/JuXITTCore.html" target="_blank">JuXITTCore.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/AOS/main/JuXITTCore.html')">copy</button></div>
+<div class="link"><span class="name">SpiceBus License</span><a href="https://raw.githack.com/alissali/AOS/main/SpiceBus.COMMERCIAL.LICENSE.html" target="_blank">SpiceBus.COMMERCIAL.LICENSE.html</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/AOS/main/SpiceBus.COMMERCIAL.LICENSE.html')">copy</button></div>
+</div>
+</div>
+
+<div class="cat">
+<div class="cat-hdr" onclick="this.parentElement.classList.toggle('open')"><h2>🏪 JuXITT-Core + JeuX + JouwWeb</h2><span class="cnt">3</span><span class="arrow">▶</span></div>
+<div class="cat-body">
+<div class="link"><span class="name">Ali Baba Cavern (JuXITT)</span><a href="https://raw.githack.com/alissali/JuXITT-Core/main/cavern/index.html" target="_blank">JuXITT-Core/cavern/</a><button class="copy" onclick="cp('https://raw.githack.com/alissali/JuXITT-Core/main/cavern/index.html')">copy</button></div>
+<div class="link"><span class="name">JeuX on Render</span><a href="http://learn-1-vk8x.onrender.com/" target="_blank">learn-1-vk8x.onrender.com</a><button class="copy" onclick="cp('http://learn-1-vk8x.onrender.com/')">copy</button></div>
+<div class="link"><span class="name">JuXITT Homepage</span><a href="https://juxitt.com" target="_blank">juxitt.com</a><button class="copy" onclick="cp('https://juxitt.com')">copy</button></div>
+</div>
+</div>
+
+<div class="cat">
+<div class="cat-hdr" onclick="this.parentElement.classList.toggle('open')"><h2>🐙 GitHub Repos</h2><span class="cnt">4</span><span class="arrow">▶</span></div>
+<div class="cat-body">
+<div class="link"><span class="name">Learn (games + stories)</span><a href="https://github.com/alissali/Learn" target="_blank">github.com/alissali/Learn</a><button class="copy" onclick="cp('https://github.com/alissali/Learn')">copy</button></div>
+<div class="link"><span class="name">AOS</span><a href="https://github.com/alissali/AOS" target="_blank">github.com/alissali/AOS</a><button class="copy" onclick="cp('https://github.com/alissali/AOS')">copy</button></div>
+<div class="link"><span class="name">JuXITT-Core</span><a href="https://github.com/alissali/JuXITT-Core" target="_blank">github.com/alissali/JuXITT-Core</a><button class="copy" onclick="cp('https://github.com/alissali/JuXITT-Core')">copy</button></div>
+<div class="link"><span class="name">NextGen-POS</span><a href="https://github.com/alissali/NextGen-POS" target="_blank">github.com/alissali/NextGen-POS</a><button class="copy" onclick="cp('https://github.com/alissali/NextGen-POS')">copy</button></div>
+</div>
+</div>
+
+<div class="cat">
+<div class="cat-hdr" onclick="this.parentElement.classList.toggle('open')"><h2>💳 Stripe Payment Links — 10 Products LIVE</h2><span class="cnt">10</span><span class="arrow">▶</span></div>
+<div class="cat-body">
+<div class="link"><span class="name">DUNE TAROT MELANGE — €6.66</span><a href="https://buy.stripe.com/dRm14pdv14VQ1qT7J41wY05" target="_blank">buy.stripe.com/…Y05</a><button class="copy" onclick="cp('https://buy.stripe.com/dRm14pdv14VQ1qT7J41wY05')">copy</button></div>
+<div class="link"><span class="name">DUNE TAROT IRULAN — €22</span><a href="https://buy.stripe.com/9B628tdv15ZUglNbZk1wY06" target="_blank">buy.stripe.com/…Y06</a><button class="copy" onclick="cp('https://buy.stripe.com/9B628tdv15ZUglNbZk1wY06')">copy</button></div>
+<div class="link"><span class="name">DUNE TAROT SSS THE GAME — €66</span><a href="https://buy.stripe.com/5kQ9AVgHdaga3z10gC1wY07" target="_blank">buy.stripe.com/…Y07</a><button class="copy" onclick="cp('https://buy.stripe.com/5kQ9AVgHdaga3z10gC1wY07')">copy</button></div>
+<div class="link"><span class="name">SSS IRULAN — €22</span><a href="https://buy.stripe.com/3cI00lfD99c6glN9Rc1wY08" target="_blank">buy.stripe.com/…Y08</a><button class="copy" onclick="cp('https://buy.stripe.com/3cI00lfD99c6glN9Rc1wY08')">copy</button></div>
+<div class="link"><span class="name">SSS COMPLETE — €66</span><a href="https://buy.stripe.com/7sYeVf0If1JE2uXbZk1wY09" target="_blank">buy.stripe.com/…Y09</a><button class="copy" onclick="cp('https://buy.stripe.com/7sYeVf0If1JE2uXbZk1wY09')">copy</button></div>
+<div class="link"><span class="name">CAVERN SPICE BOX — €20</span><a href="https://buy.stripe.com/9B6bJ31Mj4VQ2uX1kG1wY0a" target="_blank">buy.stripe.com/…Y0a</a><button class="copy" onclick="cp('https://buy.stripe.com/9B6bJ31Mj4VQ2uX1kG1wY0a')">copy</button></div>
+<div class="link"><span class="name">CAVERN SWEETS BOX — €38</span><a href="https://buy.stripe.com/fZu14pez5gEy6Ldfbw1wY0b" target="_blank">buy.stripe.com/…Y0b</a><button class="copy" onclick="cp('https://buy.stripe.com/fZu14pez5gEy6Ldfbw1wY0b')">copy</button></div>
+<div class="link"><span class="name">CAVERN FROZEN BOX — €28</span><a href="https://buy.stripe.com/fZucN71Mj73YedFd3o1wY0c" target="_blank">buy.stripe.com/…Y0c</a><button class="copy" onclick="cp('https://buy.stripe.com/fZucN71Mj73YedFd3o1wY0c')">copy</button></div>
+<div class="link"><span class="name">CAVERN CHAI BOX — €16</span><a href="https://buy.stripe.com/bJebJ376DgEy7PhaVg1wY0d" target="_blank">buy.stripe.com/…Y0d</a><button class="copy" onclick="cp('https://buy.stripe.com/bJebJ376DgEy7PhaVg1wY0d')">copy</button></div>
+<div class="link"><span class="name">CAVERN FULL CAVERN — €99</span><a href="https://buy.stripe.com/00w8wR4Yv5ZU1qT9Rc1wY0e" target="_blank">buy.stripe.com/…Y0e</a><button class="copy" onclick="cp('https://buy.stripe.com/00w8wR4Yv5ZU1qT9Rc1wY0e')">copy</button></div>
+</div>
+</div>
+
+</div>
+
+<div class="footer">
+<p>◆ JuX ITT — <a href="https://juxaos.com">juxaos.com</a> — 78 artifacts · 12 categories · Built 12 June 2026</p>
+<p style="margin-top:5px">NAME / FACT / TARGET</p>
+</div>
+
+<div class="toast" id="toast">Copied!</div>
+
+<script>
+function cp(t){navigator.clipboard.writeText(t).then(()=>{const s=document.getElementById('toast');s.classList.add('show');setTimeout(()=>s.classList.remove('show'),1500)})}
+document.getElementById('search').addEventListener('input',function(){
+const q=this.value.toLowerCase();
+document.querySelectorAll('.link').forEach(l=>{
+const name=l.querySelector('.name').textContent.toLowerCase();
+const url=l.querySelector('a').textContent.toLowerCase();
+l.style.display=(name.includes(q)||url.includes(q))?'flex':'none';
+});
+document.querySelectorAll('.cat').forEach(c=>{
+const vis=c.querySelectorAll('.link[style="display: flex;"], .link:not([style])');
+const hidden=c.querySelectorAll('.link[style="display: none;"]');
+if(q&&vis.length>0)c.classList.add('open');
+});
+});
+</script>
+</body>
+</html>
