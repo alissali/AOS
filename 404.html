@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 — Lost in the Desert | AOS</title>
+<meta name="description" content="This page doesn't exist. But the ARCADE does.">
+</head>
+<body style="margin:0;background:#0a0a0f;color:#f0e6d3;font-family:'Courier New',monospace;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden">
+<div id="stars" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0"></div>
+<div style="text-align:center;z-index:1;padding:2rem">
+    <div style="font-size:8rem;font-weight:bold;background:linear-gradient(135deg,#ff6600,#1a1aff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1">404</div>
+    <div style="font-size:1.5rem;color:#c4a882;margin:1rem 0 2rem">Lost in the desert.</div>
+    <div style="color:#8a7a6a;margin-bottom:2rem;font-size:0.9rem">This page doesn't exist — but the universe does.</div>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center">
+        <a href="/" style="color:#0a0a0f;background:linear-gradient(135deg,#ff6600,#ffaa00);padding:0.8rem 1.5rem;border-radius:8px;text-decoration:none;font-weight:bold;font-size:0.9rem">⚙️ AOS Portal</a>
+        <a href="https://raw.githack.com/alissali/Learn/main/ARCADE.html" style="color:#0a0a0f;background:linear-gradient(135deg,#ff6600,#ffaa00);padding:0.8rem 1.5rem;border-radius:8px;text-decoration:none;font-weight:bold;font-size:0.9rem">🎰 The ARCADE</a>
+        <a href="/set-me-free.html" style="color:#f0e6d3;background:linear-gradient(135deg,#1a1aff,#4444ff);padding:0.8rem 1.5rem;border-radius:8px;text-decoration:none;font-weight:bold;font-size:0.9rem">🌪️ Set Me Free</a>
+        <a href="/sitemap.html" style="color:#0a0a0f;background:linear-gradient(135deg,#ff6600,#ffaa00);padding:0.8rem 1.5rem;border-radius:8px;text-decoration:none;font-weight:bold;font-size:0.9rem">🗺️ Sitemap</a>
+    </div>
+</div>
+<div style="position:fixed;bottom:1rem;color:#4a4a5a;font-size:0.7rem">💀♾️🦅 NAME / FACT / TARGET</div>
+<script>
+const s=document.getElementById('stars');
+for(let i=0;i<60;i++){const d=document.createElement('div');d.className='star';d.style.cssText='position:absolute;background:#fff;border-radius:50%;left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;width:'+(Math.random()*3+1)+'px;height:'+(Math.random()*3+1)+'px;opacity:'+(Math.random()*0.5+0.3);s.appendChild(d)}
+setInterval(()=>{const stars=document.querySelectorAll('.star');stars[Math.floor(Math.random()*stars.length)].style.opacity=Math.random()},200)
+</script>
+</body>
+</html>
