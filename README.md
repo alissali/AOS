@@ -1,104 +1,69 @@
-# أشوس — AOS
+# ⚙️ AOS — Adequate Operating System
 
-## Linux Adequate Operating System
+> Formal language architecture. Five levels: Objects → Expressions → Sentences → Dictionaries → Services.  
+> MIT License · © 2026 Mamoun Alissali
 
-### Read *ME!* — then Load *ME!*
+## What is AOS?
 
-**نظام تشغيل لينوكس المُلائِم — شامل**
+**AOS** is a formal language architecture with five levels:
 
-🟩⬜⬛
+1. **Objects** — NAME / FACT / TARGET
+2. **Expressions** — Composed objects
+3. **Sentences** — Logical statements
+4. **Dictionaries** — Domain containers (JuX is the first)
+5. **Services** — Running dictionaries
 
----
+## 🌐 Live at [juxaos.com](https://juxaos.com)
 
-### What
+| Page | URL |
+|------|-----|
+| 🏠 Portal | [juxaos.com](https://juxaos.com) |
+| 🌪️ Set Me Free | [juxaos.com/set-me-free.html](https://juxaos.com/set-me-free.html) |
+| 📖 About | [juxaos.com/about.html](https://juxaos.com/about.html) |
+| ♟️ Strategy | [juxaos.com/strategy.html](https://juxaos.com/strategy.html) |
+| ⬆️ AOS UP | [juxaos.com/aos-up.html](https://juxaos.com/aos-up.html) |
+| 💬 Chat | [juxaos.com/chat.html](https://juxaos.com/chat.html) |
+| 🗺️ Sitemap | [juxaos.com/sitemap.html](https://juxaos.com/sitemap.html) |
 
-AOS turns any Ubuntu into a ready-to-use AI workstation.
-One script. One command. Done.
+## 🎰 The ARCADE
 
-```bash
-sudo bash aos-install.sh
-```
+All games and products live in the [Learn](https://github.com/alissali/Learn) repository.
 
-### What You Get
+**→ [Enter the ARCADE](https://raw.githack.com/alissali/Learn/main/ARCADE.html)**
 
-- 🖥️ XFCE desktop — fast, clean, no bloat
-- 🤖 Ollama + Open WebUI — local AI, no cloud, no surveillance
-- 🎨 AOS branding — wallpaper, boot splash, GRUB theme
-- 🔒 UFW firewall — configured, active
-- 🐍 Python + Flask + dev tools — ready to build
-
-### Why
-
-No pub. No tracking. No corporate.
-Just a machine that works — and thinks.
-
-*Try Me You'll Love Me!* ☕
-
-### المبدأ
-
-```
-المُلاءَمَة = Adequate
-المُواءَمَة = Harmony
-واو الفعل — الحركة بركة
-```
-
-كل نسخة أفضل من سابقتها — الحلزون الصاعد.
-الوفاء يُكافأ. الثقة بالبرهان.
-
-*"أهلاً وسهلاً — في بلاد الشام، الضيف ملك."*
-
-### Versions
-
-```
-AOS FREE!  (v0.00)  →  0€       — Try Me You'll Love Me!
-AOS 1      (v0.1)   →  $
-AOS 2      (v0.2)   →  $+
-AOS 3      (v0.3)   →  $*++  ⭐
-```
-
-Spirale Ascendante: each version costs more.
-Loyal clients pay less — or the same. Always.
-
-### Install
-
-```
-git clone https://github.com/alissali/AOS.git
-cd AOS
-sudo bash aos-install.sh
-```
-
-Requirements: Ubuntu 22.04+ / Debian 12+
-
-### Structure
+## 📂 Repository Structure
 
 ```
 AOS/
-├── README.md
-├── ARCHITECTURE.md
-├── aos-install.sh
-├── aos-wallpaper.png
-├── plymouth/aos-theme/
-│   ├── aos-theme.plymouth
-│   ├── aos-theme.script
-│   ├── logo.png
-│   └── progress-bar.png
-└── grub/aos-theme/
-    └── theme.txt
+├── index.html          # juxaos.com gateway
+├── set-me-free.html    # The manifesto
+├── about.html          # The story
+├── strategy.html       # Where we go
+├── aos-up.html         # Update system
+├── chat.html           # AOS Chat
+├── sitemap.html        # Full sitemap (45 pages)
+├── media/
+│   └── AOS.mp4         # The video
+└── juxnews/
+    └── 2026-05-08-welcome.html
 ```
 
-### Credits
+## 🔗 Ecosystem
 
-Built by **Dr. Mamoun ALISSALI** — **د. مأمون العسالي**
-Le Mans, France 🟩⬜⬛
+| Repo | What |
+|------|------|
+| [Learn](https://github.com/alissali/Learn) | Games · Stories · Products · All HTML |
+| [AOS](https://github.com/alissali/AOS) | This repo — juxaos.com portal |
+| [JuXITT-Core](https://github.com/alissali/JuXITT-Core) | Engine · Ali Baba Cavern source |
+| [NextGen-POS](https://github.com/alissali/NextGen-POS) | POS.vpp · Academic artifact |
 
-With Coherence by AI. Inside Harmony.
+## Contact
+
+- **Web:** [juxitt.com](https://juxitt.com)
+- **Email:** [jux@juxitt.com](mailto:jux@juxitt.com)
 
 ---
 
----
+*NAME / FACT / TARGET — Bug-free is a property of Architecture, not code.*
 
-### 🐻 + 🤖 = Coherence INSIDE Harmony ☕🟩⬜⬛
-
----
-
-*© 2026 JuXITT — [juxitt.com](https://juxitt.com)*
+💀♾️🦅
