@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JuX — System Status</title>
+<meta property="og:title" content="JuX — System Status">
+<meta property="og:description" content="Live health monitor for all JuX services">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%230a0a0f'/%3E%3Cpolygon points='16,2 30,16 16,30 2,16' fill='none' stroke='%23ff6600' stroke-width='2'/%3E%3Ctext x='16' y='21' text-anchor='middle' fill='%23ff6600' font-family='monospace' font-weight='bold' font-size='14'%3EJ%3C/text%3E%3C/svg%3E">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{min-height:100vh;background:#0a0a0f;color:#e0e0e0;font-family:'Courier New',monospace;padding:30px 20px}
+.header{text-align:center;margin-bottom:40px}
+h1{font-size:2em;color:#ff6600;letter-spacing:4px}
+.subtitle{color:#888;margin-top:8px;font-size:.9em}
+.summary{display:flex;gap:20px;justify-content:center;margin:25px 0;flex-wrap:wrap}
+.stat{padding:15px 25px;border:1px solid #333;border-radius:12px;text-align:center;min-width:120px}
+.stat .num{font-size:2em;font-weight:bold}
+.stat .label{font-size:.75em;color:#888;margin-top:4px}
+.stat.up .num{color:#4caf50}
+.stat.down .num{color:#f44336}
+.stat.checking .num{color:#ff9800}
+.grid{max-width:900px;margin:0 auto;display:grid;gap:8px}
+.row{display:grid;grid-template-columns:1fr 120px 80px 100px;align-items:center;padding:12px 16px;background:#111;border-radius:8px;border-left:3px solid #333;transition:all .3s}
+.row.up{border-left-color:#4caf50}
+.row.down{border-left-color:#f44336}
+.row.checking{border-left-color:#ff9800}
+.row-name{font-weight:bold;font-size:.9em}
+.row-cat{color:#888;font-size:.75em}
+.row-status{text-align:center;font-size:.85em;font-weight:bold}
+.row-time{text-align:right;color:#888;font-size:.8em}
+.legend{text-align:center;margin-top:30px;color:#555;font-size:.75em}
+.refresh-btn{display:block;margin:30px auto;padding:12px 30px;background:transparent;border:1px solid #ff6600;color:#ff6600;border-radius:20px;font-family:inherit;font-size:.9em;cursor:pointer;transition:all .3s}
+.refresh-btn:hover{background:#ff6600;color:#0a0a0f}
+.pulse{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;animation:pulse 2s infinite}
+.pulse.green{background:#4caf50}
+.pulse.red{background:#f44336}
+.pulse.orange{background:#ff9800}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.last-check{text-align:center;margin:20px 0;color:#555;font-size:.8em}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>◆ JuX STATUS</h1>
+  <div class="subtitle">LIVE HEALTH MONITOR</div>
+</div>
+
+<div class="summary">
+  <div class="stat checking" id="stat-up"><div class="num" id="num-up">—</div><div class="label">UP</div></div>
+  <div class="stat checking" id="stat-down"><div class="num" id="num-down">—</div><div class="label">DOWN</div></div>
+  <div class="stat checking" id="stat-avg"><div class="num" id="num-avg">—</div><div class="label">AVG ms</div></div>
+</div>
+
+<div class="last-check" id="last-check">Checking...</div>
+
+<div class="grid" id="grid"></div>
+
+<button class="refresh-btn" onclick="checkAll()">⟳ REFRESH ALL</button>
+
+<div class="legend">
+  Checks use fetch() from your browser. CORS-blocked = shown as UP if resource exists on GitHub.<br>
+  Auto-refreshes every 60 seconds. All times in milliseconds.
+</div>
+
+<script>
+const services = [
+  {name:"juxaos.com",url:"https://juxaos.com",cat:"Portal"},
+  {name:"juxitt.com",url:"https://juxitt.com",cat:"Portal"},
+  {name:"ARCADE",url:"https://raw.githack.com/alissali/Learn/main/ARCADE.html",cat:"Game"},
+  {name:"MONOPOLY",url:"https://raw.githack.com/alissali/Learn/main/MONOPOLY.html",cat:"Game"},
+  {name:"SNAKE",url:"https://raw.githack.com/alissali/Learn/main/SNAKE.html",cat:"Game"},
+  {name:"JuXYams",url:"https://raw.githack.com/alissali/Learn/main/JuXYams.html",cat:"Game"},
+  {name:"HOLDEM",url:"https://raw.githack.com/alissali/Learn/main/HOLDEM.TRAINING.html",cat:"Game"},
+  {name:"HOLDEM.AR",url:"https://raw.githack.com/alissali/Learn/main/HOLDEM.TRAINING.AR.html",cat:"Game"},
+  {name:"DUNE TAROT — PORN",url:"https://raw.githack.com/alissali/Learn/main/DUNE.TAROT.PORN.html",cat:"Tarot"},
+  {name:"DUNE TAROT — GAME",url:"https://raw.githack.com/alissali/Learn/main/DUNE.TAROT.GAME.html",cat:"Tarot"},
+  {name:"DUNE TAROT — Reader",url:"https://raw.githack.com/alissali/Learn/main/DUNE.TAROT.html",cat:"Tarot"},
+  {name:"SSS",url:"https://raw.githack.com/alissali/Learn/main/SSS.html",cat:"Words"},
+  {name:"IRULAN",url:"https://raw.githack.com/alissali/Learn/main/IRULAN.SS.html",cat:"Words"},
+  {name:"OCB VERSES",url:"https://raw.githack.com/alissali/Learn/main/OCB.VERSES.html",cat:"Words"},
+  {name:"CAVERN",url:"https://raw.githack.com/alissali/Learn/main/CAVERN.html",cat:"Store"},
+  {name:"AOS.SPEC",url:"https://raw.githack.com/alissali/Learn/main/AOS.SPEC.html",cat:"AOS"},
+  {name:"AOS.DOWNLOAD",url:"https://raw.githack.com/alissali/Learn/main/AOS.DOWNLOAD.html",cat:"AOS"},
+  {name:"AOS.PRICING",url:"https://raw.githack.com/alissali/Learn/main/AOS.PRICING.html",cat:"AOS"},
+  {name:"AOS.INACTION",url:"https://raw.githack.com/alissali/Learn/main/AOS.INACTION.html",cat:"AOS"},
+  {name:"set-me-free",url:"https://juxaos.com/set-me-free.html",cat:"Portal"},
+  {name:"Sitemap",url:"https://juxaos.com/sitemap.html",cat:"Portal"},
+];
+
+const grid=document.getElementById('grid');
+const results=[];
+
+function render(){
+  grid.innerHTML='';
+  let up=0,down=0,times=[];
+  services.forEach((s,i)=>{
+    const r=results[i]||{status:'checking',ms:0};
+    if(r.status==='up')up++;
+    if(r.status==='down')down++;
+    if(r.ms>0)times.push(r.ms);
+    const cls=r.status;
+    const dot=cls==='up'?'green':cls==='down'?'red':'orange';
+    const statusText=cls==='up'?'● UP':cls==='down'?'● DOWN':'◌ ...';
+    grid.innerHTML+=`<div class="row ${cls}"><div><span class="pulse ${dot}"></span><span class="row-name">${s.name}</span></div><div class="row-cat">${s.cat}</div><div class="row-status">${statusText}</div><div class="row-time">${r.ms>0?r.ms+'ms':'—'}</div></div>`;
+  });
+  document.getElementById('num-up').textContent=up;
+  document.getElementById('num-down').textContent=down;
+  const avg=times.length?Math.round(times.reduce((a,b)=>a+b,0)/times.length):0;
+  document.getElementById('num-avg').textContent=avg||'—';
+  document.getElementById('stat-up').className='stat '+(up>0?'up':'checking');
+  document.getElementById('stat-down').className='stat '+(down>0?'down':'checking');
+}
+
+async function checkOne(i){
+  const s=services[i];
+  const t0=performance.now();
+  try{
+    const r=await fetch(s.url,{mode:'no-cors',cache:'no-store'});
+    const ms=Math.round(performance.now()-t0);
+    results[i]={status:'up',ms};
+  }catch(e){
+    const ms=Math.round(performance.now()-t0);
+    results[i]={status:'down',ms};
+  }
+  render();
+}
+
+async function checkAll(){
+  results.length=0;
+  services.forEach((_,i)=>results[i]={status:'checking',ms:0});
+  render();
+  document.getElementById('last-check').textContent='Checking...';
+  const promises=services.map((_,i)=>checkOne(i));
+  await Promise.all(promises);
+  document.getElementById('last-check').textContent='Last check: '+new Date().toLocaleTimeString();
+}
+
+checkAll();
+setInterval(checkAll,60000);
+</script>
+</body>
+</html>
