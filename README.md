@@ -1,69 +1,109 @@
+<div align="center">
+
 # ⚙️ AOS — Adequate Operating System
 
-> Formal language architecture. Five levels: Objects → Expressions → Sentences → Dictionaries → Services.  
-> MIT License · © 2026 Mamoun Alissali
+**Formal Language Architecture · Five Levels · MIT License**
 
-## What is AOS?
-
-**AOS** is a formal language architecture with five levels:
-
-1. **Objects** — NAME / FACT / TARGET
-2. **Expressions** — Composed objects
-3. **Sentences** — Logical statements
-4. **Dictionaries** — Domain containers (JuX is the first)
-5. **Services** — Running dictionaries
-
-## 🌐 Live at [juxaos.com](https://juxaos.com)
-
-| Page | URL |
-|------|-----|
-| 🏠 Portal | [juxaos.com](https://juxaos.com) |
-| 🌪️ Set Me Free | [juxaos.com/set-me-free.html](https://juxaos.com/set-me-free.html) |
-| 📖 About | [juxaos.com/about.html](https://juxaos.com/about.html) |
-| ♟️ Strategy | [juxaos.com/strategy.html](https://juxaos.com/strategy.html) |
-| ⬆️ AOS UP | [juxaos.com/aos-up.html](https://juxaos.com/aos-up.html) |
-| 💬 Chat | [juxaos.com/chat.html](https://juxaos.com/chat.html) |
-| 🗺️ Sitemap | [juxaos.com/sitemap.html](https://juxaos.com/sitemap.html) |
-
-## 🎰 The ARCADE
-
-All games and products live in the [Learn](https://github.com/alissali/Learn) repository.
-
-**→ [Enter the ARCADE](https://raw.githack.com/alissali/Learn/main/ARCADE.html)**
-
-## 📂 Repository Structure
-
-```
-AOS/
-├── index.html          # juxaos.com gateway
-├── set-me-free.html    # The manifesto
-├── about.html          # The story
-├── strategy.html       # Where we go
-├── aos-up.html         # Update system
-├── chat.html           # AOS Chat
-├── sitemap.html        # Full sitemap (45 pages)
-├── media/
-│   └── AOS.mp4         # The video
-└── juxnews/
-    └── 2026-05-08-welcome.html
-```
-
-## 🔗 Ecosystem
-
-| Repo | What |
-|------|------|
-| [Learn](https://github.com/alissali/Learn) | Games · Stories · Products · All HTML |
-| [AOS](https://github.com/alissali/AOS) | This repo — juxaos.com portal |
-| [JuXITT-Core](https://github.com/alissali/JuXITT-Core) | Engine · Ali Baba Cavern source |
-| [NextGen-POS](https://github.com/alissali/NextGen-POS) | POS.vpp · Academic artifact |
-
-## Contact
-
-- **Web:** [juxitt.com](https://juxitt.com)
-- **Email:** [jux@juxitt.com](mailto:jux@juxitt.com)
+[![Live](https://img.shields.io/badge/SITE-juxaos.com-ff6600?style=for-the-badge)](https://juxaos.com)
+[![Spec](https://img.shields.io/badge/SPEC-READ-00ccff?style=for-the-badge)](https://raw.githack.com/alissali/AOS/main/AOS.SPEC.html)
+[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
 ---
 
-*NAME / FACT / TARGET — Bug-free is a property of Architecture, not code.*
+### 🌐 [juxaos.com](https://juxaos.com) · [AOS Spec](https://raw.githack.com/alissali/AOS/main/AOS.SPEC.html) · [Download](https://raw.githack.com/alissali/AOS/main/AOS.DOWNLOAD.html)
 
-💀♾️🦅
+</div>
+
+---
+
+## What is AOS?
+
+**NAME:** AOS — Adequate Operating System
+**FACT:** Formal language architecture. Five levels:
+
+```
+Objects (NAME/FACT/TARGET) → Expressions → Sentences → Dictionaries → Services
+```
+
+JuX is the first Dictionary built on AOS.
+
+## 🏗️ Architecture
+
+Three-layer system:
+- **Architect** (Window/Tasklet) — Vision, design
+- **Bridge** (JuXITT) — Connection layer
+- **Ground** (Ubuntu/Tasklet) — Execution
+
+## 📄 Documentation
+
+| Page | Description | Link |
+|------|-------------|------|
+| ⚙️ AOS Spec | Full specification | [VIEW](https://raw.githack.com/alissali/AOS/main/AOS.SPEC.html) |
+| 📥 Download | LinuxAOS + WinAOS | [VIEW](https://raw.githack.com/alissali/AOS/main/AOS.DOWNLOAD.html) |
+| 💰 Pricing | Set Me Free | [VIEW](https://raw.githack.com/alissali/AOS/main/set-me-free.html) |
+| 🔬 42 Demo | Interactive AOS demo | [VIEW](https://raw.githack.com/alissali/AOS/main/AOS.42.DEMO.html) |
+| 🕌 Arabic Dictionary | AOS Arabic implementation | [VIEW](https://raw.githack.com/alissali/AOS/main/AOS.ARABIC.DICTIONARY.html) |
+| 🔤 Arabic Engine | Arabic text processing | [VIEW](https://raw.githack.com/alissali/AOS/main/AOS.ARABIC.ENGINE.html) |
+| ⚡ In Action | AOS live demo | [VIEW](https://raw.githack.com/alissali/AOS/main/AOS.INACTION.html) |
+| 🐛 BUG-MIB | Bug tracking MIB | [VIEW](https://raw.githack.com/alissali/AOS/main/BUG-UBUNTU-SS.html) |
+
+## 🌐 juxaos.com — Complete Web Presence
+
+| Page | Link |
+|------|------|
+| 🏠 Gateway | [juxaos.com](https://juxaos.com) |
+| 🛒 Shop | [shop.html](https://juxaos.com/shop.html) |
+| 📋 Registry | [registry.html](https://juxaos.com/registry.html) |
+| 📦 Press Kit | [press.html](https://juxaos.com/press.html) |
+| ⚡ Command Center | [command.html](https://juxaos.com/command.html) |
+| 🔗 Link Tree | [links.html](https://juxaos.com/links.html) |
+| 📇 Business Card | [card.html](https://juxaos.com/card.html) |
+| 📡 Status Monitor | [status.html](https://juxaos.com/status.html) |
+| 📜 About / Manifesto | [about.html](https://juxaos.com/about.html) |
+| 🙏 Thank You | [thanks.html](https://juxaos.com/thanks.html) |
+| 🗺️ Sitemap | [sitemap.html](https://juxaos.com/sitemap.html) |
+| 🔒 Privacy Policy | [privacy.html](https://juxaos.com/privacy.html) |
+| 📋 Terms of Service | [terms.html](https://juxaos.com/terms.html) |
+| ✉️ Email Signature | [jux-signature.html](https://juxaos.com/jux-signature.html) |
+| 📡 RSS Feed | [feed.xml](https://juxaos.com/feed.xml) |
+| 🤖 robots.txt | [robots.txt](https://juxaos.com/robots.txt) |
+| 👥 humans.txt | [humans.txt](https://juxaos.com/humans.txt) |
+
+## 🎮 ARCADE — Full Gaming Platform
+
+See [Learn repo](https://github.com/alissali/Learn) for the complete ARCADE ecosystem:
+6 games · 48 prizes · tournament mode · daily challenges · achievements · PWA
+
+## 🧆 Ali Baba's Cavern
+
+Iraqi-Kurdish grocery — [CAVERN](https://raw.githack.com/alissali/Learn/main/CAVERN.html) · [SHOP](https://juxaos.com/shop.html)
+
+## 📰 JuXNews
+
+| Edition | Link |
+|---------|------|
+| Welcome | [Edition 1](https://alissali.github.io/AOS/) |
+| Edition 2 | [Edition 2](https://raw.githack.com/alissali/Learn/main/JuXNews.Edition2.html) |
+| THE HUNDRED | [Edition 3](https://raw.githack.com/alissali/Learn/main/JuXNews.Edition3.html) |
+
+## 🛠️ Related Repos
+
+| Repo | Description |
+|------|-------------|
+| [Learn](https://github.com/alissali/Learn) | ARCADE, games, stories, DUNE TAROT |
+| [JuXITT-Core](https://github.com/alissali/JuXITT-Core) | Ali Baba Cavern source |
+| [NextGen-POS](https://github.com/alissali/NextGen-POS) | POS system (POS.vpp) |
+
+## 📄 License
+
+MIT
+
+---
+
+<div align="center">
+
+**[JuX ITT](https://juxitt.com) · [juxaos.com](https://juxaos.com) · [ARCADE](https://raw.githack.com/alissali/Learn/main/ARCADE.html) · [Press Kit](https://juxaos.com/press.html)**
+
+*Built with the 7 Facts: Truth · Deduction · Reason · Motivation · Functional View · Synthesis · Production*
+
+</div>
