@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JuX ITT — COMMAND CENTER</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23e8a045' x='25' y='25' width='50' height='50' rx='4' transform='rotate(45 50 50)'/></svg>">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a12;color:#e8d5c0;font-family:monospace;min-height:100vh}
+.header{background:linear-gradient(135deg,#0a0a12,#1a0a2e);padding:25px;text-align:center;border-bottom:2px solid #e8a045}
+.header h1{font-family:'Cinzel Decorative',serif;color:#e8a045;font-size:1.8em;letter-spacing:5px}
+.header p{color:#666;font-size:.8em;margin-top:4px}
+.dash{max-width:1000px;margin:20px auto;padding:0 15px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:20px}
+.stat-card{background:rgba(15,15,25,.95);border:1px solid #1a1a2e;border-radius:8px;padding:15px;text-align:center}
+.stat-card .val{font-size:1.8em;color:#e8a045;font-family:'Cinzel Decorative',serif}
+.stat-card .lbl{color:#666;font-size:.7em;margin-top:3px;letter-spacing:1px}
+.section{background:rgba(15,15,25,.95);border:1px solid #1a1a2e;border-radius:10px;padding:15px;margin-bottom:15px}
+.section h2{font-family:'Cinzel Decorative',serif;color:#e8a045;font-size:1em;margin-bottom:10px;letter-spacing:2px}
+.check-list{list-style:none}
+.check-list li{padding:6px 0;border-bottom:1px solid #0f0f19;display:flex;justify-content:space-between;align-items:center;font-size:.8em}
+.check-list li:last-child{border:none}
+.check-list .url{color:#888;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60%}
+.check-list .url a{color:#888;text-decoration:none}
+.check-list .url a:hover{color:#e8a045}
+.status{padding:2px 8px;border-radius:4px;font-size:.75em;font-weight:bold}
+.status.ok{background:rgba(76,175,80,.15);color:#4caf50}
+.status.pending{background:rgba(255,193,7,.15);color:#ffc107}
+.status.checking{background:rgba(79,195,247,.15);color:#4fc3f7}
+.repo{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #0f0f19;font-size:.8em}
+.repo:last-child{border:none}
+.repo a{color:#4fc3f7;text-decoration:none}
+.ts{color:#444;font-size:.7em;text-align:center;margin-top:15px}
+.btn-check{display:block;margin:10px auto;padding:8px 20px;background:none;border:1px solid #e8a045;color:#e8a045;border-radius:6px;cursor:pointer;font-family:monospace;font-size:.85em}
+.btn-check:hover{background:rgba(232,160,69,.1)}
+#log{max-height:200px;overflow-y:auto;font-size:.75em;color:#555;padding:8px;background:#050510;border-radius:6px;margin-top:10px}
+.progress{height:3px;background:#1a1a2e;border-radius:2px;overflow:hidden;margin-top:8px}
+.progress-bar{height:100%;background:#e8a045;transition:width .5s;width:0}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>⚡ COMMAND CENTER</h1>
+<p>JuX ITT · All Systems Monitor</p>
+</div>
+<div class="dash">
+<div class="stats" id="top-stats">
+<div class="stat-card"><div class="val" id="total-pages">36</div><div class="lbl">PAGES</div></div>
+<div class="stat-card"><div class="val">3</div><div class="lbl">REPOS</div></div>
+<div class="stat-card"><div class="val">13</div><div class="lbl">PRODUCTS</div></div>
+<div class="stat-card"><div class="val">10</div><div class="lbl">STRIPE LINKS</div></div>
+<div class="stat-card"><div class="val" id="online-count">—</div><div class="lbl">ONLINE</div></div>
+<div class="stat-card"><div class="val" id="offline-count">—</div><div class="lbl">OFFLINE</div></div>
+</div>
+
+<div class="section">
+<h2>📡 LIVE STATUS CHECK</h2>
+<button class="btn-check" id="run-check">▶ RUN ALL CHECKS</button>
+<div class="progress"><div class="progress-bar" id="pbar"></div></div>
+<ul class="check-list" id="checks"></ul>
+<div id="log"></div>
+</div>
+
+<div class="section">
+<h2>🕹️ LEARN REPO — Games & Stories</h2>
+<ul class="check-list">
+<li><span class="url"><a href="https://raw.githack.com/alissali/Learn/main/ARCADE.html" target="_blank">ARCADE.html</a></span><span class="status ok">HUB</span></li>
+<li><span class="url"><a href="https://raw.githack.com/alissali/Learn/main/DUNE.TAROT.PORN.html" target="_blank">DUNE.TAROT.PORN.html</a></span><span class="status ok">79 cards</span></li>
+<li><span class="url"><a href="https://raw.githack.com/alissali/Learn/main/MONOPOLY.html" target="_blank">MONOPOLY.html</a></span><span class="status ok">24 streets</span></li>
+<li><span class="url"><a href="https://raw.githack.com/alissali/Learn/main/SNAKE.html" target="_blank">SNAKE.html</a></span><span class="status ok">9 prizes</span></li>
+<li><span class="url"><a href="https://raw.githack.com/alissali/Learn/main/JuXYams.html" target="_blank">JuXYams.html</a></span><span class="status ok">9 prizes</span></li>
+<li><span class="url"><a href="https://raw.githack.com/alissali/Learn/main/HOLDEM.TRAINING.html" target="_blank">HOLDEM.TRAINING.html</a></span><span class="status ok">9 prizes</span></li>
+<li><span class="url"><a href="https://raw.githack.com/alissali/Learn/main/SSS.html" target="_blank">SSS.html</a></span><span class="status ok">2 tiers</span></li>
+<li><span class="url"><a href="https://raw.githack.com/alissali/Learn/main/CAVERN.MENU.html" target="_blank">CAVERN.MENU.html</a></span><span class="status ok">17 items</span></li>
+<li><span class="url"><a href="https://raw.githack.com/alissali/Learn/main/ARCADE.TOURNAMENT.html" target="_blank">ARCADE.TOURNAMENT.html</a></span><span class="status ok">2-8 players</span></li>
+</ul>
+</div>
+
+<div class="section">
+<h2>⚙️ AOS REPO — juxaos.com</h2>
+<ul class="check-list">
+<li><span class="url"><a href="https://juxaos.com" target="_blank">index.html</a></span><span class="status ok">Gateway</span></li>
+<li><span class="url"><a href="https://juxaos.com/shop.html" target="_blank">shop.html</a></span><span class="status ok">13 products</span></li>
+<li><span class="url"><a href="https://juxaos.com/about.html" target="_blank">about.html</a></span><span class="status ok">Manifesto</span></li>
+<li><span class="url"><a href="https://juxaos.com/card.html" target="_blank">card.html</a></span><span class="status ok">vCard</span></li>
+<li><span class="url"><a href="https://juxaos.com/status.html" target="_blank">status.html</a></span><span class="status ok">21 services</span></li>
+<li><span class="url"><a href="https://juxaos.com/links.html" target="_blank">links.html</a></span><span class="status ok">Link Tree</span></li>
+<li><span class="url"><a href="https://juxaos.com/privacy.html" target="_blank">privacy.html</a></span><span class="status ok">GDPR</span></li>
+<li><span class="url"><a href="https://juxaos.com/terms.html" target="_blank">terms.html</a></span><span class="status ok">Legal</span></li>
+<li><span class="url"><a href="https://juxaos.com/thanks.html" target="_blank">thanks.html</a></span><span class="status ok">Post-buy</span></li>
+</ul>
+</div>
+
+<div class="section">
+<h2>🔗 REPOSITORIES</h2>
+<div class="repo"><a href="https://github.com/alissali/Learn" target="_blank">alissali/Learn</a><span style="color:#4caf50">main</span></div>
+<div class="repo"><a href="https://github.com/alissali/AOS" target="_blank">alissali/AOS</a><span style="color:#4caf50">main</span></div>
+<div class="repo"><a href="https://github.com/alissali/JuXITT-Core" target="_blank">alissali/JuXITT-Core</a><span style="color:#4caf50">main</span></div>
+<div class="repo"><a href="https://github.com/alissali/NextGen-POS" target="_blank">alissali/NextGen-POS</a><span style="color:#666">archive</span></div>
+</div>
+
+<div class="section">
+<h2>💳 STRIPE PRODUCTS</h2>
+<ul class="check-list">
+<li><span class="url">DUNE TAROT MELANGE</span><span class="status ok">€6.66</span></li>
+<li><span class="url">DUNE TAROT IRULAN</span><span class="status ok">€22</span></li>
+<li><span class="url">DUNE TAROT SSS</span><span class="status ok">€66</span></li>
+<li><span class="url">SSS IRULAN</span><span class="status ok">€22</span></li>
+<li><span class="url">SSS COMPLETE</span><span class="status ok">€66</span></li>
+<li><span class="url">CAVERN SPICE</span><span class="status ok">€20</span></li>
+<li><span class="url">CAVERN SWEETS</span><span class="status ok">€38</span></li>
+<li><span class="url">CAVERN FROZEN</span><span class="status ok">€28</span></li>
+<li><span class="url">CAVERN CHAI</span><span class="status ok">€16</span></li>
+<li><span class="url">CAVERN FULL</span><span class="status ok">€99</span></li>
+<li><span class="url">ARCADE CHAMPION</span><span class="status pending">€6.66 — LINK PENDING</span></li>
+<li><span class="url">ARCADE MOGUL</span><span class="status pending">€22 — LINK PENDING</span></li>
+<li><span class="url">ARCADE FULL</span><span class="status pending">€66 — LINK PENDING</span></li>
+</ul>
+</div>
+
+<p class="ts">Last session: 12 June 2026 · 100+ deliverables · 21 rounds</p>
+</div>
+<script>
+const urls=[
+'https://raw.githack.com/alissali/Learn/main/ARCADE.html',
+'https://raw.githack.com/alissali/Learn/main/DUNE.TAROT.PORN.html',
+'https://raw.githack.com/alissali/Learn/main/MONOPOLY.html',
+'https://raw.githack.com/alissali/Learn/main/SNAKE.html',
+'https://raw.githack.com/alissali/Learn/main/JuXYams.html',
+'https://raw.githack.com/alissali/Learn/main/HOLDEM.TRAINING.html',
+'https://raw.githack.com/alissali/Learn/main/SSS.html',
+'https://juxaos.com',
+'https://juxaos.com/shop.html',
+'https://juxaos.com/about.html',
+'https://juxaos.com/card.html',
+'https://juxaos.com/status.html',
+'https://juxaos.com/privacy.html',
+'https://juxaos.com/terms.html',
+'https://juxaos.com/links.html',
+'https://juxaos.com/thanks.html',
+'https://raw.githack.com/alissali/JuXITT-Core/main/cavern/CAVERN.html',
+];
+const cl=document.getElementById('checks'),log=document.getElementById('log'),pb=document.getElementById('pbar');
+document.getElementById('run-check').onclick=async function(){
+cl.innerHTML='';log.innerHTML='';let on=0,off=0;
+for(let i=0;i<urls.length;i++){
+pb.style.width=((i+1)/urls.length*100)+'%';
+let u=urls[i],name=u.split('/').pop()||'index';
+log.innerHTML+=`Checking ${name}...\n`;log.scrollTop=log.scrollHeight;
+try{let t0=Date.now(),r=await fetch(u,{mode:'no-cors',cache:'no-store'});let ms=Date.now()-t0;
+cl.innerHTML+=`<li><span class="url"><a href="${u}" target="_blank">${name}</a></span><span class="status ok">${ms}ms</span></li>`;on++}
+catch(e){cl.innerHTML+=`<li><span class="url"><a href="${u}" target="_blank">${name}</a></span><span class="status pending">FAIL</span></li>`;off++}
+}
+document.getElementById('online-count').textContent=on;
+document.getElementById('offline-count').textContent=off;
+log.innerHTML+=`\nDone: ${on} online, ${off} offline`;
+};
+</script>
+</body>
+</html>
