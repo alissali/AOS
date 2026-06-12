@@ -70,6 +70,7 @@ body{min-height:100vh;background:#05070f;font-family:'Courier New',monospace;col
 .footer .sig{color:#f59e0b;font-size:1em;margin-bottom:1em}
 </style>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzBhMGEwZiIvPgogIDxwb2x5Z29uIHBvaW50cz0iMTYsMiAzMCwxNiAxNiwzMCAyLDE2IiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZykiIHN0cm9rZS13aWR0aD0iMiIvPgogIDx0ZXh0IHg9IjE2IiB5PSIyMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmNjYwMCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTIiPko8L3RleHQ+CiAgPGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmNjYwMCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFhMWFmZiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPgo8L3N2Zz4=">
+    <link rel="alternate" type="application/rss+xml" title="JuXNews" href="feed.xml">
 </head>
 <body>
 
@@ -308,5 +309,12 @@ body{min-height:100vh;background:#05070f;font-family:'Courier New',monospace;col
 const s=document.getElementById('stars');
 for(let i=0;i<80;i++){const d=document.createElement('div');d.className='star';d.style.left=Math.random()*100+'%';d.style.top=Math.random()*100+'%';d.style.setProperty('--d',(2+Math.random()*4)+'s');d.style.animationDelay=Math.random()*3+'s';d.style.opacity=Math.random();s.appendChild(d)}
 </script>
+    <div style="text-align:center;margin:15px 0;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a href="privacy.html" style="color:#888;text-decoration:none;font-family:monospace;font-size:.75em">Privacy Policy</a>
+      <span style="color:#333">·</span>
+      <a href="terms.html" style="color:#888;text-decoration:none;font-family:monospace;font-size:.75em">Terms of Service</a>
+      <span style="color:#333">·</span>
+      <a href="feed.xml" style="color:#888;text-decoration:none;font-family:monospace;font-size:.75em">📡 RSS</a>
+    </div>
 </body>
 </html>
