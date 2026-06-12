@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JuX — PUBLISH KIT — Copy & Go</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#e0e0e0;font-family:'Courier New',monospace;padding:20px;max-width:900px;margin:0 auto}
+h1{text-align:center;font-size:2em;background:linear-gradient(90deg,#ff6600,#00bfff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:20px 0}
+h2{color:#ff6600;margin:30px 0 10px;font-size:1.4em;border-bottom:1px solid #333;padding-bottom:5px}
+h3{color:#00bfff;margin:20px 0 8px}
+.card{background:#111;border:1px solid #333;border-radius:8px;padding:20px;margin:15px 0;position:relative}
+.card:hover{border-color:#ff6600}
+.copy-btn{position:absolute;top:10px;right:10px;background:#ff6600;color:#000;border:none;padding:6px 14px;border-radius:4px;cursor:pointer;font-weight:bold;font-family:inherit}
+.copy-btn:hover{background:#ff8833}
+.copy-btn.copied{background:#00cc66}
+pre{background:#0d0d0d;padding:15px;border-radius:4px;overflow-x:auto;white-space:pre-wrap;font-size:0.85em;line-height:1.6;margin-top:10px}
+.tag{display:inline-block;background:#222;border:1px solid #444;padding:2px 8px;border-radius:3px;margin:2px;font-size:0.8em}
+.platform{display:inline-block;padding:4px 12px;border-radius:4px;font-weight:bold;font-size:0.9em;margin-right:8px}
+.devto{background:#1a1a2e;color:#fff}
+.codepen{background:#1e1e1e;color:#47cf73}
+.reddit{background:#1a0a00;color:#ff4500}
+.ph{background:#1a0e00;color:#da552f}
+.itch{background:#0a1a0a;color:#fa5c5c}
+.step{background:#1a1a00;border-left:3px solid #ff6600;padding:10px 15px;margin:8px 0;border-radius:0 4px 4px 0}
+a{color:#00bfff}
+.counter{text-align:center;color:#666;margin:10px 0}
+.links{background:#0d1117;padding:15px;border-radius:4px;margin:10px 0}
+.links a{display:block;margin:3px 0}
+</style>
+</head>
+<body>
+
+<h1>◆ JuX — PUBLISH KIT ◆</h1>
+<p style="text-align:center;color:#888">Ready-to-paste content for 5 platforms. Click COPY → paste → publish.</p>
+<p class="counter">Built 12 June 2026 · Session 3 · Round 24</p>
+
+<!-- ═══════════════════════════════════════ -->
+<h2>🟣 1. DEV.TO — Article</h2>
+<!-- ═══════════════════════════════════════ -->
+
+<div class="step">
+<strong>Steps:</strong> Go to <a href="https://dev.to/enter" target="_blank">dev.to/enter</a> → Log in with GitHub → Click "Create Post" → Paste the content below → Publish
+</div>
+
+<div class="card" id="devto-card">
+<button class="copy-btn" onclick="copyCard('devto-content')">COPY</button>
+<h3><span class="platform devto">DEV.TO</span> Full Article (Markdown)</h3>
+<pre id="devto-content">---
+title: I Built 78 Live Pages in 23 Rounds With Zero Frameworks
+published: true
+tags: webdev, javascript, html, showdev
+---
+
+## 78 pages. 23 rounds. Zero frameworks. Pure HTML + CSS + JS.
+
+I'm a 60-year-old self-taught developer from Rennes, France. Over three sessions, I built an entire web ecosystem from scratch — no React, no Next.js, no Tailwind, no build tools. Just raw HTML, CSS, and vanilla JavaScript.
+
+### What I Built
+
+**🎮 JuX ARCADE** — A full gaming platform with 6 browser games:
+- 🐍 SNAKE — Classic with power-ups
+- 🎲 YAMS — Dice game with scoring
+- 🃏 HOLD'EM TRAINING — Poker trainer (EN + AR)
+- 🎰 MONOPOLY — 9×9 board, Freedom Fighters edition
+- 🔮 DUNE TAROT — 79-card mystical deck (3 versions)
+
+**Plus the entire ecosystem:**
+- 🎪 Cinematic boot sequence with Web Audio
+- ⚔️ Tournament mode (2-8 players, bracket system)
+- 🏆 Hall of Fame with 48 prizes
+- 📊 Stats dashboard with rank progression
+- 🎫 Shareable challenge cards (canvas → PNG)
+- 🎵 Ambient synth radio (Web Audio API)
+- 🎰 Daily rewards with 7-day streaks
+- 🗺️ Interactive star map (constellation navigation)
+- 🎬 Auto-playing cinematic trailer
+
+**🧆 Ali Baba's Cavern** — Iraqi-Kurdish grocery store with 17 products and Stripe payments
+
+**📖 SSS** — Soft Sex Story — literary fiction with Dune mythology
+
+**⚙️ AOS** — Adequate Operating System — a formal language architecture (MIT licensed)
+
+### The Numbers
+
+| Metric | Value |
+|---|---|
+| Total live pages | 78 |
+| Build rounds | 23 |
+| Frameworks used | 0 |
+| Lines of CSS | ~15,000 |
+| Payment links | 10 (Stripe) |
+| Games | 6 |
+| Tarot cards | 79 |
+| Products | 13 |
+
+### Key Features (Zero Dependencies)
+
+- **PWA** — installable, works offline (service worker + manifest)
+- **Web Audio API** — 7 synthesized sounds, no audio files
+- **Canvas API** — challenge card generator, constellation map
+- **localStorage** — persistent scores, achievements, daily streaks
+- **JSON-LD** — structured data for Google (13 products)
+- **Stripe** — 10 live payment links, legal footers on all pages
+
+### Live Links
+
+- 🎮 [ARCADE Hub](https://raw.githack.com/alissali/Learn/main/ARCADE.html)
+- 🏠 [juxaos.com](https://juxaos.com) — full web presence
+- 🛒 [The Shop](https://juxaos.com/shop.html) — 13 products
+- 🌌 [Universe Map](https://raw.githack.com/alissali/Learn/main/UNIVERSE.html)
+- 📋 [Full Registry (78 links)](https://juxaos.com/registry.html)
+- 🐙 [GitHub — Learn repo](https://github.com/alissali/Learn)
+- 🐙 [GitHub — AOS repo](https://github.com/alissali/AOS)
+
+### The Philosophy
+
+No frameworks. No build steps. No node_modules. Every page loads in under 1 second. Every page works without JavaScript for core content. The browser is the platform.
+
+I call it **JuX** — and the 7 Facts that drive it are: TRUTH, DEDUCTION, REASON, MOTIVATION, FUNCTIONAL VIEW, SYNTHESIS, PRODUCTION.
+
+**Try it. Break it. Fork it. It's all MIT licensed.**
+
+---
+
+*Built by Mamoun Alissali — JuX ITT · Rennes, France*
+*Wonder Boy — born 6/6/66*</pre>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2>🟢 2. CODEPEN — 3 Pens</h2>
+<!-- ═══════════════════════════════════════ -->
+
+<div class="step">
+<strong>Steps:</strong> Go to <a href="https://codepen.io/pen/" target="_blank">codepen.io/pen</a> → Sign up with GitHub → Create New Pen → Paste HTML below → Save
+</div>
+
+<div class="card">
+<button class="copy-btn" onclick="copyCard('codepen-snake')">COPY</button>
+<h3><span class="platform codepen">CODEPEN</span> Pen 1 — SNAKE (Title + Description)</h3>
+<pre id="codepen-snake">Title: 🐍 JuX SNAKE — Pure JS Snake Game
+Description: Classic snake with power-ups, speed progression, and neon styling. Zero frameworks, zero dependencies. Part of the JuX ARCADE ecosystem — 6 games, 78 pages, all hand-coded.
+Tags: javascript, game, snake, html5, css3
+
+HTML: Paste the content from https://raw.githack.com/alissali/Learn/main/SNAKE.html (view source)</pre>
+</div>
+
+<div class="card">
+<button class="copy-btn" onclick="copyCard('codepen-tarot')">COPY</button>
+<h3><span class="platform codepen">CODEPEN</span> Pen 2 — DUNE TAROT (Title + Description)</h3>
+<pre id="codepen-tarot">Title: 🔮 DUNE TAROT — 79-Card Interactive Deck
+Description: 79 cards, 23 Major Arcana with original art, 4 suits (SPICE/WATER/CRYSKNIFE/SOLARI). Lazy-loaded images, Web Audio sounds, localStorage prizes. SSS mythology embedded. Zero frameworks.
+Tags: javascript, tarot, game, html5, interactive
+
+HTML: Paste the content from https://raw.githack.com/alissali/Learn/main/DUNE.TAROT.GAME.html (view source)</pre>
+</div>
+
+<div class="card">
+<button class="copy-btn" onclick="copyCard('codepen-yams')">COPY</button>
+<h3><span class="platform codepen">CODEPEN</span> Pen 3 — YAMS (Title + Description)</h3>
+<pre id="codepen-yams">Title: 🎲 JuX YAMS — Dice Game with Scoring
+Description: Classic Yahtzee-style dice game. Roll, hold, score. Pure vanilla JS, CSS animations, mobile-responsive. Part of the JuX ARCADE — 6 games built with zero frameworks.
+Tags: javascript, game, dice, html5, css3
+
+HTML: Paste the content from https://raw.githack.com/alissali/Learn/main/JuXYams.html (view source)</pre>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2>🔴 3. REDDIT — 3 Posts</h2>
+<!-- ═══════════════════════════════════════ -->
+
+<div class="step">
+<strong>Steps:</strong> Go to <a href="https://www.reddit.com/submit" target="_blank">reddit.com/submit</a> → Log in → Select subreddit → Paste → Post
+</div>
+
+<div class="card">
+<button class="copy-btn" onclick="copyCard('reddit-webdev')">COPY</button>
+<h3><span class="platform reddit">r/webdev</span> Post</h3>
+<pre id="reddit-webdev">Title: [Showoff Saturday] I built 78 live web pages with zero frameworks — pure HTML/CSS/JS
+
+I'm 60 years old, self-taught, and I just built an entire web ecosystem from scratch:
+
+🎮 **6 browser games** (Snake, Poker Trainer, Monopoly, Dice, Tarot — all playable)
+🏆 **48 prizes** with Hall of Fame and localStorage persistence
+⚔️ **Tournament mode** — 2-8 players, bracket system
+🎵 **Web Audio API** — synthesized sounds, ambient radio
+📱 **PWA** — installable, works offline
+💳 **Stripe payments** — 13 products, 10 live payment links
+🌐 **78 total pages** including shop, status monitor, press kit, universe map
+
+No React. No Tailwind. No build tools. No node_modules.
+
+Every page loads in under 1 second. Every page is a single HTML file.
+
+🎮 Play: https://raw.githack.com/alissali/Learn/main/ARCADE.html
+🏠 Site: https://juxaos.com
+📋 All 78 links: https://juxaos.com/registry.html
+🐙 Source: https://github.com/alissali/Learn
+
+MIT licensed. Fork it. Break it. Enjoy.
+
+Built in Rennes, France. ◆ JuX ITT</pre>
+</div>
+
+<div class="card">
+<button class="copy-btn" onclick="copyCard('reddit-indiegaming')">COPY</button>
+<h3><span class="platform reddit">r/indiegaming</span> Post</h3>
+<pre id="reddit-indiegaming">Title: JuX ARCADE — 6 free browser games, tournament mode, 48 prizes, all in pure HTML/JS
+
+Built a full arcade platform that runs in any browser:
+
+🐍 SNAKE — power-ups, speed levels
+🎲 YAMS — dice scoring game
+🃏 HOLD'EM TRAINING — poker hand trainer
+🎰 MONOPOLY — 9×9 board with Freedom Fighters
+🔮 DUNE TAROT — 79-card deck with original art (3 versions!)
+
+Features:
+- ⚔️ Tournament mode (2-8 players, bracket)
+- 🏆 Hall of Fame with 48 unlockable prizes
+- 🎰 Daily rewards + 7-day streaks
+- 🎵 Synth soundtrack (Web Audio API)
+- 🎪 Cinematic boot sequence
+- 📱 PWA — install it, play offline
+
+Zero frameworks. Zero dependencies. Just games.
+
+🎮 Play now: https://raw.githack.com/alissali/Learn/main/ARCADE.html
+🗺️ Star Map: https://raw.githack.com/alissali/Learn/main/ARCADE.MAP.html
+
+Free. MIT licensed. Enjoy!</pre>
+</div>
+
+<div class="card">
+<button class="copy-btn" onclick="copyCard('reddit-javascript')">COPY</button>
+<h3><span class="platform reddit">r/javascript</span> Post</h3>
+<pre id="reddit-javascript">Title: Built 6 games + 78 pages using only vanilla JS — Web Audio, Canvas, Service Workers, localStorage
+
+No frameworks, no build tools. Here's what vanilla JS can do in 2026:
+
+- **Web Audio API** — 7 synthesized sounds (coin, fanfare, jackpot, ambient drone)
+- **Canvas API** — constellation map with traveling particles, shareable challenge card generator
+- **Service Worker** — full offline play capability
+- **localStorage** — persistent scores, achievements, 7-day streak system, 48 prizes
+- **JSON-LD** — structured data for 13 products (Google sees prices)
+- **Intersection Observer** — lazy-load 23 tarot card images on click
+
+Total: 78 live pages, 6 games, 13 Stripe products, full PWA.
+
+Source: https://github.com/alissali/Learn
+Live: https://raw.githack.com/alissali/Learn/main/ARCADE.html
+
+MIT licensed.</pre>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2>🟠 4. PRODUCT HUNT</h2>
+<!-- ═══════════════════════════════════════ -->
+
+<div class="step">
+<strong>Steps:</strong> Go to <a href="https://www.producthunt.com/posts/new" target="_blank">producthunt.com</a> → Sign up → Submit Product → Fill with content below
+</div>
+
+<div class="card">
+<button class="copy-btn" onclick="copyCard('ph-content')">COPY</button>
+<h3><span class="platform ph">PRODUCT HUNT</span> Listing</h3>
+<pre id="ph-content">Product Name: JuX ARCADE
+Tagline: 6 browser games, 48 prizes, zero frameworks — pure HTML/CSS/JS
+URL: https://raw.githack.com/alissali/Learn/main/ARCADE.html
+Topics: Games, Web Development, Open Source, Developer Tools
+
+Description:
+JuX ARCADE is a full gaming platform built with zero frameworks — pure HTML, CSS, and vanilla JavaScript.
+
+🎮 6 Games: Snake, Yams (dice), Hold'em Training (poker), Monopoly, Dune Tarot (79 cards)
+🏆 48 unlockable prizes in the Hall of Fame
+⚔️ Tournament mode for 2-8 players
+🎵 Synthesized soundtrack (Web Audio API)
+🎪 Cinematic boot sequence
+📱 PWA — install and play offline
+🎰 Daily rewards with streak system
+
+Part of the JuX ecosystem — 78 live pages, 13 products with Stripe payments, all hand-coded.
+
+MIT licensed. Built in Rennes, France by a 60-year-old self-taught developer.
+
+Gallery images:
+- Screenshot of ARCADE hub
+- Screenshot of DUNE TAROT
+- Screenshot of Star Map
+- Screenshot of Tournament mode
+
+Maker: Mamoun Alissali (@alissali)</pre>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2>🔴 5. ITCH.IO</h2>
+<!-- ═══════════════════════════════════════ -->
+
+<div class="step">
+<strong>Steps:</strong> Go to <a href="https://itch.io/register" target="_blank">itch.io</a> → Create account → Dashboard → Create New Project → Fill with content below
+</div>
+
+<div class="card">
+<button class="copy-btn" onclick="copyCard('itch-content')">COPY</button>
+<h3><span class="platform itch">ITCH.IO</span> Game Page</h3>
+<pre id="itch-content">Title: JuX ARCADE
+Project URL: jux-arcade
+Classification: Games
+Kind of project: HTML (plays in browser)
+Embed URL: https://raw.githack.com/alissali/Learn/main/ARCADE.html
+Viewport: 1280 x 720
+
+Genre: Card Game, Strategy, Puzzle
+Tags: arcade, browser-game, cards, html5, javascript, no-framework, pure-js, tarot, vanilla-js
+
+Description:
+JuX ARCADE — 6 browser games built with zero frameworks.
+
+🐍 SNAKE — Classic snake with power-ups and speed levels
+🎲 YAMS — Dice scoring game
+🃏 HOLD'EM TRAINING — Texas Hold'em hand trainer (EN + Arabic)
+🎰 MONOPOLY — 9×9 board, 24 international streets, Freedom Fighters
+🔮 DUNE TAROT — 79-card deck with 23 original Major Arcana artworks
+
+Features:
+• Tournament mode (2-8 players)
+• Hall of Fame with 48 unlockable prizes
+• Daily rewards with 7-day streak system
+• Cinematic boot sequence
+• Web Audio synthesized sounds
+• Star Map constellation navigation
+• PWA — installable, plays offline
+• Stats dashboard with rank progression
+
+Built by Mamoun Alissali in Rennes, France.
+MIT licensed. Pure HTML + CSS + JavaScript. Zero dependencies.
+
+Pricing: Free / $6.66 Champion / $22 Mogul / $66 Full Access</pre>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<h2 style="color:#00cc66">✅ QUICK LAUNCH CHECKLIST</h2>
+<!-- ═══════════════════════════════════════ -->
+
+<div class="card" style="border-color:#00cc66">
+<table style="width:100%;border-collapse:collapse">
+<tr style="border-bottom:1px solid #333"><td>☐</td><td><strong>Dev.to</strong></td><td><a href="https://dev.to/enter" target="_blank">Sign in with GitHub</a> → Create Post → Paste → Publish</td></tr>
+<tr style="border-bottom:1px solid #333"><td>☐</td><td><strong>CodePen</strong></td><td><a href="https://codepen.io/accounts/signup/user/free" target="_blank">Sign up</a> → 3 new pens → Paste source</td></tr>
+<tr style="border-bottom:1px solid #333"><td>☐</td><td><strong>Reddit</strong></td><td><a href="https://www.reddit.com/register" target="_blank">Create account</a> → 3 posts → Paste</td></tr>
+<tr style="border-bottom:1px solid #333"><td>☐</td><td><strong>Product Hunt</strong></td><td><a href="https://www.producthunt.com" target="_blank">Sign up</a> → Submit → Paste listing</td></tr>
+<tr><td>☐</td><td><strong>itch.io</strong></td><td><a href="https://itch.io/register" target="_blank">Register</a> → New Project → HTML embed → Paste</td></tr>
+</table>
+</div>
+
+<script>
+function copyCard(id){
+const el=document.getElementById(id);
+const text=el.textContent;
+navigator.clipboard.writeText(text).then(()=>{
+const btn=el.parentElement.querySelector('.copy-btn');
+btn.textContent='COPIED ✓';
+btn.classList.add('copied');
+setTimeout(()=>{btn.textContent='COPY';btn.classList.remove('copied')},2000);
+});
+}
+</script>
+
+</body>
+</html>
