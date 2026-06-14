@@ -7,8 +7,17 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#000;overflow:hidden;font-family:'Segoe UI',sans-serif}
-canvas{display:block;position:absolute;top:0;left:0}
-#ui-overlay{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;z-index:10}
+.game-nav{display:flex;align-items:center;justify-content:space-between;padding:8px 20px;background:rgba(0,51,51,0.95);border-bottom:1px solid rgba(74,158,255,0.3);z-index:200;position:relative}
+.game-nav a{color:#c0c0c0;text-decoration:none;font-size:14px;font-family:'Courier New',monospace;transition:color 0.2s}
+.game-nav a:hover{color:#4a9eff}
+.game-nav .logo{font-size:20px;font-weight:bold;color:#fff;letter-spacing:2px}
+.game-nav .logo span{color:#4a9eff}
+.game-nav .nav-links{display:flex;gap:20px;align-items:center}
+.game-nav .nav-links a.active{color:#ffdd00}
+.game-nav .buy-btn{background:linear-gradient(135deg,#4a9eff,#0066cc);color:#fff!important;padding:5px 14px;border-radius:4px;font-size:12px;font-weight:bold}
+.game-nav .buy-btn:hover{opacity:0.9}
+canvas{display:block;position:absolute;top:42px;left:0}
+#ui-overlay{position:absolute;top:42px;left:0;width:100%;height:calc(100% - 42px);display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;z-index:10}
 #ui-overlay.active{pointer-events:auto}
 .menu-btn{pointer-events:auto;cursor:pointer;border:2px solid #ffdd00;background:rgba(180,120,30,0.9);color:#fff;font:bold 18px sans-serif;padding:12px 30px;margin:6px;min-width:200px;text-align:center;transition:all 0.2s}
 .menu-btn:hover{background:rgba(220,160,40,0.95);transform:scale(1.05)}
@@ -31,13 +40,23 @@ canvas{display:block;position:absolute;top:0;left:0}
 </style>
 </head>
 <body>
+<nav class="game-nav">
+  <a href="index.html" class="logo">A<span>O</span>S</a>
+  <div class="nav-links">
+    <a href="game.html">🚀 Silver Ship</a>
+    <a href="arena.html" class="active">⚔️ Arena</a>
+    <a href="silver-ship.html">Gallery</a>
+    <a href="index.html">Home</a>
+    <a href="https://buy.stripe.com/9B6bJ31Mjewqd9BbZk1wY00" target="_blank" class="buy-btn">TORNADO €20 🌪️</a>
+  </div>
+</nav>
 <canvas id="gc" tabindex="0"></canvas>
 <div id="ui-overlay"></div>
 <button class="toggle-sound" id="sndToggle" onclick="soundEnabled=!soundEnabled;this.textContent=soundEnabled?'🔊':'🔇'">🔊</button>
 <script>
 const C=document.getElementById('gc'),X=C.getContext('2d');
 let W,H;
-function resize(){W=C.width=innerWidth;H=C.height=innerHeight}
+function resize(){W=C.width=innerWidth;H=C.height=innerHeight-42}
 resize();addEventListener('resize',resize);
 
 // ═══════════════════════════════════════════
