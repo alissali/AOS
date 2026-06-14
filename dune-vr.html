@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DUNE: The Journey Back to Earth — 3D VR</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{overflow:hidden;background:#000;font-family:'Courier New',monospace;color:#e8d5a3}
+canvas{display:block}
+#hud{position:fixed;top:0;left:0;right:0;z-index:20;pointer-events:none}
+#hud-top{display:flex;justify-content:space-between;padding:12px 20px;background:linear-gradient(180deg,rgba(0,0,0,0.7),transparent)}
+#health-bar{width:200px;height:16px;background:rgba(0,0,0,0.6);border:1px solid #c4a44a;border-radius:3px;overflow:hidden}
+#health-fill{width:100%;height:100%;background:linear-gradient(90deg,#d4443c,#e8a832,#5dba3b);transition:width 0.3s}
+#enemy-bar{width:200px;height:16px;background:rgba(0,0,0,0.6);border:1px solid #8b0000;border-radius:3px;overflow:hidden}
+#enemy-fill{width:100%;height:100%;background:linear-gradient(90deg,#ff4444,#cc2222);transition:width 0.3s}
+#arena-name{text-align:center;font-size:18px;letter-spacing:4px;color:#e8c860;text-shadow:0 0 20px rgba(232,200,96,0.5)}
+#combo{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:48px;color:#ffd700;text-shadow:0 0 30px #ffa500;pointer-events:none;z-index:30;opacity:0;transition:opacity 0.3s}
+#crosshair{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:24px;height:24px;pointer-events:none;z-index:15}
+#crosshair::before,#crosshair::after{content:'';position:absolute;background:#e8c860;opacity:0.6}
+#crosshair::before{width:2px;height:24px;left:11px}
+#crosshair::after{width:24px;height:2px;top:11px}
+
+#menu-screen{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a0a00 0%,#2d1800 30%,#0a0500 60%,#1a0f00 100%)}
+#menu-screen h1{font-size:42px;letter-spacing:8px;color:#e8c860;text-shadow:0 0 40px rgba(232,200,96,0.4),0 0 80px rgba(232,150,30,0.2);margin-bottom:8px}
+#menu-screen h2{font-size:16px;letter-spacing:6px;color:#a08030;margin-bottom:40px}
+.arena-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:720px;margin-bottom:30px}
+.arena-btn{background:rgba(40,25,5,0.8);border:1px solid #6b4c1e;color:#e8c860;padding:16px 12px;font-family:'Courier New',monospace;font-size:13px;cursor:pointer;border-radius:6px;transition:all 0.3s;text-align:center;min-width:160px}
+.arena-btn:hover{background:rgba(80,50,10,0.9);border-color:#e8c860;box-shadow:0 0 20px rgba(232,200,96,0.3);transform:translateY(-2px)}
+.arena-btn .icon{font-size:28px;display:block;margin-bottom:6px}
+.arena-btn .name{font-size:12px;letter-spacing:2px;display:block}
+.arena-btn.locked{opacity:0.35;cursor:not-allowed}
+#vr-btn{background:linear-gradient(135deg,#2d1800,#4a2800);border:2px solid #e8c860;color:#e8c860;padding:12px 30px;font-size:16px;font-family:'Courier New',monospace;cursor:pointer;border-radius:8px;letter-spacing:3px;margin-top:10px;transition:all 0.3s}
+#vr-btn:hover{background:linear-gradient(135deg,#4a2800,#6b3c00);box-shadow:0 0 30px rgba(232,200,96,0.4)}
+#controls-info{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);color:#806030;font-size:11px;z-index:10;pointer-events:none}
+
+#death-screen,#victory-screen{position:fixed;inset:0;z-index:100;display:none;flex-direction:column;align-items:center;justify-content:center}
+#death-screen{background:rgba(40,0,0,0.9)}
+#victory-screen{background:rgba(20,15,0,0.9)}
+.screen-title{font-size:52px;letter-spacing:6px;margin-bottom:20px}
+.screen-sub{font-size:16px;margin-bottom:30px;color:#a08030}
+.screen-btn{background:rgba(40,25,5,0.8);border:1px solid #e8c860;color:#e8c860;padding:12px 30px;font-size:14px;font-family:'Courier New',monospace;cursor:pointer;border-radius:6px;margin:5px;transition:all 0.3s}
+.screen-btn:hover{background:rgba(80,50,10,0.9);box-shadow:0 0 15px rgba(232,200,96,0.3)}
+
+#damage-flash{position:fixed;inset:0;background:radial-gradient(ellipse,transparent 50%,rgba(180,30,0,0.5));pointer-events:none;z-index:25;opacity:0;transition:opacity 0.15s}
+
+nav.dune-nav{position:fixed;top:0;left:0;right:0;z-index:50;height:42px;background:linear-gradient(90deg,#1a0a00,#2d1800,#1a0a00);display:flex;align-items:center;padding:0 16px;border-bottom:1px solid #6b4c1e;gap:14px;font-size:13px}
+nav.dune-nav a{color:#e8c860;text-decoration:none;transition:color 0.2s}
+nav.dune-nav a:hover{color:#ffd700}
+nav.dune-nav .logo{font-weight:bold;font-size:15px;margin-right:10px}
+nav.dune-nav .spacer{flex:1}
+nav.dune-nav .buy{background:#e8c860;color:#1a0a00;padding:4px 12px;border-radius:4px;font-weight:bold;font-size:12px}
+nav.dune-nav .buy:hover{background:#ffd700}
+</style>
+</head>
+<body>
+
+<nav class="dune-nav" id="topnav">
+  <a href="index.html" class="logo">🌪️ AOS</a>
+  <a href="silver-ship.html">🛸 Gallery</a>
+  <a href="game.html">🚀 Silver Ship</a>
+  <a href="arena.html">⚔️ Arena</a>
+  <a href="dune-arena.html">🏜️ Dune 2D</a>
+  <a href="dune-vr.html" class="active" style="color:#ffd700">🥽 Dune 3D</a>
+  <span class="spacer"></span>
+  <a href="https://buy.stripe.com/9B6bJ31Mjewqd9BbZk1wY00" class="buy">🌪️ TORNADO €20</a>
+</nav>
+
+<div id="menu-screen">
+  <h1>🏜️ DUNE</h1>
+  <h2>THE JOURNEY BACK TO EARTH — 3D VR</h2>
+  <div class="arena-grid" id="arena-grid"></div>
+  <button id="vr-btn" style="display:none">🥽 ENTER VR</button>
+  <p style="color:#604020;font-size:11px;margin-top:12px">WASD move · Mouse look · Click attack · Space block · Shift dodge</p>
+</div>
+
+<div id="hud" style="display:none">
+  <div id="hud-top">
+    <div><div style="font-size:11px;margin-bottom:3px">FREMEN ⚔</div><div id="health-bar"><div id="health-fill"></div></div></div>
+    <div id="arena-name"></div>
+    <div style="text-align:right"><div style="font-size:11px;margin-bottom:3px;color:#cc4444">ENEMY 💀</div><div id="enemy-bar"><div id="enemy-fill"></div></div></div>
+  </div>
+</div>
+<div id="combo"></div>
+<div id="crosshair" style="display:none"></div>
+<div id="damage-flash"></div>
+<div id="controls-info">WASD move · Mouse look · Left-click attack · Space block · Shift dodge · ESC menu</div>
+
+<div id="death-screen">
+  <div class="screen-title" style="color:#cc3333">💀 LOST IN THE DESERT</div>
+  <div class="screen-sub">The sands claim another...</div>
+  <button class="screen-btn" onclick="retry()">⚔ RETRY</button>
+  <button class="screen-btn" onclick="backToMenu()">🏜️ MENU</button>
+</div>
+
+<div id="victory-screen">
+  <div class="screen-title" style="color:#ffd700">🏜️ VICTORY!</div>
+  <div class="screen-sub" id="victory-sub"></div>
+  <button class="screen-btn" onclick="nextArena()">➡ NEXT STAGE</button>
+  <button class="screen-btn" onclick="backToMenu()">🏜️ MENU</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ══════════════════════════════════════════════════
+// DUNE: THE JOURNEY BACK TO EARTH — 3D VR COMBAT
+// ══════════════════════════════════════════════════
+
+const ARENAS = [
+  {name:'SIETCH TABR',sub:'Learn the Crysknife',icon:'🏜️',sky:0x4a3520,fog:0x3a2510,ground:0xc4a44a,enemies:2,eHP:60,eDmg:5,eSpd:0.018},
+  {name:'DEATH STILL',sub:'Survive the Deep Desert',icon:'💀',sky:0x2a1a0a,fog:0x1a0a00,ground:0x8b7355,enemies:3,eHP:80,eDmg:7,eSpd:0.02},
+  {name:'MAKER HOOKS',sub:'Master the Worm',icon:'🐛',sky:0x5a4530,fog:0x4a3520,ground:0xd4b464,enemies:3,eHP:100,eDmg:8,eSpd:0.022},
+  {name:'BENE GESSERIT TEMPLE',sub:'The Voice Commands',icon:'🔮',sky:0x1a0a2a,fog:0x100520,ground:0x554466,enemies:4,eHP:90,eDmg:10,eSpd:0.024},
+  {name:'GIEDI PRIME',sub:'Harkonnen Pit Fights',icon:'⚫',sky:0x0a0a0a,fog:0x050505,ground:0x333333,enemies:4,eHP:120,eDmg:12,eSpd:0.026},
+  {name:'TERMINATOR',sub:'Score: 1.5/10',icon:'⚡',sky:0x001a1a,fog:0x003333,ground:0x004444,enemies:5,eHP:150,eDmg:15,eSpd:0.03},
+  {name:'SANDWORM CHARGE',sub:'Ride the Maker',icon:'🐛',sky:0x5a4020,fog:0x4a3010,ground:0xe8c870,enemies:4,eHP:130,eDmg:11,eSpd:0.028},
+  {name:'BATTLE OF ARRAKEEN',sub:'Defend the Shield Wall',icon:'⚔',sky:0x3a2010,fog:0x2a1000,ground:0xaa8844,enemies:6,eHP:140,eDmg:13,eSpd:0.032}
+];
+
+let scene, camera, renderer, clock;
+let player, enemies = [], particles = [];
+let currentArena = 0, gameActive = false, paused = false;
+let playerHP = 100, maxHP = 100;
+let comboCount = 0, comboTimer = 0;
+let keys = {}, mouseDown = false;
+let yaw = 0, pitch = 0;
+let playerMesh, weaponMesh, weaponSwing = 0;
+let attacking = false, blocking = false, dodging = false;
+let attackCooldown = 0, dodgeCooldown = 0, blockTimer = 0;
+let groundMesh, skyDome;
+let vrSession = null, vrSupported = false;
+
+// ═══ INIT ═══
+function init() {
+  scene = new THREE.Scene();
+  clock = new THREE.Clock();
+  
+  camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 500);
+  camera.position.set(0, 1.7, 0);
+  
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.5;
+  renderer.xr.enabled = true;
+  document.body.appendChild(renderer.domElement);
+  
+  // Check VR
+  if (navigator.xr) {
+    navigator.xr.isSessionSupported('immersive-vr').then(ok => {
+      vrSupported = ok;
+      if (ok) document.getElementById('vr-btn').style.display = 'block';
+    });
+  }
+  
+  // Lights
+  const amb = new THREE.AmbientLight(0xffeedd, 0.4);
+  scene.add(amb);
+  
+  const sun = new THREE.DirectionalLight(0xffe0a0, 1.2);
+  sun.position.set(50, 80, 30);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(2048, 2048);
+  sun.shadow.camera.left = -40;
+  sun.shadow.camera.right = 40;
+  sun.shadow.camera.top = 40;
+  sun.shadow.camera.bottom = -40;
+  scene.add(sun);
+  
+  const point = new THREE.PointLight(0xff8800, 0.3, 50);
+  point.position.set(0, 10, 0);
+  scene.add(point);
+  
+  buildMenu();
+  
+  window.addEventListener('resize', () => {
+    camera.aspect = innerWidth / innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+  });
+  
+  document.addEventListener('keydown', e => {
+    keys[e.code] = true;
+    if (e.code === 'Escape' && gameActive) backToMenu();
+    if (e.code === 'Space' && gameActive) { blocking = true; e.preventDefault(); }
+    if (e.code === 'ShiftLeft' && gameActive && dodgeCooldown <= 0) startDodge();
+  });
+  document.addEventListener('keyup', e => {
+    keys[e.code] = false;
+    if (e.code === 'Space') blocking = false;
+  });
+  document.addEventListener('mousedown', e => {
+    if (!gameActive) return;
+    if (!document.pointerLockElement) {
+      renderer.domElement.requestPointerLock();
+      return;
+    }
+    if (e.button === 0 && attackCooldown <= 0) startAttack();
+  });
+  document.addEventListener('mousemove', e => {
+    if (!document.pointerLockElement || !gameActive) return;
+    yaw -= e.movementX * 0.002;
+    pitch -= e.movementY * 0.002;
+    pitch = Math.max(-1.2, Math.min(1.2, pitch));
+  });
+  
+  renderer.setAnimationLoop(gameLoop);
+}
+
+// ═══ MENU ═══
+function buildMenu() {
+  const grid = document.getElementById('arena-grid');
+  grid.innerHTML = '';
+  ARENAS.forEach((a, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'arena-btn';
+    btn.innerHTML = `<span class="icon">${a.icon}</span><span class="name">${a.name}</span><span style="font-size:10px;color:#806030;display:block;margin-top:4px">${a.sub}</span>`;
+    btn.onclick = () => startArena(i);
+    grid.appendChild(btn);
+  });
+}
+
+// ═══ BUILD ARENA ═══
+function buildArena(idx) {
+  // Clear
+  while (scene.children.length > 0) scene.remove(scene.children[0]);
+  enemies = [];
+  particles = [];
+  
+  const a = ARENAS[idx];
+  
+  // Sky
+  scene.background = new THREE.Color(a.sky);
+  scene.fog = new THREE.FogExp2(a.fog, 0.015);
+  
+  // Lights
+  scene.add(new THREE.AmbientLight(0xffeedd, 0.35));
+  const sun = new THREE.DirectionalLight(0xffe0a0, 1.2);
+  sun.position.set(50, 80, 30);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(1024, 1024);
+  sun.shadow.camera.left = -30; sun.shadow.camera.right = 30;
+  sun.shadow.camera.top = 30; sun.shadow.camera.bottom = -30;
+  scene.add(sun);
+  scene.add(new THREE.PointLight(0xff6600, 0.4, 40));
+  
+  // Ground — desert terrain
+  const gGeo = new THREE.PlaneGeometry(100, 100, 64, 64);
+  const pos = gGeo.attributes.position;
+  for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i), y = pos.getY(i);
+    pos.setZ(i, Math.sin(x * 0.3) * Math.cos(y * 0.2) * 1.5 + Math.random() * 0.2);
+  }
+  gGeo.computeVertexNormals();
+  groundMesh = new THREE.Mesh(gGeo, new THREE.MeshStandardMaterial({
+    color: a.ground, roughness: 0.95, metalness: 0.05, flatShading: true
+  }));
+  groundMesh.rotation.x = -Math.PI / 2;
+  groundMesh.receiveShadow = true;
+  scene.add(groundMesh);
+  
+  // Arena walls / pillars
+  const wallMat = new THREE.MeshStandardMaterial({ color: 0x6b4c1e, roughness: 0.8 });
+  const pillarGeo = new THREE.CylinderGeometry(0.5, 0.6, 5, 8);
+  for (let i = 0; i < 12; i++) {
+    const angle = (i / 12) * Math.PI * 2;
+    const r = 18;
+    const pillar = new THREE.Mesh(pillarGeo, wallMat);
+    pillar.position.set(Math.cos(angle) * r, 2.5, Math.sin(angle) * r);
+    pillar.castShadow = true;
+    scene.add(pillar);
+    
+    // Torch on top
+    const torchLight = new THREE.PointLight(0xff6600, 0.5, 10);
+    torchLight.position.set(Math.cos(angle) * r, 5.5, Math.sin(angle) * r);
+    scene.add(torchLight);
+    
+    // Flame particle (simple sphere)
+    const flame = new THREE.Mesh(
+      new THREE.SphereGeometry(0.15, 6, 6),
+      new THREE.MeshBasicMaterial({ color: 0xff6600 })
+    );
+    flame.position.copy(torchLight.position);
+    flame.userData.isFlame = true;
+    flame.userData.baseY = torchLight.position.y;
+    scene.add(flame);
+  }
+  
+  // Rock formations
+  const rockMat = new THREE.MeshStandardMaterial({ color: 0x5a4a3a, roughness: 0.9, flatShading: true });
+  for (let i = 0; i < 8; i++) {
+    const rockGeo = new THREE.DodecahedronGeometry(0.8 + Math.random() * 1.2, 0);
+    const rock = new THREE.Mesh(rockGeo, rockMat);
+    const angle = Math.random() * Math.PI * 2;
+    const dist = 8 + Math.random() * 10;
+    rock.position.set(Math.cos(angle) * dist, 0.5, Math.sin(angle) * dist);
+    rock.rotation.set(Math.random(), Math.random(), Math.random());
+    rock.scale.y = 0.5 + Math.random() * 0.5;
+    rock.castShadow = true;
+    scene.add(rock);
+  }
+  
+  // Player weapon (crysknife)
+  const bladeMat = new THREE.MeshStandardMaterial({ color: 0xe8e0d0, metalness: 0.6, roughness: 0.3 });
+  const bladeGeo = new THREE.BoxGeometry(0.05, 0.5, 0.02);
+  weaponMesh = new THREE.Mesh(bladeGeo, bladeMat);
+  
+  const hiltMat = new THREE.MeshStandardMaterial({ color: 0x8b6914, roughness: 0.6 });
+  const hilt = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.15, 0.04), hiltMat);
+  hilt.position.y = -0.32;
+  weaponMesh.add(hilt);
+  
+  const guard = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.02, 0.04), hiltMat);
+  guard.position.y = -0.25;
+  weaponMesh.add(guard);
+  
+  scene.add(weaponMesh);
+  
+  // Sand particles
+  const sandGeo = new THREE.BufferGeometry();
+  const sandPos = new Float32Array(500 * 3);
+  for (let i = 0; i < 500; i++) {
+    sandPos[i*3] = (Math.random()-0.5)*60;
+    sandPos[i*3+1] = Math.random()*8;
+    sandPos[i*3+2] = (Math.random()-0.5)*60;
+  }
+  sandGeo.setAttribute('position', new THREE.BufferAttribute(sandPos, 3));
+  const sandMat = new THREE.PointsMaterial({ color: a.ground, size: 0.08, transparent: true, opacity: 0.4 });
+  const sandParticles = new THREE.Points(sandGeo, sandMat);
+  sandParticles.userData.isSand = true;
+  scene.add(sandParticles);
+  
+  // Spawn enemies
+  for (let i = 0; i < a.enemies; i++) {
+    spawnEnemy(a, i);
+  }
+}
+
+function spawnEnemy(a, idx) {
+  const angle = (idx / a.enemies) * Math.PI * 2 + Math.random() * 0.5;
+  const dist = 6 + Math.random() * 6;
+  
+  // Enemy body
+  const group = new THREE.Group();
+  
+  // Torso
+  const torsoMat = new THREE.MeshStandardMaterial({ color: 0x4a2a0a, roughness: 0.7 });
+  const torso = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.8, 0.3), torsoMat);
+  torso.position.y = 1.2;
+  torso.castShadow = true;
+  group.add(torso);
+  
+  // Head
+  const headMat = new THREE.MeshStandardMaterial({ color: 0x6b4a2a, roughness: 0.6 });
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.2, 8, 8), headMat);
+  head.position.y = 1.8;
+  head.castShadow = true;
+  group.add(head);
+  
+  // Eyes — glowing
+  const eyeMat = new THREE.MeshBasicMaterial({ color: 0x0044ff }); // Blue-in-blue
+  const eyeL = new THREE.Mesh(new THREE.SphereGeometry(0.04, 6, 6), eyeMat);
+  eyeL.position.set(-0.08, 1.83, 0.16);
+  group.add(eyeL);
+  const eyeR = new THREE.Mesh(new THREE.SphereGeometry(0.04, 6, 6), eyeMat);
+  eyeR.position.set(0.08, 1.83, 0.16);
+  group.add(eyeR);
+  
+  // Legs
+  const legMat = new THREE.MeshStandardMaterial({ color: 0x3a2a1a, roughness: 0.8 });
+  const legL = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.7, 0.18), legMat);
+  legL.position.set(-0.15, 0.45, 0);
+  group.add(legL);
+  const legR = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.7, 0.18), legMat);
+  legR.position.set(0.15, 0.45, 0);
+  group.add(legR);
+  
+  // Arms
+  const armL = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.6, 0.14), torsoMat);
+  armL.position.set(-0.44, 1.1, 0);
+  group.add(armL);
+  const armR = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.6, 0.14), torsoMat);
+  armR.position.set(0.44, 1.1, 0);
+  armR.userData.isWeaponArm = true;
+  group.add(armR);
+  
+  // Enemy weapon
+  const eBlade = new THREE.Mesh(
+    new THREE.BoxGeometry(0.04, 0.6, 0.02),
+    new THREE.MeshStandardMaterial({ color: 0xcccccc, metalness: 0.7 })
+  );
+  eBlade.position.set(0.44, 0.8, 0.2);
+  group.add(eBlade);
+  
+  group.position.set(Math.cos(angle) * dist, 0, Math.sin(angle) * dist);
+  group.userData = {
+    hp: a.eHP,
+    maxHP: a.eHP,
+    dmg: a.eDmg,
+    spd: a.eSpd,
+    state: 'idle', // idle, chase, attack, hit, dead
+    stateTimer: 0,
+    attackCooldown: 2 + Math.random() * 2,
+    isEnemy: true,
+    targetAngle: 0,
+    strafeDir: Math.random() > 0.5 ? 1 : -1,
+    strafeTimer: 0
+  };
+  
+  scene.add(group);
+  enemies.push(group);
+}
+
+// ═══ START ARENA ═══
+function startArena(idx) {
+  currentArena = idx;
+  playerHP = maxHP = 100;
+  comboCount = 0;
+  attackCooldown = 0;
+  dodgeCooldown = 0;
+  blocking = false;
+  dodging = false;
+  yaw = 0;
+  pitch = 0;
+  camera.position.set(0, 1.7, 0);
+  
+  buildArena(idx);
+  
+  document.getElementById('menu-screen').style.display = 'none';
+  document.getElementById('death-screen').style.display = 'none';
+  document.getElementById('victory-screen').style.display = 'none';
+  document.getElementById('hud').style.display = 'block';
+  document.getElementById('crosshair').style.display = 'block';
+  document.getElementById('arena-name').textContent = ARENAS[idx].icon + ' ' + ARENAS[idx].name;
+  
+  updateHealthBars();
+  gameActive = true;
+  
+  renderer.domElement.requestPointerLock();
+}
+
+function startAttack() {
+  if (attacking) return;
+  attacking = true;
+  weaponSwing = 0;
+  attackCooldown = 0.4;
+  
+  // Check hit on enemies
+  const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+  const pPos = camera.position.clone();
+  
+  enemies.forEach(e => {
+    if (e.userData.hp <= 0) return;
+    const dist = pPos.distanceTo(e.position);
+    if (dist > 3) return;
+    
+    const toE = e.position.clone().sub(pPos).normalize();
+    const dot = forward.dot(toE);
+    if (dot > 0.5) { // ~60° cone
+      const dmg = 15 + Math.floor(Math.random() * 10);
+      e.userData.hp -= dmg;
+      e.userData.state = 'hit';
+      e.userData.stateTimer = 0.3;
+      
+      comboCount++;
+      comboTimer = 2;
+      showCombo(dmg);
+      spawnHitParticles(e.position);
+      
+      if (e.userData.hp <= 0) {
+        e.userData.state = 'dead';
+        e.userData.stateTimer = 1;
+      }
+    }
+  });
+}
+
+function startDodge() {
+  dodging = true;
+  dodgeCooldown = 1;
+  setTimeout(() => { dodging = false; }, 300);
+}
+
+function showCombo(dmg) {
+  const el = document.getElementById('combo');
+  if (comboCount > 1) {
+    el.textContent = `⚔ ${dmg} DMG × ${comboCount} COMBO!`;
+  } else {
+    el.textContent = `⚔ ${dmg} DMG`;
+  }
+  el.style.opacity = '1';
+  setTimeout(() => { el.style.opacity = '0'; }, 600);
+}
+
+function spawnHitParticles(pos) {
+  for (let i = 0; i < 8; i++) {
+    const p = new THREE.Mesh(
+      new THREE.SphereGeometry(0.04, 4, 4),
+      new THREE.MeshBasicMaterial({ color: 0xff4400 })
+    );
+    p.position.copy(pos);
+    p.position.y += 1 + Math.random();
+    p.userData = {
+      vx: (Math.random() - 0.5) * 0.15,
+      vy: Math.random() * 0.1,
+      vz: (Math.random() - 0.5) * 0.15,
+      life: 0.6
+    };
+    scene.add(p);
+    particles.push(p);
+  }
+}
+
+function updateHealthBars() {
+  document.getElementById('health-fill').style.width = Math.max(0, playerHP / maxHP * 100) + '%';
+  
+  // Show average enemy HP
+  const alive = enemies.filter(e => e.userData.hp > 0);
+  if (alive.length > 0) {
+    const totalHP = alive.reduce((s, e) => s + e.userData.hp, 0);
+    const totalMax = alive.reduce((s, e) => s + e.userData.maxHP, 0);
+    document.getElementById('enemy-fill').style.width = (totalHP / totalMax * 100) + '%';
+  } else {
+    document.getElementById('enemy-fill').style.width = '0%';
+  }
+}
+
+// ═══ GAME LOOP ═══
+function gameLoop() {
+  const dt = Math.min(clock.getDelta(), 0.05);
+  if (!gameActive) {
+    renderer.render(scene, camera);
+    return;
+  }
+  
+  // ── Player movement ──
+  const moveSpeed = 5 * dt;
+  const forward = new THREE.Vector3(-Math.sin(yaw), 0, -Math.cos(yaw));
+  const right = new THREE.Vector3(Math.cos(yaw), 0, -Math.sin(yaw));
+  
+  if (keys['KeyW']) camera.position.addScaledVector(forward, moveSpeed);
+  if (keys['KeyS']) camera.position.addScaledVector(forward, -moveSpeed);
+  if (keys['KeyA']) camera.position.addScaledVector(right, -moveSpeed);
+  if (keys['KeyD']) camera.position.addScaledVector(right, moveSpeed);
+  
+  // Clamp to arena
+  const maxDist = 17;
+  const pDist = Math.sqrt(camera.position.x ** 2 + camera.position.z ** 2);
+  if (pDist > maxDist) {
+    camera.position.x *= maxDist / pDist;
+    camera.position.z *= maxDist / pDist;
+  }
+  camera.position.y = 1.7;
+  
+  // Camera rotation
+  camera.quaternion.setFromEuler(new THREE.Euler(pitch, yaw, 0, 'YXZ'));
+  
+  // ── Weapon position & swing ──
+  if (attacking) {
+    weaponSwing += dt * 12;
+    if (weaponSwing > Math.PI) {
+      attacking = false;
+      weaponSwing = 0;
+    }
+  }
+  if (attackCooldown > 0) attackCooldown -= dt;
+  if (dodgeCooldown > 0) dodgeCooldown -= dt;
+  
+  // Weapon follows camera
+  const weaponOffset = new THREE.Vector3(0.3, -0.3, -0.5);
+  weaponOffset.applyQuaternion(camera.quaternion);
+  weaponMesh.position.copy(camera.position).add(weaponOffset);
+  weaponMesh.quaternion.copy(camera.quaternion);
+  if (attacking) {
+    weaponMesh.rotateX(-Math.sin(weaponSwing) * 1.5);
+  }
+  if (blocking) {
+    weaponMesh.rotateX(-0.8);
+    weaponMesh.position.y += 0.2;
+  }
+  
+  // ── Combo timer ──
+  if (comboTimer > 0) {
+    comboTimer -= dt;
+    if (comboTimer <= 0) comboCount = 0;
+  }
+  
+  // ── Enemy AI ──
+  const aliveEnemies = [];
+  enemies.forEach(e => {
+    const ud = e.userData;
+    if (ud.hp <= 0) {
+      if (ud.state === 'dead') {
+        ud.stateTimer -= dt;
+        e.position.y -= dt * 0.5;
+        if (ud.stateTimer <= 0) {
+          scene.remove(e);
+        }
+      }
+      return;
+    }
+    aliveEnemies.push(e);
+    
+    const toPlayer = camera.position.clone().sub(e.position);
+    toPlayer.y = 0;
+    const dist = toPlayer.length();
+    const dir = toPlayer.normalize();
+    
+    // Face player
+    ud.targetAngle = Math.atan2(dir.x, dir.z);
+    e.rotation.y += (ud.targetAngle - e.rotation.y) * 0.1;
+    
+    ud.strafeTimer -= dt;
+    if (ud.strafeTimer <= 0) {
+      ud.strafeDir *= -1;
+      ud.strafeTimer = 1.5 + Math.random() * 2;
+    }
+    
+    if (ud.state === 'hit') {
+      ud.stateTimer -= dt;
+      // Knockback
+      e.position.addScaledVector(dir, -dt * 3);
+      if (ud.stateTimer <= 0) ud.state = 'chase';
+      return;
+    }
+    
+    // Chase
+    if (dist > 2) {
+      e.position.addScaledVector(dir, ud.spd * 60 * dt);
+      // Strafe
+      const strafe = new THREE.Vector3(-dir.z, 0, dir.x);
+      e.position.addScaledVector(strafe, ud.strafeDir * ud.spd * 20 * dt);
+      
+      // Leg animation
+      const legPhase = Date.now() * 0.008;
+      e.children.forEach(c => {
+        if (c.position.y < 0.6 && c.position.y > 0.3) {
+          c.rotation.x = Math.sin(legPhase + (c.position.x > 0 ? Math.PI : 0)) * 0.4;
+        }
+      });
+    }
+    
+    // Attack
+    ud.attackCooldown -= dt;
+    if (dist < 2.5 && ud.attackCooldown <= 0) {
+      ud.attackCooldown = 1.5 + Math.random();
+      
+      // Swing arm animation
+      e.children.forEach(c => {
+        if (c.userData && c.userData.isWeaponArm) {
+          c.rotation.x = -1.5;
+          setTimeout(() => { if (c.parent) c.rotation.x = 0; }, 300);
+        }
+      });
+      
+      // Damage player
+      if (!dodging) {
+        let dmg = ud.dmg;
+        if (blocking) dmg = Math.floor(dmg * 0.3);
+        playerHP -= dmg;
+        
+        // Screen flash
+        const flash = document.getElementById('damage-flash');
+        flash.style.opacity = blocking ? '0.2' : '0.6';
+        setTimeout(() => { flash.style.opacity = '0'; }, 150);
+        
+        if (playerHP <= 0) {
+          playerHP = 0;
+          gameActive = false;
+          document.exitPointerLock();
+          document.getElementById('death-screen').style.display = 'flex';
+          document.getElementById('hud').style.display = 'none';
+          document.getElementById('crosshair').style.display = 'none';
+        }
+      }
+    }
+    
+    // Enemy separation
+    enemies.forEach(other => {
+      if (other === e || other.userData.hp <= 0) return;
+      const sep = e.position.clone().sub(other.position);
+      sep.y = 0;
+      if (sep.length() < 1.5) {
+        e.position.addScaledVector(sep.normalize(), dt * 2);
+      }
+    });
+  });
+  
+  // Victory check
+  if (aliveEnemies.length === 0 && enemies.length > 0 && gameActive) {
+    gameActive = false;
+    document.exitPointerLock();
+    document.getElementById('victory-screen').style.display = 'flex';
+    document.getElementById('victory-sub').textContent = ARENAS[currentArena].name + ' — CLEARED!';
+    document.getElementById('hud').style.display = 'none';
+    document.getElementById('crosshair').style.display = 'none';
+  }
+  
+  // ── Particles ──
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.position.x += p.userData.vx;
+    p.position.y += p.userData.vy;
+    p.position.z += p.userData.vz;
+    p.userData.vy -= 0.005;
+    p.userData.life -= dt;
+    p.material.opacity = p.userData.life;
+    if (p.userData.life <= 0) {
+      scene.remove(p);
+      particles.splice(i, 1);
+    }
+  }
+  
+  // ── Ambient animations ──
+  scene.children.forEach(obj => {
+    if (obj.userData && obj.userData.isFlame) {
+      obj.position.y = obj.userData.baseY + Math.sin(Date.now() * 0.01 + obj.position.x) * 0.1;
+      obj.material.color.setHex(Math.random() > 0.5 ? 0xff6600 : 0xff8800);
+    }
+    if (obj.userData && obj.userData.isSand) {
+      const pos = obj.geometry.attributes.position;
+      for (let i = 0; i < pos.count; i++) {
+        pos.setX(i, pos.getX(i) + 0.02);
+        if (pos.getX(i) > 30) pos.setX(i, -30);
+        pos.setY(i, pos.getY(i) + Math.sin(Date.now() * 0.001 + i) * 0.002);
+      }
+      pos.needsUpdate = true;
+    }
+  });
+  
+  updateHealthBars();
+  renderer.render(scene, camera);
+}
+
+// ═══ NAVIGATION ═══
+function retry() {
+  startArena(currentArena);
+}
+
+function nextArena() {
+  if (currentArena < ARENAS.length - 1) {
+    startArena(currentArena + 1);
+  } else {
+    backToMenu();
+  }
+}
+
+function backToMenu() {
+  gameActive = false;
+  if (document.pointerLockElement) document.exitPointerLock();
+  document.getElementById('menu-screen').style.display = 'flex';
+  document.getElementById('death-screen').style.display = 'none';
+  document.getElementById('victory-screen').style.display = 'none';
+  document.getElementById('hud').style.display = 'none';
+  document.getElementById('crosshair').style.display = 'none';
+  
+  // Clear scene
+  while (scene.children.length > 0) scene.remove(scene.children[0]);
+  enemies = [];
+  particles = [];
+}
+
+// ═══ VR ═══
+document.getElementById('vr-btn').addEventListener('click', async () => {
+  if (!vrSupported) return;
+  try {
+    vrSession = await navigator.xr.requestSession('immersive-vr', {
+      optionalFeatures: ['local-floor', 'bounded-floor']
+    });
+    renderer.xr.setSession(vrSession);
+    vrSession.addEventListener('end', () => { vrSession = null; });
+    // Start first arena in VR
+    if (!gameActive) startArena(0);
+  } catch (e) {
+    console.warn('VR failed:', e);
+  }
+});
+
+// ═══ BOOT ═══
+init();
+</script>
+</body>
+</html>
