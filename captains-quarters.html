@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silver Ship — Captain's Quarters VR</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{overflow:hidden;background:#000;font-family:'Courier New',monospace}
+canvas{display:block}
+#hud{position:fixed;top:12px;left:50%;transform:translateX(-50%);color:#88ccff;font-size:14px;letter-spacing:3px;text-shadow:0 0 10px #0088ff;z-index:10;pointer-events:none;text-align:center}
+#hud h1{font-size:22px;margin-bottom:4px}
+#hud p{font-size:11px;color:#66aadd;letter-spacing:1px}
+#chapters{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:center;gap:6px;padding:10px;z-index:10}
+.ch-btn{background:rgba(0,40,60,0.85);border:1px solid #44aadd;color:#88ddff;padding:5px 10px;font-size:10px;font-family:'Courier New',monospace;cursor:pointer;border-radius:4px;transition:all .3s}
+.ch-btn:hover{background:rgba(0,100,160,0.9);border-color:#88eeff;color:#fff;box-shadow:0 0 12px #0088ff}
+#controls-hint{position:fixed;bottom:55px;left:50%;transform:translateX(-50%);color:#4488aa;font-size:11px;z-index:10;pointer-events:none;opacity:0.7}
+</style>
+</head>
+<body>
+
+<div id="hud">
+  <h1>⚜ CAPTAIN'S QUARTERS ⚜</h1>
+  <p>SILVER SHIP — DEEP SPACE</p>
+</div>
+
+<div id="controls-hint">🖱️ Drag to look around · Scroll to zoom · Right-drag to pan</div>
+
+<div id="chapters">
+  <button class="ch-btn">I · Birth</button>
+  <button class="ch-btn">II · Desert</button>
+  <button class="ch-btn">III · Spice</button>
+  <button class="ch-btn">IV · Storm</button>
+  <button class="ch-btn">V · Ship</button>
+  <button class="ch-btn">VI · Stars</button>
+  <button class="ch-btn">VII · War</button>
+  <button class="ch-btn">VIII · Peace</button>
+  <button class="ch-btn">IX · Home</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+// ═══════════════════════════════════════
+// CAPTAIN'S QUARTERS — FULLY POPULATED
+// ═══════════════════════════════════════
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x050510);
+scene.fog = new THREE.FogExp2(0x050510, 0.012);
+
+const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 1000);
+camera.position.set(0, 3, 7);
+
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.2;
+document.body.appendChild(renderer.domElement);
+
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.target.set(0, 1.5, 0);
+controls.maxPolarAngle = Math.PI * 0.85;
+controls.minDistance = 1.5;
+controls.maxDistance = 14;
+
+// ═══ HELPER ═══
+function box(w,h,d,m,x,y,z,rx,ry,rz){
+  const g = new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);
+  g.position.set(x,y,z);
+  if(rx) g.rotation.x=rx; if(ry) g.rotation.y=ry; if(rz) g.rotation.z=rz;
+  scene.add(g); return g;
+}
+function cyl(rt,rb,h,m,x,y,z,seg){
+  const g = new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,seg||12),m);
+  g.position.set(x,y,z); scene.add(g); return g;
+}
+function sphere(r,m,x,y,z,seg){
+  const g = new THREE.Mesh(new THREE.SphereGeometry(r,seg||16,seg||12),m);
+  g.position.set(x,y,z); scene.add(g); return g;
+}
+
+// ═══ MATERIALS ═══
+const M = {
+  hull: new THREE.MeshStandardMaterial({color:0x1a2a3a, roughness:0.3, metalness:0.8}),
+  hullDk: new THREE.MeshStandardMaterial({color:0x0d1520, roughness:0.4, metalness:0.7}),
+  floor: new THREE.MeshStandardMaterial({color:0x2a1a0a, roughness:0.7, metalness:0.1}),
+  wood: new THREE.MeshStandardMaterial({color:0x8B5A2B, roughness:0.6, metalness:0.05}),
+  woodDk: new THREE.MeshStandardMaterial({color:0x5C3A1A, roughness:0.7, metalness:0.05}),
+  leather: new THREE.MeshStandardMaterial({color:0x8B0000, roughness:0.5, metalness:0.05}),
+  leatherDk: new THREE.MeshStandardMaterial({color:0x4a1010, roughness:0.6, metalness:0.05}),
+  gold: new THREE.MeshStandardMaterial({color:0xFFD700, roughness:0.2, metalness:0.9, emissive:0x332200, emissiveIntensity:0.3}),
+  silver: new THREE.MeshStandardMaterial({color:0xccccdd, roughness:0.2, metalness:0.9}),
+  rug: new THREE.MeshStandardMaterial({color:0x8B1A1A, roughness:0.9}),
+  rugBdr: new THREE.MeshStandardMaterial({color:0xCC9933, roughness:0.8, metalness:0.1}),
+  stone: new THREE.MeshStandardMaterial({color:0x3a2a2a, roughness:0.8, metalness:0.1}),
+  fire: new THREE.MeshStandardMaterial({color:0xFF4400, emissive:0xFF2200, emissiveIntensity:2, transparent:true, opacity:0.9}),
+  fireCore: new THREE.MeshStandardMaterial({color:0xFFCC00, emissive:0xFFAA00, emissiveIntensity:3, transparent:true, opacity:0.85}),
+  glass: new THREE.MeshStandardMaterial({color:0x88ccff, roughness:0.05, metalness:0.3, transparent:true, opacity:0.3}),
+  screen: new THREE.MeshStandardMaterial({color:0x003322, emissive:0x00ff88, emissiveIntensity:0.5, roughness:0.1}),
+  holo: new THREE.MeshStandardMaterial({color:0x0044ff, emissive:0x0088ff, emissiveIntensity:1, transparent:true, opacity:0.6}),
+  cushion: new THREE.MeshStandardMaterial({color:0xCC8844, roughness:0.7}),
+  cushionB: new THREE.MeshStandardMaterial({color:0x224466, roughness:0.7}),
+  plant: new THREE.MeshStandardMaterial({color:0x228B22, roughness:0.8}),
+  plantDk: new THREE.MeshStandardMaterial({color:0x1a6b1a, roughness:0.8}),
+  pot: new THREE.MeshStandardMaterial({color:0xB87333, roughness:0.6, metalness:0.2}),
+  cat: new THREE.MeshStandardMaterial({color:0xDEB887, roughness:0.9}),
+  catEye: new THREE.MeshStandardMaterial({color:0x00ff44, emissive:0x00ff44, emissiveIntensity:1}),
+  bk1: new THREE.MeshStandardMaterial({color:0xCC2222, roughness:0.7}),
+  bk2: new THREE.MeshStandardMaterial({color:0x2244CC, roughness:0.7}),
+  bk3: new THREE.MeshStandardMaterial({color:0x22AA44, roughness:0.7}),
+  bk4: new THREE.MeshStandardMaterial({color:0xCC8800, roughness:0.7}),
+  bk5: new THREE.MeshStandardMaterial({color:0x8822CC, roughness:0.7}),
+  bk6: new THREE.MeshStandardMaterial({color:0x22CCCC, roughness:0.7}),
+  bk7: new THREE.MeshStandardMaterial({color:0xCC2288, roughness:0.7}),
+  crystal: new THREE.MeshStandardMaterial({color:0x88ddff, emissive:0x44aaff, emissiveIntensity:0.5, transparent:true, opacity:0.7, roughness:0.05, metalness:0.5}),
+  slipper: new THREE.MeshStandardMaterial({color:0x882222, roughness:0.8}),
+  brass: new THREE.MeshStandardMaterial({color:0xBB8833, roughness:0.3, metalness:0.8}),
+  paper: new THREE.MeshStandardMaterial({color:0xeeddcc, roughness:0.9}),
+  ink: new THREE.MeshStandardMaterial({color:0x111122, roughness:0.3, metalness:0.5}),
+  fabric: new THREE.MeshStandardMaterial({color:0x334455, roughness:0.8}),
+  mirror: new THREE.MeshStandardMaterial({color:0xaabbcc, roughness:0.05, metalness:1.0}),
+  steel: new THREE.MeshStandardMaterial({color:0x888899, roughness:0.2, metalness:0.9}),
+  ceramic: new THREE.MeshStandardMaterial({color:0xddccbb, roughness:0.6}),
+  wine: new THREE.MeshStandardMaterial({color:0x660022, transparent:true, opacity:0.7, roughness:0.05}),
+  chessW: new THREE.MeshStandardMaterial({color:0xeeeedd, roughness:0.4, metalness:0.1}),
+  chessB: new THREE.MeshStandardMaterial({color:0x222222, roughness:0.4, metalness:0.1}),
+  map: new THREE.MeshStandardMaterial({color:0xddcc99, emissive:0x332200, emissiveIntensity:0.1, roughness:0.9}),
+  cloak: new THREE.MeshStandardMaterial({color:0x1a1a2a, roughness:0.8}),
+  scope: new THREE.MeshStandardMaterial({color:0x554433, roughness:0.3, metalness:0.6}),
+};
+
+// ═══ ROOM SHELL ═══
+const fl = box(12,0.2,12, M.floor, 0,-0.1,0); fl.receiveShadow=true;
+// Floor planks
+for(let i=-5;i<=5;i++){
+  box(12,0.01,0.02, M.woodDk, 0,0.01,i);
+  box(0.02,0.01,12, M.woodDk, i,0.01,0);
+}
+box(12,7,0.2, M.hull, 0,3.5,-6);      // back
+box(0.2,7,12, M.hullDk, -6,3.5,0);    // left
+box(0.2,7,12, M.hullDk, 6,3.5,0);     // right
+box(12,0.2,12, M.hull, 0,7,0);         // ceiling
+box(12,7,0.2, M.hullDk, 0,3.5,6);     // front wall (behind camera)
+
+// Hull panels (back wall)
+for(let i=0;i<5;i++){
+  box(1.8,3.5,0.05, M.hullDk, -4.5+i*2.2, 2.8, -5.85);
+  box(1.9,0.05,0.06, M.gold, -4.5+i*2.2, 4.6, -5.84);
+  box(1.9,0.05,0.06, M.gold, -4.5+i*2.2, 1.0, -5.84);
+}
+
+// Hull panels (side walls)
+for(let z=-3;z<=3;z+=3){
+  box(0.05,3,1.5, M.hull, -5.85,2.5,z);
+  box(0.05,3,1.5, M.hull, 5.85,2.5,z);
+}
+
+// ═══ VIEWPORT (back wall, larger) ═══
+box(4.5,3,0.15, M.gold, 0,4,-5.88);       // frame
+box(4,2.5,0.1, M.glass, 0,4,-5.85);       // glass
+const vpBg = new THREE.Mesh(new THREE.PlaneGeometry(4,2.5),
+  new THREE.MeshBasicMaterial({color:0x030318}));
+vpBg.position.set(0,4,-5.95); scene.add(vpBg);
+
+// Stars
+const starGeo = new THREE.BufferGeometry();
+const starP = [];
+for(let i=0;i<300;i++) starP.push((Math.random()-0.5)*4, 2.8+Math.random()*2.5, -6.5-Math.random()*6);
+starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starP,3));
+const stars = new THREE.Points(starGeo, new THREE.PointsMaterial({color:0xffffff,size:0.03}));
+scene.add(stars);
+
+// Planet with ring
+const planet = sphere(0.5, new THREE.MeshStandardMaterial({color:0xdd8844,emissive:0x553311,emissiveIntensity:0.3,roughness:0.8}), 1,4.2,-7, 32);
+const ring = new THREE.Mesh(new THREE.RingGeometry(0.65,0.85,32),
+  new THREE.MeshStandardMaterial({color:0xaa8866,transparent:true,opacity:0.4,side:THREE.DoubleSide}));
+ring.position.set(1,4.2,-7); ring.rotation.x=1.2; scene.add(ring);
+
+// Moon
+sphere(0.12, new THREE.MeshStandardMaterial({color:0x889999,roughness:0.9}), -0.8,4.5,-7.5);
+
+// ═══ FIREPLACE (left wall) ═══
+box(0.3,2.5,2.2, M.stone, -5.7,1.25,0);  // back
+box(0.5,2.5,0.25, M.stone, -5.55,1.25,-1.1); // left pillar
+box(0.5,2.5,0.25, M.stone, -5.55,1.25,1.1);  // right pillar
+box(0.5,0.15,2.5, M.stone, -5.55,2.55,0);     // mantle
+box(0.6,0.1,2.6, M.stone, -5.5,0.05,0);       // hearth
+
+// Mantle decorations
+cyl(0.04,0.04,0.2, M.gold, -5.45,2.72,-0.6);   // candlestick 1
+cyl(0.04,0.04,0.2, M.gold, -5.45,2.72,0.6);    // candlestick 2
+sphere(0.03, M.fireCore, -5.45,2.85,-0.6);       // candle flame 1
+sphere(0.03, M.fireCore, -5.45,2.85,0.6);        // candle flame 2
+sphere(0.06, M.crystal, -5.45,2.7,0);            // crystal on mantle
+box(0.08,0.12,0.06, M.gold, -5.45,2.68,0.3);    // gold box
+
+// Flames
+const flames = [];
+for(let i=0;i<7;i++){
+  const h=0.3+Math.random()*0.5;
+  const fm = new THREE.Mesh(new THREE.ConeGeometry(0.08+Math.random()*0.08,h,8), i<3?M.fireCore:M.fire);
+  fm.position.set(-5.55, 0.3+h/2, -0.6+(i*0.2));
+  fm.userData={baseY:0.3+h/2,baseH:h,speed:2+Math.random()*3,phase:Math.random()*Math.PI*2};
+  scene.add(fm); flames.push(fm);
+}
+// Logs
+for(let i=0;i<4;i++){
+  const log=cyl(0.05,0.06,0.7, M.woodDk, -5.55,0.12,-0.4+i*0.25, 8);
+  log.rotation.z=(i-1.5)*0.2; log.rotation.x=Math.random()*0.3;
+}
+
+// ═══ DESK (right side, against wall) ═══
+const dkTop = box(2.5,0.1,1.2, M.wood, 4,1.2,-2);
+dkTop.castShadow=true;
+// Legs with detail
+for(let x of [-1,1]) for(let z of [-0.4,0.4]){
+  box(0.12,1.15,0.12, M.woodDk, 4+x,0.575,-2+z);
+  box(0.15,0.04,0.15, M.gold, 4+x,0.02,-2+z); // foot caps
+}
+box(2,0.6,0.05, M.woodDk, 4,0.55,-2.55); // back panel
+// Drawers
+for(let x of [-0.5,0.5]){
+  box(0.8,0.28,0.05, M.wood, 4+x,0.7,-1.45);
+  box(0.18,0.04,0.04, M.gold, 4+x,0.7,-1.42);
+}
+
+// Desk items
+box(0.45,0.03,0.35, M.screen, 3.5,1.27,-2.1);      // datapad
+// Papers scattered
+box(0.3,0.005,0.4, M.paper, 4.2,1.26,-1.7, 0,0.2);
+box(0.25,0.005,0.35, M.paper, 4.4,1.265,-1.8, 0,-0.15);
+box(0.2,0.005,0.3, M.paper, 4.1,1.268,-1.65, 0,0.4);
+// Ink well
+cyl(0.04,0.04,0.06, M.ink, 4.6,1.28,-2.2);
+// Pen
+box(0.01,0.01,0.2, M.gold, 4.5,1.265,-2.15, 0,0.3);
+// Quill feather
+box(0.04,0.005,0.15, M.paper, 4.52,1.27,-2.05, 0,0.3);
+
+// Holodisplay
+cyl(0.18,0.22,0.05, M.hull, 3.3,1.28,-2.3);
+const holoScr = new THREE.Mesh(new THREE.PlaneGeometry(0.7,0.5), M.holo);
+holoScr.position.set(3.3,1.6,-2.3); scene.add(holoScr);
+
+// Desk lamp
+cyl(0.08,0.1,0.03, M.brass, 4.8,1.27,-2.4);
+cyl(0.02,0.02,0.3, M.brass, 4.8,1.42,-2.4);
+cyl(0.08,0.02,0.08, M.brass, 4.8,1.58,-2.4); // shade
+const deskLamp = new THREE.PointLight(0xffdd88,0.4,2);
+deskLamp.position.set(4.8,1.55,-2.4); scene.add(deskLamp);
+
+// ═══ THRONE ═══
+box(1.1,0.12,1, M.leather, 4,0.75,-0.3);     // seat
+box(1.1,1.8,0.12, M.leatherDk, 4,1.7,-0.8);  // back
+box(1.2,0.15,0.15, M.gold, 4,2.65,-0.8);      // crown
+// Fleur-de-lis on crown
+sphere(0.05, M.gold, 4,2.75,-0.74);
+sphere(0.04, M.gold, 3.88,2.7,-0.74);
+sphere(0.04, M.gold, 4.12,2.7,-0.74);
+// Armrests
+for(let x of [-0.55,0.55]){
+  box(0.12,0.55,0.9, M.woodDk, 4+x,1.02,-0.35);
+  box(0.16,0.06,0.95, M.gold, 4+x,1.32,-0.35);
+}
+box(0.9,0.08,0.8, M.cushion, 4,0.85,-0.3); // cushion
+
+// ═══ SOFA ═══
+box(3,0.35,1, M.leather, 0,0.42,3.5);     // seat
+box(3,1.2,0.2, M.leatherDk, 0,1.1,4);     // back
+for(let x of [-1.5,1.5]){
+  box(0.18,0.8,1, M.leatherDk, x,0.65,3.5); // arms
+}
+// Cushions (3 back + 2 accent)
+for(let x of [-0.7,0,0.7]){
+  box(0.55,0.4,0.15, M.cushion, x,0.9,3.9, -0.2);
+}
+box(0.4,0.3,0.3, M.cushionB, -1.2,0.75,3.5, 0,0,-0.3); // accent left
+box(0.4,0.3,0.3, M.cushionB, 1.2,0.75,3.5, 0,0,0.3);   // accent right
+
+// Throw blanket draped on sofa arm
+box(0.5,0.03,0.8, M.fabric, -1.5,1.1,3.5, 0.4,0,0.3);
+
+// ═══ COFFEE TABLE (in front of sofa) ═══
+box(1.8,0.08,0.8, M.wood, 0,0.55,2);     // top
+box(1.6,0.06,0.6, M.woodDk, 0,0.25,2);   // lower shelf
+for(let x of [-0.7,0.7]) for(let z of [-0.3,0.3]){
+  box(0.08,0.5,0.08, M.woodDk, x,0.27,2+z);
+}
+
+// Items on coffee table
+// Tea set
+cyl(0.06,0.05,0.1, M.ceramic, -0.3,0.65,2);  // teapot body
+sphere(0.03, M.ceramic, -0.3,0.72,2);          // lid
+cyl(0.03,0.03,0.06, M.ceramic, -0.15,0.63,2.1); // cup 1
+cyl(0.03,0.03,0.06, M.ceramic, -0.45,0.63,1.9); // cup 2
+// Open book on table
+box(0.25,0.02,0.2, M.bk2, 0.3,0.6,2, 0,0.1);
+box(0.25,0.02,0.2, M.paper, 0.3,0.62,2.02, -0.05,0.1);
+
+// ═══ CHESS SET (on coffee table) ═══
+box(0.35,0.02,0.35, M.woodDk, 0.6,0.6,2); // board
+for(let r=0;r<3;r++) for(let c=0;c<3;c++){
+  const isW=(r+c)%2===0;
+  box(0.04,0.06,0.04, isW?M.chessW:M.chessB, 0.48+c*0.07,0.65,1.88+r*0.07);
+}
+// A few taller pieces
+cyl(0.02,0.02,0.08, M.chessW, 0.52,0.67,2.1);
+cyl(0.02,0.02,0.1, M.chessB, 0.65,0.68,1.92);
+
+// ═══ RUG ═══
+box(4,0.02,3, M.rug, 0,0.01,2);
+box(3.4,0.025,2.4, M.rugBdr, 0,0.02,2);
+box(2.6,0.03,1.6, M.rug, 0,0.025,2);
+// Medallion center
+cyl(0.4,0.4,0.005, M.gold, 0,0.035,2, 32);
+
+// ═══ BOOKSHELF (left wall, near fireplace) ═══
+box(0.1,4,2.5, M.woodDk, -5.75,2.5,-3.5);  // back
+for(let x of [-1.2,1.2]) box(0.3,4,0.06, M.woodDk, -5.6,2.5,-3.5+x); // sides
+for(let y of [0.8,1.6,2.4,3.2,4.0]) box(0.3,0.06,2.5, M.wood, -5.6,y,-3.5); // shelves
+
+// Books (lots!)
+const bkMats = [M.bk1,M.bk2,M.bk3,M.bk4,M.bk5,M.bk6,M.bk7];
+for(let row=0;row<4;row++){
+  const count = 6+Math.floor(Math.random()*3);
+  for(let i=0;i<count;i++){
+    const bh=0.2+Math.random()*0.25;
+    const bk = box(0.18,bh,0.1+Math.random()*0.05, bkMats[(row*7+i)%7],
+      -5.55, 0.85+row*0.8+bh/2, -4.5+i*0.3);
+    if(Math.random()>0.85) bk.rotation.z=0.15; // tilted book
+  }
+}
+// Crystal orb on shelf
+sphere(0.1, M.crystal, -5.5,1.0,-3.2,16);
+// Ship model on top shelf
+box(0.2,0.08,0.06, M.wood, -5.5,4.15,-3.5);      // hull
+box(0.01,0.12,0.01, M.woodDk, -5.5,4.22,-3.5);   // mast
+box(0.1,0.01,0.06, M.paper, -5.5,4.28,-3.5);      // sail
+
+// ═══ SECOND BOOKSHELF (right wall) ═══
+box(0.1,3.5,1.8, M.woodDk, 5.75,2.25,2);
+for(let x of [-0.85,0.85]) box(0.3,3.5,0.06, M.woodDk, 5.6,2.25,2+x);
+for(let y of [0.8,1.6,2.4,3.2]) box(0.3,0.06,1.8, M.wood, 5.6,y,2);
+for(let row=0;row<3;row++){
+  for(let i=0;i<5;i++){
+    const bh=0.18+Math.random()*0.2;
+    box(0.18,bh,0.1, bkMats[(row*3+i+2)%7], 5.52, 0.85+row*0.8+bh/2, 1.3+i*0.3);
+  }
+}
+
+// ═══ WEAPON RACK (back wall, left of viewport) ═══
+box(0.8,0.08,0.12, M.woodDk, -3.5,3,-5.82);  // rack bar
+box(0.8,0.08,0.12, M.woodDk, -3.5,2,-5.82);  // lower rack bar
+// Swords
+for(let i=0;i<3;i++){
+  box(0.03,1.2,0.02, M.steel, -3.8+i*0.3,2.5,-5.78); // blade
+  box(0.1,0.04,0.06, M.gold, -3.8+i*0.3,1.92,-5.76);  // crossguard
+  cyl(0.02,0.02,0.15, M.leatherDk, -3.8+i*0.3,1.82,-5.76); // grip
+}
+
+// ═══ TROPHY SHELF (back wall, right of viewport) ═══
+box(1.2,0.08,0.3, M.wood, 3.5,3,-5.82); // shelf
+// Trophies
+cyl(0.05,0.08,0.2, M.gold, 3.2,3.14,-5.7);
+sphere(0.04, M.gold, 3.2,3.28,-5.7);
+cyl(0.05,0.08,0.15, M.silver, 3.5,3.12,-5.7);
+sphere(0.035, M.silver, 3.5,3.23,-5.7);
+cyl(0.04,0.06,0.12, M.brass, 3.8,3.1,-5.7);
+// Medal on wall
+cyl(0.06,0.06,0.01, M.gold, 3.5,3.8,-5.88);
+box(0.01,0.15,0.01, M.bk1, 3.5,3.65,-5.86); // ribbon
+
+// ═══ STAR MAP (back wall) ═══
+box(1.5,1,0.02, M.map, -3.5,4.5,-5.86);
+// Map pins
+for(let i=0;i<6;i++){
+  sphere(0.02, M.bk1, -4.1+i*0.25, 4.2+Math.random()*0.5, -5.84);
+}
+
+// ═══ TELESCOPE (near viewport) ═══
+cyl(0.06,0.04,0.8, M.scope, 2,3.5,-5, 12);
+const telesc = scene.children[scene.children.length-1];
+telesc.rotation.x=0.4; telesc.rotation.z=0.2;
+// Tripod legs
+for(let a=0;a<3;a++){
+  const leg = cyl(0.015,0.015,1.2, M.brass, 2+Math.cos(a*2.1)*0.15, 2.9, -5+Math.sin(a*2.1)*0.15);
+  leg.rotation.x=(a===0?0.15:-0.1); leg.rotation.z=(a-1)*0.15;
+}
+
+// ═══ MIRROR (left wall) ═══
+box(0.05,1.5,0.8, M.gold, -5.85,3.5,3);    // frame
+box(0.02,1.3,0.6, M.mirror, -5.83,3.5,3);  // mirror surface
+
+// ═══ WALL CLOCK (right wall) ═══
+cyl(0.2,0.2,0.05, M.woodDk, 5.85,4,0);
+const clockFace = scene.children[scene.children.length-1];
+clockFace.rotation.z=Math.PI/2;
+cyl(0.18,0.18,0.02, M.paper, 5.84,4,0);
+scene.children[scene.children.length-1].rotation.z=Math.PI/2;
+// Clock hands
+box(0.1,0.01,0.01, M.chessB, 5.83,4.05,0, 0,0,0.5);
+box(0.07,0.01,0.01, M.chessB, 5.83,4,-0.02, 0,0,-0.3);
+
+// ═══ CLOAK ON HOOK (near door) ═══
+sphere(0.04, M.brass, 4.5,3.5,5.8);  // hook
+box(0.6,1.5,0.1, M.cloak, 4.5,2.5,5.75, 0,0,0.05); // hanging cloak
+
+// ═══ WINE RACK (right wall, near bookshelf) ═══
+box(0.25,1,0.8, M.woodDk, 5.7,0.5,0);
+for(let r=0;r<3;r++) for(let c=0;c<2;c++){
+  cyl(0.04,0.04,0.25, M.wine, 5.68, 0.2+r*0.3, -0.15+c*0.3);
+  scene.children[scene.children.length-1].rotation.z=Math.PI/2;
+}
+
+// ═══ SIDE TABLE (next to sofa) ═══
+box(0.6,0.06,0.6, M.wood, -2.5,0.7,3);
+cyl(0.06,0.08,0.7, M.woodDk, -2.5,0.35,3);
+// Lamp on side table
+cyl(0.06,0.08,0.03, M.brass, -2.5,0.75,3);
+cyl(0.015,0.015,0.25, M.brass, -2.5,0.88,3);
+cyl(0.1,0.04,0.1, M.cushion, -2.5,1.03,3);
+const sideL = new THREE.PointLight(0xffcc77,0.3,3);
+sideL.position.set(-2.5,1.1,3); scene.add(sideL);
+
+// Coaster + glass on side table
+cyl(0.06,0.06,0.005, M.woodDk, -2.3,0.735,3.15);
+cyl(0.03,0.025,0.08, new THREE.MeshStandardMaterial({color:0xffaa44,transparent:true,opacity:0.5,roughness:0.05}), -2.3,0.78,3.15);
+
+// ═══ TIFFANY 🐱 ═══
+const catB = sphere(0.22, M.cat, 1,0.62,3.5);
+catB.scale.set(1,0.7,1.3);
+const catH = sphere(0.13, M.cat, 1,0.82,3.25);
+for(let x of [-0.04,0.04]) sphere(0.025, M.catEye, 1+x,0.85,3.14);
+// Ears
+box(0.04,0.06,0.02, M.cat, 0.96,0.92,3.22, 0,0,0.2);
+box(0.04,0.06,0.02, M.cat, 1.04,0.92,3.22, 0,0,-0.2);
+// Nose
+sphere(0.012, new THREE.MeshStandardMaterial({color:0xffaaaa}), 1,0.82,3.12);
+// Tail
+const tail = cyl(0.02,0.01,0.45, M.cat, 1,0.55,3.9);
+tail.rotation.x=0.8;
+
+// ═══ PLANTS (4 total) ═══
+const plantSpots = [[4.5,0,4.5],[-4.5,0,-4],[-4.5,0,4.5],[4.5,0,-4.5]];
+plantSpots.forEach(([px,_,pz],idx)=>{
+  const h = 0.3+idx*0.1;
+  cyl(0.15+idx*0.02, 0.12, h, M.pot, px,h/2,pz);
+  const leafCount = 5+idx*2;
+  for(let j=0;j<leafCount;j++){
+    sphere(0.1+Math.random()*0.05, idx%2?M.plant:M.plantDk,
+      px+(Math.random()-0.5)*0.25, h+0.1+Math.random()*0.35, pz+(Math.random()-0.5)*0.25);
+  }
+});
+
+// ═══ SLIPPERS ═══
+for(let x of [0.8,1.05]){
+  box(0.12,0.05,0.28, M.slipper, x,0.025,2.5, 0,x===0.8?0.15:-0.15);
+}
+
+// ═══ DRINKS TRAY ON DESK ═══
+box(0.4,0.02,0.25, M.gold, 4.6,1.27,-2.6);
+cyl(0.05,0.06,0.2, M.crystal, 4.55,1.37,-2.6);
+cyl(0.03,0.025,0.1, new THREE.MeshStandardMaterial({color:0xffaa44,transparent:true,opacity:0.5,roughness:0.05}), 4.7,1.32,-2.55);
+cyl(0.03,0.025,0.1, new THREE.MeshStandardMaterial({color:0xffaa44,transparent:true,opacity:0.5,roughness:0.05}), 4.7,1.32,-2.68);
+
+// ═══ CEILING LIGHTS ═══
+for(let x of [-2.5,0,2.5]){
+  box(0.15,0.05,10, new THREE.MeshStandardMaterial({color:0x88ccff,emissive:0x4488ff,emissiveIntensity:2}), x,6.95,0);
+}
+
+// ═══ WALL SCONCES (8 total) ═══
+for(let z of [-3,-1,1,3]){
+  for(let side of [-1,1]){
+    sphere(0.06, new THREE.MeshStandardMaterial({color:0xffddaa,emissive:0xffaa44,emissiveIntensity:2}), side*5.85,3.5,z);
+    const sc = new THREE.PointLight(0xffaa44,0.3,4);
+    sc.position.set(side*5.7,3.5,z); scene.add(sc);
+  }
+}
+
+// ═══ DOOR (front wall, right) ═══
+box(1.2,2.8,0.15, M.woodDk, 3,1.4,5.85);
+box(1.3,0.08,0.18, M.gold, 3,2.82,5.84);  // door header
+box(0.08,2.8,0.18, M.gold, 2.4,1.4,5.84); // left frame
+box(0.08,2.8,0.18, M.gold, 3.6,1.4,5.84); // right frame
+sphere(0.05, M.gold, 2.7,1.4,5.78);        // door handle
+// Panel details
+box(0.8,0.8,0.02, M.wood, 3,2.2,5.77);
+box(0.8,0.8,0.02, M.wood, 3,0.9,5.77);
+
+// ═══ LIGHTING ═══
+scene.add(new THREE.AmbientLight(0x334466, 0.35));
+
+const ceilLt = new THREE.PointLight(0x88bbff,0.8,15);
+ceilLt.position.set(0,6.5,0); ceilLt.castShadow=true; scene.add(ceilLt);
+
+const fireLt = new THREE.PointLight(0xff6622,1.5,10);
+fireLt.position.set(-5.2,1.5,0); fireLt.castShadow=true; scene.add(fireLt);
+
+const vpLt = new THREE.PointLight(0x4488ff,0.5,8);
+vpLt.position.set(0,4,-5); scene.add(vpLt);
+
+const holoLt = new THREE.PointLight(0x0088ff,0.4,3);
+holoLt.position.set(3.3,1.6,-2.3); scene.add(holoLt);
+
+// ═══ DUST MOTES ═══
+const dustGeo = new THREE.BufferGeometry();
+const dustP = [];
+for(let i=0;i<150;i++) dustP.push((Math.random()-0.5)*10, Math.random()*6, (Math.random()-0.5)*10);
+dustGeo.setAttribute('position', new THREE.Float32BufferAttribute(dustP,3));
+const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({color:0xffddaa,size:0.02,transparent:true,opacity:0.4}));
+scene.add(dust);
+
+// ═══ ANIMATION ═══
+const clock = new THREE.Clock();
+function animate(){
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
+
+  // Flames
+  flames.forEach(f=>{
+    const d=f.userData;
+    f.scale.y=0.7+0.5*Math.sin(t*d.speed+d.phase);
+    f.scale.x=0.8+0.3*Math.sin(t*d.speed*1.3+d.phase);
+    f.position.y=d.baseY+0.05*Math.sin(t*d.speed*0.7);
+  });
+
+  // Fire light flicker
+  fireLt.intensity=1.2+0.5*Math.sin(t*3)+0.3*Math.sin(t*7);
+
+  // Holo pulse
+  holoScr.material.opacity=0.4+0.2*Math.sin(t*2);
+  holoScr.rotation.y=Math.sin(t*0.5)*0.1;
+
+  // Dust
+  const dp=dust.geometry.attributes.position.array;
+  for(let i=1;i<dp.length;i+=3){
+    dp[i]+=Math.sin(t*0.3+i)*0.001;
+    if(dp[i]>6)dp[i]=0;
+  }
+  dust.geometry.attributes.position.needsUpdate=true;
+
+  // Stars twinkle
+  stars.material.size=0.025+0.01*Math.sin(t*2);
+
+  // Cat breathing
+  catB.scale.y=0.7+0.03*Math.sin(t*1.5);
+
+  // Planet rotation
+  planet.rotation.y+=0.002;
+  ring.rotation.z+=0.001;
+
+  // Crystal orb glow
+  M.crystal.emissiveIntensity=0.3+0.3*Math.sin(t*1.5);
+
+  // Clock hand (minute)
+  // Desk lamp slight flicker
+  deskLamp.intensity=0.35+0.05*Math.sin(t*4);
+
+  controls.update();
+  renderer.render(scene,camera);
+}
+animate();
+
+// ═══ RESIZE ═══
+window.addEventListener('resize',()=>{
+  camera.aspect=innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth,innerHeight);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEMPLARS: Holy War Deckbuilder</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#1a0a00;color:#d4a574;font-family:'Georgia',serif;overflow-x:hidden;min-height:100vh}
+/* TEMPLAR THEME */
+:root{--gold:#d4a574;--red:#8b1a1a;--stone:#3a2a1a;--parchment:#f4e4c1;--cross-red:#c41e3a;--holy:#ffd700;--heresy:#6b0080;--iron:#7a7a7a}
+
+/* HEADER */
+.game-header{background:linear-gradient(135deg,#1a0a00,#2a1508);border-bottom:2px solid var(--gold);padding:8px 16px;display:flex;justify-content:space-between;align-items:center}
+.game-title{font-size:1.4em;font-weight:bold;color:var(--gold);text-shadow:0 0 10px rgba(212,165,116,0.5)}
+.game-title .cross{color:var(--cross-red);font-size:1.2em}
+
+/* STATS BAR */
+.stats-bar{display:flex;gap:12px;padding:8px 16px;background:#0d0500;border-bottom:1px solid #3a2a1a;flex-wrap:wrap;justify-content:center}
+.stat{display:flex;align-items:center;gap:4px;font-size:0.95em;padding:4px 10px;border-radius:4px;background:#1a0a00;border:1px solid #3a2a1a}
+.stat .icon{font-size:1.1em}
+.stat .val{font-weight:bold;color:var(--parchment)}
+
+/* RINGS */
+.rings-area{display:flex;gap:10px;padding:10px 16px;justify-content:center;flex-wrap:wrap}
+.ring-card{width:130px;padding:10px;border-radius:10px;text-align:center;cursor:pointer;transition:all 0.3s;position:relative;border:2px solid #3a2a1a}
+.ring-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,0.5)}
+.ring-card.ready{border-color:var(--holy);box-shadow:0 0 15px rgba(255,215,0,0.3)}
+.ring-card .ring-icon{font-size:2em;margin-bottom:4px}
+.ring-card .ring-name{font-size:0.8em;font-weight:bold;margin-bottom:4px}
+.ring-card .ring-desc{font-size:0.65em;color:#a08060}
+.ring-card .charge-bar{height:4px;background:#1a0a00;border-radius:2px;margin-top:6px;overflow:hidden}
+.ring-card .charge-fill{height:100%;background:var(--holy);transition:width 0.3s}
+.ring-sword{background:linear-gradient(135deg,#2a0a0a,#3a1515);color:#ff6b6b}
+.ring-shield{background:linear-gradient(135deg,#0a1a2a,#152535);color:#6bb5ff}
+.ring-cross{background:linear-gradient(135deg,#2a2a0a,#353515);color:var(--holy)}
+.ring-grail{background:linear-gradient(135deg,#1a0a2a,#251535);color:#d46bff}
+
+/* BATTLE */
+.battle-area{padding:10px 16px}
+.section-title{font-size:0.85em;color:var(--gold);margin-bottom:8px;text-transform:uppercase;letter-spacing:2px;border-bottom:1px solid #3a2a1a;padding-bottom:4px}
+.enemies-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:10px}
+.enemy-card{background:linear-gradient(135deg,#1a1a0a,#252515);border:2px solid #5a5a2a;border-radius:8px;padding:8px;width:110px;text-align:center;transition:all 0.3s}
+.enemy-card.targeted{border-color:var(--cross-red);box-shadow:0 0 12px rgba(196,30,58,0.4)}
+.enemy-card .enemy-icon{font-size:1.8em}
+.enemy-card .enemy-name{font-size:0.7em;font-weight:bold;margin:3px 0;color:var(--parchment)}
+.enemy-card .enemy-hp{font-size:0.75em;color:#ff6b6b}
+.enemy-card .enemy-atk{font-size:0.65em;color:#ffa500}
+.enemy-card.dead{opacity:0.3;border-color:#333;transform:scale(0.9)}
+
+/* HAND */
+.hand-area{padding:10px 16px}
+.hand-cards{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.card{width:95px;padding:8px;border-radius:8px;text-align:center;cursor:pointer;transition:all 0.2s;border:2px solid #3a2a1a;font-size:0.75em}
+.card:hover{transform:translateY(-5px);box-shadow:0 8px 20px rgba(0,0,0,0.5)}
+.card .card-icon{font-size:1.6em;margin-bottom:3px}
+.card .card-name{font-weight:bold;font-size:0.8em;margin-bottom:2px}
+.card .card-effect{font-size:0.7em;color:#a08060}
+.card .card-cost{position:absolute;top:4px;right:6px;font-size:0.65em;color:var(--holy)}
+.card-attack{background:linear-gradient(135deg,#2a0505,#3a1010)}
+.card-guard{background:linear-gradient(135deg,#050a2a,#101a3a)}
+.card-gold{background:linear-gradient(135deg,#2a2a05,#3a3510)}
+.card-holy{background:linear-gradient(135deg,#2a1a05,#3a2a10)}
+.card-starter{background:linear-gradient(135deg,#1a1510,#2a2520)}
+
+/* MARKET */
+.market-area{padding:10px 16px}
+.market-cards{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.market-card{width:95px;padding:8px;border-radius:8px;text-align:center;cursor:pointer;transition:all 0.2s;border:2px solid #5a4a2a;position:relative}
+.market-card:hover{border-color:var(--holy);box-shadow:0 0 12px rgba(255,215,0,0.2)}
+.market-card .cost-tag{background:var(--holy);color:#1a0a00;font-size:0.65em;font-weight:bold;padding:1px 6px;border-radius:10px;display:inline-block;margin-top:3px}
+.market-card.too-expensive{opacity:0.4;cursor:not-allowed}
+
+/* ACTIONS */
+.actions{display:flex;gap:10px;justify-content:center;padding:10px 16px;flex-wrap:wrap}
+.btn{padding:8px 20px;border:none;border-radius:6px;font-family:Georgia,serif;font-size:0.85em;cursor:pointer;transition:all 0.2s;font-weight:bold}
+.btn:hover{transform:translateY(-2px)}
+.btn-attack{background:var(--cross-red);color:white}
+.btn-end{background:var(--stone);color:var(--gold);border:1px solid var(--gold)}
+.btn-purge{background:var(--heresy);color:white}
+.btn:disabled{opacity:0.3;cursor:not-allowed;transform:none}
+
+/* LOG */
+.log-area{padding:6px 16px;max-height:80px;overflow-y:auto}
+.log-entry{font-size:0.7em;color:#806040;padding:2px 0;border-bottom:1px solid #1a1005}
+.log-entry.damage{color:#ff6b6b}
+.log-entry.gold-log{color:var(--holy)}
+.log-entry.holy-log{color:#6bb5ff}
+.log-entry.ring-log{color:#d46bff}
+
+/* WAVE BANNER */
+.wave-banner{text-align:center;padding:15px;background:linear-gradient(135deg,#1a0a00,var(--red),#1a0a00);font-size:1.2em;font-weight:bold;color:var(--parchment);text-shadow:0 0 10px rgba(196,30,58,0.5)}
+
+/* GAME OVER */
+.game-over{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;z-index:100}
+.game-over-box{text-align:center;padding:40px;border:3px solid var(--gold);border-radius:15px;background:linear-gradient(135deg,#1a0a00,#2a1508)}
+.game-over-box h1{font-size:2em;color:var(--gold);margin-bottom:10px}
+.game-over-box p{color:var(--parchment);margin-bottom:20px}
+
+/* HERESY BAR */
+.heresy-bar{height:6px;background:#1a0a00;border-radius:3px;margin:0 16px;overflow:hidden}
+.heresy-fill{height:100%;background:linear-gradient(90deg,var(--heresy),#ff00ff);transition:width 0.5s}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:#0d0500}
+::-webkit-scrollbar-thumb{background:#3a2a1a;border-radius:3px}
+</style>
+</head>
+<body>
+<div id="game"></div>
+<script>
+// ═══════════════════════════════════════════
+// TEMPLARS: HOLY WAR DECKBUILDER ⚔️✝️
+// ═══════════════════════════════════════════
+
+const RINGS = [
+  {id:'sword',name:'Sword of Solomon',icon:'⚔️',desc:'Holy blade — 8 damage + 2 attack',maxCharge:4,type:'offense',
+   bg:'ring-sword',effect:(G)=>{G.log('⚔️ SWORD OF SOLOMON! 8 damage to target!','ring-log');if(G.targetEnemy!==null&&G.enemies[G.targetEnemy]&&G.enemies[G.targetEnemy].hp>0){G.enemies[G.targetEnemy].hp-=8;G.log(`💥 ${G.enemies[G.targetEnemy].name} takes 8 HOLY damage!`,'damage')}else{let t=G.enemies.find(e=>e.hp>0);if(t){t.hp-=8;G.log(`💥 ${t.name} takes 8 HOLY damage!`,'damage')}}G.attack+=2}},
+  {id:'shield',name:'Shield of Faith',icon:'🛡️',desc:'Divine guard — +6 guard + draw 2',maxCharge:4,type:'defense',
+   bg:'ring-shield',effect:(G)=>{G.log('🛡️ SHIELD OF FAITH! +6 guard, draw 2!','holy-log');G.guard+=6;G.drawCards(2)}},
+  {id:'cross',name:'True Cross',icon:'✝️',desc:'Holy relic — +5 gold + purge 3 heresy',maxCharge:5,type:'holy',
+   bg:'ring-cross',effect:(G)=>{G.log('✝️ TRUE CROSS! +5 gold, purge 3 heresy!','gold-log');G.gold+=5;G.heresy=Math.max(0,G.heresy-3)}},
+  {id:'grail',name:'Holy Grail',icon:'🏆',desc:'Divine power — 5 damage ALL + 4 guard',maxCharge:6,type:'ultimate',
+   bg:'ring-grail',effect:(G)=>{G.log('🏆 HOLY GRAIL! 5 damage to ALL enemies!','ring-log');G.enemies.forEach(e=>{if(e.hp>0){e.hp-=5;G.log(`💥 ${e.name} takes 5 divine damage!`,'damage')}});G.guard+=4}}
+];
+
+const STARTER_DECK = [
+  {name:'Squire',icon:'🗡️',type:'card-starter',effect:'ATK +1',apply:(G)=>{G.attack+=1}},
+  {name:'Squire',icon:'🗡️',type:'card-starter',effect:'ATK +1',apply:(G)=>{G.attack+=1}},
+  {name:'Squire',icon:'🗡️',type:'card-starter',effect:'ATK +1',apply:(G)=>{G.attack+=1}},
+  {name:'Squire',icon:'🗡️',type:'card-starter',effect:'ATK +1',apply:(G)=>{G.attack+=1}},
+  {name:'Pilgrim',icon:'🪙',type:'card-gold',effect:'GOLD +1',apply:(G)=>{G.gold+=1}},
+  {name:'Pilgrim',icon:'🪙',type:'card-gold',effect:'GOLD +1',apply:(G)=>{G.gold+=1}},
+  {name:'Pilgrim',icon:'🪙',type:'card-gold',effect:'GOLD +1',apply:(G)=>{G.gold+=1}},
+  {name:'Pilgrim',icon:'🪙',type:'card-gold',effect:'GOLD +1',apply:(G)=>{G.gold+=1}},
+  {name:'Shield Wall',icon:'🛡️',type:'card-guard',effect:'GUARD +1',apply:(G)=>{G.guard+=1}},
+  {name:'Prayer',icon:'🙏',type:'card-holy',effect:'CHARGE +1',apply:(G)=>{G.chargeAll(1)}}
+];
+
+const MARKET_POOL = [
+  {name:'Knight',icon:'⚔️',type:'card-attack',effect:'ATK +3',cost:3,apply:(G)=>{G.attack+=3}},
+  {name:'Crusader',icon:'🏇',type:'card-attack',effect:'ATK +2, CHG +1',cost:4,apply:(G)=>{G.attack+=2;G.chargeAll(1)}},
+  {name:'Templar',icon:'🗡️',type:'card-attack',effect:'ATK +4',cost:5,apply:(G)=>{G.attack+=4}},
+  {name:'Hospitaller',icon:'💚',type:'card-guard',effect:'GUARD +4',cost:3,apply:(G)=>{G.guard+=4}},
+  {name:'Fortress',icon:'🏰',type:'card-guard',effect:'GUARD +3, Draw 1',cost:4,apply:(G)=>{G.guard+=3;G.drawCards(1)}},
+  {name:'Castle Wall',icon:'🧱',type:'card-guard',effect:'GUARD +6',cost:6,apply:(G)=>{G.guard+=6}},
+  {name:'Tax Collector',icon:'💰',type:'card-gold',effect:'GOLD +3',cost:3,apply:(G)=>{G.gold+=3}},
+  {name:'Merchant',icon:'🏪',type:'card-gold',effect:'GOLD +2, Draw 1',cost:4,apply:(G)=>{G.gold+=2;G.drawCards(1)}},
+  {name:'Treasury',icon:'👑',type:'card-gold',effect:'GOLD +5',cost:6,apply:(G)=>{G.gold+=5}},
+  {name:'Chaplain',icon:'⛪',type:'card-holy',effect:'CHG +2',cost:3,apply:(G)=>{G.chargeAll(2)}},
+  {name:'Bishop',icon:'📿',type:'card-holy',effect:'CHG +2, -2 Heresy',cost:5,apply:(G)=>{G.chargeAll(2);G.heresy=Math.max(0,G.heresy-2)}},
+  {name:'Pope\'s Blessing',icon:'✨',type:'card-holy',effect:'CHG +3, GUARD +2',cost:7,apply:(G)=>{G.chargeAll(3);G.guard+=2}},
+  {name:'Assassin',icon:'🗡️',type:'card-attack',effect:'ATK +5, +1 Heresy',cost:4,apply:(G)=>{G.attack+=5;G.heresy+=1}},
+  {name:'War Engine',icon:'🏗️',type:'card-attack',effect:'ATK +3 ALL enemies',cost:8,apply:(G)=>{G.enemies.forEach(e=>{if(e.hp>0){e.hp-=3;G.log(`🏗️ ${e.name} takes 3 siege damage!`,'damage')}})}},
+  {name:'Relic Hunter',icon:'🔍',type:'card-holy',effect:'Draw 3',cost:5,apply:(G)=>{G.drawCards(3)}},
+  {name:'Holy Water',icon:'💧',type:'card-holy',effect:'-4 Heresy',cost:3,apply:(G)=>{G.heresy=Math.max(0,G.heresy-4)}}
+];
+
+const WAVES = [
+  {name:'⚔️ WAVE I — Saracen Scouts',enemies:[
+    {name:'Scout',icon:'🏹',hp:5,atk:1},{name:'Scout',icon:'🏹',hp:5,atk:1},{name:'Rider',icon:'🐴',hp:8,atk:2}
+  ]},
+  {name:'⚔️ WAVE II — Desert Raiders',enemies:[
+    {name:'Raider',icon:'⚔️',hp:10,atk:2},{name:'Raider',icon:'⚔️',hp:10,atk:2},{name:'Archer',icon:'🏹',hp:7,atk:3},{name:'Shaman',icon:'🔮',hp:6,atk:1}
+  ]},
+  {name:'⚔️ WAVE III — Mamluk Warriors',enemies:[
+    {name:'Mamluk',icon:'🗡️',hp:14,atk:3},{name:'Mamluk',icon:'🗡️',hp:14,atk:3},{name:'War Elephant',icon:'🐘',hp:20,atk:4}
+  ]},
+  {name:'⚔️ WAVE IV — Assassin Order',enemies:[
+    {name:'Assassin',icon:'🗡️',hp:12,atk:5},{name:'Assassin',icon:'🗡️',hp:12,atk:5},{name:'Shadow Master',icon:'👤',hp:16,atk:4},{name:'Poison Blade',icon:'🐍',hp:10,atk:6}
+  ]},
+  {name:'⚔️ WAVE V — SALADIN THE GREAT',enemies:[
+    {name:'Elite Guard',icon:'🛡️',hp:18,atk:4},{name:'Elite Guard',icon:'🛡️',hp:18,atk:4},{name:'SALADIN',icon:'👑',hp:35,atk:6}
+  ]}
+];
+
+// ═══════════════════════════════════════════
+// GAME STATE
+// ═══════════════════════════════════════════
+const G = {
+  hp:30, maxHp:30, attack:0, guard:0, gold:0, heresy:0,
+  wave:0, turn:0, phase:'play', gameOver:false, victory:false,
+  deck:[], hand:[], discard:[], played:[],
+  enemies:[], targetEnemy:null,
+  rings: RINGS.map(r=>({...r,charge:0})),
+  market: [],
+  logs: [],
+
+  init() {
+    this.deck = shuffle([...STARTER_DECK].map(c=>({...c})));
+    this.hand=[];this.discard=[];this.played=[];
+    this.hp=30;this.attack=0;this.guard=0;this.gold=0;this.heresy=0;
+    this.wave=0;this.turn=0;this.gameOver=false;this.victory=false;
+    this.targetEnemy=null;
+    this.rings=RINGS.map(r=>({...r,charge:0}));
+    this.logs=[];
+    this.refreshMarket();
+    this.startWave();
+  },
+
+  refreshMarket() {
+    this.market = [];
+    let pool = shuffle([...MARKET_POOL]);
+    for(let i=0;i<6&&i<pool.length;i++) this.market.push({...pool[i]});
+  },
+
+  startWave() {
+    if(this.wave>=WAVES.length){this.victory=true;this.gameOver=true;render();return}
+    this.enemies=WAVES[this.wave].enemies.map(e=>({...e,maxHp:e.hp}));
+    this.targetEnemy=0;
+    this.log(`\n${WAVES[this.wave].name}`,'ring-log');
+    this.startTurn();
+  },
+
+  startTurn() {
+    this.turn++;this.attack=0;this.guard=0;this.gold=0;this.played=[];this.phase='play';
+    this.drawCards(5);
+    if(this.targetEnemy!==null&&(this.targetEnemy>=this.enemies.length||this.enemies[this.targetEnemy].hp<=0)){
+      let alive=this.enemies.findIndex(e=>e.hp>0);
+      this.targetEnemy=alive>=0?alive:null;
+    }
+    render();
+  },
+
+  drawCards(n) {
+    for(let i=0;i<n;i++){
+      if(this.deck.length===0){
+        if(this.discard.length===0)return;
+        this.deck=shuffle([...this.discard]);this.discard=[];
+        this.log('🔄 Deck reshuffled','holy-log');
+      }
+      this.hand.push(this.deck.pop());
+    }
+  },
+
+  playCard(idx) {
+    if(this.phase!=='play'||this.gameOver)return;
+    let card=this.hand.splice(idx,1)[0];
+    card.apply(this);
+    this.played.push(card);
+    this.log(`▶ Played ${card.icon} ${card.name}: ${card.effect}`);
+    render();
+  },
+
+  activateRing(idx) {
+    let ring=this.rings[idx];
+    if(ring.charge<ring.maxCharge||this.gameOver)return;
+    ring.charge=0;
+    ring.effect(this);
+    this.checkEnemies();
+    render();
+  },
+
+  chargeAll(n) {
+    this.rings.forEach(r=>{r.charge=Math.min(r.maxCharge,r.charge+n)});
+  },
+
+  attackEnemy() {
+    if(this.attack<=0||this.gameOver)return;
+    if(this.targetEnemy===null||this.targetEnemy>=this.enemies.length)return;
+    let e=this.enemies[this.targetEnemy];
+    if(e.hp<=0)return;
+    let dmg=this.attack;
+    e.hp-=dmg;this.attack=0;
+    this.log(`⚔️ Strike ${e.name} for ${dmg} damage!`,'damage');
+    this.checkEnemies();
+    render();
+  },
+
+  selectTarget(idx) {
+    if(this.enemies[idx]&&this.enemies[idx].hp>0) this.targetEnemy=idx;
+    render();
+  },
+
+  buyCard(idx) {
+    let card=this.market[idx];
+    if(!card||this.gold<card.cost)return;
+    this.gold-=card.cost;
+    this.discard.push({name:card.name,icon:card.icon,type:card.type,effect:card.effect,apply:card.apply});
+    this.market.splice(idx,1);
+    // replace from pool
+    let pool=shuffle(MARKET_POOL.filter(c=>!this.market.find(m=>m.name===c.name)));
+    if(pool.length>0)this.market.push({...pool[0]});
+    this.log(`🛒 Bought ${card.icon} ${card.name} for ${card.cost} gold`,'gold-log');
+    render();
+  },
+
+  purgeHeresy() {
+    if(this.gold<2||this.heresy<=0)return;
+    this.gold-=2;this.heresy=Math.max(0,this.heresy-2);
+    this.log('⛪ Purged 2 heresy for 2 gold','holy-log');
+    render();
+  },
+
+  endTurn() {
+    // Enemy attacks
+    let totalDmg=0;
+    this.enemies.forEach(e=>{
+      if(e.hp>0){totalDmg+=e.atk;this.log(`💢 ${e.name} attacks for ${e.atk}`,'damage')}
+    });
+    let blocked=Math.min(this.guard,totalDmg);
+    let through=totalDmg-blocked;
+    if(blocked>0)this.log(`🛡️ Blocked ${blocked} damage`,'holy-log');
+    if(through>0){this.hp-=through;this.log(`💔 Took ${through} damage! HP: ${this.hp}`,'damage')}
+    // Heresy tick
+    this.heresy+=1;
+    if(this.heresy>=10){this.hp=0;this.log('💀 CONSUMED BY HERESY!','damage')}
+    // Death check
+    if(this.hp<=0){this.hp=0;this.gameOver=true;this.victory=false;render();return}
+    // Discard hand + played
+    this.discard.push(...this.hand,...this.played);
+    this.hand=[];this.played=[];
+    this.startTurn();
+  },
+
+  checkEnemies() {
+    let allDead=this.enemies.every(e=>e.hp<=0);
+    if(allDead){
+      this.wave++;
+      this.log('✅ Wave cleared!','holy-log');
+      this.discard.push(...this.hand,...this.played);this.hand=[];this.played=[];
+      this.refreshMarket();
+      setTimeout(()=>{this.startWave()},500);
+    } else {
+      // retarget if current target dead
+      if(this.targetEnemy!==null&&this.enemies[this.targetEnemy].hp<=0){
+        let alive=this.enemies.findIndex(e=>e.hp>0);
+        this.targetEnemy=alive>=0?alive:null;
+      }
+    }
+  },
+
+  log(msg,cls='') {
+    this.logs.unshift({msg,cls});
+    if(this.logs.length>50)this.logs.pop();
+  }
+};
+
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}return arr}
+
+// ═══════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════
+function render() {
+  const g=document.getElementById('game');
+  if(G.gameOver){
+    g.innerHTML=`<div class="game-over"><div class="game-over-box">
+      <h1>${G.victory?'✝️ JERUSALEM IS OURS!':'💀 FALLEN IN THE HOLY LAND'}</h1>
+      <p>${G.victory?'The Kingdom of Heaven stands. Deus Vult!':'Your bones bleach in the desert sun...'}</p>
+      <p>Waves: ${G.wave}/${WAVES.length} · Turns: ${G.turn} · Heresy: ${G.heresy}</p>
+      <button class="btn btn-end" onclick="G.init();render()">⚔️ CRUSADE AGAIN</button>
+    </div></div>`;
+    return;
+  }
+
+  let waveName=G.wave<WAVES.length?WAVES[G.wave].name:'';
+  let hpPct=Math.max(0,(G.hp/G.maxHp)*100);
+  let heresyPct=(G.heresy/10)*100;
+
+  let html=`
+    <div class="game-header">
+      <div class="game-title"><span class="cross">✝️</span> TEMPLARS: Holy War</div>
+      <div style="font-size:0.8em;color:#806040">Wave ${G.wave+1}/5 · Turn ${G.turn}</div>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stat"><span class="icon">❤️</span><span class="val">${G.hp}/${G.maxHp}</span></div>
+      <div class="stat"><span class="icon">⚔️</span><span class="val">${G.attack}</span></div>
+      <div class="stat"><span class="icon">🛡️</span><span class="val">${G.guard}</span></div>
+      <div class="stat"><span class="icon">💰</span><span class="val">${G.gold}</span></div>
+      <div class="stat"><span class="icon">😈</span><span class="val">${G.heresy}/10</span></div>
+      <div class="stat"><span class="icon">📦</span><span class="val">${G.deck.length}</span></div>
+      <div class="stat"><span class="icon">♻️</span><span class="val">${G.discard.length}</span></div>
+    </div>
+
+    <div class="heresy-bar"><div class="heresy-fill" style="width:${heresyPct}%"></div></div>
+
+    <div class="wave-banner">${waveName}</div>
+
+    <div class="rings-area">
+      ${G.rings.map((r,i)=>`
+        <div class="ring-card ${r.bg} ${r.charge>=r.maxCharge?'ready':''}" onclick="G.activateRing(${i})">
+          <div class="ring-icon">${r.icon}</div>
+          <div class="ring-name">${r.name}</div>
+          <div class="ring-desc">${r.desc}</div>
+          <div class="charge-bar"><div class="charge-fill" style="width:${(r.charge/r.maxCharge)*100}%"></div></div>
+          <div style="font-size:0.6em;margin-top:3px;color:#a08060">${r.charge}/${r.maxCharge}</div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="battle-area">
+      <div class="section-title">⚔️ Battlefield</div>
+      <div class="enemies-row">
+        ${G.enemies.map((e,i)=>`
+          <div class="enemy-card ${e.hp<=0?'dead':''} ${i===G.targetEnemy?'targeted':''}" onclick="G.selectTarget(${i})">
+            <div class="enemy-icon">${e.icon}</div>
+            <div class="enemy-name">${e.name}</div>
+            <div class="enemy-hp">❤️ ${Math.max(0,e.hp)}/${e.maxHp}</div>
+            <div class="enemy-atk">⚔️ ${e.atk}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-attack" onclick="G.attackEnemy()" ${G.attack<=0?'disabled':''}>⚔️ STRIKE (${G.attack})</button>
+      <button class="btn btn-purge" onclick="G.purgeHeresy()" ${G.gold<2||G.heresy<=0?'disabled':''}>⛪ PURGE (2💰)</button>
+      <button class="btn btn-end" onclick="G.endTurn()">🔚 END TURN</button>
+    </div>
+
+    <div class="hand-area">
+      <div class="section-title">🃏 Hand (${G.hand.length})</div>
+      <div class="hand-cards">
+        ${G.hand.map((c,i)=>`
+          <div class="card ${c.type}" onclick="G.playCard(${i})">
+            <div class="card-icon">${c.icon}</div>
+            <div class="card-name">${c.name}</div>
+            <div class="card-effect">${c.effect}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="market-area">
+      <div class="section-title">🏪 Market</div>
+      <div class="market-cards">
+        ${G.market.map((c,i)=>`
+          <div class="market-card ${c.type} ${G.gold<c.cost?'too-expensive':''}" onclick="G.buyCard(${i})">
+            <div class="card-icon">${c.icon}</div>
+            <div class="card-name">${c.name}</div>
+            <div class="card-effect">${c.effect}</div>
+            <div class="cost-tag">${c.cost} 💰</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="log-area">
+      ${G.logs.slice(0,15).map(l=>`<div class="log-entry ${l.cls}">${l.msg}</div>`).join('')}
+    </div>
+  `;
+  g.innerHTML=html;
+}
+
+// START
+G.init();
+render();
+</script>
+</body>
+</html>

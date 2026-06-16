@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LECTRIC: Northern Voltage</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#040810;color:#b0c8e0;font-family:'Courier New',monospace;min-height:100vh;overflow-x:hidden;
+  background-image:radial-gradient(ellipse at 50% -10%,#0a2a1a22 0%,transparent 50%)}
+@keyframes lightning{0%,100%{opacity:0}5%{opacity:1}6%{opacity:0}8%{opacity:.7}9%{opacity:0}}
+@keyframes aurora{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes pulse{0%,100%{transform:scale(1);filter:brightness(1)}50%{transform:scale(1.05);filter:brightness(1.3)}}
+@keyframes spark{0%,100%{text-shadow:0 0 5px currentColor}50%{text-shadow:0 0 20px currentColor,0 0 40px currentColor}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes scan{0%{background-position:0%}100%{background-position:200%}}
+.aurora-bar{position:fixed;top:0;left:0;width:100%;height:4px;z-index:100;
+  background:linear-gradient(90deg,#00ff88,#00ccff,#aa44ff,#ffcc00,#00ff88);background-size:200%;animation:aurora 4s linear infinite}
+.lightning-flash{position:fixed;top:0;left:0;width:100%;height:100%;background:#ffffff;z-index:99;
+  pointer-events:none;animation:lightning 12s infinite;opacity:0}
+.container{max-width:900px;margin:0 auto;padding:10px 15px;position:relative;z-index:1}
+
+/* HEADER */
+.header{text-align:center;padding:15px 0 10px;border-bottom:1px solid #1a3a2a}
+.header h1{font-size:1.6em;letter-spacing:5px;color:#00ffaa;animation:spark 3s infinite}
+.header .sub{font-size:.65em;color:#3a6a5a;margin-top:4px;letter-spacing:3px}
+.header .quote{font-size:.7em;color:#557788;font-style:italic;margin-top:8px}
+
+/* STATS BAR */
+.stats{display:flex;justify-content:center;gap:12px;padding:12px 0;flex-wrap:wrap}
+.stat{background:#0a1218;border:1px solid #1a2a2a;border-radius:8px;padding:8px 16px;text-align:center}
+.stat .v{font-size:1.4em;font-weight:bold;color:#00ffaa}
+.stat .l{font-size:.55em;color:#3a5a5a;text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+
+/* GAME AREA */
+.game{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.panel{background:#0a1018;border:1px solid #1a2a2a;border-radius:12px;padding:14px;position:relative}
+.panel h2{font-size:.8em;color:#00ccff;letter-spacing:2px;margin-bottom:8px;text-transform:uppercase}
+
+/* CRUCIBLES */
+.crucible{background:linear-gradient(135deg,var(--c1),var(--c2));border:2px solid var(--border);border-radius:10px;
+  padding:10px 12px;margin:6px 0;cursor:pointer;transition:all .3s;position:relative;overflow:hidden}
+.crucible:hover{transform:translateX(4px);box-shadow:0 0 15px var(--glow)}
+.crucible.locked{opacity:.4;pointer-events:none}
+.crucible .c-top{display:flex;align-items:center;gap:8px}
+.crucible .c-icon{font-size:1.5em;animation:float 3s ease-in-out infinite}
+.crucible .c-name{font-size:.8em;font-weight:bold;color:var(--title);letter-spacing:1px}
+.crucible .c-type{font-size:.55em;color:var(--type);text-transform:uppercase;letter-spacing:1px}
+.crucible .c-desc{font-size:.65em;color:#6688aa;margin-top:6px;line-height:1.4}
+.crucible .c-cost{position:absolute;top:8px;right:10px;font-size:.6em;color:#ffcc00;opacity:.7}
+
+/* CARDS */
+.card-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.card{background:#0d1520;border:1px solid #1a2a3a;border-radius:8px;padding:8px;flex:1;min-width:70px;
+  text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.card:hover{border-color:#00ffaa;transform:translateY(-3px);box-shadow:0 4px 12px #00ffaa22}
+.card.selected{border-color:#00ffaa;box-shadow:0 0 10px #00ffaa44}
+.card .c-em{font-size:1.3em}
+.card .c-nm{font-size:.6em;color:#7799aa;margin-top:3px;line-height:1.2}
+.card .c-pw{font-size:.55em;color:#00ffaa;margin-top:2px}
+
+/* ENEMY */
+.enemy{text-align:center;padding:10px;position:relative}
+.enemy .e-icon{font-size:2.5em;animation:pulse 2s infinite}
+.enemy .e-name{font-size:.9em;color:#ff4444;letter-spacing:2px;margin:6px 0}
+.enemy .e-hp-bar{background:#1a0a0a;border:1px solid #3a1515;border-radius:6px;height:16px;overflow:hidden;margin:6px 0}
+.enemy .e-hp-fill{height:100%;background:linear-gradient(90deg,#ff2222,#ff6644);border-radius:6px;transition:width .5s}
+.enemy .e-hp-text{font-size:.6em;color:#aa4444}
+
+/* PLAYER STATS */
+.player-stats{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:8px 0}
+.p-stat{background:#0a1218;border:1px solid #1a2a2a;border-radius:6px;padding:6px 12px;text-align:center}
+.p-stat .ps-v{font-size:1.1em;font-weight:bold}
+.p-stat .ps-l{font-size:.5em;color:#3a5a5a;text-transform:uppercase;letter-spacing:1px}
+
+/* ACTION BUTTONS */
+.actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:10px 0}
+.btn{padding:8px 18px;border:2px solid;border-radius:8px;background:transparent;color:inherit;
+  font-family:inherit;font-size:.75em;cursor:pointer;letter-spacing:2px;transition:all .3s;text-transform:uppercase}
+.btn:hover{transform:scale(1.05)}
+.btn-attack{border-color:#00ffaa;color:#00ffaa}
+.btn-attack:hover{background:#00ffaa;color:#040810;box-shadow:0 0 20px #00ffaa66}
+.btn-charge{border-color:#ffcc00;color:#ffcc00}
+.btn-charge:hover{background:#ffcc00;color:#040810}
+.btn-ward{border-color:#00ccff;color:#00ccff}
+.btn-ward:hover{background:#00ccff;color:#040810}
+.btn-purge{border-color:#aa44ff;color:#aa44ff}
+.btn-purge:hover{background:#aa44ff;color:#040810}
+.btn-end{border-color:#334;color:#556}
+.btn-end:hover{background:#334;color:#ccc}
+
+/* LOG */
+.log{background:#060a10;border:1px solid #111a22;border-radius:8px;padding:8px 12px;
+  max-height:120px;overflow-y:auto;margin-top:8px;font-size:.65em;line-height:1.6}
+.log .entry{border-bottom:1px solid #0a1118;padding:2px 0}
+.log .entry.dmg{color:#ff6644}
+.log .entry.heal{color:#00ffaa}
+.log .entry.info{color:#00ccff}
+.log .entry.warn{color:#ffcc00}
+.log .entry.epic{color:#aa44ff;font-weight:bold}
+
+/* TRIAL PROGRESS */
+.trials{display:flex;gap:6px;justify-content:center;margin:8px 0}
+.trial-dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:.7em;border:2px solid #1a2a2a;background:#0a1018;transition:all .3s}
+.trial-dot.active{border-color:#00ffaa;box-shadow:0 0 10px #00ffaa44}
+.trial-dot.done{border-color:#00ff88;background:#0a2a15;color:#00ff88}
+.trial-dot.locked{opacity:.3}
+
+/* VICTORY/DEFEAT */
+.overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000e;z-index:50;
+  justify-content:center;align-items:center;flex-direction:column}
+.overlay.active{display:flex}
+.overlay .o-icon{font-size:4em;animation:pulse 1.5s infinite}
+.overlay .o-title{font-size:1.5em;letter-spacing:4px;margin:12px 0}
+.overlay .o-msg{font-size:.75em;color:#667;margin-bottom:15px;text-align:center;max-width:400px;line-height:1.5}
+.overlay .o-btn{background:linear-gradient(135deg,#00ffaa,#00ccff);color:#040810;border:none;
+  padding:10px 30px;border-radius:8px;font-family:inherit;cursor:pointer;letter-spacing:2px;font-size:.8em}
+</style>
+</head>
+<body>
+<div class="aurora-bar"></div>
+<div class="lightning-flash"></div>
+<div class="container">
+
+<div class="header">
+  <h1>⚡ LECTRIC ⚡</h1>
+  <div class="sub">NORTHERN VOLTAGE — THE 6TH UNIVERSE</div>
+  <div class="quote">"In the North I saw a magic they call LECTRIC..." — M</div>
+</div>
+
+<div class="stats" id="topStats"></div>
+<div class="trials" id="trialDots"></div>
+
+<div class="game">
+  <!-- LEFT: CRUCIBLES + HAND -->
+  <div>
+    <div class="panel">
+      <h2>⚡ Crucibles of Voltage</h2>
+      <div id="crucibles"></div>
+    </div>
+    <div class="panel" style="margin-top:10px">
+      <h2>🃏 Your Hand</h2>
+      <div class="card-row" id="hand"></div>
+      <div class="actions" style="margin-top:10px">
+        <button class="btn btn-charge" onclick="gainCharge()">⚡ Charge</button>
+        <button class="btn btn-purge" onclick="discharge()">🔌 Discharge</button>
+        <button class="btn btn-end" onclick="endTurn()">End Turn</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: ENEMY + PLAYER -->
+  <div>
+    <div class="panel">
+      <h2>💀 Trial Arena</h2>
+      <div class="enemy" id="enemyArea"></div>
+    </div>
+    <div class="panel" style="margin-top:10px">
+      <h2>🧠 Mind State</h2>
+      <div class="player-stats" id="playerStats"></div>
+      <div class="actions">
+        <button class="btn btn-attack" onclick="strikeAll()">⚡ STRIKE</button>
+        <button class="btn btn-ward" onclick="raiseWard()">🛡️ Ward</button>
+      </div>
+    </div>
+    <div class="panel" style="margin-top:10px">
+      <h2>📡 Transmission Log</h2>
+      <div class="log" id="log"></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<!-- OVERLAYS -->
+<div class="overlay" id="victoryOverlay">
+  <div class="o-icon">⚡</div>
+  <div class="o-title" style="color:#00ffaa">CIRCUIT COMPLETE</div>
+  <div class="o-msg" id="victoryMsg">The voltage flows through you.</div>
+  <button class="o-btn" onclick="nextTrial()">NEXT TRIAL ⚡</button>
+</div>
+<div class="overlay" id="defeatOverlay">
+  <div class="o-icon">💀</div>
+  <div class="o-title" style="color:#ff4444">OVERLOADED</div>
+  <div class="o-msg">Your circuits burned out. The North keeps its secrets... for now.</div>
+  <button class="o-btn" onclick="restartGame()">REBOOT ⚡</button>
+</div>
+<div class="overlay" id="winOverlay">
+  <div class="o-icon">🔐</div>
+  <div class="o-title" style="color:#ffcc00">KNOX OPENED</div>
+  <div class="o-msg" id="winMsg">You found the secret. The 6th mind is yours.</div>
+  <button class="o-btn" onclick="restartGame()">PLAY AGAIN ⚡</button>
+</div>
+
+<script>
+// ============ GAME ENGINE ============
+const CRUCIBLES = [
+  {id:'lightning',icon:'⚡',name:'Lightning Rune',type:'Raw Power',color:'#ffcc00',
+   desc:'Chain strike — raw voltage tearing through enemy defenses.',
+   cards:[
+    {em:'⚡',nm:'Bolt',atk:3,cost:0},
+    {em:'🌩️',nm:'Thunder Crack',atk:5,cost:1},
+    {em:'💥',nm:'Chain Lightning',atk:4,cost:1,aoe:true},
+    {em:'⛈️',nm:'Storm Surge',atk:8,cost:2}
+   ]},
+  {id:'frost',icon:'❄️',name:'Frost Circuit',type:'Frozen Logic',color:'#00ccff',
+   desc:'Freeze, shatter, control. Cold is just slow electrons.',
+   cards:[
+    {em:'❄️',nm:'Frost Bite',atk:2,cost:0,ward:2},
+    {em:'🧊',nm:'Cryo Lock',atk:0,cost:1,ward:5},
+    {em:'💎',nm:'Shatter',atk:6,cost:1},
+    {em:'🌊',nm:'Absolute Zero',atk:3,cost:2,ward:4,aoe:true}
+   ]},
+  {id:'storm',icon:'🌪️',name:'Storm Tide',type:'AOE Tempest',color:'#aa44ff',
+   desc:'The storm does not choose its targets. Neither do you.',
+   cards:[
+    {em:'🌀',nm:'Gust',atk:2,cost:0,draw:1},
+    {em:'🌪️',nm:'Cyclone',atk:4,cost:1,aoe:true},
+    {em:'🌊',nm:'Tidal Surge',atk:3,cost:1,draw:2},
+    {em:'⚡',nm:'Supercell',atk:7,cost:2,aoe:true}
+   ]},
+  {id:'plasma',icon:'🔥',name:'Plasma Forge',type:'Forbidden Voltage',color:'#ff6600',
+   desc:'Ancient tech. Voltage so high it becomes fire. Costs sanity.',
+   cards:[
+    {em:'🔥',nm:'Arc Weld',atk:4,cost:0,burn:1},
+    {em:'☄️',nm:'Plasma Bolt',atk:6,cost:1,burn:1},
+    {em:'💀',nm:'Meltdown',atk:5,cost:1,aoe:true,burn:2},
+    {em:'🌟',nm:'Fusion',atk:9,cost:2,burn:2}
+   ]}
+];
+
+const KNOX_CRUCIBLE = {
+  id:'knox',icon:'🔐',name:'KNOX — The Secret',type:'ULTIMATE',color:'#ffcc00',
+  desc:'The lock opens. Behind it: everything you are, expressed as pure voltage.',
+  cards:[
+   {em:'🔐',nm:'KNOX SURGE',atk:7,cost:0,aoe:true,ward:5,draw:3,heal:3}
+  ]
+};
+
+const TRIALS = [
+  {name:'THE STATIC FIELD',icon:'⚡',hp:18,atk:3,desc:'Electricity without purpose. Tame it.'},
+  {name:'AURORA SENTINELS',icon:'🌌',hp:24,atk:4,desc:'Northern lights given teeth and voltage.'},
+  {name:'THE TRANSFORMER',icon:'🔌',hp:30,atk:5,desc:'It converts everything into destruction.'},
+  {name:'NIKOLA\'S GHOST',icon:'👻',hp:38,atk:6,desc:'The forgotten genius. His current still flows.'},
+  {name:'THE NORTHERN EQUATION',icon:'💀',hp:50,atk:8,desc:'The final formula. Solve it or burn.'}
+];
+
+let G = {};
+
+function initGame(){
+  G = {
+    trial:0, hp:30, maxHp:30, charge:3, maxCharge:5, ward:0, overload:0,
+    deck:[], hand:[], discard:[], gold:0,
+    crucibleOwned:[0], // start with Lightning
+    knoxUnlocked:false,
+    enemies:[]
+  };
+  // Build starting deck
+  G.deck = [];
+  for(let i=0;i<4;i++) G.deck.push({em:'⚡',nm:'Spark',atk:2,cost:0});
+  for(let i=0;i<3;i++) G.deck.push({em:'🛡️',nm:'Insulate',atk:0,cost:0,ward:2});
+  for(let i=0;i<2;i++) G.deck.push({em:'🔋',nm:'Battery',atk:0,cost:0,charge:1});
+  G.deck.push({em:'💡',nm:'Illuminate',atk:1,cost:0,draw:1});
+  shuffle(G.deck);
+  startTrial();
+}
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}
+
+function startTrial(){
+  const t=TRIALS[G.trial];
+  G.enemies=[{...t,maxHp:t.hp}];
+  G.hand=[];
+  G.discard=[];
+  // Check KNOX unlock
+  if(G.trial>=3 && !G.knoxUnlocked){
+    G.knoxUnlocked=true;
+    addLog('🔐 KNOX UNLOCKED — The secret reveals itself!','epic');
+  }
+  drawCards(5);
+  render();
+  addLog(`⚡ TRIAL ${G.trial+1}: ${t.name}`,'info');
+  addLog(`"${t.desc}"`,'warn');
+}
+
+function drawCards(n){
+  for(let i=0;i<n;i++){
+    if(G.deck.length===0){G.deck=[...G.discard];G.discard=[];shuffle(G.deck)}
+    if(G.deck.length>0) G.hand.push(G.deck.pop());
+  }
+  render();
+}
+
+function playCard(idx){
+  const c=G.hand[idx];
+  if(c.cost>G.charge){addLog('Not enough charge!','warn');return}
+  G.charge-=c.cost;
+  // Attack
+  if(c.atk){
+    if(c.aoe){G.enemies.forEach(e=>damageEnemy(e,c.atk))}
+    else if(G.enemies.length){damageEnemy(G.enemies[0],c.atk)}
+    addLog(`${c.em} ${c.nm} → ${c.atk} damage${c.aoe?' (ALL)':''}!`,'dmg');
+  }
+  // Ward
+  if(c.ward){G.ward+=c.ward;addLog(`+${c.ward} ward 🛡️`,'info')}
+  // Draw
+  if(c.draw){drawCards(c.draw);addLog(`Drew ${c.draw} card(s)`,'info')}
+  // Heal
+  if(c.heal){G.hp=Math.min(G.maxHp,G.hp+c.heal);addLog(`+${c.heal} HP healed`,'heal')}
+  // Charge gain
+  if(c.charge){G.charge=Math.min(G.maxCharge,G.charge+c.charge);addLog(`+${c.charge} charge ⚡`,'info')}
+  // Burn (overload)
+  if(c.burn){G.overload+=c.burn;addLog(`+${c.burn} overload 🔥`,'warn')}
+  G.hand.splice(idx,1);
+  G.discard.push(c);
+  checkEnemies();
+  render();
+}
+
+function damageEnemy(e,dmg){e.hp=Math.max(0,e.hp-dmg)}
+
+function checkEnemies(){
+  G.enemies=G.enemies.filter(e=>e.hp>0);
+  if(G.enemies.length===0){
+    if(G.trial>=TRIALS.length-1){
+      document.getElementById('winOverlay').classList.add('active');
+      document.getElementById('winMsg').textContent=
+        `All 5 trials complete. KNOX is open. The 6th mind is YOURS.\n"Everything IS physics. Even lightning. Even thought."`;
+    } else {
+      const msgs=['The static yields.','The aurora dims.','The transformer falls silent.',
+        'Nikola smiles from beyond.','THE EQUATION IS SOLVED.'];
+      document.getElementById('victoryMsg').textContent=msgs[G.trial]||'Circuit complete.';
+      document.getElementById('victoryOverlay').classList.add('active');
+    }
+  }
+}
+
+function endTurn(){
+  // Enemy attacks
+  G.enemies.forEach(e=>{
+    let dmg=e.atk;
+    if(G.ward>0){const blocked=Math.min(G.ward,dmg);G.ward-=blocked;dmg-=blocked;
+      if(blocked)addLog(`Ward absorbed ${blocked} damage`,'info')}
+    if(dmg>0){G.hp-=dmg;addLog(`${e.icon} ${e.name} hits for ${dmg}!`,'dmg')}
+  });
+  // Overload damage
+  if(G.overload>0){G.hp-=G.overload;addLog(`🔥 Overload burns for ${G.overload}!`,'warn')}
+  // Check death
+  if(G.hp<=0){G.hp=0;render();document.getElementById('defeatOverlay').classList.add('active');return}
+  // Reset turn
+  G.charge=G.maxCharge;
+  G.hand.forEach(c=>G.discard.push(c));
+  G.hand=[];
+  drawCards(5);
+  addLog('— New turn —','info');
+  render();
+}
+
+function gainCharge(){G.charge=Math.min(G.maxCharge,G.charge+1);addLog('+1 charge ⚡','info');render()}
+function raiseWard(){if(G.charge<1){addLog('Need charge!','warn');return}G.charge--;G.ward+=3;addLog('+3 ward 🛡️','info');render()}
+function discharge(){
+  if(G.overload<=0){addLog('No overload to discharge.','info');return}
+  const cleared=G.overload;G.overload=0;addLog(`Discharged ${cleared} overload!`,'heal');render()
+}
+function strikeAll(){
+  if(G.charge<2){addLog('Need 2 charge!','warn');return}
+  G.charge-=2;G.enemies.forEach(e=>damageEnemy(e,3));
+  addLog('⚡ STRIKE ALL — 3 damage to all enemies!','dmg');checkEnemies();render()
+}
+
+function nextTrial(){
+  document.getElementById('victoryOverlay').classList.remove('active');
+  G.trial++;
+  // Offer crucible
+  if(G.trial<CRUCIBLES.length && !G.crucibleOwned.includes(G.trial)){
+    G.crucibleOwned.push(G.trial);
+    const cr=CRUCIBLES[G.trial];
+    cr.cards.forEach(c=>G.deck.push({...c}));
+    addLog(`Unlocked ${cr.icon} ${cr.name}!`,'epic');
+  }
+  // KNOX cards
+  if(G.knoxUnlocked && G.trial===4){
+    KNOX_CRUCIBLE.cards.forEach(c=>G.deck.push({...c}));
+    addLog('🔐 KNOX SURGE added to your deck!','epic');
+  }
+  shuffle(G.deck);
+  startTrial();
+}
+
+function restartGame(){
+  document.querySelectorAll('.overlay').forEach(o=>o.classList.remove('active'));
+  document.getElementById('log').innerHTML='';
+  initGame();
+}
+
+function addLog(msg,cls='info'){
+  const log=document.getElementById('log');
+  const d=document.createElement('div');d.className='entry '+cls;d.textContent=msg;
+  log.prepend(d);
+}
+
+// ============ RENDER ============
+function render(){
+  // Top stats
+  document.getElementById('topStats').innerHTML=`
+    <div class="stat"><div class="v" style="color:#00ffaa">${G.trial+1}/5</div><div class="l">Trial</div></div>
+    <div class="stat"><div class="v" style="color:#ff4444">${G.hp}/${G.maxHp}</div><div class="l">HP</div></div>
+    <div class="stat"><div class="v" style="color:#ffcc00">${G.charge}/${G.maxCharge}</div><div class="l">Charge</div></div>
+    <div class="stat"><div class="v" style="color:#00ccff">${G.ward}</div><div class="l">Ward</div></div>
+    <div class="stat"><div class="v" style="color:#ff6600">${G.overload}</div><div class="l">Overload</div></div>
+    <div class="stat"><div class="v" style="color:#aa44ff">${G.hand.length}</div><div class="l">Hand</div></div>
+    <div class="stat"><div class="v" style="color:#667">${G.deck.length}</div><div class="l">Deck</div></div>`;
+
+  // Trial dots
+  let dots='';
+  TRIALS.forEach((t,i)=>{
+    const cls=i<G.trial?'done':i===G.trial?'active':'locked';
+    dots+=`<div class="trial-dot ${cls}">${i<G.trial?'✓':t.icon}</div>`;
+  });
+  document.getElementById('trialDots').innerHTML=dots;
+
+  // Crucibles
+  let crHtml='';
+  CRUCIBLES.forEach((cr,i)=>{
+    const owned=G.crucibleOwned.includes(i);
+    crHtml+=`<div class="crucible${owned?'':' locked'}" style="--c1:${cr.color}11;--c2:${cr.color}05;--border:${cr.color}33;--glow:${cr.color}22;--title:${cr.color};--type:${cr.color}88">
+      <div class="c-top"><span class="c-icon">${cr.icon}</span><span>
+        <div class="c-name">${cr.name}</div><div class="c-type">${cr.type}</div>
+      </span></div>
+      <div class="c-desc">${cr.desc}</div>
+      ${owned?'':'<div class="c-cost">🔒 Trial '+(i+1)+'</div>'}
+    </div>`;
+  });
+  // KNOX
+  const kn=KNOX_CRUCIBLE;
+  crHtml+=`<div class="crucible${G.knoxUnlocked?'':' locked'}" style="--c1:${kn.color}11;--c2:${kn.color}05;--border:${kn.color}55;--glow:${kn.color}44;--title:${kn.color};--type:${kn.color}88">
+    <div class="c-top"><span class="c-icon">${kn.icon}</span><span>
+      <div class="c-name">${kn.name}</div><div class="c-type">${kn.type}</div>
+    </span></div>
+    <div class="c-desc">${kn.desc}</div>
+    ${G.knoxUnlocked?'':'<div class="c-cost">🔒 After Trial 3</div>'}
+  </div>`;
+  document.getElementById('crucibles').innerHTML=crHtml;
+
+  // Hand
+  let handHtml='';
+  G.hand.forEach((c,i)=>{
+    handHtml+=`<div class="card" onclick="playCard(${i})">
+      <div class="c-em">${c.em}</div>
+      <div class="c-nm">${c.nm}</div>
+      <div class="c-pw">${c.atk?'⚡'+c.atk:''}${c.ward?' 🛡️'+c.ward:''}${c.draw?' 🃏'+c.draw:''}${c.burn?' 🔥'+c.burn:''}${c.heal?' 💚'+c.heal:''}${c.aoe?' AOE':''}${c.cost?' ('+c.cost+')':''}</div>
+    </div>`;
+  });
+  document.getElementById('hand').innerHTML=handHtml||'<div style="color:#334;font-size:.7em">No cards in hand</div>';
+
+  // Enemy
+  if(G.enemies.length){
+    const e=G.enemies[0];
+    const pct=Math.max(0,(e.hp/e.maxHp)*100);
+    document.getElementById('enemyArea').innerHTML=`
+      <div class="e-icon">${e.icon}</div>
+      <div class="e-name">${e.name}</div>
+      <div class="e-hp-bar"><div class="e-hp-fill" style="width:${pct}%"></div></div>
+      <div class="e-hp-text">${e.hp} / ${e.maxHp} HP — ATK: ${e.atk}</div>
+      <div style="font-size:.6em;color:#556;margin-top:4px;font-style:italic">"${e.desc}"</div>`;
+  } else {
+    document.getElementById('enemyArea').innerHTML='<div style="color:#334;font-size:.8em">⚡ No enemy</div>';
+  }
+
+  // Player stats
+  document.getElementById('playerStats').innerHTML=`
+    <div class="p-stat"><div class="ps-v" style="color:#ff4444">❤️ ${G.hp}</div><div class="ps-l">HP</div></div>
+    <div class="p-stat"><div class="ps-v" style="color:#ffcc00">⚡ ${G.charge}</div><div class="ps-l">Charge</div></div>
+    <div class="p-stat"><div class="ps-v" style="color:#00ccff">🛡️ ${G.ward}</div><div class="ps-l">Ward</div></div>
+    <div class="p-stat"><div class="ps-v" style="color:#ff6600">🔥 ${G.overload}</div><div class="ps-l">Overload</div></div>`;
+}
+
+// ============ START ============
+initGame();
+</script>
+</body>
+</html>

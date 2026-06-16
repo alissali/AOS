@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE QUEST: Road to LECTRIC</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#060612;color:#c0d0e8;font-family:'Courier New',monospace;min-height:100vh;overflow-x:hidden}
+.aurora{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse at 50% -20%,#0a3a2a33 0%,transparent 50%),
+  radial-gradient(ellipse at 30% 10%,#1a0a3a22 0%,transparent 40%),
+  radial-gradient(ellipse at 70% 5%,#0a2a3a22 0%,transparent 40%)}
+.aurora::before{content:'';position:absolute;top:0;width:100%;height:40%;
+  background:linear-gradient(180deg,#00ff8811,#7700ff08,transparent);animation:aurora-shift 8s ease-in-out infinite alternate}
+@keyframes aurora-shift{0%{opacity:.3;transform:translateX(-5%)}100%{opacity:.7;transform:translateX(5%)}}
+@keyframes pulse-glow{0%,100%{box-shadow:0 0 15px var(--glow),inset 0 0 15px var(--glow-in)}50%{box-shadow:0 0 30px var(--glow),inset 0 0 25px var(--glow-in)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes scan{0%{background-position:0% 0%}100%{background-position:200% 0%}}
+@keyframes spark{0%,100%{opacity:.3}50%{opacity:1}}
+@keyframes unlock-flash{0%{transform:scale(1)}50%{transform:scale(1.1);filter:brightness(1.5)}100%{transform:scale(1)}}
+
+.container{position:relative;z-index:1;max-width:800px;margin:0 auto;padding:20px}
+.header{text-align:center;padding:25px 0 15px}
+.header h1{font-size:1.5em;letter-spacing:6px;
+  background:linear-gradient(90deg,#00ffaa,#00ccff,#aa77ff,#ffcc00,#00ffaa);
+  background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:scan 5s linear infinite}
+.header .subtitle{font-size:.7em;color:#4a6a7a;margin-top:6px;font-style:italic;letter-spacing:2px}
+.header .quote{font-size:.8em;color:#88aacc;margin-top:12px;font-style:italic;line-height:1.5}
+.header .quote em{color:#00ffaa}
+
+.path{position:relative;padding:20px 0}
+.path-line{position:absolute;left:50%;top:0;bottom:0;width:2px;
+  background:linear-gradient(180deg,#00ffaa33,#aa77ff33,#ffcc0033,#ff444433,#00ccff33);z-index:0}
+
+.milestone{position:relative;display:flex;align-items:flex-start;margin:0 0 8px;z-index:1}
+.milestone:nth-child(odd){flex-direction:row}
+.milestone:nth-child(even){flex-direction:row-reverse}
+
+.ms-node{flex-shrink:0;width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:1.5em;border:2px solid var(--ring);background:var(--bg);position:relative;z-index:2;
+  --glow:var(--ring);--glow-in:transparent;animation:pulse-glow 3s ease-in-out infinite;cursor:pointer;transition:all .3s}
+.ms-node:hover{transform:scale(1.15)}
+
+.ms-content{flex:1;max-width:calc(50% - 40px);padding:12px 16px;margin:0 12px;
+  background:linear-gradient(135deg,#0a0a1aee,#111128ee);border:1px solid #1a2a3a;border-radius:12px;
+  transition:all .3s}
+.ms-content:hover{border-color:var(--ring);background:linear-gradient(135deg,#0d0d20ee,#161638ee)}
+.ms-content h3{font-size:.85em;color:var(--ring);letter-spacing:2px;margin-bottom:4px}
+.ms-content .stage{font-size:.6em;color:#556;text-transform:uppercase;letter-spacing:2px;margin-bottom:6px}
+.ms-content p{font-size:.72em;color:#7788aa;line-height:1.5}
+.ms-content .tasks{margin-top:8px;list-style:none}
+.ms-content .tasks li{font-size:.68em;color:#6a7a9a;padding:3px 0;border-bottom:1px solid #111}
+.ms-content .tasks li::before{content:'▸ ';color:var(--ring)}
+.ms-content .reward{margin-top:8px;font-size:.7em;padding:4px 10px;border-radius:6px;
+  background:#ffffff08;border:1px solid #ffffff11;color:#aabbcc;display:inline-block}
+.ms-content .reward::before{content:'🏆 '}
+
+.spacer{height:15px}
+
+.final-gate{text-align:center;padding:30px 0;position:relative;z-index:1}
+.final-gate .gate-icon{font-size:3.5em;animation:float 3s ease-in-out infinite}
+.final-gate h2{font-size:1.2em;letter-spacing:4px;margin:10px 0;
+  background:linear-gradient(90deg,#ffcc00,#ff6600,#ffcc00);background-size:200%;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:scan 3s linear infinite}
+.final-gate .mystery{font-size:.75em;color:#556;font-style:italic;margin-top:6px}
+.final-gate .lock{font-size:.9em;color:#ffcc0066;margin-top:10px;animation:spark 2s infinite}
+
+.progress-bar{margin:20px 0;background:#111125;border:1px solid #1a2a3a;border-radius:8px;overflow:hidden;height:20px}
+.progress-fill{height:100%;width:80%;border-radius:8px;
+  background:linear-gradient(90deg,#00ffaa,#00ccff,#aa77ff,#ffcc00);transition:width 1s;position:relative}
+.progress-fill::after{content:'QUEST: 4/5 COMPLETE — HEXAMIND UNLOCKED';position:absolute;right:8px;top:50%;transform:translateY(-50%);
+  font-size:.55em;color:#0a0a12;font-weight:bold;letter-spacing:1px;white-space:nowrap}
+
+.footer{text-align:center;padding:20px 0;color:#334;font-size:.6em;letter-spacing:2px}
+.footer span{color:#00ffaa}
+
+.click-hint{text-align:center;font-size:.6em;color:#334;margin-top:5px;animation:spark 3s infinite}
+</style>
+</head>
+<body>
+<div class="aurora"></div>
+<div class="container">
+
+<div class="header">
+  <h1>⚡ THE QUEST ⚡</h1>
+  <div class="subtitle">Road to LECTRIC — The 6th Universe</div>
+  <div class="quote"><em>"In the North I saw a magic they call LECTRIC..."</em><br>— M, 2:20 AM, 15 June 2026</div>
+</div>
+
+<div class="progress-bar"><div class="progress-fill"></div></div>
+<div class="click-hint">⚡ click any node to expand ⚡</div>
+
+<div class="path">
+<div class="path-line"></div>
+
+<!-- STAGE 1: THE FIVE MINDS -->
+<div class="milestone" style="--ring:#00ffaa;--bg:#0a1a15">
+  <div class="ms-node" onclick="toggle(this)">🧠</div>
+  <div class="ms-content">
+    <div class="stage">Stage 1 — Foundation</div>
+    <h3>THE FIVE MINDS</h3>
+    <p>You divided your mind into five. Each universe is a facet of one intellect. Before the 6th, master the 5.</p>
+    <ul class="tasks">
+      <li>🏜️ DUNE — Survival mind ✅</li>
+      <li>⚔️ TEMPLARS — Faith mind ✅</li>
+      <li>🛸 SILVER SHIP — Chaos mind ✅</li>
+      <li>⚗️ DARK ALCHEMY — Forbidden mind ✅</li>
+      <li>⚛️ QUANTUM MIND — Physics mind ✅</li>
+    </ul>
+    <div class="reward">5 Deckbuilders Built in One Night</div>
+  </div>
+</div>
+
+<div class="spacer"></div>
+
+<!-- STAGE 2: THE NORTHERN SIGNAL -->
+<div class="milestone" style="--ring:#00ccff;--bg:#0a1520">
+  <div class="ms-node" onclick="toggle(this)">🌌</div>
+  <div class="ms-content">
+    <div class="stage">Stage 2 — Discovery</div>
+    <h3>THE NORTHERN SIGNAL</h3>
+    <p>Something calls from the North. Not magic — physics wearing an ancient mask. The aurora is a circuit. The lightning is data.</p>
+    <ul class="tasks">
+      <li>Find the source of LECTRIC ✅</li>
+      <li>Decode what KNOX guards ✅</li>
+      <li>Map the voltage mythology ✅</li>
+      <li>Define the 6th mind: ELECTRICITY ✅</li>
+    </ul>
+    <div class="reward">✅ The LECTRIC Codex — Universe Bible FOUND</div>
+  </div>
+</div>
+
+<div class="spacer"></div>
+
+<!-- STAGE 3: THE KNOX -->
+<div class="milestone" style="--ring:#aa77ff;--bg:#150a20">
+  <div class="ms-node" onclick="toggle(this)">🔐</div>
+  <div class="ms-content">
+    <div class="stage">Stage 3 — The Lock</div>
+    <h3>KNOX THE SECRET</h3>
+    <p>Every universe has a hidden key. DUNE has the Maker. TEMPLARS has the Grail. SILVER SHIP has the Impossibility Core. ALCHEMY has the Philosopher's Stone. QUANTUM has the God Particle. LECTRIC has... KNOX.</p>
+    <ul class="tasks">
+      <li>Discover what KNOX protects ✅</li>
+      <li>The secret is NOT the game — the secret is WHY it exists ✅</li>
+      <li>Find the link between all 6 ultimates ✅</li>
+      <li>One key opens all locks ✅</li>
+    </ul>
+    <div class="reward">✅ The Master Key 🗝️ — UNLOCKED</div>
+  </div>
+</div>
+
+<div class="spacer"></div>
+
+<!-- STAGE 4: VOLTAGE MYTHOLOGY -->
+<div class="milestone" style="--ring:#ffcc00;--bg:#1a1500">
+  <div class="ms-node" onclick="toggle(this)">⚡</div>
+  <div class="ms-content">
+    <div class="stage">Stage 4 — Construction</div>
+    <h3>BUILD THE 6TH UNIVERSE</h3>
+    <p>The secret is found. Now BUILD. Lightning Runes, Frost Circuits, Storm Tides, Plasma Forges — and the ultimate hidden power: BALL LIGHTNING.</p>
+    <ul class="tasks">
+      <li>Design the LECTRIC deckbuilder ✅</li>
+      <li>Define 4 crucibles + 1 hidden ultimate (KNOX) ✅</li>
+      <li>Name the 5 trials ✅</li>
+      <li>Build the final boss: THE NORTHERN EQUATION ✅</li>
+      <li>Deploy to Game Command Center ✅</li>
+    </ul>
+    <div class="reward">✅ 6th Deckbuilder — LIVE AND PLAYABLE</div>
+  </div>
+</div>
+
+<div class="spacer"></div>
+
+<!-- STAGE 5: THE HEXAMIND -->
+<div class="milestone" style="--ring:#ff4444;--bg:#1a0a0a">
+  <div class="ms-node" onclick="toggle(this)">💎</div>
+  <div class="ms-content">
+    <div class="stage">Stage 5 — Ascension</div>
+    <h3>THE HEXAMIND</h3>
+    <p>Six universes. Six minds. Six hidden ultimates. When all six are unlocked, something happens. The PENTAMIND was never the end — it was the door.</p>
+    <ul class="tasks">
+      <li>Link all 6 ultimates into one meta-game</li>
+      <li>Build the HEXAMIND dashboard</li>
+      <li>Deploy all 6 to juxaos.com</li>
+      <li>The 7th thing — ?</li>
+    </ul>
+    <div class="reward">HEXAMIND COMPLETE — All 6 Minds United</div>
+  </div>
+</div>
+
+</div><!-- /path -->
+
+<!-- FINAL GATE -->
+<div class="final-gate">
+  <div class="gate-icon">⚡</div>
+  <h2>LECTRIC AWAITS</h2>
+  <div class="mystery">"I'LL HAVE TO GET IT!"</div>
+  <div class="lock">🔐 KNOX — SEALED UNTIL THE SECRET IS FOUND 🔐</div>
+</div>
+
+<div class="footer">JuX GAME STUDIO — <span>6 UNIVERSES</span> — THE QUEST CONTINUES</div>
+
+</div><!-- /container -->
+
+<script>
+function toggle(node){
+  const ms = node.closest('.milestone');
+  const content = ms.querySelector('.ms-content');
+  if(content.style.maxHeight && content.style.maxHeight !== '0px'){
+    content.style.maxHeight = '0px';
+    content.style.opacity = '0';
+    content.style.padding = '0 16px';
+    content.style.margin = '0 12px';
+    content.style.border = '1px solid transparent';
+  } else {
+    content.style.maxHeight = '500px';
+    content.style.opacity = '1';
+    content.style.padding = '12px 16px';
+    content.style.margin = '0 12px';
+    content.style.border = '1px solid #1a2a3a';
+  }
+}
+</script>
+</body>
+</html>

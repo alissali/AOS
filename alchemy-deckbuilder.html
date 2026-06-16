@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DARK ALCHEMY: The Philosopher's Stone</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a12;color:#c8b8e8;font-family:'Segoe UI',system-ui,sans-serif;overflow-x:hidden;min-height:100vh}
+.screen{display:none;min-height:100vh;padding:20px}
+.screen.active{display:block}
+h1{text-align:center;font-size:2.2em;color:#a855f7;text-shadow:0 0 30px rgba(168,85,247,0.5);margin-bottom:10px}
+h2{color:#a855f7;text-align:center;margin-bottom:15px}
+.subtitle{text-align:center;color:#8b7cb8;font-style:italic;margin-bottom:25px;font-size:1.1em}
+.btn{padding:12px 28px;border:2px solid #a855f7;background:rgba(168,85,247,0.15);color:#a855f7;font-size:1em;cursor:pointer;border-radius:8px;transition:all 0.3s;display:inline-block;margin:5px}
+.btn:hover{background:#a855f7;color:#0a0a12;transform:scale(1.05)}
+.btn-small{padding:6px 14px;font-size:0.85em}
+.btn-danger{border-color:#dc2626;color:#dc2626;background:rgba(220,38,38,0.15)}
+.btn-danger:hover{background:#dc2626;color:#fff}
+.rings-section{display:flex;flex-wrap:wrap;justify-content:center;gap:15px;margin:20px 0}
+.ring-card{background:rgba(168,85,247,0.08);border:2px solid #a855f7;border-radius:12px;padding:18px;width:200px;text-align:center;cursor:pointer;transition:all 0.3s}
+.ring-card:hover,.ring-card.selected{background:rgba(168,85,247,0.2);transform:scale(1.05);box-shadow:0 0 20px rgba(168,85,247,0.3)}
+.ring-card .emoji{font-size:2.5em;margin-bottom:8px}
+.ring-card .name{font-size:1.1em;font-weight:bold;color:#a855f7}
+.ring-card .desc{font-size:0.8em;color:#8b7cb8;margin-top:6px}
+.ring-card.locked{opacity:0.4;border-style:dashed;cursor:default}
+.ring-card.locked:hover{transform:none;box-shadow:none;background:rgba(168,85,247,0.08)}
+.stats-bar{display:flex;justify-content:center;gap:15px;padding:10px;background:rgba(0,0,0,0.4);border-radius:10px;margin:10px 0;flex-wrap:wrap}
+.stat{text-align:center;min-width:60px}
+.stat .val{font-size:1.3em;font-weight:bold;color:#a855f7}
+.stat .lbl{font-size:0.7em;color:#8b7cb8}
+.battle-area{display:flex;flex-direction:column;align-items:center;gap:15px;margin:15px 0}
+.enemies-row{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.enemy-card{background:rgba(220,38,38,0.15);border:2px solid #7f1d1d;border-radius:10px;padding:12px;min-width:120px;text-align:center;cursor:pointer;transition:all 0.2s}
+.enemy-card:hover{border-color:#dc2626}
+.enemy-card.dead{opacity:0.3;border-color:#444}
+.enemy-card .enemy-name{font-size:0.9em;color:#f87171;font-weight:bold}
+.enemy-card .enemy-hp{font-size:1.1em;color:#ef4444;margin-top:4px}
+.hand-area{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:15px 0}
+.card{background:rgba(168,85,247,0.1);border:2px solid #6b21a8;border-radius:8px;padding:10px;width:110px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:0.8em}
+.card:hover{transform:translateY(-5px);border-color:#a855f7;box-shadow:0 5px 15px rgba(168,85,247,0.3)}
+.card .card-name{font-weight:bold;color:#a855f7;font-size:0.9em}
+.card .card-stats{color:#8b7cb8;font-size:0.75em;margin-top:4px}
+.market-area{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:15px 0}
+.market-card{background:rgba(168,85,247,0.05);border:2px dashed #6b21a8;border-radius:8px;padding:10px;width:130px;text-align:center;cursor:pointer;transition:all 0.2s}
+.market-card:hover{border-style:solid;border-color:#a855f7;background:rgba(168,85,247,0.15)}
+.market-card .cost{color:#facc15;font-weight:bold;font-size:0.9em}
+.ring-power{background:rgba(168,85,247,0.15);border:2px solid #a855f7;border-radius:12px;padding:12px;text-align:center;margin:10px auto;max-width:350px;cursor:pointer;transition:all 0.3s}
+.ring-power:hover{background:rgba(168,85,247,0.3)}
+.ring-power.ready{animation:glow 1.5s ease-in-out infinite}
+.ring-power.spent{opacity:0.4;cursor:default}
+.second-ring{background:rgba(250,204,21,0.15);border:2px solid #facc15;border-radius:12px;padding:12px;text-align:center;margin:10px auto;max-width:350px;cursor:pointer;transition:all 0.3s}
+.second-ring.ready{animation:glow-gold 1.5s ease-in-out infinite}
+.second-ring.spent{opacity:0.4;cursor:default}
+@keyframes glow{0%,100%{box-shadow:0 0 10px rgba(168,85,247,0.3)}50%{box-shadow:0 0 25px rgba(168,85,247,0.6)}}
+@keyframes glow-gold{0%,100%{box-shadow:0 0 10px rgba(250,204,21,0.3)}50%{box-shadow:0 0 25px rgba(250,204,21,0.6)}}
+.log{max-height:120px;overflow-y:auto;background:rgba(0,0,0,0.3);border-radius:8px;padding:10px;margin:10px 0;font-size:0.8em}
+.log-entry{padding:2px 0;border-bottom:1px solid rgba(168,85,247,0.1)}
+.center{text-align:center}
+.dark-bg{background:linear-gradient(180deg,#0a0a12 0%,#1a0a2e 50%,#0a0a12 100%)}
+.corruption-bar{height:12px;background:rgba(0,0,0,0.4);border-radius:6px;overflow:hidden;margin:5px 0;max-width:200px;display:inline-block;width:100%}
+.corruption-fill{height:100%;background:linear-gradient(90deg,#4ade80,#facc15,#dc2626);transition:width 0.3s;border-radius:6px}
+</style>
+</head>
+<body class="dark-bg">
+
+<div id="title-screen" class="screen active">
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:90vh">
+    <div style="font-size:4em;margin-bottom:10px">⚗️</div>
+    <h1>DARK ALCHEMY</h1>
+    <div style="font-size:1.5em;color:#a855f7;margin-bottom:5px">THE PHILOSOPHER'S STONE</div>
+    <div class="subtitle">"To transmute lead into gold, you must first transmute yourself."</div>
+    <button class="btn" onclick="game.showRingSelect()" style="font-size:1.2em;padding:15px 40px;margin-top:20px">🧪 ENTER THE LABORATORY</button>
+  </div>
+</div>
+
+<div id="ring-screen" class="screen">
+  <h2>Choose Your Crucible</h2>
+  <div class="subtitle">Each crucible channels a forbidden art</div>
+  <div id="ring-choices" class="rings-section"></div>
+  <div class="center" style="margin-top:20px">
+    <button class="btn" id="start-btn" onclick="game.startGame()" style="display:none">⚗️ BEGIN THE GREAT WORK</button>
+  </div>
+</div>
+
+<div id="battle-screen" class="screen">
+  <div id="battle-header"></div>
+  <div id="stats-display" class="stats-bar"></div>
+  <div id="enemy-display" class="enemies-row"></div>
+  <div id="ring-display" style="text-align:center;margin:10px 0"></div>
+  <div id="hand-display" class="hand-area"></div>
+  <div id="market-display" style="display:none">
+    <h2>🏚️ The Black Market</h2>
+    <div id="market-cards" class="market-area"></div>
+    <div class="center"><button class="btn btn-small" onclick="game.endMarket()">Leave the Market</button></div>
+  </div>
+  <div class="center" style="margin:10px 0">
+    <button class="btn btn-small" id="end-turn-btn" onclick="game.endTurn()">End Turn ⏩</button>
+    <button class="btn btn-small btn-danger" id="purge-btn" onclick="game.purge()">🩸 Bloodlet (-2 gold, -3 madness)</button>
+  </div>
+  <div id="battle-log" class="log"></div>
+</div>
+
+<div id="gameover-screen" class="screen">
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:90vh">
+    <div id="gameover-content"></div>
+  </div>
+</div>
+
+<script>
+const CONFIG={
+  rings:[
+    {id:'fire',name:'Crucible of Fire',emoji:'🔥',type:'Destruction',desc:'Incinerate — 8 damage nuke + 2 attack',chargeNeeded:4,color:'#ef4444'},
+    {id:'mercury',name:'Crucible of Mercury',emoji:'☿️',type:'Transmutation',desc:'+6 gold + draw 2 reagents',chargeNeeded:3,color:'#94a3b8'},
+    {id:'shadow',name:'Crucible of Shadow',emoji:'🌑',type:'Necromancy',desc:'Death pulse — 5 damage to ALL',chargeNeeded:5,color:'#581c87'},
+    {id:'aether',name:'Crucible of Aether',emoji:'✨',type:'Protection',desc:'All enemies -3 HP + 4 ward',chargeNeeded:4,color:'#06b6d4'}
+  ],
+  hiddenRing:{id:'philosopher',name:"Philosopher's Stone",emoji:'💎',type:'ULTIMATE',desc:'7 dmg ALL + 5 ward + draw 3 + heal 3 madness',chargeNeeded:6,color:'#facc15'},
+  starterDeck:[
+    {name:'Apprentice',attack:1,guard:0,gold:0,draw:0,madness:0},
+    {name:'Apprentice',attack:1,guard:0,gold:0,draw:0,madness:0},
+    {name:'Apprentice',attack:1,guard:0,gold:0,draw:0,madness:0},
+    {name:'Herb Gatherer',attack:0,guard:0,gold:1,draw:0,madness:0},
+    {name:'Herb Gatherer',attack:0,guard:0,gold:1,draw:0,madness:0},
+    {name:'Herb Gatherer',attack:0,guard:0,gold:1,draw:0,madness:0},
+    {name:'Warding Circle',attack:0,guard:2,gold:0,draw:0,madness:0},
+    {name:'Lead Ingot',attack:0,guard:1,gold:1,draw:0,madness:0},
+    {name:'Familiar',attack:1,guard:0,gold:0,draw:1,madness:0},
+    {name:'Tainted Elixir',attack:0,guard:0,gold:2,draw:0,madness:1}
+  ],
+  marketPool:[
+    {name:'Pyromancer',attack:3,guard:1,gold:0,draw:0,madness:0,cost:3},
+    {name:'Arcane Scholar',attack:2,guard:2,gold:0,draw:1,madness:0,cost:4},
+    {name:'Blade of Mercury',attack:4,guard:0,gold:0,draw:0,madness:0,cost:3},
+    {name:'Gold Transmuter',attack:0,guard:0,gold:3,draw:1,madness:1,cost:3},
+    {name:'Demon Binder',attack:5,guard:0,gold:0,draw:0,madness:1,cost:5},
+    {name:'White Witch',attack:1,guard:2,gold:1,draw:1,madness:0,cost:4},
+    {name:'Golem',attack:3,guard:3,gold:0,draw:0,madness:0,cost:5},
+    {name:'Homunculus',attack:2,guard:0,gold:2,draw:1,madness:0,cost:4},
+    {name:'Void Pact',attack:0,guard:0,gold:4,draw:0,madness:2,cost:4},
+    {name:'Grimoire',attack:0,guard:1,gold:1,draw:2,madness:0,cost:3},
+    {name:'Fallen Paladin',attack:4,guard:1,gold:0,draw:0,madness:1,cost:4},
+    {name:'Elixir of Life',attack:0,guard:3,gold:2,draw:0,madness:0,cost:5},
+    {name:'Raven Spy',attack:2,guard:0,gold:0,draw:2,madness:0,cost:3},
+    {name:'Grave Robber',attack:1,guard:0,gold:3,draw:0,madness:1,cost:3},
+    {name:'Arch-Magus',attack:0,guard:4,gold:0,draw:1,madness:0,cost:5},
+    {name:'Forbidden Tome',attack:3,guard:0,gold:0,draw:2,madness:1,cost:5}
+  ],
+  waves:[
+    {name:'Rat Swarm',enemies:[{name:'Plague Rat',hp:5},{name:'Plague Rat',hp:5},{name:'Dire Rat',hp:7}]},
+    {name:'Corrupted Knights',enemies:[{name:'Death Knight',hp:12},{name:'Revenant',hp:10}]},
+    {name:'The Chimera',enemies:[{name:'Chimera',hp:20},{name:'Imp',hp:8}]},
+    {name:'Lich Lord',enemies:[{name:'Lich',hp:24},{name:'Skeleton Mage',hp:12}]},
+    {name:'AZATHOTH THE UNMAKER',enemies:[{name:'💀 AZATHOTH 💀',hp:35},{name:'Void Spawn',hp:15},{name:'Void Spawn',hp:15}]}
+  ]
+};
+
+class AlchemyGame{
+  constructor(){this.screen='title'}
+  showScreen(id){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById(id+'-screen').classList.add('active');
+    this.screen=id;
+  }
+  showRingSelect(){
+    this.showScreen('ring');
+    this.selectedRing=null;
+    const c=document.getElementById('ring-choices');
+    c.innerHTML=CONFIG.rings.map(r=>`
+      <div class="ring-card" id="ring-${r.id}" onclick="game.selectRing('${r.id}')">
+        <div class="emoji">${r.emoji}</div>
+        <div class="name">${r.name}</div>
+        <div style="color:${r.color};font-size:0.8em">${r.type}</div>
+        <div class="desc">${r.desc}</div>
+        <div style="font-size:0.75em;color:#888;margin-top:6px">⚡ Charge: ${r.chargeNeeded}</div>
+      </div>
+    `).join('')+`
+      <div class="ring-card locked">
+        <div class="emoji">❓</div>
+        <div class="name">???</div>
+        <div style="color:#facc15;font-size:0.8em">FORBIDDEN</div>
+        <div class="desc">Survive to Trial 4 to unlock the ultimate secret...</div>
+        <div style="font-size:0.75em;color:#666;margin-top:6px">🔒 SEALED</div>
+      </div>`;
+    document.getElementById('start-btn').style.display='none';
+  }
+  selectRing(id){
+    this.selectedRing=id;
+    document.querySelectorAll('.ring-card').forEach(c=>c.classList.remove('selected'));
+    document.getElementById('ring-'+id).classList.add('selected');
+    document.getElementById('start-btn').style.display='inline-block';
+  }
+  startGame(){
+    if(!this.selectedRing)return;
+    this.ring=CONFIG.rings.find(r=>r.id===this.selectedRing);
+    this.deck=CONFIG.starterDeck.map(c=>({...c}));
+    this.discard=[];
+    this.hand=[];
+    this.wave=0;
+    this.hp=30;
+    this.maxHp=30;
+    this.attack=0;
+    this.guard=0;
+    this.gold=0;
+    this.madness=0;
+    this.charge=0;
+    this.ringUsed=false;
+    this.stoneUnlocked=false;
+    this.stoneCharge=0;
+    this.stoneUsed=false;
+    this.log=[];
+    this.market=this.generateMarket();
+    this.shuffle(this.deck);
+    this.startWave();
+  }
+  generateMarket(){
+    const pool=[...CONFIG.marketPool];
+    this.shuffle(pool);
+    return pool.slice(0,6).map(c=>({...c}));
+  }
+  shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}}
+  startWave(){
+    const w=CONFIG.waves[this.wave];
+    this.enemies=w.enemies.map(e=>({...e,maxHp:e.hp}));
+    this.phase='battle';
+    this.showScreen('battle');
+    this.addLog(`⚗️ Trial ${this.wave+1}: ${w.name}`);
+    this.drawHand();
+  }
+  drawHand(){
+    this.hand=[];
+    this.attack=0;this.guard=0;this.gold=0;this.ringUsed=false;this.stoneUsed=false;
+    for(let i=0;i<5;i++)this.drawCard();
+    this.render();
+  }
+  drawCard(){
+    if(this.deck.length===0){
+      if(this.discard.length===0)return;
+      this.deck=this.discard.splice(0);
+      this.shuffle(this.deck);
+    }
+    const c=this.deck.pop();
+    if(c)this.hand.push(c);
+  }
+  playCard(idx){
+    if(this.phase!=='battle')return;
+    const c=this.hand.splice(idx,1)[0];
+    if(!c)return;
+    this.attack+=c.attack||0;
+    this.guard+=c.guard||0;
+    this.gold+=c.gold||0;
+    this.madness+=c.madness||0;
+    if(c.draw)for(let i=0;i<c.draw;i++)this.drawCard();
+    this.charge++;
+    if(this.stoneUnlocked)this.stoneCharge++;
+    this.discard.push(c);
+    this.addLog(`▶ Used ${c.name}`);
+    if(this.madness>=10){this.gameOver(false,'Lost to madness... The abyss stares back.');return}
+    this.render();
+  }
+  activateRing(){
+    if(this.ringUsed||this.charge<this.ring.chargeNeeded)return;
+    this.ringUsed=true;
+    this.charge=0;
+    switch(this.ring.id){
+      case'fire':
+        this.addLog(`🔥 CRUCIBLE OF FIRE! 8 damage + 2 attack`);
+        const alive=this.enemies.filter(e=>e.hp>0);
+        if(alive.length>0){alive[0].hp-=8;if(alive[0].hp<=0)this.addLog(`☠️ ${alive[0].name} incinerated!`)}
+        this.attack+=2;break;
+      case'mercury':
+        this.addLog(`☿️ CRUCIBLE OF MERCURY! +6 gold + draw 2`);
+        this.gold+=6;this.drawCard();this.drawCard();break;
+      case'shadow':
+        this.addLog(`🌑 CRUCIBLE OF SHADOW! Death pulse — 5 damage to ALL!`);
+        this.enemies.forEach(e=>{if(e.hp>0){e.hp-=5;if(e.hp<=0)this.addLog(`☠️ ${e.name} consumed by shadow!`)}});break;
+      case'aether':
+        this.addLog(`✨ CRUCIBLE OF AETHER! All enemies -3 HP + 4 ward`);
+        this.enemies.forEach(e=>{if(e.hp>0){e.hp-=3;if(e.hp<=0)this.addLog(`☠️ ${e.name} banished!`)}});
+        this.guard+=4;break;
+    }
+    this.render();
+  }
+  activateStone(){
+    if(!this.stoneUnlocked||this.stoneUsed||this.stoneCharge<CONFIG.hiddenRing.chargeNeeded)return;
+    this.stoneUsed=true;
+    this.stoneCharge=0;
+    this.addLog(`💎 PHILOSOPHER'S STONE ACTIVATED! REALITY BENDS!`);
+    this.enemies.forEach(e=>{if(e.hp>0){e.hp-=7;if(e.hp<=0)this.addLog(`☠️ ${e.name} unmade!`)}});
+    this.guard+=5;
+    this.drawCard();this.drawCard();this.drawCard();
+    this.madness=Math.max(0,this.madness-3);
+    this.addLog(`💎 7 dmg ALL + 5 ward + 3 cards + heal 3 madness`);
+    this.render();
+  }
+  attackEnemy(idx){
+    if(this.attack<=0||this.enemies[idx].hp<=0)return;
+    const dmg=this.attack;
+    this.enemies[idx].hp-=dmg;
+    this.attack=0;
+    this.addLog(`⚔️ ${dmg} damage → ${this.enemies[idx].name}`);
+    if(this.enemies[idx].hp<=0)this.addLog(`☠️ ${this.enemies[idx].name} destroyed!`);
+    this.render();
+  }
+  endTurn(){
+    let totalDmg=0;
+    this.enemies.forEach(e=>{
+      if(e.hp>0){
+        const d=Math.ceil(e.maxHp*0.3)+this.wave;
+        totalDmg+=d;
+      }
+    });
+    const blocked=Math.min(this.guard,totalDmg);
+    const taken=totalDmg-blocked;
+    if(taken>0)this.hp-=taken;
+    this.addLog(`🛡️ Enemies strike for ${totalDmg} (${blocked} warded) → ${taken} taken`);
+    if(this.hp<=0){this.gameOver(false,'Your body crumbles to ash...');return}
+    if(this.enemies.every(e=>e.hp<=0)){
+      if(this.wave>=CONFIG.waves.length-1){
+        this.gameOver(true,'Azathoth is unbound. The Stone is YOURS. Immortality achieved!');return;
+      }
+      // Unlock Philosopher's Stone after wave 3
+      if(this.wave===2&&!this.stoneUnlocked){
+        this.stoneUnlocked=true;
+        this.stoneCharge=0;
+        this.addLog(`💎💎💎 THE PHILOSOPHER'S STONE MANIFESTS! 💎💎💎`);
+        this.addLog(`A second crucible awakens... forbidden power flows through you!`);
+      }
+      this.addLog(`🏆 Trial cleared! The Black Market opens.`);
+      this.phase='market';
+      this.market=this.generateMarket();
+      this.render();
+      return;
+    }
+    this.hand.forEach(c=>this.discard.push(c));
+    this.hand=[];
+    this.drawHand();
+  }
+  buyCard(idx){
+    if(this.phase!=='market')return;
+    const c=this.market[idx];
+    if(!c||this.gold<c.cost)return;
+    this.gold-=c.cost;
+    this.discard.push({name:c.name,attack:c.attack,guard:c.guard,gold:c.gold,draw:c.draw,madness:c.madness});
+    this.market.splice(idx,1);
+    this.addLog(`🛒 Acquired ${c.name} for ${c.cost} gold`);
+    this.render();
+  }
+  endMarket(){
+    this.wave++;
+    this.startWave();
+  }
+  purge(){
+    if(this.gold<2||this.madness<=0)return;
+    this.gold-=2;
+    this.madness=Math.max(0,this.madness-3);
+    this.addLog(`🩸 Bloodletting — purged 3 madness for 2 gold`);
+    this.render();
+  }
+  gameOver(won,msg){
+    this.showScreen('gameover');
+    const stoneMsg=this.stoneUnlocked?' | 💎 Stone: FOUND':'';
+    document.getElementById('gameover-content').innerHTML=`
+      <div style="font-size:3em">${won?'💎':'💀'}</div>
+      <h1>${won?'MAGNUM OPUS':'DISSOLUTION'}</h1>
+      <div class="subtitle">${msg}</div>
+      <div style="margin:15px 0;color:#8b7cb8">Trials cleared: ${won?5:this.wave} | Crucible: ${this.ring.emoji} ${this.ring.name}${stoneMsg}</div>
+      <button class="btn" onclick="game.showRingSelect()" style="margin-top:20px">🔄 Begin Again</button>
+    `;
+  }
+  addLog(msg){this.log.unshift(msg);if(this.log.length>50)this.log.pop()}
+  render(){
+    if(this.screen!=='battle')return;
+    document.getElementById('battle-header').innerHTML=`
+      <h2>${this.ring.emoji} Trial ${this.wave+1}/5: ${CONFIG.waves[this.wave].name}</h2>`;
+    document.getElementById('stats-display').innerHTML=`
+      <div class="stat"><div class="val" style="color:#ef4444">❤️ ${this.hp}/${this.maxHp}</div><div class="lbl">Vitality</div></div>
+      <div class="stat"><div class="val" style="color:#ef4444">⚔️ ${this.attack}</div><div class="lbl">Attack</div></div>
+      <div class="stat"><div class="val" style="color:#06b6d4">🛡️ ${this.guard}</div><div class="lbl">Ward</div></div>
+      <div class="stat"><div class="val" style="color:#facc15">💰 ${this.gold}</div><div class="lbl">Gold</div></div>
+      <div class="stat"><div class="val" style="color:#a855f7">⚡ ${this.charge}/${this.ring.chargeNeeded}</div><div class="lbl">Charge</div></div>
+      ${this.stoneUnlocked?`<div class="stat"><div class="val" style="color:#facc15">💎 ${this.stoneCharge}/${CONFIG.hiddenRing.chargeNeeded}</div><div class="lbl">Stone</div></div>`:''}
+      <div class="stat">
+        <div class="val" style="color:#c084fc">🧠 ${this.madness}/10</div>
+        <div class="corruption-bar"><div class="corruption-fill" style="width:${this.madness*10}%"></div></div>
+        <div class="lbl">Madness</div>
+      </div>`;
+    document.getElementById('enemy-display').innerHTML=this.enemies.map((e,i)=>`
+      <div class="enemy-card ${e.hp<=0?'dead':''}" onclick="game.attackEnemy(${i})" style="cursor:${e.hp>0&&this.attack>0?'pointer':'default'}">
+        <div class="enemy-name">${e.name}</div>
+        <div class="enemy-hp">${e.hp>0?`❤️ ${e.hp}/${e.maxHp}`:'💀 DEAD'}</div>
+        ${e.hp>0?`<div style="font-size:0.7em;color:#888">DMG: ${Math.ceil(e.maxHp*0.3)+this.wave}</div>`:''}
+      </div>
+    `).join('');
+    // Main crucible
+    const ready=this.charge>=this.ring.chargeNeeded&&!this.ringUsed;
+    let ringHtml=`
+      <div class="ring-power ${ready?'ready':this.ringUsed?'spent':''}" onclick="game.activateRing()">
+        <div style="font-size:1.5em">${this.ring.emoji}</div>
+        <div style="font-weight:bold;color:${this.ring.color}">${this.ring.name}</div>
+        <div style="font-size:0.8em;color:#8b7cb8">${this.ringUsed?'⏳ Spent this turn':ready?'🔥 READY — CLICK TO ACTIVATE!':this.ring.desc}</div>
+      </div>`;
+    // Philosopher's Stone (second crucible)
+    if(this.stoneUnlocked){
+      const sReady=this.stoneCharge>=CONFIG.hiddenRing.chargeNeeded&&!this.stoneUsed;
+      ringHtml+=`
+        <div class="second-ring ${sReady?'ready':this.stoneUsed?'spent':''}" onclick="game.activateStone()">
+          <div style="font-size:1.5em">💎</div>
+          <div style="font-weight:bold;color:#facc15">Philosopher's Stone</div>
+          <div style="font-size:0.8em;color:#8b7cb8">${this.stoneUsed?'⏳ Spent this turn':sReady?'💎 THE STONE IS READY — TRANSMUTE REALITY!':CONFIG.hiddenRing.desc}</div>
+        </div>`;
+    }
+    document.getElementById('ring-display').innerHTML=ringHtml;
+    document.getElementById('hand-display').innerHTML=this.hand.map((c,i)=>`
+      <div class="card" onclick="game.playCard(${i})">
+        <div class="card-name">${c.name}</div>
+        <div class="card-stats">
+          ${c.attack?`⚔️${c.attack} `:''}${c.guard?`🛡️${c.guard} `:''}${c.gold?`💰${c.gold} `:''}${c.draw?`🃏${c.draw} `:''}${c.madness?`🧠${c.madness}`:''}
+        </div>
+      </div>
+    `).join('');
+    const md=document.getElementById('market-display');
+    if(this.phase==='market'){
+      md.style.display='block';
+      document.getElementById('market-cards').innerHTML=this.market.map((c,i)=>`
+        <div class="market-card" onclick="game.buyCard(${i})" style="opacity:${this.gold>=c.cost?1:0.4}">
+          <div class="card-name">${c.name}</div>
+          <div class="card-stats">
+            ${c.attack?`⚔️${c.attack} `:''}${c.guard?`🛡️${c.guard} `:''}${c.gold?`💰${c.gold} `:''}${c.draw?`🃏${c.draw} `:''}${c.madness?`🧠${c.madness}`:''}
+          </div>
+          <div class="cost">💰 ${c.cost}</div>
+        </div>
+      `).join('');
+    }else{md.style.display='none'}
+    document.getElementById('battle-log').innerHTML=this.log.slice(0,15).map(l=>`<div class="log-entry">${l}</div>`).join('');
+  }
+}
+const game=new AlchemyGame();
+</script>
+</body>
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>QUANTUM MIND: The Observer Effect</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a1a;color:#e0e8ff;font-family:'Courier New',monospace;min-height:100vh;overflow-x:hidden}
+#particles-bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.game-container{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:10px}
+h1{text-align:center;font-size:2em;margin:10px 0;background:linear-gradient(90deg,#00ffff,#8b5cf6,#00ffff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none;animation:qpulse 3s ease-in-out infinite}
+@keyframes qpulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.4)}}
+@keyframes waveCollapse{0%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0.5}100%{transform:scale(1);opacity:1}}
+@keyframes entangle{0%{box-shadow:0 0 5px #00ffff}50%{box-shadow:0 0 25px #8b5cf6,0 0 50px #00ffff}100%{box-shadow:0 0 5px #00ffff}}
+@keyframes superpose{0%{opacity:1}25%{opacity:0.3}50%{opacity:1}75%{opacity:0.5}100%{opacity:1}}
+.subtitle{text-align:center;color:#8b5cf6;font-size:0.85em;margin-bottom:10px;letter-spacing:3px}
+.stats-bar{display:flex;justify-content:space-between;background:rgba(0,255,255,0.05);border:1px solid #1a1a3a;border-radius:8px;padding:8px 15px;margin-bottom:8px;flex-wrap:wrap;gap:5px}
+.stat{text-align:center;min-width:70px}
+.stat-label{font-size:0.65em;color:#8b5cf6;text-transform:uppercase;letter-spacing:1px}
+.stat-value{font-size:1.3em;font-weight:bold;color:#00ffff}
+.coherence-bar{width:100%;height:6px;background:#1a1a3a;border-radius:3px;margin:4px 0;overflow:hidden}
+.coherence-fill{height:100%;border-radius:3px;transition:width 0.5s,background 0.5s}
+.zone{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.zone-title{font-size:0.75em;color:#555;margin-bottom:4px;text-transform:uppercase;letter-spacing:2px}
+.enemy-zone{flex:1;min-width:280px}
+.enemy-card{background:rgba(139,92,246,0.1);border:1px solid #8b5cf6;border-radius:8px;padding:10px;margin-bottom:6px;position:relative}
+.enemy-name{font-weight:bold;color:#ff6b6b;font-size:0.95em}
+.enemy-intent{font-size:0.75em;color:#ffa500;margin-top:3px}
+.hp-bar{width:100%;height:5px;background:#333;border-radius:3px;margin-top:5px;overflow:hidden}
+.hp-fill{height:100%;background:linear-gradient(90deg,#ff0044,#ff6b6b);border-radius:3px;transition:width 0.4s}
+.hand-zone{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;min-height:150px;padding:10px;background:rgba(0,255,255,0.03);border:1px solid #1a1a3a;border-radius:8px}
+.card{width:140px;background:rgba(10,10,30,0.95);border:2px solid #333;border-radius:10px;padding:10px;cursor:pointer;transition:all 0.2s;position:relative}
+.card:hover{transform:translateY(-8px);border-color:#00ffff;box-shadow:0 0 20px rgba(0,255,255,0.3)}
+.card.entanglement{border-color:#00ffff;background:rgba(0,255,255,0.08)}
+.card.superposition{border-color:#8b5cf6;background:rgba(139,92,246,0.08);animation:superpose 2s infinite}
+.card.wave-collapse{border-color:#ff6b6b;background:rgba(255,107,107,0.08)}
+.card.dark-energy{border-color:#ff0044;background:rgba(255,0,68,0.08)}
+.card.god-particle{border-color:#ffd700;background:rgba(255,215,0,0.1);animation:entangle 2s infinite}
+.card-cost{position:absolute;top:5px;right:8px;background:#8b5cf6;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:0.75em;font-weight:bold}
+.card-name{font-weight:bold;font-size:0.8em;margin-bottom:5px;padding-right:25px}
+.card-type{font-size:0.6em;color:#8b5cf6;text-transform:uppercase;letter-spacing:1px}
+.card-desc{font-size:0.7em;color:#aaa;margin-top:5px;line-height:1.3}
+.card-stats{display:flex;justify-content:space-between;margin-top:6px;font-size:0.7em}
+.atk{color:#ff6b6b}
+.def{color:#00ffff}
+.actions{display:flex;gap:8px;justify-content:center;margin:8px 0;flex-wrap:wrap}
+.btn{padding:8px 20px;border:1px solid #8b5cf6;background:rgba(139,92,246,0.15);color:#e0e8ff;border-radius:6px;cursor:pointer;font-family:inherit;font-size:0.85em;transition:all 0.2s}
+.btn:hover{background:rgba(139,92,246,0.4);box-shadow:0 0 15px rgba(139,92,246,0.3)}
+.btn:disabled{opacity:0.3;cursor:not-allowed}
+.btn-end{border-color:#ff6b6b;background:rgba(255,0,68,0.15)}
+.btn-end:hover{background:rgba(255,0,68,0.3)}
+.log{background:rgba(0,0,0,0.4);border:1px solid #1a1a3a;border-radius:8px;padding:8px;max-height:100px;overflow-y:auto;font-size:0.7em;color:#888;margin-top:6px}
+.log-entry{padding:2px 0;border-bottom:1px solid #111}
+.shop{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:8px 0}
+.reward-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;z-index:100}
+.reward-panel{background:#0a0a1a;border:2px solid #8b5cf6;border-radius:12px;padding:25px;text-align:center;max-width:500px}
+.decohere{color:#ff6b6b}
+.phase-label{text-align:center;font-size:0.75em;color:#ffa500;margin-bottom:4px;letter-spacing:2px}
+</style>
+</head>
+<body>
+<canvas id="particles-bg"></canvas>
+<div class="game-container" id="app"></div>
+
+<script>
+// Particle background
+const cvs=document.getElementById('particles-bg'),ctx=cvs.getContext('2d');
+let pts=[];
+function initP(){cvs.width=innerWidth;cvs.height=innerHeight;pts=[];for(let i=0;i<80;i++)pts.push({x:Math.random()*cvs.width,y:Math.random()*cvs.height,vx:(Math.random()-0.5)*0.5,vy:(Math.random()-0.5)*0.5,r:Math.random()*2+0.5,o:Math.random()*0.5+0.2})}
+function drawP(){ctx.clearRect(0,0,cvs.width,cvs.height);pts.forEach((p,i)=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>cvs.width)p.vx*=-1;if(p.y<0||p.y>cvs.height)p.vy*=-1;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=i%3===0?`rgba(0,255,255,${p.o})`:`rgba(139,92,246,${p.o})`;ctx.fill();pts.forEach((q,j)=>{if(j>i){const d=Math.hypot(p.x-q.x,p.y-q.y);if(d<120){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.strokeStyle=`rgba(0,255,255,${0.1*(1-d/120)})`;ctx.stroke()}}})});requestAnimationFrame(drawP)}
+initP();drawP();addEventListener('resize',initP);
+
+// === QUANTUM MIND DECKBUILDER ===
+const TRIALS=[
+  {name:"TRIAL I: SCHRÖDINGER'S CAGE",enemies:[{name:"Observer Drone",hp:18,atk:4,intent:"Measures you"},{name:"Probability Ghost",hp:14,atk:3,intent:"Phase shifts"}]},
+  {name:"TRIAL II: THE DOUBLE SLIT",enemies:[{name:"Wave Sentinel",hp:24,atk:5,intent:"Interference pattern"},{name:"Particle Hunter",hp:20,atk:6,intent:"Collapses your state"}]},
+  {name:"TRIAL III: HEISENBERG'S VAULT",enemies:[{name:"Uncertainty Golem",hp:30,atk:7,intent:"Position unknown"},{name:"Momentum Wraith",hp:22,atk:5,intent:"Velocity strike"},{name:"Decay Phantom",hp:16,atk:4,intent:"Half-life drain"}]},
+  {name:"TRIAL IV: THE EVENT HORIZON",enemies:[{name:"Singularity Knight",hp:35,atk:8,intent:"Gravitational crush"},{name:"Hawking Shade",hp:28,atk:6,intent:"Radiation burn"}]},
+  {name:"TRIAL V: AZATHOTH'S EQUATION",enemies:[{name:"AZATHOTH — THE FINAL OBSERVER",hp:50,atk:10,intent:"COLLAPSES ALL REALITY"}]}
+];
+
+const STARTER_CARDS=[
+  {name:"Photon Burst",type:"entanglement",cost:0,atk:3,def:0,desc:"A focused beam of light particles",category:"Entanglement"},
+  {name:"Photon Burst",type:"entanglement",cost:0,atk:3,def:0,desc:"A focused beam of light particles",category:"Entanglement"},
+  {name:"Photon Burst",type:"entanglement",cost:0,atk:3,def:0,desc:"A focused beam of light particles",category:"Entanglement"},
+  {name:"Quantum Shield",type:"superposition",cost:0,atk:0,def:3,desc:"Exists in all defensive states",category:"Superposition"},
+  {name:"Quantum Shield",type:"superposition",cost:0,atk:0,def:3,desc:"Exists in all defensive states",category:"Superposition"},
+  {name:"Mind Spike",type:"wave-collapse",cost:1,atk:5,def:0,desc:"Thought becomes force",category:"Wave Collapse"},
+  {name:"Probability Veil",type:"superposition",cost:1,atk:0,def:4,desc:"Multiple realities shield you",category:"Superposition"},
+  {name:"Neutrino Slip",type:"entanglement",cost:0,atk:2,def:1,desc:"Passes through all matter",category:"Entanglement"}
+];
+
+const SHOP_CARDS=[
+  {name:"Quantum Tunnel",type:"entanglement",cost:1,atk:6,def:0,desc:"Phase through defenses — pure damage",category:"Entanglement"},
+  {name:"Pair Bond",type:"entanglement",cost:2,atk:4,def:0,desc:"Link two enemies — damage one, hurt both",category:"Entanglement",special:"entangle"},
+  {name:"Spin Lock",type:"entanglement",cost:1,atk:0,def:5,desc:"Entangled particles form a barrier",category:"Entanglement"},
+  {name:"Dual State",type:"superposition",cost:1,atk:3,def:3,desc:"Attack AND defend — exists as both",category:"Superposition"},
+  {name:"Eigenstate",type:"superposition",cost:2,atk:0,def:7,desc:"Collapse into perfect defense",category:"Superposition"},
+  {name:"Flux Uncertainty",type:"superposition",cost:1,atk:0,def:0,desc:"Draw 3 cards — the future is unwritten",category:"Superposition",special:"draw3"},
+  {name:"Collapse Beam",type:"wave-collapse",cost:2,atk:8,def:0,desc:"Force reality into pain",category:"Wave Collapse"},
+  {name:"Reality Shatter",type:"wave-collapse",cost:3,atk:5,def:0,desc:"5 damage to ALL enemies",category:"Wave Collapse",special:"aoe"},
+  {name:"Decoherence Pulse",type:"wave-collapse",cost:2,atk:6,def:2,desc:"Break their quantum state",category:"Wave Collapse"},
+  {name:"Void Siphon",type:"dark-energy",cost:2,atk:4,def:0,desc:"Steal 4 HP from enemy — heal yourself",category:"Dark Energy",special:"drain"},
+  {name:"Vacuum Decay",type:"dark-energy",cost:3,atk:0,def:0,desc:"6 damage ALL + 3 decoherence to you",category:"Dark Energy",special:"vacuum"},
+  {name:"Dark Matter Shell",type:"dark-energy",cost:2,atk:0,def:8,desc:"The void protects its own",category:"Dark Energy"},
+  {name:"Entropy Cascade",type:"dark-energy",cost:3,atk:7,def:0,desc:"Chaos made weapon — massive single hit",category:"Dark Energy"},
+  {name:"Tachyon Strike",type:"entanglement",cost:2,atk:7,def:0,desc:"Hits before it's thrown",category:"Entanglement"},
+  {name:"Observer's Eye",type:"superposition",cost:1,atk:0,def:0,desc:"See all — draw 2, gain 2 ward",category:"Superposition",special:"observe"},
+  {name:"Antimatter Lance",type:"dark-energy",cost:4,atk:12,def:0,desc:"Annihilation. 4 decoherence to you.",category:"Dark Energy",special:"antimatter"}
+];
+
+const GOD_PARTICLE={name:"♾️ GOD PARTICLE",type:"god-particle",cost:0,atk:7,def:5,desc:"7 dmg ALL + 5 ward + draw 3 + heal 3 decoherence — THE MIND IS THE UNIVERSE",category:"GOD PARTICLE",special:"god"};
+
+let G={trial:0,phase:"battle",deck:[],hand:[],discard:[],psi:3,maxPsi:3,ward:0,decoherence:0,maxDec:10,enemies:[],log:[],shopCards:[],godUnlocked:false,goldReward:0};
+
+function init(){
+  G.deck=JSON.parse(JSON.stringify(STARTER_CARDS));
+  G.trial=0;G.decoherence=0;G.ward=0;G.psi=3;G.maxPsi=3;G.godUnlocked=false;
+  startTrial();
+}
+
+function startTrial(){
+  const t=TRIALS[G.trial];
+  G.enemies=t.enemies.map(e=>({...e,maxHp:e.hp}));
+  G.phase="battle";G.discard=G.discard.concat(G.hand);G.hand=[];
+  G.deck=G.deck.concat(G.discard);G.discard=[];
+  shuffle(G.deck);
+  G.log=[`⚛️ ${t.name}`];
+  startTurn();
+}
+
+function startTurn(){
+  G.psi=G.maxPsi;G.ward=0;
+  drawCards(5);
+  render();
+}
+
+function drawCards(n){for(let i=0;i<n;i++){if(G.deck.length===0){G.deck=G.discard.slice();G.discard=[];shuffle(G.deck)}if(G.deck.length>0)G.hand.push(G.deck.pop())}}
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}
+
+function playCard(idx){
+  const c=G.hand[idx];
+  if(c.cost>G.psi)return;
+  G.psi-=c.cost;
+  G.hand.splice(idx,1);
+  let msg=`▸ ${c.name}`;
+
+  if(c.special==="entangle"&&G.enemies.length>=2){
+    G.enemies.forEach(e=>e.hp-=c.atk);
+    msg+=` → ${c.atk} dmg to ALL (entangled)`;
+  } else if(c.special==="aoe"){
+    G.enemies.forEach(e=>e.hp-=c.atk);
+    msg+=` → ${c.atk} dmg to ALL`;
+  } else if(c.special==="draw3"){
+    drawCards(3);msg+=` → Draw 3`;
+  } else if(c.special==="drain"){
+    const t=G.enemies.find(e=>e.hp>0);
+    if(t){t.hp-=c.atk;G.decoherence=Math.max(0,G.decoherence-c.atk);msg+=` → ${c.atk} drain from ${t.name}`}
+  } else if(c.special==="vacuum"){
+    G.enemies.forEach(e=>e.hp-=6);G.decoherence=Math.min(G.maxDec,G.decoherence+3);
+    msg+=` → 6 dmg ALL, +3 decoherence`;
+  } else if(c.special==="observe"){
+    drawCards(2);G.ward+=2;msg+=` → Draw 2, +2 ward`;
+  } else if(c.special==="antimatter"){
+    const t=G.enemies.find(e=>e.hp>0);
+    if(t){t.hp-=c.atk;msg+=` → ${c.atk} ANNIHILATION to ${t.name}`}
+    G.decoherence=Math.min(G.maxDec,G.decoherence+4);msg+=`, +4 decoherence`;
+  } else if(c.special==="god"){
+    G.enemies.forEach(e=>e.hp-=7);G.ward+=5;drawCards(3);G.decoherence=Math.max(0,G.decoherence-3);
+    msg+=` → 7 ALL + 5 ward + draw 3 + heal 3`;
+  } else {
+    if(c.atk>0){const t=G.enemies.find(e=>e.hp>0);if(t){t.hp-=c.atk;msg+=` → ${c.atk} dmg to ${t.name}`}}
+    if(c.def>0){G.ward+=c.def;msg+=` +${c.def} ward`}
+  }
+
+  G.discard.push(c);
+  G.log.unshift(msg);
+  G.enemies=G.enemies.filter(e=>e.hp>0);
+  if(G.enemies.length===0){
+    if(G.trial>=TRIALS.length-1){G.phase="victory";G.log.unshift("🧠 THE MIND HAS CONQUERED THE UNIVERSE")}
+    else{G.phase="reward";if(G.trial===2&&!G.godUnlocked){G.godUnlocked=true;G.log.unshift("♾️ GOD PARTICLE UNLOCKED — The mind touches infinity")}}
+  }
+  render();
+}
+
+function endTurn(){
+  let dmg=0;
+  G.enemies.forEach(e=>{
+    const hit=e.atk;
+    const blocked=Math.min(G.ward,hit);
+    G.ward-=blocked;
+    const through=hit-blocked;
+    if(through>0){G.decoherence=Math.min(G.maxDec,G.decoherence+through);dmg+=through}
+    G.log.unshift(`◂ ${e.name} → ${hit} dmg${blocked>0?` (${blocked} warded)`:''}`);
+  });
+  G.discard=G.discard.concat(G.hand);G.hand=[];
+  if(G.decoherence>=G.maxDec){G.phase="gameover";G.log.unshift("💀 TOTAL DECOHERENCE — Your mind dissolves");render();return}
+  startTurn();
+}
+
+function buyCard(idx){
+  const c=G.shopCards[idx];
+  G.discard.push({...c});
+  G.shopCards.splice(idx,1);
+  G.log.unshift(`⊕ Acquired: ${c.name}`);
+  render();
+}
+
+function collectGodParticle(){
+  G.discard.push({...GOD_PARTICLE});
+  G.log.unshift("♾️ GOD PARTICLE added to your mind");
+  nextTrial();
+}
+
+function nextTrial(){
+  G.trial++;startTrial();
+}
+
+function skipReward(){nextTrial()}
+
+function bloodlet(){
+  if(G.hand.length===0)return;
+  const c=G.hand.pop();
+  G.decoherence=Math.max(0,G.decoherence-2);
+  G.log.unshift(`⊖ Purged: ${c.name} — healed 2 decoherence`);
+  render();
+}
+
+function render(){
+  const app=document.getElementById('app');
+  const t=TRIALS[G.trial]||TRIALS[TRIALS.length-1];
+  const decPct=(G.decoherence/G.maxDec*100);
+  const decColor=decPct>70?'#ff0044':decPct>40?'#ffa500':'#00ffff';
+
+  let h=`<h1>⚛️ QUANTUM MIND ⚛️</h1>
+<div class="subtitle">THE OBSERVER EFFECT — TRIAL ${G.trial+1} / ${TRIALS.length}</div>
+<div class="stats-bar">
+  <div class="stat"><div class="stat-label">Ψ PSI</div><div class="stat-value">${G.psi}/${G.maxPsi}</div></div>
+  <div class="stat"><div class="stat-label">⊡ Ward</div><div class="stat-value">${G.ward}</div></div>
+  <div class="stat"><div class="stat-label">Deck</div><div class="stat-value">${G.deck.length}</div></div>
+  <div class="stat"><div class="stat-label">Discard</div><div class="stat-value">${G.discard.length}</div></div>
+  <div class="stat" style="min-width:150px"><div class="stat-label">◈ Decoherence</div><div class="stat-value decohere">${G.decoherence}/${G.maxDec}</div>
+    <div class="coherence-bar"><div class="coherence-fill" style="width:${100-decPct}%;background:${decColor}"></div></div>
+  </div>
+</div>`;
+
+  if(G.phase==="gameover"){
+    h+=`<div class="reward-overlay"><div class="reward-panel">
+      <h2 style="color:#ff0044;font-size:1.8em">💀 TOTAL DECOHERENCE</h2>
+      <p style="margin:15px 0;color:#aaa">Your mind scattered across infinite states.<br>The universe observed YOU.</p>
+      <p style="color:#555;font-size:0.85em">Reached Trial ${G.trial+1} of ${TRIALS.length}</p>
+      <button class="btn" onclick="init()" style="margin-top:15px">⚛️ REBOOT CONSCIOUSNESS</button>
+    </div></div>`;
+    app.innerHTML=h;return;
+  }
+
+  if(G.phase==="victory"){
+    h+=`<div class="reward-overlay"><div class="reward-panel">
+      <h2 style="color:#ffd700;font-size:1.8em">🧠 THE MIND IS THE UNIVERSE</h2>
+      <p style="margin:15px 0;color:#00ffff;font-size:1.1em">You observed Azathoth.<br>Azathoth observed nothing.</p>
+      <p style="color:#8b5cf6">Everything IS physics. And physics... is YOU.</p>
+      <p style="color:#555;margin-top:10px">Decoherence: ${G.decoherence}/${G.maxDec}</p>
+      <button class="btn" onclick="init()" style="margin-top:15px">⚛️ NEW EXPERIMENT</button>
+    </div></div>`;
+    app.innerHTML=h;return;
+  }
+
+  if(G.phase==="reward"){
+    G.shopCards=[];
+    const pool=SHOP_CARDS.slice();shuffle(pool);
+    G.shopCards=pool.slice(0,4);
+    h+=`<div class="reward-overlay"><div class="reward-panel">
+      <h2 style="color:#00ffff">⚛️ QUANTUM ACQUISITION</h2>
+      <p style="color:#888;margin:8px 0">Choose a card to add to your mind:</p>
+      <div class="shop">`;
+    G.shopCards.forEach((c,i)=>{
+      h+=`<div class="card ${c.type}" onclick="buyCard(${i})" style="cursor:pointer">
+        <div class="card-cost">${c.cost}</div>
+        <div class="card-name">${c.name}</div>
+        <div class="card-type">${c.category}</div>
+        <div class="card-desc">${c.desc}</div>
+        <div class="card-stats"><span class="atk">${c.atk?'⚡'+c.atk:''}</span><span class="def">${c.def?'⊡'+c.def:''}</span></div>
+      </div>`;
+    });
+    h+=`</div>`;
+    if(G.godUnlocked&&!G.deck.concat(G.hand,G.discard).find(c=>c.special==="god")){
+      h+=`<div style="margin:15px 0"><button class="btn" onclick="collectGodParticle()" style="border-color:#ffd700;color:#ffd700;font-size:1.1em">♾️ TAKE THE GOD PARTICLE</button></div>`;
+    }
+    h+=`<button class="btn btn-end" onclick="skipReward()" style="margin-top:10px">Skip → Next Trial</button>
+    </div></div>`;
+    app.innerHTML=h;return;
+  }
+
+  // Battle phase
+  h+=`<div class="phase-label">⚔ ${t.name}</div>`;
+  h+=`<div class="zone"><div class="enemy-zone">`;
+  G.enemies.forEach(e=>{
+    const pct=Math.max(0,e.hp/e.maxHp*100);
+    h+=`<div class="enemy-card">
+      <div class="enemy-name">${e.name} <span style="color:#aaa;font-size:0.8em">${e.hp}/${e.maxHp}</span></div>
+      <div class="enemy-intent">⚡ ${e.atk} dmg — "${e.intent}"</div>
+      <div class="hp-bar"><div class="hp-fill" style="width:${pct}%"></div></div>
+    </div>`;
+  });
+  h+=`</div></div>`;
+
+  h+=`<div class="zone-title">YOUR HAND (${G.hand.length} cards)</div>`;
+  h+=`<div class="hand-zone">`;
+  G.hand.forEach((c,i)=>{
+    const playable=c.cost<=G.psi;
+    h+=`<div class="card ${c.type}" onclick="${playable?`playCard(${i})`:'void(0)'}" style="${playable?'':'opacity:0.4;cursor:not-allowed'}">
+      <div class="card-cost">${c.cost}</div>
+      <div class="card-name">${c.name}</div>
+      <div class="card-type">${c.category}</div>
+      <div class="card-desc">${c.desc}</div>
+      <div class="card-stats"><span class="atk">${c.atk?'⚡'+c.atk:''}</span><span class="def">${c.def?'⊡'+c.def:''}</span></div>
+    </div>`;
+  });
+  h+=`</div>`;
+
+  h+=`<div class="actions">
+    <button class="btn btn-end" onclick="endTurn()">END TURN ▸</button>
+    <button class="btn" onclick="bloodlet()" ${G.hand.length===0?'disabled':''}>⊖ PURGE CARD (−2 decoherence)</button>
+  </div>`;
+
+  h+=`<div class="log">`;
+  G.log.slice(0,15).forEach(l=>{h+=`<div class="log-entry">${l}</div>`});
+  h+=`</div>`;
+
+  app.innerHTML=h;
+}
+
+init();
+</script>
+</body>
+</html>

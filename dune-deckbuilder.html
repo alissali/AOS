@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DUNE: Ring of the Desert</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#1a0a00;color:#e8d5a3;font-family:'Segoe UI',system-ui,sans-serif;overflow-x:hidden;min-height:100vh}
+.screen{display:none;min-height:100vh;padding:20px}
+.screen.active{display:block}
+h1{text-align:center;font-size:2.2em;color:#d4a041;text-shadow:0 0 30px rgba(212,160,65,0.5);margin-bottom:10px}
+h2{color:#d4a041;text-align:center;margin-bottom:15px}
+.subtitle{text-align:center;color:#c4956a;font-style:italic;margin-bottom:25px;font-size:1.1em}
+.btn{padding:12px 28px;border:2px solid #d4a041;background:rgba(212,160,65,0.15);color:#d4a041;font-size:1em;cursor:pointer;border-radius:8px;transition:all 0.3s;display:inline-block;margin:5px}
+.btn:hover{background:#d4a041;color:#1a0a00;transform:scale(1.05)}
+.btn-small{padding:6px 14px;font-size:0.85em}
+.btn-danger{border-color:#c0392b;color:#c0392b;background:rgba(192,57,43,0.15)}
+.btn-danger:hover{background:#c0392b;color:#fff}
+.rings-section{display:flex;flex-wrap:wrap;justify-content:center;gap:15px;margin:20px 0}
+.ring-card{background:rgba(212,160,65,0.08);border:2px solid #d4a041;border-radius:12px;padding:18px;width:200px;text-align:center;cursor:pointer;transition:all 0.3s}
+.ring-card:hover,.ring-card.selected{background:rgba(212,160,65,0.2);transform:scale(1.05);box-shadow:0 0 20px rgba(212,160,65,0.3)}
+.ring-card .emoji{font-size:2.5em;margin-bottom:8px}
+.ring-card .name{font-size:1.1em;font-weight:bold;color:#d4a041}
+.ring-card .desc{font-size:0.8em;color:#c4956a;margin-top:6px}
+.stats-bar{display:flex;justify-content:center;gap:15px;padding:10px;background:rgba(0,0,0,0.4);border-radius:10px;margin:10px 0;flex-wrap:wrap}
+.stat{text-align:center;min-width:60px}
+.stat .val{font-size:1.3em;font-weight:bold;color:#d4a041}
+.stat .lbl{font-size:0.7em;color:#c4956a}
+.battle-area{display:flex;flex-direction:column;align-items:center;gap:15px;margin:15px 0}
+.enemies-row{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.enemy-card{background:rgba(139,0,0,0.2);border:2px solid #8b0000;border-radius:10px;padding:12px;min-width:120px;text-align:center}
+.enemy-card.dead{opacity:0.3;border-color:#444}
+.enemy-card .enemy-name{font-size:0.9em;color:#ff6b6b;font-weight:bold}
+.enemy-card .enemy-hp{font-size:1.1em;color:#e74c3c;margin-top:4px}
+.hand-area{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:15px 0}
+.card{background:rgba(212,160,65,0.1);border:2px solid #8b6914;border-radius:8px;padding:10px;width:110px;text-align:center;cursor:pointer;transition:all 0.2s;font-size:0.8em}
+.card:hover{transform:translateY(-5px);border-color:#d4a041;box-shadow:0 5px 15px rgba(212,160,65,0.3)}
+.card .card-name{font-weight:bold;color:#d4a041;font-size:0.9em}
+.card .card-stats{color:#c4956a;font-size:0.75em;margin-top:4px}
+.market-area{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:15px 0}
+.market-card{background:rgba(212,160,65,0.05);border:2px dashed #8b6914;border-radius:8px;padding:10px;width:130px;text-align:center;cursor:pointer;transition:all 0.2s}
+.market-card:hover{border-style:solid;border-color:#d4a041;background:rgba(212,160,65,0.15)}
+.market-card .cost{color:#f39c12;font-weight:bold;font-size:0.9em}
+.ring-power{background:rgba(212,160,65,0.15);border:2px solid #d4a041;border-radius:12px;padding:12px;text-align:center;margin:10px auto;max-width:350px;cursor:pointer;transition:all 0.3s}
+.ring-power:hover{background:rgba(212,160,65,0.3)}
+.ring-power.ready{animation:glow 1.5s ease-in-out infinite}
+.ring-power.spent{opacity:0.4;cursor:default}
+@keyframes glow{0%,100%{box-shadow:0 0 10px rgba(212,160,65,0.3)}50%{box-shadow:0 0 25px rgba(212,160,65,0.6)}}
+.log{max-height:120px;overflow-y:auto;background:rgba(0,0,0,0.3);border-radius:8px;padding:10px;margin:10px 0;font-size:0.8em}
+.log-entry{padding:2px 0;border-bottom:1px solid rgba(212,160,65,0.1)}
+.center{text-align:center}
+.sand-bg{background:linear-gradient(180deg,#1a0a00 0%,#2d1800 50%,#1a0a00 100%)}
+.corruption-bar{height:12px;background:rgba(0,0,0,0.4);border-radius:6px;overflow:hidden;margin:5px 0;max-width:200px;display:inline-block;width:100%}
+.corruption-fill{height:100%;background:linear-gradient(90deg,#8e44ad,#c0392b);transition:width 0.3s;border-radius:6px}
+</style>
+</head>
+<body class="sand-bg">
+
+<div id="title-screen" class="screen active">
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:90vh">
+    <div style="font-size:4em;margin-bottom:10px">🏜️</div>
+    <h1>DUNE</h1>
+    <div style="font-size:1.5em;color:#d4a041;margin-bottom:5px">RING OF THE DESERT</div>
+    <div class="subtitle">"He who controls the spice controls the universe."</div>
+    <button class="btn" onclick="game.showRingSelect()" style="font-size:1.2em;padding:15px 40px;margin-top:20px">⚔️ BEGIN YOUR JOURNEY</button>
+  </div>
+</div>
+
+<div id="ring-screen" class="screen">
+  <h2>Choose Your Ring</h2>
+  <div class="subtitle">Each ring holds ancient power from the desert</div>
+  <div id="ring-choices" class="rings-section"></div>
+  <div class="center" style="margin-top:20px">
+    <button class="btn" id="start-btn" onclick="game.startGame()" style="display:none">🗡️ ENTER THE DESERT</button>
+  </div>
+</div>
+
+<div id="battle-screen" class="screen">
+  <div id="battle-header"></div>
+  <div id="stats-display" class="stats-bar"></div>
+  <div id="enemy-display" class="enemies-row"></div>
+  <div id="ring-display" style="text-align:center;margin:10px 0"></div>
+  <div id="hand-display" class="hand-area"></div>
+  <div id="market-display" style="display:none">
+    <h2>🏪 Sietch Market</h2>
+    <div id="market-cards" class="market-area"></div>
+    <div class="center"><button class="btn btn-small" onclick="game.endMarket()">Done Shopping</button></div>
+  </div>
+  <div class="center" style="margin:10px 0">
+    <button class="btn btn-small" id="end-turn-btn" onclick="game.endTurn()">End Turn ⏩</button>
+    <button class="btn btn-small btn-danger" id="purge-btn" onclick="game.purgeCorruption()">🧹 Purge (-2 spice, -3 corruption)</button>
+  </div>
+  <div id="battle-log" class="log"></div>
+</div>
+
+<div id="gameover-screen" class="screen">
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:90vh">
+    <div id="gameover-content"></div>
+  </div>
+</div>
+
+<script>
+const CONFIG={
+  rings:[
+    {id:'crysknife',name:'Crysknife',emoji:'🗡️',type:'Offensive',desc:'Pure blade fury — 8 damage nuke + 2 attack',chargeNeeded:4,color:'#e74c3c'},
+    {id:'spice',name:'Spice Ring',emoji:'🌶️',type:'Economy',desc:'+6 spice + draw 2 cards',chargeNeeded:3,color:'#f39c12'},
+    {id:'maker',name:'Maker Ring',emoji:'🪱',type:'Summoning',desc:'Call a Sandworm — 5 damage to ALL',chargeNeeded:5,color:'#e67e22'},
+    {id:'gesserit',name:'Bene Gesserit',emoji:'👁️',type:'Control',desc:'All enemies -3 HP + 4 guard',chargeNeeded:4,color:'#9b59b6'}
+  ],
+  starterDeck:[
+    {name:'Desert Scout',attack:1,guard:0,spice:0,draw:0,corruption:0},
+    {name:'Desert Scout',attack:1,guard:0,spice:0,draw:0,corruption:0},
+    {name:'Desert Scout',attack:1,guard:0,spice:0,draw:0,corruption:0},
+    {name:'Water Seller',attack:0,guard:0,spice:1,draw:0,corruption:0},
+    {name:'Water Seller',attack:0,guard:0,spice:1,draw:0,corruption:0},
+    {name:'Water Seller',attack:0,guard:0,spice:1,draw:0,corruption:0},
+    {name:'Fremen Guard',attack:0,guard:2,spice:0,draw:0,corruption:0},
+    {name:'Stillsuit',attack:0,guard:1,spice:1,draw:0,corruption:0},
+    {name:'Sand Runner',attack:1,guard:0,spice:0,draw:1,corruption:0},
+    {name:'Spice Pouch',attack:0,guard:0,spice:2,draw:0,corruption:1}
+  ],
+  marketPool:[
+    {name:'Fedaykin',attack:3,guard:1,spice:0,draw:0,corruption:0,cost:3},
+    {name:'Naib Leader',attack:2,guard:2,spice:0,draw:1,corruption:0,cost:4},
+    {name:'Crysknife Master',attack:4,guard:0,spice:0,draw:0,corruption:0,cost:3},
+    {name:'Spice Harvester',attack:0,guard:0,spice:3,draw:1,corruption:1,cost:3},
+    {name:'Sandworm Rider',attack:5,guard:0,spice:0,draw:0,corruption:1,cost:5},
+    {name:'Bene Gesserit',attack:1,guard:2,spice:1,draw:1,corruption:0,cost:4},
+    {name:'Stilgar',attack:3,guard:3,spice:0,draw:0,corruption:0,cost:5},
+    {name:'Chani',attack:2,guard:0,spice:2,draw:1,corruption:0,cost:4},
+    {name:'Spacing Guild',attack:0,guard:0,spice:4,draw:0,corruption:2,cost:4},
+    {name:'Mentat',attack:0,guard:1,spice:1,draw:2,corruption:0,cost:3},
+    {name:'Sardaukar Turncoat',attack:4,guard:1,spice:0,draw:0,corruption:1,cost:4},
+    {name:'Shai-Hulud Blessing',attack:0,guard:3,spice:2,draw:0,corruption:0,cost:5},
+    {name:'Thopter Pilot',attack:2,guard:0,spice:0,draw:2,corruption:0,cost:3},
+    {name:'Smuggler',attack:1,guard:0,spice:3,draw:0,corruption:1,cost:3},
+    {name:'Reverend Mother',attack:0,guard:4,spice:0,draw:1,corruption:0,cost:5},
+    {name:'Paul\'s Vision',attack:3,guard:0,spice:0,draw:2,corruption:1,cost:5}
+  ],
+  waves:[
+    {name:'Harkonnen Patrol',enemies:[{name:'Grunt',hp:6},{name:'Grunt',hp:6},{name:'Scout',hp:4}]},
+    {name:'Sardaukar Raid',enemies:[{name:'Sardaukar',hp:10},{name:'Sardaukar',hp:10}]},
+    {name:'Beast Rabban',enemies:[{name:'Rabban',hp:18},{name:'Guard',hp:8}]},
+    {name:'Feyd-Rautha',enemies:[{name:'Feyd-Rautha',hp:22},{name:'Champion',hp:12}]},
+    {name:'BARON HARKONNEN',enemies:[{name:'⚔️ BARON ⚔️',hp:30},{name:'Elite',hp:15},{name:'Elite',hp:15}]}
+  ]
+};
+
+class DuneGame{
+  constructor(){this.screen='title'}
+  showScreen(id){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById(id+'-screen').classList.add('active');
+    this.screen=id;
+  }
+  showRingSelect(){
+    this.showScreen('ring');
+    this.selectedRing=null;
+    const c=document.getElementById('ring-choices');
+    c.innerHTML=CONFIG.rings.map(r=>`
+      <div class="ring-card" id="ring-${r.id}" onclick="game.selectRing('${r.id}')">
+        <div class="emoji">${r.emoji}</div>
+        <div class="name">${r.name}</div>
+        <div style="color:${r.color};font-size:0.8em">${r.type}</div>
+        <div class="desc">${r.desc}</div>
+        <div style="font-size:0.75em;color:#888;margin-top:6px">⚡ Charge: ${r.chargeNeeded}</div>
+      </div>
+    `).join('');
+    document.getElementById('start-btn').style.display='none';
+  }
+  selectRing(id){
+    this.selectedRing=id;
+    document.querySelectorAll('.ring-card').forEach(c=>c.classList.remove('selected'));
+    document.getElementById('ring-'+id).classList.add('selected');
+    document.getElementById('start-btn').style.display='inline-block';
+  }
+  startGame(){
+    if(!this.selectedRing)return;
+    this.ring=CONFIG.rings.find(r=>r.id===this.selectedRing);
+    this.deck=CONFIG.starterDeck.map(c=>({...c}));
+    this.discard=[];
+    this.hand=[];
+    this.wave=0;
+    this.hp=30;
+    this.maxHp=30;
+    this.attack=0;
+    this.guard=0;
+    this.spice=0;
+    this.corruption=0;
+    this.charge=0;
+    this.ringUsed=false;
+    this.log=[];
+    this.market=this.generateMarket();
+    this.shuffle(this.deck);
+    this.startWave();
+  }
+  generateMarket(){
+    const pool=[...CONFIG.marketPool];
+    this.shuffle(pool);
+    return pool.slice(0,6).map(c=>({...c}));
+  }
+  shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}}
+  startWave(){
+    const w=CONFIG.waves[this.wave];
+    this.enemies=w.enemies.map(e=>({...e,maxHp:e.hp}));
+    this.phase='battle';
+    this.showScreen('battle');
+    this.addLog(`⚔️ Wave ${this.wave+1}: ${w.name}`);
+    this.drawHand();
+  }
+  drawHand(){
+    this.hand=[];
+    this.attack=0;this.guard=0;this.spice=0;this.ringUsed=false;
+    for(let i=0;i<5;i++)this.drawCard();
+    this.render();
+  }
+  drawCard(){
+    if(this.deck.length===0){
+      if(this.discard.length===0)return;
+      this.deck=this.discard.splice(0);
+      this.shuffle(this.deck);
+    }
+    const c=this.deck.pop();
+    if(c)this.hand.push(c);
+  }
+  playCard(idx){
+    if(this.phase!=='battle')return;
+    const c=this.hand.splice(idx,1)[0];
+    if(!c)return;
+    this.attack+=c.attack||0;
+    this.guard+=c.guard||0;
+    this.spice+=c.spice||0;
+    this.corruption+=c.corruption||0;
+    if(c.draw)for(let i=0;i<c.draw;i++)this.drawCard();
+    this.charge++;
+    this.discard.push(c);
+    this.addLog(`▶ Played ${c.name}`);
+    if(this.corruption>=10){this.gameOver(false,'Consumed by spice addiction!');return}
+    this.render();
+  }
+  activateRing(){
+    if(this.ringUsed||this.charge<this.ring.chargeNeeded)return;
+    this.ringUsed=true;
+    this.charge=0;
+    switch(this.ring.id){
+      case'crysknife':
+        this.addLog(`🗡️ CRYSKNIFE ACTIVATED! 8 damage + 2 attack`);
+        const alive=this.enemies.filter(e=>e.hp>0);
+        if(alive.length>0){alive[0].hp-=8;if(alive[0].hp<=0)this.addLog(`☠️ ${alive[0].name} destroyed!`)}
+        this.attack+=2;break;
+      case'spice':
+        this.addLog(`🌶️ SPICE RING ACTIVATED! +6 spice + draw 2`);
+        this.spice+=6;this.drawCard();this.drawCard();break;
+      case'maker':
+        this.addLog(`🪱 MAKER RING ACTIVATED! Sandworm — 5 damage to ALL!`);
+        this.enemies.forEach(e=>{if(e.hp>0){e.hp-=5;if(e.hp<=0)this.addLog(`☠️ ${e.name} devoured!`)}});break;
+      case'gesserit':
+        this.addLog(`👁️ BENE GESSERIT ACTIVATED! All enemies -3 HP + 4 guard`);
+        this.enemies.forEach(e=>{if(e.hp>0){e.hp-=3;if(e.hp<=0)this.addLog(`☠️ ${e.name} controlled!`)}});
+        this.guard+=4;break;
+    }
+    this.render();
+  }
+  attackEnemy(idx){
+    if(this.attack<=0||this.enemies[idx].hp<=0)return;
+    const dmg=this.attack;
+    this.enemies[idx].hp-=dmg;
+    this.attack=0;
+    this.addLog(`⚔️ ${dmg} damage → ${this.enemies[idx].name}`);
+    if(this.enemies[idx].hp<=0)this.addLog(`☠️ ${this.enemies[idx].name} killed!`);
+    this.render();
+  }
+  endTurn(){
+    // Enemy attacks
+    let totalDmg=0;
+    this.enemies.forEach(e=>{
+      if(e.hp>0){
+        const d=Math.ceil(e.maxHp*0.3)+this.wave;
+        totalDmg+=d;
+      }
+    });
+    const blocked=Math.min(this.guard,totalDmg);
+    const taken=totalDmg-blocked;
+    if(taken>0)this.hp-=taken;
+    this.addLog(`🛡️ Enemies deal ${totalDmg} damage (${blocked} blocked) → ${taken} taken`);
+    if(this.hp<=0){this.gameOver(false,'Fallen in the desert...');return}
+    // Check wave clear
+    if(this.enemies.every(e=>e.hp<=0)){
+      if(this.wave>=CONFIG.waves.length-1){
+        this.gameOver(true,'The Baron is dead. Arrakis is FREE!');return;
+      }
+      this.addLog(`🏆 Wave cleared! Market opens.`);
+      this.phase='market';
+      this.market=this.generateMarket();
+      this.render();
+      return;
+    }
+    // Draw new hand
+    this.hand.forEach(c=>this.discard.push(c));
+    this.hand=[];
+    this.drawHand();
+  }
+  buyCard(idx){
+    if(this.phase!=='market')return;
+    const c=this.market[idx];
+    if(!c||this.spice<c.cost)return;
+    this.spice-=c.cost;
+    this.discard.push({name:c.name,attack:c.attack,guard:c.guard,spice:c.spice,draw:c.draw,corruption:c.corruption});
+    this.market.splice(idx,1);
+    this.addLog(`🛒 Bought ${c.name} for ${c.cost} spice`);
+    this.render();
+  }
+  endMarket(){
+    this.wave++;
+    this.startWave();
+  }
+  purgeCorruption(){
+    if(this.spice<2||this.corruption<=0)return;
+    this.spice-=2;
+    this.corruption=Math.max(0,this.corruption-3);
+    this.addLog(`🧹 Purged corruption (-2 spice, -3 corruption)`);
+    this.render();
+  }
+  gameOver(won,msg){
+    this.showScreen('gameover');
+    document.getElementById('gameover-content').innerHTML=`
+      <div style="font-size:3em">${won?'🏆':'💀'}</div>
+      <h1>${won?'VICTORY':'DEFEAT'}</h1>
+      <div class="subtitle">${msg}</div>
+      <div style="margin:15px 0;color:#c4956a">Waves cleared: ${won?5:this.wave} | Ring: ${this.ring.emoji} ${this.ring.name}</div>
+      <button class="btn" onclick="game.showRingSelect()" style="margin-top:20px">🔄 Play Again</button>
+    `;
+  }
+  addLog(msg){this.log.unshift(msg);if(this.log.length>50)this.log.pop()}
+  render(){
+    if(this.screen!=='battle')return;
+    // Header
+    document.getElementById('battle-header').innerHTML=`
+      <h2>${this.ring.emoji} Wave ${this.wave+1}/5: ${CONFIG.waves[this.wave].name}</h2>`;
+    // Stats
+    document.getElementById('stats-display').innerHTML=`
+      <div class="stat"><div class="val" style="color:#e74c3c">❤️ ${this.hp}/${this.maxHp}</div><div class="lbl">Health</div></div>
+      <div class="stat"><div class="val" style="color:#e74c3c">⚔️ ${this.attack}</div><div class="lbl">Attack</div></div>
+      <div class="stat"><div class="val" style="color:#3498db">🛡️ ${this.guard}</div><div class="lbl">Guard</div></div>
+      <div class="stat"><div class="val" style="color:#f39c12">🌶️ ${this.spice}</div><div class="lbl">Spice</div></div>
+      <div class="stat"><div class="val" style="color:#9b59b6">⚡ ${this.charge}/${this.ring.chargeNeeded}</div><div class="lbl">Charge</div></div>
+      <div class="stat">
+        <div class="val" style="color:#8e44ad">☠️ ${this.corruption}/10</div>
+        <div class="corruption-bar"><div class="corruption-fill" style="width:${this.corruption*10}%"></div></div>
+        <div class="lbl">Corruption</div>
+      </div>`;
+    // Enemies
+    document.getElementById('enemy-display').innerHTML=this.enemies.map((e,i)=>`
+      <div class="enemy-card ${e.hp<=0?'dead':''}" onclick="game.attackEnemy(${i})" style="cursor:${e.hp>0&&this.attack>0?'pointer':'default'}">
+        <div class="enemy-name">${e.name}</div>
+        <div class="enemy-hp">${e.hp>0?`❤️ ${e.hp}/${e.maxHp}`:'💀 DEAD'}</div>
+        ${e.hp>0?`<div style="font-size:0.7em;color:#888">DMG: ${Math.ceil(e.maxHp*0.3)+this.wave}</div>`:''}
+      </div>
+    `).join('');
+    // Ring power
+    const ready=this.charge>=this.ring.chargeNeeded&&!this.ringUsed;
+    document.getElementById('ring-display').innerHTML=`
+      <div class="ring-power ${ready?'ready':this.ringUsed?'spent':''}" onclick="game.activateRing()">
+        <div style="font-size:1.5em">${this.ring.emoji}</div>
+        <div style="font-weight:bold;color:${this.ring.color}">${this.ring.name}</div>
+        <div style="font-size:0.8em;color:#c4956a">${this.ringUsed?'⏳ Used this turn':ready?'🔥 READY — CLICK TO ACTIVATE!':this.ring.desc}</div>
+      </div>`;
+    // Hand
+    document.getElementById('hand-display').innerHTML=this.hand.map((c,i)=>`
+      <div class="card" onclick="game.playCard(${i})">
+        <div class="card-name">${c.name}</div>
+        <div class="card-stats">
+          ${c.attack?`⚔️${c.attack} `:''}${c.guard?`🛡️${c.guard} `:''}${c.spice?`🌶️${c.spice} `:''}${c.draw?`🃏${c.draw} `:''}${c.corruption?`☠️${c.corruption}`:''}
+        </div>
+      </div>
+    `).join('');
+    // Market
+    const md=document.getElementById('market-display');
+    if(this.phase==='market'){
+      md.style.display='block';
+      document.getElementById('market-cards').innerHTML=this.market.map((c,i)=>`
+        <div class="market-card" onclick="game.buyCard(${i})" style="opacity:${this.spice>=c.cost?1:0.4}">
+          <div class="card-name">${c.name}</div>
+          <div class="card-stats">
+            ${c.attack?`⚔️${c.attack} `:''}${c.guard?`🛡️${c.guard} `:''}${c.spice?`🌶️${c.spice} `:''}${c.draw?`🃏${c.draw} `:''}${c.corruption?`☠️${c.corruption}`:''}
+          </div>
+          <div class="cost">🌶️ ${c.cost}</div>
+        </div>
+      `).join('');
+    }else{md.style.display='none'}
+    // Log
+    document.getElementById('battle-log').innerHTML=this.log.slice(0,15).map(l=>`<div class="log-entry">${l}</div>`).join('');
+  }
+}
+const game=new DuneGame();
+</script>
+</body>
+</html>

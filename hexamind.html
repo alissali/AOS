@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>HEXAMIND: The Convergence</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a14;color:#eee;font-family:'Segoe UI',sans-serif;min-height:100vh}
+.container{max-width:900px;margin:0 auto;padding:15px}
+h1{text-align:center;font-size:2.4em;letter-spacing:6px;margin:15px 0 5px;
+  background:linear-gradient(90deg,#ffaa00,#ff4444,#aa00ff,#00ccff,#00ffaa,#ffcc00);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  animation:rainbow 4s linear infinite;background-size:300%}
+@keyframes rainbow{0%{background-position:0%}100%{background-position:300%}}
+.sub{text-align:center;color:#888;letter-spacing:3px;font-size:.9em}
+#phaseText{text-align:center;margin:12px 0;color:#aaa;font-size:.95em}
+#phaseText b{color:#ffaa00}
+.meter{width:80%;max-width:500px;height:24px;background:#111;border-radius:12px;margin:10px auto;
+  border:1px solid #333;overflow:hidden;position:relative}
+.meter-fill{height:100%;border-radius:12px;transition:width 1s;
+  background:linear-gradient(90deg,#ffaa00,#ff4444,#aa00ff,#00ccff,#00ffaa,#ffcc00)}
+.meter-txt{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-size:.75em;font-weight:700;color:#fff;text-shadow:0 0 5px #000}
+#selectScreen{display:flex;flex-wrap:wrap;justify-content:center;gap:15px;margin:20px 0}
+.mind-btn{width:140px;height:160px;border-radius:12px;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:all .3s;text-align:center;padding:10px;position:relative;user-select:none}
+.mind-btn:hover{transform:scale(1.08);filter:brightness(1.4)}
+.mind-btn.done{opacity:.35;pointer-events:none}
+.mind-btn.done::after{content:'DONE';position:absolute;top:8px;right:8px;
+  font-size:.6em;font-weight:700;color:#0f0;letter-spacing:1px}
+.mind-btn .icon{font-size:2.5em;margin-bottom:6px;pointer-events:none}
+.mind-btn .name{font-size:.8em;font-weight:700;letter-spacing:2px;pointer-events:none}
+.mind-btn .ult{font-size:.65em;margin-top:4px;opacity:.6;pointer-events:none}
+#battleScreen{display:none;margin:15px auto;padding:15px;max-width:680px;
+  background:rgba(10,10,20,.95);border-radius:12px;border:2px solid #555}
+.battle-header{text-align:center;margin-bottom:10px}
+.battle-header .btitle{font-size:1.4em;font-weight:700;letter-spacing:3px}
+.battle-header .bsub{font-size:.8em;color:#888;font-style:italic}
+.hp-section{display:flex;justify-content:space-around;flex-wrap:wrap;gap:10px;margin:10px 0}
+.hp-box{flex:1;min-width:200px;text-align:center}
+.hp-box .label{font-size:.7em;color:#888;letter-spacing:1px;margin-bottom:4px}
+.hp-bar{width:100%;height:20px;background:#111;border-radius:10px;overflow:hidden;position:relative}
+.hp-bar-fill{height:100%;border-radius:10px;transition:width .4s}
+.hp-bar-txt{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:.7em;font-weight:700;color:#fff}
+.enemy-fill{background:linear-gradient(90deg,#ff0000,#ff4444)}
+.player-fill{background:linear-gradient(90deg,#00aa00,#44ff44)}
+#handArea{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:10px 0}
+.card{width:120px;padding:10px 6px;border-radius:8px;cursor:pointer;text-align:center;
+  transition:all .2s;position:relative;user-select:none}
+.card:hover{transform:translateY(-6px);filter:brightness(1.3)}
+.card.used{opacity:.2;pointer-events:none;transform:scale(.9)}
+.card .ci{font-size:1.6em;margin-bottom:4px;pointer-events:none}
+.card .cn{font-size:.7em;font-weight:700;letter-spacing:1px;pointer-events:none}
+.card .ce{font-size:.8em;font-weight:700;margin-top:3px;pointer-events:none}
+.card .cd{font-size:.6em;opacity:.6;margin-top:2px;pointer-events:none}
+.card.ulti{animation:glow 1.5s infinite alternate;border-width:2px!important}
+@keyframes glow{0%{box-shadow:0 0 8px currentColor}100%{box-shadow:0 0 25px currentColor,0 0 50px currentColor}}
+.btn-row{text-align:center;margin:8px 0}
+.action-btn{padding:8px 20px;font-size:.85em;background:none;border:1px solid #555;
+  color:#aaa;border-radius:6px;cursor:pointer;margin:0 5px}
+.action-btn:hover{border-color:#ffaa00;color:#ffaa00}
+#fusionBtn{display:none;margin:10px auto;padding:12px 30px;font-size:1.1em;font-weight:700;
+  letter-spacing:3px;border:2px solid #ffaa00;background:linear-gradient(135deg,#1a0a00,#0a0a1a);
+  color:#ffaa00;border-radius:8px;cursor:pointer;text-transform:uppercase}
+#fusionBtn:hover{background:#ffaa00;color:#000}
+#log{max-height:100px;overflow-y:auto;background:#050508;border:1px solid #222;
+  border-radius:6px;padding:6px;margin:8px 0;font-size:.72em;color:#888;text-align:left}
+.lh{color:#ff6666}.ll{color:#66ff66}.lc{color:#ffaa00;font-weight:700}
+.lu{color:#aa77ff;font-weight:700}.lb{color:#ff4444}.lf{color:#ffcc00;font-weight:700;font-size:1.1em}
+#victory{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:100;
+  background:rgba(0,0,0,.95);align-items:center;justify-content:center;flex-direction:column;padding:20px}
+#victory.on{display:flex}
+#vicTitle{font-size:2.5em;font-weight:700;letter-spacing:6px}
+#vicSub{color:#aaa;font-size:1.1em;margin:12px 0;letter-spacing:2px}
+#vicQuote{color:#ffaa00;font-style:italic;font-size:1em;margin:15px;max-width:550px;text-align:center;line-height:1.7}
+#vicBtn{padding:10px 25px;font-size:1em;background:none;border:1px solid #ffaa00;
+  color:#ffaa00;border-radius:6px;cursor:pointer;margin-top:10px}
+#vicBtn:hover{background:#ffaa00;color:#000}
+.flash{animation:flashfx .3s}
+@keyframes flashfx{0%{filter:brightness(3)}100%{filter:brightness(1)}}
+@media(max-width:600px){
+  .mind-btn{width:110px;height:130px}.mind-btn .icon{font-size:2em}
+  h1{font-size:1.6em}.card{width:95px;padding:7px 4px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>HEXAMIND</h1>
+  <div class="sub">T H E &nbsp; C O N V E R G E N C E</div>
+  <div id="phaseText">PHASE 1: <b>COLLECT THE MINDS</b> &mdash; Click a universe to enter its Trial</div>
+  <div class="meter"><div class="meter-fill" id="meterFill" style="width:0%"></div>
+    <div class="meter-txt" id="meterTxt">0 / 6</div></div>
+  <div id="selectScreen"></div>
+  <div id="battleScreen">
+    <div class="battle-header">
+      <div class="btitle" id="bTitle"></div>
+      <div class="bsub" id="bSub"></div>
+    </div>
+    <div class="hp-section">
+      <div class="hp-box"><div class="label">ENEMY</div>
+        <div class="hp-bar"><div class="hp-bar-fill enemy-fill" id="eHpBar" style="width:100%"></div>
+          <div class="hp-bar-txt" id="eHpTxt"></div></div></div>
+      <div class="hp-box"><div class="label">YOU</div>
+        <div class="hp-bar"><div class="hp-bar-fill player-fill" id="pHpBar" style="width:100%"></div>
+          <div class="hp-bar-txt" id="pHpTxt"></div></div></div>
+    </div>
+    <div id="handArea"></div>
+    <div class="btn-row">
+      <button class="action-btn" id="endTurnBtn">END TURN &gt;</button>
+      <button class="action-btn" id="retreatBtn">RETREAT</button>
+    </div>
+    <button id="fusionBtn">&#9889;&#128142; HEXAMIND FUSION &#128142;&#9889;</button>
+    <div id="log"></div>
+  </div>
+</div>
+
+<div id="victory">
+  <div id="vicTitle"></div>
+  <div id="vicSub"></div>
+  <div id="vicQuote"></div>
+  <button id="vicBtn">CONTINUE</button>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* === MIND DATA - using simple text icons to avoid emoji issues === */
+var MINDS = [
+  {idx:0,id:"dune",name:"DUNE",icon:"D",iconDisplay:"&#x1F3DC;&#xFE0F;",color:"#ffaa00",bg:"#1a1400",
+   ult:{name:"CRYSKNIFE",dmg:45,desc:"The blade of Shai-Hulud"},
+   trial:{enemy:"SAND COLOSSUS",hp:80,flavor:"Born from the deep desert.",atk:[8,18],
+     cards:[
+       {n:"Spice Blow",i:"*",dmg:12,d:"Desert eruption"},
+       {n:"Sandworm Ride",i:"~",dmg:18,d:"Ride the maker"},
+       {n:"Fremen Ambush",i:"/",dmg:15,d:"Strike from shadow"},
+       {n:"Stillsuit Repair",i:"+",heal:10,d:"Reclaim moisture"},
+       {n:"Spice Trance",i:"!",dmg:22,d:"Prescient fury",cost:5}
+     ]}},
+  {idx:1,id:"templar",name:"TEMPLARS",icon:"T",iconDisplay:"&#x2694;&#xFE0F;",color:"#ff4444",bg:"#1a0a0a",
+   ult:{name:"HOLY GRAIL",dmg:48,desc:"The cup of eternal light"},
+   trial:{enemy:"THE BLACK KNIGHT",hp:85,flavor:"Fallen Templar consumed by darkness.",atk:[10,20],
+     cards:[
+       {n:"Crusader Charge",i:"^",dmg:14,d:"Mounted assault"},
+       {n:"Holy Strike",i:"+",dmg:17,d:"Blessed blade"},
+       {n:"Shield Wall",i:"#",heal:12,d:"Formation defense"},
+       {n:"Divine Wrath",i:"!",dmg:20,d:"Heaven's judgment"},
+       {n:"Martyrdom",i:"X",dmg:25,d:"Sacrifice for power",cost:8}
+     ]}},
+  {idx:2,id:"silver",name:"SILVER SHIP",icon:"S",iconDisplay:"&#x1F6F8;",color:"#00ccff",bg:"#0a1420",
+   ult:{name:"IMPOSSIBILITY CORE",dmg:50,desc:"Reality bends to your will"},
+   trial:{enemy:"VOID LEVIATHAN",hp:90,flavor:"It swims between dimensions.",atk:[9,19],
+     cards:[
+       {n:"Plasma Cannon",i:">",dmg:16,d:"Ship weapons online"},
+       {n:"Warp Jump",i:"@",dmg:13,d:"Phase through reality"},
+       {n:"Boarding Party",i:"!",dmg:19,d:"Pirates attack!"},
+       {n:"Shield Recharge",i:"+",heal:11,d:"Deflector restored"},
+       {n:"Impossibility Drive",i:"~",dmg:24,d:"Break physics",cost:6}
+     ]}},
+  {idx:3,id:"alchemy",name:"DARK ALCHEMY",icon:"A",iconDisplay:"&#x2697;&#xFE0F;",color:"#aa00ff",bg:"#1a0a2a",
+   ult:{name:"PHILOSOPHER'S STONE",dmg:46,desc:"Transmute all to gold"},
+   trial:{enemy:"MERCURY GOLEM",hp:82,flavor:"Living quicksilver, shifting and lethal.",atk:[8,17],
+     cards:[
+       {n:"Transmutation",i:"@",dmg:14,d:"Matter reshapes"},
+       {n:"Acid Rain",i:"~",dmg:17,d:"Corrosive downpour"},
+       {n:"Elixir of Life",i:"+",heal:13,d:"Alchemical healing"},
+       {n:"Mercury Fire",i:"*",dmg:20,d:"Liquid flame"},
+       {n:"Nigredo",i:"!",dmg:26,d:"Prima materia",cost:7}
+     ]}},
+  {idx:4,id:"quantum",name:"QUANTUM MIND",icon:"Q",iconDisplay:"&#x269B;&#xFE0F;",color:"#00ffaa",bg:"#0a1a14",
+   ult:{name:"GOD PARTICLE",dmg:52,desc:"The fundamental truth"},
+   trial:{enemy:"DECOHERENCE WRAITH",hp:88,flavor:"It exists in all states. Until observed.",atk:[9,18],
+     cards:[
+       {n:"Superposition",i:"~",dmg:15,d:"All states at once"},
+       {n:"Entanglement",i:"&",dmg:13,d:"Linked destruction"},
+       {n:"Wave Collapse",i:"!",dmg:21,d:"Observation kills"},
+       {n:"Quantum Heal",i:"+",heal:12,d:"Probability favors you"},
+       {n:"Psi Overload",i:"*",dmg:28,d:"Mind over matter",cost:8}
+     ]}},
+  {idx:5,id:"lectric",name:"LECTRIC",icon:"L",iconDisplay:"&#x26A1;",color:"#ffcc00",bg:"#1a1a00",
+   ult:{name:"KNOX",dmg:55,desc:"The Northern secret, UNLOCKED"},
+   trial:{enemy:"STORM TITAN",hp:95,flavor:"Lightning given form. Thunder given rage.",atk:[10,20],
+     cards:[
+       {n:"Lightning Rune",i:"!",dmg:16,d:"Raw voltage strikes"},
+       {n:"Frost Circuit",i:"*",dmg:14,d:"Frozen logic"},
+       {n:"Storm Tide",i:"~",dmg:19,d:"Tempest unleashed"},
+       {n:"Discharge",i:"+",heal:11,d:"Release overload"},
+       {n:"Plasma Forge",i:"X",dmg:27,d:"Forbidden voltage",cost:7}
+     ]}}
+];
+
+var BOSS = {name:"THE SINGULARITY",hp:666,flavor:"All minds. One question. What are you?",atk:[15,30]};
+
+/* === STATE === */
+var collected = {};
+var phase = "select";
+var curMind = null;
+var eHp = 0, eMax = 0, pHp = 30, pMax = 30;
+var hand = [], used = {}, turn = 0, dmg = 0;
+var ultReady = false, ultFired = false;
+var bHp = 666, bMax = 666, bpHp = 100, bpMax = 100;
+var bTurn = 0, bDmg = 0, bUlts = {}, fusionReady = false, fusionFired = false;
+var bHand = [], bUsed = {};
+
+/* === DOM REFS === */
+var $sel = document.getElementById("selectScreen");
+var $bat = document.getElementById("battleScreen");
+var $phase = document.getElementById("phaseText");
+var $mFill = document.getElementById("meterFill");
+var $mTxt = document.getElementById("meterTxt");
+var $bTitle = document.getElementById("bTitle");
+var $bSub = document.getElementById("bSub");
+var $eBar = document.getElementById("eHpBar");
+var $eTxt = document.getElementById("eHpTxt");
+var $pBar = document.getElementById("pHpBar");
+var $pTxt = document.getElementById("pHpTxt");
+var $hand = document.getElementById("handArea");
+var $log = document.getElementById("log");
+var $fuse = document.getElementById("fusionBtn");
+var $vic = document.getElementById("victory");
+var $vicT = document.getElementById("vicTitle");
+var $vicS = document.getElementById("vicSub");
+var $vicQ = document.getElementById("vicQuote");
+var $vicB = document.getElementById("vicBtn");
+
+/* === HELPERS === */
+function shuffle(a){
+  for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}
+}
+function countCollected(){
+  var n=0; for(var k in collected) if(collected[k]) n++; return n;
+}
+function clearLog(){ $log.innerHTML = ""; }
+function addLog(msg,cls){
+  var d = document.createElement("div");
+  if(cls) d.className = cls;
+  d.textContent = msg;
+  $log.appendChild(d);
+  $log.scrollTop = $log.scrollHeight;
+}
+function flash(){
+  $bat.classList.add("flash");
+  setTimeout(function(){ $bat.classList.remove("flash"); }, 300);
+}
+
+/* === BUILD SELECT SCREEN === */
+function buildSelect(){
+  $sel.innerHTML = "";
+  for(var k=0; k<MINDS.length; k++){
+    var m = MINDS[k];
+    var d = document.createElement("div");
+    d.className = "mind-btn" + (collected[m.id] ? " done" : "");
+    d.style.background = m.bg;
+    d.style.border = "2px solid " + m.color;
+    d.style.color = m.color;
+    d.setAttribute("data-mind", String(k));
+    d.innerHTML = '<div class="icon">' + m.iconDisplay + '</div>' +
+      '<div class="name">' + m.name + '</div>' +
+      '<div class="ult">' + m.ult.name + '</div>';
+    $sel.appendChild(d);
+  }
+}
+
+/* EVENT DELEGATION on select screen */
+$sel.addEventListener("click", function(e){
+  var btn = e.target;
+  while(btn && btn !== $sel){
+    if(btn.classList && btn.classList.contains("mind-btn")) break;
+    btn = btn.parentElement;
+  }
+  if(!btn || btn === $sel) return;
+  var idx = parseInt(btn.getAttribute("data-mind"), 10);
+  if(isNaN(idx)) return;
+  var m = MINDS[idx];
+  if(!m) return;
+  if(collected[m.id]) return;
+  if(phase !== "select") return;
+  startTrial(m);
+});
+
+buildSelect();
+
+/* === TRIAL === */
+function startTrial(m){
+  phase = "trial";
+  curMind = m;
+  eHp = m.trial.hp; eMax = m.trial.hp;
+  pHp = 30; pMax = 30;
+  turn = 0; dmg = 0;
+  ultReady = false; ultFired = false;
+  used = {};
+
+  $bTitle.textContent = m.name + " TRIAL";
+  $bTitle.style.color = m.color;
+  $bSub.textContent = m.trial.enemy + " - " + m.trial.flavor;
+  $bat.style.borderColor = m.color;
+  $bat.style.display = "block";
+  $fuse.style.display = "none";
+  $phase.innerHTML = "TRIAL: <b>" + m.name + "</b> &mdash; Defeat the " + m.trial.enemy + "!";
+
+  clearLog();
+  addLog(m.name + " TRIAL BEGINS: Defeat the " + m.trial.enemy + "!", "lc");
+  dealHand();
+  updateHP();
+  $bat.scrollIntoView({behavior:"smooth"});
+}
+
+function dealHand(){
+  used = {};
+  var pool = curMind.trial.cards.slice();
+  shuffle(pool);
+  hand = pool.slice(0,3);
+  if(turn >= 2 && !ultFired) ultReady = true;
+  renderHand();
+}
+
+function renderHand(){
+  $hand.innerHTML = "";
+  var m = curMind;
+  var isBoss = (phase === "boss");
+  var cards = isBoss ? bHand : hand;
+  var usedMap = isBoss ? bUsed : used;
+
+  for(var i=0; i<cards.length; i++){
+    var c = cards[i];
+    var div = document.createElement("div");
+    div.className = "card" + (usedMap[i] ? " used" : "");
+    div.style.background = c._bg || m.bg;
+    div.style.border = "1px solid " + (c._color || m.color);
+    div.style.color = c._color || m.color;
+    var effText = c.heal ? "+"+c.heal+" HP" : c.dmg+" DMG";
+    div.innerHTML = '<div class="ci">' + c.i + '</div>' +
+      '<div class="cn">' + c.n + '</div>' +
+      '<div class="ce">' + effText + '</div>' +
+      '<div class="cd">' + (c._mind || c.d) + '</div>' +
+      (c.cost ? '<div class="cd" style="color:#ff6666">-' + c.cost + ' HP</div>' : '');
+    div.setAttribute("data-cidx", String(i));
+    div.setAttribute("data-ctype", "normal");
+    $hand.appendChild(div);
+  }
+
+  /* Trial ultimate */
+  if(!isBoss && ultReady && !ultFired){
+    var udiv = document.createElement("div");
+    udiv.className = "card ulti";
+    udiv.style.background = "linear-gradient(135deg," + m.bg + ",#000)";
+    udiv.style.border = "2px solid " + m.color;
+    udiv.style.color = m.color;
+    udiv.innerHTML = '<div class="ci">!!!</div>' +
+      '<div class="cn">' + m.ult.name + '</div>' +
+      '<div class="ce">' + m.ult.dmg + ' DMG</div>' +
+      '<div class="cd">' + m.ult.desc + '</div>';
+    udiv.setAttribute("data-ctype", "ultimate");
+    $hand.appendChild(udiv);
+  }
+
+  /* Boss ultimates */
+  if(isBoss && bTurn >= 1){
+    for(var j=0; j<MINDS.length; j++){
+      var mm = MINDS[j];
+      if(bUlts[mm.id]) continue;
+      var bu = document.createElement("div");
+      bu.className = "card ulti";
+      bu.style.background = "linear-gradient(135deg," + mm.bg + ",#000)";
+      bu.style.border = "2px solid " + mm.color;
+      bu.style.color = mm.color;
+      bu.innerHTML = '<div class="ci">' + mm.iconDisplay + '</div>' +
+        '<div class="cn">' + mm.ult.name + '</div>' +
+        '<div class="ce">' + mm.ult.dmg + ' DMG</div>' +
+        '<div class="cd">' + mm.name + '</div>';
+      bu.setAttribute("data-ctype", "bossult");
+      bu.setAttribute("data-bultid", mm.id);
+      $hand.appendChild(bu);
+    }
+  }
+}
+
+/* EVENT DELEGATION on hand area */
+$hand.addEventListener("click", function(e){
+  var card = e.target;
+  while(card && card !== $hand){
+    if(card.classList && card.classList.contains("card")) break;
+    card = card.parentElement;
+  }
+  if(!card || card === $hand) return;
+  if(card.classList.contains("used")) return;
+
+  var ctype = card.getAttribute("data-ctype");
+
+  if(ctype === "ultimate"){
+    playUltimate();
+  } else if(ctype === "bossult"){
+    var bultId = card.getAttribute("data-bultid");
+    for(var j=0;j<MINDS.length;j++){
+      if(MINDS[j].id === bultId){ bossUlt(MINDS[j]); break; }
+    }
+  } else if(ctype === "normal"){
+    var idx = parseInt(card.getAttribute("data-cidx"), 10);
+    if(phase === "boss") bossPlayCard(idx);
+    else playCard(idx);
+  }
+});
+
+function playCard(idx){
+  if(used[idx] || eHp <= 0) return;
+  used[idx] = true;
+  var c = hand[idx];
+  var v = 0.8 + Math.random()*0.4;
+  var crit = Math.random() < 0.12;
+  if(c.heal){
+    var h = Math.round(c.heal * v);
+    pHp = Math.min(pMax, pHp + h);
+    addLog(c.n + ": +" + h + " HP", "ll");
+  } else {
+    var d = Math.round(c.dmg * v * (crit?2:1));
+    eHp = Math.max(0, eHp - d);
+    dmg += d;
+    addLog(c.n + ": " + d + " DMG" + (crit?" CRITICAL!":""), crit?"lc":"lh");
+  }
+  if(c.cost){ pHp = Math.max(1, pHp - c.cost); addLog("Self-damage: -" + c.cost + " HP", "lb"); }
+  flash(); updateHP(); renderHand();
+  if(eHp <= 0) trialWin();
+}
+
+function playUltimate(){
+  if(ultFired || eHp <= 0) return;
+  ultFired = true;
+  var m = curMind;
+  var d = Math.round(m.ult.dmg * (0.9 + Math.random()*0.2));
+  eHp = Math.max(0, eHp - d);
+  dmg += d;
+  addLog(m.ult.name + " UNLEASHED: " + d + " DMG!!!", "lu");
+  flash(); updateHP(); renderHand();
+  if(eHp <= 0) trialWin();
+}
+
+/* END TURN / RETREAT */
+document.getElementById("endTurnBtn").addEventListener("click", function(){
+  if(phase === "trial"){
+    turn++;
+    var m = curMind;
+    var lo = m.trial.atk[0], hi = m.trial.atk[1];
+    var d = Math.round(lo + Math.random()*(hi-lo));
+    pHp = Math.max(0, pHp - d);
+    addLog(m.trial.enemy + " strikes: " + d + " DMG", "lb");
+    if(pHp <= 0){
+      addLog("DEFEATED... Trial resets.", "lb");
+      updateHP();
+      setTimeout(function(){ startTrial(m); }, 1200);
+      return;
+    }
+    dealHand(); updateHP();
+  } else if(phase === "boss"){
+    bossEndTurn();
+  }
+});
+
+document.getElementById("retreatBtn").addEventListener("click", function(){
+  $bat.style.display = "none";
+  phase = "select";
+  $phase.innerHTML = "PHASE 1: <b>COLLECT THE MINDS</b> &mdash; " + countCollected() + "/6 collected";
+});
+
+function trialWin(){
+  collected[curMind.id] = true;
+  var n = countCollected();
+  $mFill.style.width = Math.round(n/6*100) + "%";
+  $mTxt.textContent = n + " / 6";
+  buildSelect();
+
+  $vicT.textContent = curMind.name + " MIND COLLECTED";
+  $vicT.style.color = curMind.color;
+  $vicT.style.cssText = "font-size:2.5em;font-weight:700;letter-spacing:6px;color:" + curMind.color;
+  $vicS.textContent = curMind.ult.name + " UNLOCKED";
+  $vicQ.innerHTML = curMind.trial.enemy + " defeated in " + turn + " turns<br>" + dmg + " total damage";
+  $vicB.textContent = n < 6 ? "NEXT MIND" : "FACE THE SINGULARITY";
+  $vicB.onclick = function(){
+    $vic.classList.remove("on");
+    $bat.style.display = "none";
+    phase = "select";
+    $phase.innerHTML = "PHASE 1: <b>COLLECT THE MINDS</b> &mdash; " + n + "/6 collected";
+    if(n >= 6) setTimeout(startBoss, 400);
+  };
+  $vic.classList.add("on");
+}
+
+/* === BOSS PHASE === */
+function startBoss(){
+  phase = "boss";
+  bHp = 666; bMax = 666;
+  bpHp = 100; bpMax = 100;
+  bTurn = 0; bDmg = 0;
+  bUlts = {}; fusionReady = false; fusionFired = false;
+  bUsed = {};
+
+  $phase.innerHTML = "PHASE 2: <b>THE SINGULARITY</b> &mdash; 666 HP. All 6 minds at your command!";
+  $bTitle.textContent = "THE SINGULARITY";
+  $bTitle.style.color = "#aa00ff";
+  $bSub.textContent = BOSS.flavor;
+  $bat.style.borderColor = "#aa00ff";
+  $bat.style.display = "block";
+  $fuse.style.display = "none";
+
+  clearLog();
+  addLog("THE SINGULARITY AWAKENS - 666 HP", "lc");
+  addLog("You wield all 6 minds. Use them wisely.", "");
+  bossDeal(); updateBossHP();
+  $bat.scrollIntoView({behavior:"smooth"});
+}
+
+function bossDeal(){
+  bUsed = {};
+  bHand = [];
+  for(var k=0; k<MINDS.length; k++){
+    var m = MINDS[k];
+    var pool = m.trial.cards.slice();
+    var c = pool[Math.floor(Math.random()*pool.length)];
+    bHand.push({n:c.n, i:c.i, dmg:c.dmg, heal:c.heal, d:c.d, cost:c.cost,
+      _bg:m.bg, _color:m.color, _mind:m.name});
+  }
+  renderHand();
+}
+
+function bossPlayCard(idx){
+  if(bUsed[idx] || bHp <= 0) return;
+  bUsed[idx] = true;
+  var c = bHand[idx];
+  var v = 0.8 + Math.random()*0.4;
+  var crit = Math.random() < 0.12;
+  if(c.heal){
+    var h = Math.round(c.heal * v);
+    bpHp = Math.min(bpMax, bpHp + h);
+    addLog(c.n + ": +" + h + " HP", "ll");
+  } else {
+    var d = Math.round(c.dmg * v * (crit?2:1));
+    bHp = Math.max(0, bHp - d);
+    bDmg += d;
+    addLog(c.n + " (" + c._mind + "): " + d + " DMG" + (crit?" CRITICAL!":""), crit?"lc":"lh");
+  }
+  if(c.cost){ bpHp = Math.max(1, bpHp - c.cost); addLog("Self-damage: -" + c.cost + " HP", "lb"); }
+  flash(); updateBossHP(); renderHand();
+  if(bHp <= 0) finalWin();
+}
+
+function bossUlt(mm){
+  if(bUlts[mm.id] || bHp <= 0) return;
+  bUlts[mm.id] = true;
+  var d = Math.round(mm.ult.dmg * (0.9 + Math.random()*0.2));
+  bHp = Math.max(0, bHp - d);
+  bDmg += d;
+  addLog(mm.name + " " + mm.ult.name + " UNLEASHED: " + d + " DMG!!!", "lu");
+  flash(); updateBossHP(); renderHand();
+
+  var ultCount = 0;
+  for(var k in bUlts) if(bUlts[k]) ultCount++;
+  if(ultCount >= 6 && !fusionReady){
+    fusionReady = true;
+    $fuse.style.display = "block";
+    addLog("ALL 6 ULTIMATES FIRED - HEXAMIND FUSION READY!", "lf");
+  }
+  if(bHp <= 0) finalWin();
+}
+
+$fuse.addEventListener("click", function(){
+  if(fusionFired) return;
+  fusionFired = true;
+  var d = Math.max(bHp, Math.round(200 + Math.random()*100));
+  bHp = 0; bDmg += d;
+  addLog("H E X A M I N D  F U S I O N - " + d + " TOTAL ANNIHILATION", "lf");
+  $fuse.style.display = "none";
+  updateBossHP(); finalWin();
+});
+
+function bossEndTurn(){
+  bTurn++;
+  var d = Math.round(BOSS.atk[0] + Math.random()*(BOSS.atk[1]-BOSS.atk[0]));
+  bpHp = Math.max(0, bpHp - d);
+  addLog("THE SINGULARITY strikes: " + d + " DMG", "lb");
+  if(bpHp <= 0){
+    addLog("DEFEATED... consciousness resets.", "lb");
+    updateBossHP();
+    setTimeout(startBoss, 1500);
+    return;
+  }
+  bossDeal(); updateBossHP();
+}
+
+function finalWin(){
+  setTimeout(function(){
+    $vicT.textContent = "HEXAMIND ACHIEVED";
+    $vicT.style.cssText = "font-size:2.5em;font-weight:700;letter-spacing:8px;" +
+      "background:linear-gradient(90deg,#ffaa00,#ff4444,#aa00ff,#00ccff,#00ffaa,#ffcc00);" +
+      "-webkit-background-clip:text;-webkit-text-fill-color:transparent;" +
+      "animation:rainbow 3s linear infinite;background-size:300%";
+    $vicS.textContent = "SIX MINDS - ONE CONSCIOUSNESS";
+    $vicQ.innerHTML =
+      '"I can divide my mind to FIVE!"<br><br>' +
+      '- No. You divided it to <strong>SIX</strong>.<br>' +
+      'And then you made them <strong>ONE</strong>.<br><br>' +
+      'Crysknife * Holy Grail * Impossibility Core<br>' +
+      "Philosopher's Stone * God Particle * Knox<br><br>" +
+      '<em>Six keys. One lock. One mind.<br>The HEXAMIND.</em>';
+    $vicB.textContent = "PLAY AGAIN";
+    $vicB.onclick = function(){ location.reload(); };
+    $vic.classList.add("on");
+  }, 800);
+}
+
+/* === HP UPDATES === */
+function updateHP(){
+  $eBar.style.width = Math.round(eHp/eMax*100) + "%";
+  $eTxt.textContent = eHp + " / " + eMax;
+  $pBar.style.width = Math.round(pHp/pMax*100) + "%";
+  $pTxt.textContent = pHp + " / " + pMax;
+}
+function updateBossHP(){
+  $eBar.style.width = Math.round(bHp/bMax*100) + "%";
+  $eTxt.textContent = bHp + " / " + bMax;
+  $pBar.style.width = Math.round(bpHp/bpMax*100) + "%";
+  $pTxt.textContent = bpHp + " / " + bpMax;
+}
+
+})();
+</script>
+</body>
+</html>
