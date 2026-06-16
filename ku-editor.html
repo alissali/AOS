@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KU Game Editor</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#0a0a0f; color:#e0e0e0; font-family:'Courier New',monospace; height:100vh; display:flex; flex-direction:column; }
+
+/* TOP BAR */
+.topbar { background:#111; border-bottom:1px solid #333; padding:8px 16px; display:flex; align-items:center; gap:16px; }
+.topbar h1 { font-size:16px; color:#f5c842; }
+.topbar select { background:#222; color:#e0e0e0; border:1px solid #555; padding:4px 8px; border-radius:4px; font-family:inherit; }
+.topbar button { background:#f5c842; color:#000; border:none; padding:6px 14px; border-radius:4px; cursor:pointer; font-weight:bold; font-family:inherit; }
+.topbar button:hover { background:#ffd866; }
+.topbar .spacer { flex:1; }
+.topbar .status { font-size:12px; color:#888; }
+
+/* TABS */
+.tabs { display:flex; background:#111; border-bottom:1px solid #333; }
+.tab { padding:10px 20px; cursor:pointer; color:#888; border-bottom:2px solid transparent; transition:all .2s; font-size:13px; }
+.tab:hover { color:#ccc; }
+.tab.active { color:#f5c842; border-bottom-color:#f5c842; }
+
+/* MAIN LAYOUT */
+.main { flex:1; display:flex; overflow:hidden; }
+.panel { flex:1; overflow-y:auto; padding:16px; display:none; }
+.panel.active { display:flex; flex-direction:column; gap:12px; }
+
+/* COMMON CONTROLS */
+.card { background:#1a1a24; border:1px solid #333; border-radius:8px; padding:14px; }
+.card h3 { color:#f5c842; font-size:14px; margin-bottom:10px; }
+label { font-size:12px; color:#aaa; display:block; margin-bottom:4px; }
+input, textarea, select { background:#0d0d14; color:#e0e0e0; border:1px solid #444; border-radius:4px; padding:6px 8px; width:100%; font-family:inherit; font-size:13px; margin-bottom:8px; }
+textarea { resize:vertical; min-height:60px; }
+.btn { background:#333; color:#e0e0e0; border:1px solid #555; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:12px; font-family:inherit; }
+.btn:hover { background:#444; }
+.btn-primary { background:#f5c842; color:#000; border-color:#f5c842; font-weight:bold; }
+.btn-primary:hover { background:#ffd866; }
+.btn-danger { background:#661a1a; color:#ff6b6b; border-color:#661a1a; }
+.btn-danger:hover { background:#882a2a; }
+.btn-row { display:flex; gap:8px; flex-wrap:wrap; }
+.list-item { background:#0d0d14; border:1px solid #333; border-radius:6px; padding:10px; margin-bottom:6px; cursor:pointer; transition:all .15s; }
+.list-item:hover { border-color:#f5c842; }
+.list-item.selected { border-color:#f5c842; background:#1a1a10; }
+.list-item .li-title { font-weight:bold; color:#f5c842; font-size:13px; }
+.list-item .li-sub { font-size:11px; color:#888; margin-top:2px; }
+.badge { display:inline-block; background:#333; color:#aaa; font-size:10px; padding:2px 6px; border-radius:3px; margin-left:4px; }
+.badge.snake-s { background:#1a3322; color:#66ff88; }
+.badge.snake-d { background:#331a1a; color:#ff6688; }
+.badge.start { background:#1a2233; color:#6688ff; }
+.split { display:flex; gap:12px; flex:1; overflow:hidden; }
+.split-left { width:280px; min-width:200px; overflow-y:auto; display:flex; flex-direction:column; gap:8px; }
+.split-right { flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:12px; }
+.empty-state { color:#555; text-align:center; padding:40px; font-style:italic; }
+.choice-row { display:flex; gap:6px; align-items:center; margin-bottom:6px; }
+.choice-row input { flex:1; margin-bottom:0; }
+.choice-row select { width:140px; margin-bottom:0; }
+.tag { display:inline-block; background:#2a2a1a; color:#f5c842; font-size:11px; padding:2px 8px; border-radius:10px; margin:2px; }
+
+/* PREVIEW */
+.preview-frame { background:#111; border:1px solid #333; border-radius:8px; flex:1; padding:20px; overflow-y:auto; }
+.preview-frame .scene-text { font-size:15px; line-height:1.7; color:#ccc; margin-bottom:16px; white-space:pre-wrap; }
+.preview-frame .scene-title { color:#f5c842; font-size:18px; margin-bottom:12px; }
+.preview-frame .choice-btn { display:block; background:#1a1a24; border:1px solid #f5c842; color:#f5c842; padding:10px 16px; border-radius:6px; margin-bottom:8px; cursor:pointer; font-family:inherit; font-size:14px; width:100%; text-align:left; }
+.preview-frame .choice-btn:hover { background:#2a2a14; }
+.preview-frame .facts-panel { background:#0a1a0a; border:1px solid #2a4a2a; border-radius:6px; padding:10px; margin-top:12px; }
+.preview-frame .facts-panel h4 { color:#66ff88; font-size:12px; margin-bottom:6px; }
+.preview-frame .fact-item { font-size:11px; color:#88cc88; }
+.snake-config { border:1px solid #444; border-radius:6px; padding:10px; margin-bottom:8px; }
+.snake-config.static { border-color:#66ff88; }
+.snake-config.dynamic { border-color:#ff6688; }
+
+/* JSON PANEL */
+.json-out { background:#0d0d14; border:1px solid #333; border-radius:6px; padding:12px; font-size:12px; white-space:pre-wrap; overflow-y:auto; flex:1; color:#88cc88; line-height:1.5; }
+
+/* TREE VIEW */
+.tree-canvas { flex:1; background:#0d0d14; border:1px solid #333; border-radius:8px; position:relative; overflow:auto; min-height:300px; }
+.tree-node { position:absolute; background:#1a1a24; border:1px solid #444; border-radius:6px; padding:6px 10px; font-size:11px; color:#e0e0e0; cursor:pointer; min-width:80px; text-align:center; z-index:2; }
+.tree-node.sn-static { border-color:#66ff88; }
+.tree-node.sn-dynamic { border-color:#ff6688; }
+.tree-node.start { border-color:#6688ff; }
+.tree-node:hover { border-color:#f5c842; }
+svg.tree-lines { position:absolute; top:0; left:0; width:100%; height:100%; z-index:1; }
+svg.tree-lines line { stroke:#444; stroke-width:1; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <h1>🛠️ KU Game Editor</h1>
+  <select id="worldSelect">
+    <option value="dune">🏜️ Arrakis (Dune)</option>
+    <option value="templars">⚔️ Templars</option>
+    <option value="silvership">🛸 Silver Ship</option>
+    <option value="alchemy">⚗️ Dark Alchemy</option>
+    <option value="quantum">⚛️ Quantum Mind</option>
+    <option value="lectric">⚡ Lectric</option>
+    <option value="sexpeace">🕊️ SeX PEACE</option>
+  </select>
+  <div class="spacer"></div>
+  <span class="status" id="statusText">Ready</span>
+  <button onclick="exportJSON()">📤 Export JSON</button>
+  <button onclick="importJSON()">📥 Import</button>
+  <button onclick="importRStory()" style="background:#66ff88;color:#000">🐉 Import R's Story</button>
+  <button onclick="exportToEngine()">🚀 Export Engine JSON</button>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" data-panel="nodes">🗺️ Nodes</div>
+  <div class="tab" data-panel="softlines">📜 Soft Lines</div>
+  <div class="tab" data-panel="snakes">🐍 Snakes</div>
+  <div class="tab" data-panel="facts">🔗 Facts &amp; Rules</div>
+  <div class="tab" data-panel="preview">👁️ Preview</div>
+  <div class="tab" data-panel="tree">🌳 Tree</div>
+  <div class="tab" data-panel="json">{ } JSON</div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- NODES PANEL -->
+  <div class="panel active" id="panel-nodes">
+    <div class="split">
+      <div class="split-left">
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="addNode()">+ New Node</button>
+        </div>
+        <div id="nodeList"></div>
+      </div>
+      <div class="split-right" id="nodeEditor">
+        <div class="empty-state">Select or create a node</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOFT LINES PANEL -->
+  <div class="panel" id="panel-softlines">
+    <div class="card">
+      <h3>📜 Inject Soft Line</h3>
+      <label>Paste R's prose below:</label>
+      <textarea id="softlineInput" rows="10" placeholder="Paste story text from R 🐉..."></textarea>
+      <label>Split by:</label>
+      <div class="btn-row">
+        <button class="btn" onclick="splitSoftLine('paragraph')">Paragraphs</button>
+        <button class="btn" onclick="splitSoftLine('sentence')">Sentences</button>
+        <button class="btn" onclick="splitSoftLine('manual')">Manual (---)</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Split Preview</h3>
+      <div id="splitPreview"><div class="empty-state">Paste text and split it</div></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="createNodesFromSplit()">Create Nodes from Split</button>
+    </div>
+  </div>
+
+  <!-- SNAKES PANEL -->
+  <div class="panel" id="panel-snakes">
+    <div class="split">
+      <div class="split-left">
+        <div class="btn-row">
+          <button class="btn" onclick="addSnake('static')" style="color:#66ff88;border-color:#66ff88">+ Static 🐍</button>
+          <button class="btn" onclick="addSnake('dynamic')" style="color:#ff6688;border-color:#ff6688">+ Dynamic 🐍</button>
+        </div>
+        <div id="snakeList"></div>
+      </div>
+      <div class="split-right" id="snakeEditor">
+        <div class="empty-state">Select or create a snake</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FACTS & RULES PANEL -->
+  <div class="panel" id="panel-facts">
+    <div class="split">
+      <div class="split-left">
+        <h3 style="color:#66ff88;margin-bottom:8px">Facts</h3>
+        <div id="factsList"></div>
+        <button class="btn" onclick="showAllFacts()" style="margin-top:6px">📋 Show All Facts</button>
+        <h3 style="color:#ff8866;margin-top:16px;margin-bottom:8px">Rules</h3>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="addRule()">+ New Rule</button>
+        </div>
+        <div id="ruleList"></div>
+      </div>
+      <div class="split-right" id="ruleEditor">
+        <div class="empty-state">All facts are defined per-node. Rules fire when conditions are met.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PREVIEW PANEL -->
+  <div class="panel" id="panel-preview">
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="startPreview()">▶️ Start from Beginning</button>
+      <button class="btn" onclick="resetPreview()">🔄 Reset</button>
+    </div>
+    <div class="preview-frame" id="previewFrame">
+      <div class="empty-state">Click Start to play through your path</div>
+    </div>
+  </div>
+
+  <!-- TREE PANEL -->
+  <div class="panel" id="panel-tree">
+    <div class="tree-canvas" id="treeCanvas"></div>
+  </div>
+
+  <!-- JSON PANEL -->
+  <div class="panel" id="panel-json">
+    <div class="json-out" id="jsonOutput"></div>
+  </div>
+
+</div>
+
+<script>
+// ===== DATA MODEL =====
+const STORAGE_KEY = 'ku-editor-';
+
+function getWorldKey() { return STORAGE_KEY + document.getElementById('worldSelect').value; }
+
+function defaultWorld() {
+  return { nodes: [], snakes: [], rules: [], meta: { startNode: null } };
+}
+
+let world = defaultWorld();
+let selectedNodeId = null;
+let selectedSnakeId = null;
+let selectedRuleId = null;
+let splitSegments = [];
+let previewState = { currentNode: null, facts: [], history: [] };
+
+function save() {
+  localStorage.setItem(getWorldKey(), JSON.stringify(world));
+  document.getElementById('statusText').textContent = 'Saved ✓';
+  setTimeout(() => document.getElementById('statusText').textContent = 'Ready', 1500);
+}
+
+function load() {
+  const raw = localStorage.getItem(getWorldKey());
+  world = raw ? JSON.parse(raw) : defaultWorld();
+  // Ensure arrays exist
+  if (!world.nodes) world.nodes = [];
+  if (!world.snakes) world.snakes = [];
+  if (!world.rules) world.rules = [];
+  if (!world.meta) world.meta = { startNode: null };
+  selectedNodeId = null;
+  selectedSnakeId = null;
+  selectedRuleId = null;
+  renderAll();
+}
+
+function uid() { return 'n' + Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+// ===== TABS =====
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('panel-' + tab.dataset.panel).classList.add('active');
+    if (tab.dataset.panel === 'tree') renderTree();
+    if (tab.dataset.panel === 'json') renderJSON();
+    if (tab.dataset.panel === 'facts') renderFactsSummary();
+  });
+});
+
+document.getElementById('worldSelect').addEventListener('change', load);
+
+// ===== NODES =====
+function addNode() {
+  const node = {
+    id: uid(),
+    title: 'New Node',
+    text: '',
+    choices: [],
+    facts: [],
+    snake: null, // null or snake id
+    isStart: false
+  };
+  world.nodes.push(node);
+  if (world.nodes.length === 1) {
+    node.isStart = true;
+    node.title = 'START';
+    world.meta.startNode = node.id;
+  }
+  save();
+  renderNodeList();
+  selectNode(node.id);
+}
+
+function renderNodeList() {
+  const el = document.getElementById('nodeList');
+  el.innerHTML = '';
+  world.nodes.forEach(n => {
+    const badges = [];
+    if (n.isStart) badges.push('<span class="badge start">START</span>');
+    const snake = world.snakes.find(s => s.nodeId === n.id);
+    if (snake) badges.push(snake.type === 'static'
+      ? '<span class="badge snake-s">🐍 Static</span>'
+      : '<span class="badge snake-d">🐍 Dynamic</span>');
+    const div = document.createElement('div');
+    div.className = 'list-item' + (selectedNodeId === n.id ? ' selected' : '');
+    div.innerHTML = `<div class="li-title">${esc(n.title)} ${badges.join('')}</div>
+      <div class="li-sub">${n.choices.length} choices · ${n.facts.length} facts</div>`;
+    div.onclick = () => selectNode(n.id);
+    el.appendChild(div);
+  });
+}
+
+function selectNode(id) {
+  selectedNodeId = id;
+  renderNodeList();
+  renderNodeEditor();
+}
+
+function renderNodeEditor() {
+  const el = document.getElementById('nodeEditor');
+  const node = world.nodes.find(n => n.id === selectedNodeId);
+  if (!node) { el.innerHTML = '<div class="empty-state">Select or create a node</div>'; return; }
+
+  const choiceTargetOptions = world.nodes
+    .filter(n => n.id !== node.id)
+    .map(n => `<option value="${n.id}">${esc(n.title)}</option>`)
+    .join('');
+
+  let choicesHTML = '';
+  node.choices.forEach((c, i) => {
+    choicesHTML += `<div class="choice-row">
+      <input value="${esc(c.label)}" placeholder="Choice text" onchange="updateChoice(${i},'label',this.value)" style="flex:2">
+      <select onchange="updateChoice(${i},'target',this.value)" style="width:130px">
+        <option value="">→ (none)</option>
+        ${choiceTargetOptions.replace(`value="${c.target}"`, `value="${c.target}" selected`)}
+      </select>
+      <input value="${esc(c.fact || '')}" placeholder="fact" onchange="updateChoice(${i},'fact',this.value)" style="width:120px;color:#66ff88;font-size:11px">
+      <button class="btn btn-danger" onclick="removeChoice(${i})" style="width:30px;padding:4px">×</button>
+    </div>`;
+  });
+
+  let factsHTML = node.facts.map((f, i) =>
+    `<div class="choice-row">
+      <input value="${esc(f)}" placeholder="fact_name" onchange="updateFact(${i},this.value)">
+      <button class="btn btn-danger" onclick="removeFact(${i})" style="width:30px;padding:4px">×</button>
+    </div>`
+  ).join('');
+
+  el.innerHTML = `
+    <div class="card">
+      <h3>${node.isStart ? '🚀 ' : ''}Node: ${esc(node.title)}</h3>
+      <label>Title</label>
+      <input value="${esc(node.title)}" onchange="updateNode('title',this.value)" id="nodeTitle">
+      <label>Narrative Text</label>
+      <textarea rows="5" onchange="updateNode('text',this.value)" id="nodeText">${esc(node.text)}</textarea>
+      <label><input type="checkbox" ${node.isStart ? 'checked' : ''} onchange="setStart(this.checked)"> Start Node</label>
+    </div>
+    <div class="card">
+      <h3>🔀 Choices (${node.choices.length})</h3>
+      ${choicesHTML}
+      <button class="btn" onclick="addChoice()">+ Add Choice</button>
+    </div>
+    <div class="card">
+      <h3>📦 Facts Dropped (${node.facts.length})</h3>
+      ${factsHTML}
+      <button class="btn" onclick="addFact()">+ Add Fact</button>
+    </div>
+    <div class="card">
+      <h3>🏁 Ending</h3>
+      <label>Ending Type (blank = not an ending)</label>
+      <input value="${esc(node.ending || '')}" onchange="updateNode('ending',this.value)" placeholder="e.g. prophet, wanderer, ghost, vessel">
+      <label>Facts Granted on Ending</label>
+      <input value="${(node.facts_granted || []).join(', ')}" onchange="updateNode('facts_granted',this.value.split(',').map(s=>s.trim()).filter(Boolean))" placeholder="fact1, fact2">
+    </div>
+    <div class="card">
+      <h3>🐍 Snake Type</h3>
+      <label>
+        <select onchange="updateNode('snake',this.value||null)">
+          <option value="" ${!node.snake ? 'selected' : ''}>None</option>
+          <option value="static" ${node.snake==='static' ? 'selected' : ''}>🟢 Static</option>
+          <option value="dynamic" ${node.snake==='dynamic' ? 'selected' : ''}>🔴 Dynamic</option>
+        </select>
+      </label>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-danger" onclick="deleteNode()">🗑️ Delete Node</button>
+    </div>
+  `;
+}
+
+function updateNode(field, val) {
+  const node = world.nodes.find(n => n.id === selectedNodeId);
+  if (node) { node[field] = val; save(); renderNodeList(); }
+}
+
+function setStart(checked) {
+  world.nodes.forEach(n => n.isStart = false);
+  if (checked) {
+    const node = world.nodes.find(n => n.id === selectedNodeId);
+    if (node) { node.isStart = true; world.meta.startNode = node.id; }
+  }
+  save(); renderNodeList(); renderNodeEditor();
+}
+
+function addChoice() {
+  const node = world.nodes.find(n => n.id === selectedNodeId);
+  if (node) { node.choices.push({ label: '', target: '', fact: '' }); save(); renderNodeEditor(); }
+}
+
+function updateChoice(i, field, val) {
+  const node = world.nodes.find(n => n.id === selectedNodeId);
+  if (node && node.choices[i]) { node.choices[i][field] = val; save(); }
+}
+
+function removeChoice(i) {
+  const node = world.nodes.find(n => n.id === selectedNodeId);
+  if (node) { node.choices.splice(i, 1); save(); renderNodeEditor(); }
+}
+
+function addFact() {
+  const node = world.nodes.find(n => n.id === selectedNodeId);
+  if (node) { node.facts.push('new_fact'); save(); renderNodeEditor(); }
+}
+
+function updateFact(i, val) {
+  const node = world.nodes.find(n => n.id === selectedNodeId);
+  if (node) { node.facts[i] = val; save(); }
+}
+
+function removeFact(i) {
+  const node = world.nodes.find(n => n.id === selectedNodeId);
+  if (node) { node.facts.splice(i, 1); save(); renderNodeEditor(); }
+}
+
+function deleteNode() {
+  if (!confirm('Delete this node?')) return;
+  world.nodes = world.nodes.filter(n => n.id !== selectedNodeId);
+  world.snakes = world.snakes.filter(s => s.nodeId !== selectedNodeId);
+  // Clean up choice targets
+  world.nodes.forEach(n => n.choices.forEach(c => { if (c.target === selectedNodeId) c.target = ''; }));
+  selectedNodeId = null;
+  save(); renderNodeList(); renderNodeEditor();
+}
+
+// ===== SOFT LINE INJECTOR =====
+function splitSoftLine(mode) {
+  const text = document.getElementById('softlineInput').value.trim();
+  if (!text) return;
+  if (mode === 'paragraph') splitSegments = text.split(/\n\s*\n/).filter(s => s.trim());
+  else if (mode === 'sentence') splitSegments = text.match(/[^.!?]+[.!?]+/g) || [text];
+  else splitSegments = text.split('---').filter(s => s.trim());
+
+  splitSegments = splitSegments.map(s => s.trim());
+  renderSplitPreview();
+}
+
+function renderSplitPreview() {
+  const el = document.getElementById('splitPreview');
+  if (!splitSegments.length) { el.innerHTML = '<div class="empty-state">No segments</div>'; return; }
+  el.innerHTML = splitSegments.map((s, i) =>
+    `<div class="card" style="margin-bottom:6px">
+      <div style="color:#f5c842;font-size:11px">Segment ${i + 1}</div>
+      <div style="font-size:13px;margin-top:4px;white-space:pre-wrap">${esc(s)}</div>
+    </div>`
+  ).join('');
+}
+
+function createNodesFromSplit() {
+  if (!splitSegments.length) return;
+  const created = [];
+  splitSegments.forEach((s, i) => {
+    const node = {
+      id: uid(),
+      title: 'SL-' + (world.nodes.length + 1),
+      text: s,
+      choices: [],
+      facts: [],
+      snake: null,
+      isStart: false
+    };
+    if (world.nodes.length === 0 && i === 0) {
+      node.isStart = true;
+      node.title = 'START';
+      world.meta.startNode = node.id;
+    }
+    world.nodes.push(node);
+    created.push(node);
+  });
+  // Auto-chain: each node's choice → next node
+  for (let i = 0; i < created.length - 1; i++) {
+    created[i].choices.push({ label: 'Continue...', target: created[i + 1].id });
+  }
+  splitSegments = [];
+  save();
+  renderNodeList();
+  document.getElementById('splitPreview').innerHTML = `<div style="color:#66ff88;text-align:center;padding:20px">✓ Created ${created.length} nodes, auto-chained</div>`;
+}
+
+// ===== SNAKES =====
+function addSnake(type) {
+  const snake = {
+    id: uid(),
+    type: type,
+    name: type === 'static' ? 'Guardian' : 'Hunter',
+    nodeId: '',
+    // Static: question + answers
+    question: '',
+    answers: type === 'static' ? [{ text: '', correct: true, fact: '' }, { text: '', correct: false, fact: '' }] : [],
+    // Dynamic: conditions
+    conditions: type === 'dynamic' ? [{ requiredFacts: [], form: 'serpent', response: '' }] : []
+  };
+  world.snakes.push(snake);
+  save();
+  renderSnakeList();
+  selectSnake(snake.id);
+}
+
+function renderSnakeList() {
+  const el = document.getElementById('snakeList');
+  el.innerHTML = '';
+  world.snakes.forEach(s => {
+    const nodeTitle = world.nodes.find(n => n.id === s.nodeId)?.title || '(unassigned)';
+    const div = document.createElement('div');
+    div.className = 'list-item' + (selectedSnakeId === s.id ? ' selected' : '');
+    div.innerHTML = `<div class="li-title">${s.type === 'static' ? '🟢' : '🔴'} ${esc(s.name)}</div>
+      <div class="li-sub">${s.type} · at: ${esc(nodeTitle)}</div>`;
+    div.onclick = () => selectSnake(s.id);
+    el.appendChild(div);
+  });
+}
+
+function selectSnake(id) {
+  selectedSnakeId = id;
+  renderSnakeList();
+  renderSnakeEditor();
+}
+
+function renderSnakeEditor() {
+  const el = document.getElementById('snakeEditor');
+  const snake = world.snakes.find(s => s.id === selectedSnakeId);
+  if (!snake) { el.innerHTML = '<div class="empty-state">Select or create a snake</div>'; return; }
+
+  const nodeOptions = world.nodes.map(n =>
+    `<option value="${n.id}" ${snake.nodeId === n.id ? 'selected' : ''}>${esc(n.title)}</option>`
+  ).join('');
+
+  let configHTML = '';
+  if (snake.type === 'static') {
+    configHTML = `
+      <div class="card">
+        <h3>❓ Question</h3>
+        <textarea onchange="updateSnake('question',this.value)">${esc(snake.question)}</textarea>
+        <h3 style="margin-top:10px">Answers</h3>
+        ${snake.answers.map((a, i) => `
+          <div class="snake-config static">
+            <div class="choice-row">
+              <input value="${esc(a.text)}" placeholder="Answer text" onchange="updateSnakeAnswer(${i},'text',this.value)">
+              <label style="width:auto;margin:0"><input type="checkbox" ${a.correct ? 'checked' : ''} onchange="updateSnakeAnswer(${i},'correct',this.checked)"> ✓</label>
+              <button class="btn btn-danger" onclick="removeSnakeAnswer(${i})" style="width:30px;padding:4px">×</button>
+            </div>
+            <input value="${esc(a.fact)}" placeholder="Fact on choose" onchange="updateSnakeAnswer(${i},'fact',this.value)" style="margin:0">
+          </div>
+        `).join('')}
+        <button class="btn" onclick="addSnakeAnswer()">+ Add Answer</button>
+      </div>`;
+  } else {
+    configHTML = `
+      <div class="card">
+        <h3>🔀 Conditions → Forms</h3>
+        <p style="font-size:11px;color:#888;margin-bottom:8px">Dynamic snake changes form based on player facts</p>
+        ${snake.conditions.map((c, i) => `
+          <div class="snake-config dynamic">
+            <label>Required Facts (comma-separated)</label>
+            <input value="${c.requiredFacts.join(', ')}" onchange="updateSnakeCond(${i},'requiredFacts',this.value)">
+            <label>Snake Form</label>
+            <input value="${esc(c.form)}" placeholder="e.g. fire_serpent" onchange="updateSnakeCond(${i},'form',this.value)">
+            <label>Response Text</label>
+            <textarea onchange="updateSnakeCond(${i},'response',this.value)">${esc(c.response)}</textarea>
+            <button class="btn btn-danger" onclick="removeSnakeCond(${i})" style="margin-top:4px">× Remove</button>
+          </div>
+        `).join('')}
+        <button class="btn" onclick="addSnakeCond()">+ Add Condition</button>
+      </div>`;
+  }
+
+  el.innerHTML = `
+    <div class="card">
+      <h3>${snake.type === 'static' ? '🟢' : '🔴'} Snake: ${esc(snake.name)}</h3>
+      <label>Name</label>
+      <input value="${esc(snake.name)}" onchange="updateSnake('name',this.value)">
+      <label>Attached to Node</label>
+      <select onchange="updateSnake('nodeId',this.value)">
+        <option value="">(none)</option>
+        ${nodeOptions}
+      </select>
+    </div>
+    ${configHTML}
+    <div class="btn-row">
+      <button class="btn btn-danger" onclick="deleteSnake()">🗑️ Delete Snake</button>
+    </div>
+  `;
+}
+
+function updateSnake(field, val) {
+  const snake = world.snakes.find(s => s.id === selectedSnakeId);
+  if (snake) { snake[field] = val; save(); renderSnakeList(); }
+}
+
+function addSnakeAnswer() {
+  const snake = world.snakes.find(s => s.id === selectedSnakeId);
+  if (snake) { snake.answers.push({ text: '', correct: false, fact: '' }); save(); renderSnakeEditor(); }
+}
+
+function updateSnakeAnswer(i, field, val) {
+  const snake = world.snakes.find(s => s.id === selectedSnakeId);
+  if (snake && snake.answers[i]) { snake.answers[i][field] = val; save(); }
+}
+
+function removeSnakeAnswer(i) {
+  const snake = world.snakes.find(s => s.id === selectedSnakeId);
+  if (snake) { snake.answers.splice(i, 1); save(); renderSnakeEditor(); }
+}
+
+function addSnakeCond() {
+  const snake = world.snakes.find(s => s.id === selectedSnakeId);
+  if (snake) { snake.conditions.push({ requiredFacts: [], form: '', response: '' }); save(); renderSnakeEditor(); }
+}
+
+function updateSnakeCond(i, field, val) {
+  const snake = world.snakes.find(s => s.id === selectedSnakeId);
+  if (!snake || !snake.conditions[i]) return;
+  if (field === 'requiredFacts') snake.conditions[i][field] = val.split(',').map(s => s.trim()).filter(Boolean);
+  else snake.conditions[i][field] = val;
+  save();
+}
+
+function removeSnakeCond(i) {
+  const snake = world.snakes.find(s => s.id === selectedSnakeId);
+  if (snake) { snake.conditions.splice(i, 1); save(); renderSnakeEditor(); }
+}
+
+function deleteSnake() {
+  if (!confirm('Delete this snake?')) return;
+  world.snakes = world.snakes.filter(s => s.id !== selectedSnakeId);
+  selectedSnakeId = null;
+  save(); renderSnakeList(); renderSnakeEditor();
+}
+
+// ===== RULES =====
+function addRule() {
+  const rule = {
+    id: uid(),
+    name: 'New Rule',
+    conditions: [], // fact names required
+    conclusions: [], // facts to add
+    message: '' // text shown when rule fires
+  };
+  world.rules.push(rule);
+  save(); renderRuleList(); selectRule(rule.id);
+}
+
+function renderRuleList() {
+  const el = document.getElementById('ruleList');
+  el.innerHTML = '';
+  world.rules.forEach(r => {
+    const div = document.createElement('div');
+    div.className = 'list-item' + (selectedRuleId === r.id ? ' selected' : '');
+    div.innerHTML = `<div class="li-title">⚡ ${esc(r.name)}</div>
+      <div class="li-sub">${r.conditions.length} IF → ${r.conclusions.length} THEN</div>`;
+    div.onclick = () => selectRule(r.id);
+    el.appendChild(div);
+  });
+}
+
+function selectRule(id) {
+  selectedRuleId = id;
+  renderRuleList();
+  renderRuleEditor();
+}
+
+function renderRuleEditor() {
+  const el = document.getElementById('ruleEditor');
+  const rule = world.rules.find(r => r.id === selectedRuleId);
+  if (!rule) { el.innerHTML = '<div class="empty-state">All facts are defined per-node. Rules fire when conditions are met.</div>'; return; }
+
+  el.innerHTML = `
+    <div class="card">
+      <h3>⚡ Rule: ${esc(rule.name)}</h3>
+      <label>Name</label>
+      <input value="${esc(rule.name)}" onchange="updateRule('name',this.value)">
+      <label>Message when fired</label>
+      <textarea onchange="updateRule('message',this.value)">${esc(rule.message)}</textarea>
+    </div>
+    <div class="card">
+      <h3>IF (all facts present)</h3>
+      ${rule.conditions.map((c, i) => `<div class="choice-row">
+        <input value="${esc(c)}" onchange="updateRuleCond(${i},this.value)">
+        <button class="btn btn-danger" onclick="removeRuleCond(${i})" style="width:30px;padding:4px">×</button>
+      </div>`).join('')}
+      <button class="btn" onclick="addRuleCond()">+ Add Condition</button>
+    </div>
+    <div class="card">
+      <h3>THEN (add facts)</h3>
+      ${rule.conclusions.map((c, i) => `<div class="choice-row">
+        <input value="${esc(c)}" onchange="updateRuleConc(${i},this.value)">
+        <button class="btn btn-danger" onclick="removeRuleConc(${i})" style="width:30px;padding:4px">×</button>
+      </div>`).join('')}
+      <button class="btn" onclick="addRuleConc()">+ Add Conclusion</button>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-danger" onclick="deleteRule()">🗑️ Delete Rule</button>
+    </div>
+  `;
+}
+
+function updateRule(field, val) {
+  const rule = world.rules.find(r => r.id === selectedRuleId);
+  if (rule) { rule[field] = val; save(); renderRuleList(); }
+}
+function addRuleCond() { const r = world.rules.find(r => r.id === selectedRuleId); if (r) { r.conditions.push(''); save(); renderRuleEditor(); } }
+function updateRuleCond(i, val) { const r = world.rules.find(r => r.id === selectedRuleId); if (r) { r.conditions[i] = val; save(); } }
+function removeRuleCond(i) { const r = world.rules.find(r => r.id === selectedRuleId); if (r) { r.conditions.splice(i, 1); save(); renderRuleEditor(); } }
+function addRuleConc() { const r = world.rules.find(r => r.id === selectedRuleId); if (r) { r.conclusions.push(''); save(); renderRuleEditor(); } }
+function updateRuleConc(i, val) { const r = world.rules.find(r => r.id === selectedRuleId); if (r) { r.conclusions[i] = val; save(); } }
+function removeRuleConc(i) { const r = world.rules.find(r => r.id === selectedRuleId); if (r) { r.conclusions.splice(i, 1); save(); renderRuleEditor(); } }
+function deleteRule() { if (!confirm('Delete?')) return; world.rules = world.rules.filter(r => r.id !== selectedRuleId); selectedRuleId = null; save(); renderRuleList(); renderRuleEditor(); }
+
+// ===== FACTS SUMMARY =====
+function renderFactsSummary() {
+  const el = document.getElementById('factsList');
+  const allFacts = new Set();
+  world.nodes.forEach(n => {
+    n.facts.forEach(f => allFacts.add(f));
+    n.choices.forEach(c => { if (c.fact) allFacts.add(c.fact); });
+    if (n.facts_granted) n.facts_granted.forEach(f => allFacts.add(f));
+  });
+  world.snakes.forEach(s => {
+    if (s.answers) s.answers.forEach(a => { if (a.fact) allFacts.add(a.fact); });
+  });
+  world.rules.forEach(r => r.conclusions.forEach(c => allFacts.add(c)));
+  el.innerHTML = Array.from(allFacts).sort().map(f => `<span class="tag">${esc(f)}</span>`).join('') || '<div style="color:#555;font-size:12px">No facts yet</div>';
+}
+
+function showAllFacts() { renderFactsSummary(); }
+
+// ===== PREVIEW =====
+function startPreview() {
+  const startNode = world.nodes.find(n => n.isStart) || world.nodes[0];
+  if (!startNode) { document.getElementById('previewFrame').innerHTML = '<div class="empty-state">No nodes to preview</div>'; return; }
+  previewState = { currentNode: startNode.id, facts: new Set(), history: [] };
+  renderPreview();
+}
+
+function resetPreview() {
+  previewState = { currentNode: null, facts: new Set(), history: [] };
+  document.getElementById('previewFrame').innerHTML = '<div class="empty-state">Click Start to play through your path</div>';
+}
+
+function renderPreview() {
+  const el = document.getElementById('previewFrame');
+  const node = world.nodes.find(n => n.id === previewState.currentNode);
+  if (!node) { el.innerHTML = '<div class="empty-state">End of path</div>'; return; }
+
+  // Add facts from this node
+  node.facts.forEach(f => previewState.facts.add(f));
+
+  // Check for snake at this node
+  const snake = world.snakes.find(s => s.nodeId === node.id);
+  let snakeHTML = '';
+  if (snake) {
+    if (snake.type === 'static') {
+      snakeHTML = `<div style="background:#0a1a0a;border:1px solid #66ff88;border-radius:8px;padding:12px;margin:12px 0">
+        <div style="color:#66ff88;font-weight:bold">🐍 ${esc(snake.name)} blocks your path!</div>
+        <div style="margin:8px 0;color:#ccc">${esc(snake.question)}</div>
+        ${snake.answers.map((a, i) => `<button class="choice-btn" style="border-color:#66ff88;color:#66ff88" onclick="answerSnake('static',${i})">${esc(a.text)}</button>`).join('')}
+      </div>`;
+    } else {
+      // Find matching condition
+      const matched = snake.conditions.find(c =>
+        c.requiredFacts.every(f => previewState.facts.has(f))
+      ) || snake.conditions[snake.conditions.length - 1];
+      if (matched) {
+        snakeHTML = `<div style="background:#1a0a0a;border:1px solid #ff6688;border-radius:8px;padding:12px;margin:12px 0">
+          <div style="color:#ff6688;font-weight:bold">🐍 ${esc(snake.name)} appears as: ${esc(matched.form)}</div>
+          <div style="margin:8px 0;color:#ccc">${esc(matched.response)}</div>
+          <button class="choice-btn" style="border-color:#ff6688;color:#ff6688" onclick="passSnake()">Continue...</button>
+        </div>`;
+      }
+    }
+  }
+
+  // Check rules
+  let ruleMessages = '';
+  world.rules.forEach(r => {
+    if (r.conditions.every(c => previewState.facts.has(c))) {
+      r.conclusions.forEach(c => previewState.facts.add(c));
+      if (r.message) ruleMessages += `<div style="color:#ff8866;margin:4px 0">⚡ ${esc(r.message)}</div>`;
+    }
+  });
+
+  el.innerHTML = `
+    <div class="scene-title">${esc(node.title)}</div>
+    <div class="scene-text">${esc(node.text)}</div>
+    ${snakeHTML}
+    ${ruleMessages}
+    ${!snake ? node.choices.map(c =>
+      `<button class="choice-btn" onclick="previewChoice('${c.target}','${c.fact||''}')">${esc(c.label) || '(empty choice)'}${c.fact ? ' <span style="color:#66ff88;font-size:10px">+' + esc(c.fact) + '</span>' : ''}</button>`
+    ).join('') : ''}
+    <div class="facts-panel">
+      <h4>📦 Facts Collected (${previewState.facts.size})</h4>
+      ${Array.from(previewState.facts).map(f => `<div class="fact-item">• ${esc(f)}</div>`).join('') || '<div class="fact-item">none yet</div>'}
+    </div>
+  `;
+}
+
+window.answerSnake = function(type, idx) {
+  const snake = world.snakes.find(s => s.nodeId === previewState.currentNode);
+  if (!snake) return;
+  if (snake.answers[idx]?.fact) previewState.facts.add(snake.answers[idx].fact);
+  // After snake, show choices
+  const node = world.nodes.find(n => n.id === previewState.currentNode);
+  const el = document.getElementById('previewFrame');
+  // Remove snake block and show choices
+  const existingFacts = el.querySelector('.facts-panel');
+  const choicesHTML = node.choices.map(c =>
+    `<button class="choice-btn" onclick="previewChoice('${c.target}','${c.fact||''}')">${esc(c.label) || '(empty choice)'}${c.fact ? ' <span style="color:#66ff88;font-size:10px">+' + esc(c.fact) + '</span>' : ''}</button>`
+  ).join('');
+  // Re-render without snake
+  renderPreviewPost(node);
+};
+
+function renderPreviewPost(node) {
+  const el = document.getElementById('previewFrame');
+  el.innerHTML = `
+    <div class="scene-title">${esc(node.title)}</div>
+    <div class="scene-text">${esc(node.text)}</div>
+    <div style="color:#66ff88;margin:8px 0">🐍 Snake passed!</div>
+    ${node.choices.map(c =>
+      `<button class="choice-btn" onclick="previewChoice('${c.target}','${c.fact||''}')">${esc(c.label) || '(empty choice)'}${c.fact ? ' <span style="color:#66ff88;font-size:10px">+' + esc(c.fact) + '</span>' : ''}</button>`
+    ).join('')}
+    <div class="facts-panel">
+      <h4>📦 Facts Collected (${previewState.facts.size})</h4>
+      ${Array.from(previewState.facts).map(f => `<div class="fact-item">• ${esc(f)}</div>`).join('')}
+    </div>
+  `;
+}
+
+window.passSnake = function() {
+  const node = world.nodes.find(n => n.id === previewState.currentNode);
+  if (node) renderPreviewPost(node);
+};
+
+window.previewChoice = function(targetId, choiceFact) {
+  if (choiceFact) previewState.facts.add(choiceFact);
+  if (!targetId) {
+    // Check if current node is an ending
+    const node = world.nodes.find(n => n.id === previewState.currentNode);
+    if (node && node.ending) {
+      if (node.facts_granted) node.facts_granted.forEach(f => previewState.facts.add(f));
+      document.getElementById('previewFrame').innerHTML = `
+        <div class="scene-title">🏁 AWAKENING: ${esc(node.ending.toUpperCase())}</div>
+        <div class="scene-text">${esc(node.text)}</div>
+        <div class="facts-panel">
+          <h4>📦 All Facts (${previewState.facts.size})</h4>
+          ${Array.from(previewState.facts).map(f => '<div class="fact-item">• ' + esc(f) + '</div>').join('')}
+        </div>`;
+      return;
+    }
+    document.getElementById('previewFrame').innerHTML = '<div class="empty-state">🏁 Dead end — no target node</div>';
+    return;
+  }
+  previewState.history.push(previewState.currentNode);
+  previewState.currentNode = targetId;
+  renderPreview();
+};
+
+// ===== TREE VIEW =====
+function renderTree() {
+  const canvas = document.getElementById('treeCanvas');
+  if (!world.nodes.length) { canvas.innerHTML = '<div class="empty-state">No nodes to display</div>'; return; }
+
+  // Simple BFS layout
+  const startNode = world.nodes.find(n => n.isStart) || world.nodes[0];
+  const visited = new Set();
+  const positions = {};
+  const lines = [];
+  const queue = [{ id: startNode.id, depth: 0, index: 0 }];
+  const depthCounts = {};
+
+  // BFS to assign depths
+  const depths = {};
+  const bfsQueue = [startNode.id];
+  depths[startNode.id] = 0;
+  visited.add(startNode.id);
+  while (bfsQueue.length) {
+    const curr = bfsQueue.shift();
+    const node = world.nodes.find(n => n.id === curr);
+    if (!node) continue;
+    const d = depths[curr];
+    if (!depthCounts[d]) depthCounts[d] = 0;
+    positions[curr] = { depth: d, index: depthCounts[d]++ };
+    node.choices.forEach(c => {
+      if (c.target && !visited.has(c.target)) {
+        visited.add(c.target);
+        depths[c.target] = d + 1;
+        bfsQueue.push(c.target);
+      }
+    });
+  }
+
+  // Place unvisited nodes
+  let maxDepth = Math.max(...Object.values(depths), 0) + 1;
+  world.nodes.forEach(n => {
+    if (!positions[n.id]) {
+      if (!depthCounts[maxDepth]) depthCounts[maxDepth] = 0;
+      positions[n.id] = { depth: maxDepth, index: depthCounts[maxDepth]++ };
+    }
+  });
+
+  const nodeW = 120, nodeH = 36, padX = 40, padY = 60;
+  let svgLines = '';
+  let nodesHTML = '';
+
+  world.nodes.forEach(n => {
+    const pos = positions[n.id];
+    if (!pos) return;
+    const maxAtDepth = depthCounts[pos.depth] || 1;
+    const x = 40 + pos.index * (nodeW + padX);
+    const y = 40 + pos.depth * (nodeH + padY);
+    const snake = world.snakes.find(s => s.nodeId === n.id);
+    const cls = snake ? (snake.type === 'static' ? 'sn-static' : 'sn-dynamic') : (n.snake === 'static' ? 'sn-static' : n.snake === 'dynamic' ? 'sn-dynamic' : (n.isStart ? 'start' : ''));
+    nodesHTML += `<div class="tree-node ${cls}" style="left:${x}px;top:${y}px" onclick="selectNode('${n.id}');document.querySelector('[data-panel=nodes]').click()">${esc(n.title)}</div>`;
+
+    n.choices.forEach(c => {
+      if (c.target && positions[c.target]) {
+        const tp = positions[c.target];
+        const maxAtTargetDepth = depthCounts[tp.depth] || 1;
+        const tx = 40 + tp.index * (nodeW + padX) + nodeW / 2;
+        const ty = 40 + tp.depth * (nodeH + padY);
+        svgLines += `<line x1="${x + nodeW/2}" y1="${y + nodeH}" x2="${tx}" y2="${ty}"/>`;
+      }
+    });
+  });
+
+  const totalW = Math.max(...Object.values(depthCounts)) * (nodeW + padX) + 100;
+  const totalH = (maxDepth + 2) * (nodeH + padY) + 100;
+  canvas.innerHTML = `<svg class="tree-lines" style="width:${totalW}px;height:${totalH}px">${svgLines}</svg>${nodesHTML}`;
+  canvas.style.width = totalW + 'px';
+  canvas.style.height = totalH + 'px';
+}
+
+// ===== JSON =====
+function renderJSON() {
+  document.getElementById('jsonOutput').textContent = JSON.stringify(world, null, 2);
+}
+
+function exportJSON() {
+  const blob = new Blob([JSON.stringify(world, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = document.getElementById('worldSelect').value + '-world.json';
+  a.click();
+}
+
+function importJSON() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        world = JSON.parse(ev.target.result);
+        save();
+        renderAll();
+        document.getElementById('statusText').textContent = 'Imported ✓';
+      } catch (err) { alert('Invalid JSON: ' + err.message); }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+// deployToEngine removed — replaced by exportToEngine
+
+
+// ===== IMPORT R's STORY FORMAT =====
+function importRStory() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const rNodes = JSON.parse(ev.target.result);
+        if (!Array.isArray(rNodes)) { alert('Expected an array of nodes'); return; }
+        convertRStoryToEditor(rNodes);
+      } catch (err) { alert('Invalid JSON: ' + err.message); }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+function convertRStoryToEditor(rNodes) {
+  world = defaultWorld();
+  
+  rNodes.forEach((rn, i) => {
+    const node = {
+      id: rn.id,
+      title: rn.id,
+      text: rn.text || '',
+      choices: (rn.choices || []).map(c => ({
+        label: c.label || '',
+        target: c.next || '',
+        fact: c.fact || ''
+      })),
+      facts: [],
+      snake: rn.snake || null,
+      isStart: i === 0,
+      ending: rn.ending || null,
+      facts_granted: rn.facts_granted || null
+    };
+    world.nodes.push(node);
+  });
+  
+  if (world.nodes.length) world.meta.startNode = world.nodes[0].id;
+  
+  // Auto-create snake entries for nodes with snake property
+  world.nodes.forEach(n => {
+    if (n.snake) {
+      world.snakes.push({
+        id: 'sn-' + n.id,
+        type: n.snake,
+        name: n.snake === 'static' ? 'Bone Dune Guardian' : 'Vision Breaker',
+        nodeId: n.id,
+        question: n.snake === 'static' ? 'What did the figure reveal?' : '',
+        answers: n.snake === 'static' ? [
+          { text: 'Answer 1', correct: true, fact: 'snake_correct' },
+          { text: 'Answer 2', correct: false, fact: 'snake_wrong' }
+        ] : [],
+        conditions: n.snake === 'dynamic' ? [
+          { requiredFacts: [], form: 'default', response: 'The snake watches...' }
+        ] : []
+      });
+    }
+  });
+  
+  save();
+  renderAll();
+  document.getElementById('statusText').textContent = `🐉 Imported ${world.nodes.length} nodes from R's story!`;
+  setTimeout(() => document.getElementById('statusText').textContent = 'Ready', 3000);
+}
+
+// ===== EXPORT TO ENGINE FORMAT =====
+function exportToEngine() {
+  const engineNodes = world.nodes.map(n => {
+    const eNode = {
+      id: n.id,
+      text: n.text,
+      choices: n.choices.map(c => {
+        const ec = { label: c.label, next: c.target };
+        if (c.fact) ec.fact = c.fact;
+        return ec;
+      })
+    };
+    if (n.snake) eNode.snake = n.snake;
+    if (n.ending) eNode.ending = n.ending;
+    if (n.facts_granted && n.facts_granted.length) eNode.facts_granted = n.facts_granted;
+    return eNode;
+  });
+  
+  const blob = new Blob([JSON.stringify(engineNodes, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = document.getElementById('worldSelect').value + '-engine.json';
+  a.click();
+  document.getElementById('statusText').textContent = '🚀 Exported engine-ready JSON!';
+  setTimeout(() => document.getElementById('statusText').textContent = 'Ready', 3000);
+}
+
+// ===== HELPERS =====
+function esc(s) { if (!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function renderAll() {
+  renderNodeList();
+  renderNodeEditor();
+  renderSnakeList();
+  renderSnakeEditor();
+  renderRuleList();
+  renderRuleEditor();
+}
+
+// ===== INIT =====
+load();
+</script>
+</body>
+</html>

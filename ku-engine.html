@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌌 KU — Knowledge Universe Engine</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0a0a1a; color: #e0e0e0; font-family: 'Courier New', monospace; overflow-x: hidden; }
+
+.header { text-align: center; padding: 20px; background: linear-gradient(135deg, #0a0a2e, #1a0a3e); border-bottom: 2px solid #c9a84c; }
+.header h1 { font-size: 1.8em; color: #c9a84c; text-shadow: 0 0 20px rgba(201,168,76,0.5); }
+.header p { color: #888; font-size: 0.9em; margin-top: 5px; }
+
+.container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; max-width: 1200px; margin: 0 auto; }
+
+.panel { background: #111122; border: 1px solid #333; border-radius: 8px; padding: 15px; }
+.panel h2 { color: #c9a84c; font-size: 1.1em; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 8px; }
+
+/* WORLDS */
+.worlds-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.world-card { background: #0a0a2e; border: 1px solid #444; border-radius: 6px; padding: 10px; text-align: center; cursor: pointer; transition: all 0.3s; position: relative; }
+.world-card:hover { border-color: #c9a84c; transform: scale(1.03); }
+.world-card.locked { opacity: 0.4; }
+.world-card.unlocked { border-color: #4caf50; box-shadow: 0 0 10px rgba(76,175,80,0.3); }
+.world-card.active { border-color: #c9a84c; box-shadow: 0 0 15px rgba(201,168,76,0.5); animation: pulse 2s infinite; }
+.world-card .icon { font-size: 2em; }
+.world-card .name { font-size: 0.8em; margin-top: 5px; color: #aaa; }
+.world-card .lock { position: absolute; top: 5px; right: 5px; font-size: 0.7em; }
+@keyframes pulse { 0%,100% { box-shadow: 0 0 10px rgba(201,168,76,0.3); } 50% { box-shadow: 0 0 25px rgba(201,168,76,0.6); } }
+
+.world-card:nth-child(7) { grid-column: 2; }
+
+/* FACTS */
+.facts-list { max-height: 200px; overflow-y: auto; }
+.fact { background: #1a1a3a; padding: 5px 8px; margin: 3px 0; border-radius: 4px; font-size: 0.8em; border-left: 3px solid #4caf50; animation: fadeIn 0.3s; }
+@keyframes fadeIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+
+/* LOG */
+.log { max-height: 200px; overflow-y: auto; font-size: 0.75em; }
+.log-entry { padding: 3px 0; border-bottom: 1px solid #1a1a2a; }
+.log-entry.rule-fired { color: #c9a84c; }
+.log-entry.fact-added { color: #4caf50; }
+.log-entry.route { color: #e040fb; }
+.log-entry.info { color: #888; }
+
+/* ACTIONS */
+.actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.btn { background: #1a1a3a; border: 1px solid #555; color: #e0e0e0; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: 0.8em; transition: all 0.2s; }
+.btn:hover { border-color: #c9a84c; color: #c9a84c; }
+.btn.primary { background: #2a1a4a; border-color: #c9a84c; color: #c9a84c; }
+
+/* STATS */
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 10px; }
+.stat { background: #0a0a2e; padding: 8px; border-radius: 4px; text-align: center; }
+.stat .val { font-size: 1.5em; color: #c9a84c; }
+.stat .label { font-size: 0.65em; color: #888; }
+
+/* FULL WIDTH */
+.full { grid-column: 1 / -1; }
+
+/* STORY PANEL */
+.story-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 1000; justify-content: center; align-items: center; }
+.story-overlay.visible { display: flex; }
+.story-box { max-width: 650px; margin: 20px; padding: 30px; background: #0a0a2e; border: 2px solid #c9a84c; border-radius: 12px; position: relative; animation: storyFade 1.5s ease; }
+.story-box .story-title { color: #c9a84c; font-size: 1.2em; margin-bottom: 15px; text-align: center; text-transform: uppercase; letter-spacing: 2px; }
+.story-box .story-text { color: #d4c8a0; font-size: 0.95em; line-height: 1.8; font-style: italic; }
+.story-box .story-facts { margin-top: 20px; padding-top: 15px; border-top: 1px solid #333; }
+.story-box .story-facts span { display: inline-block; background: #1a1a3a; border: 1px solid #4caf50; color: #4caf50; padding: 3px 8px; border-radius: 4px; font-size: 0.75em; margin: 3px; animation: fadeIn 0.5s; }
+.story-box .story-clue { margin-top: 10px; color: #e040fb; font-size: 0.8em; }
+.story-box .close-story { position: absolute; top: 10px; right: 15px; color: #888; cursor: pointer; font-size: 1.2em; }
+.story-box .close-story:hover { color: #c9a84c; }
+@keyframes storyFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* PLAYER */
+.player-bar { display: flex; align-items: center; gap: 15px; padding: 10px 15px; background: #111122; border-bottom: 1px solid #333; }
+.player-bar .xp-bar { flex: 1; height: 8px; background: #1a1a3a; border-radius: 4px; overflow: hidden; }
+.player-bar .xp-fill { height: 100%; background: linear-gradient(90deg, #c9a84c, #e040fb); transition: width 0.5s; border-radius: 4px; }
+.player-bar .xp-label { font-size: 0.75em; color: #888; min-width: 80px; }
+</style>
+</head>
+<body>
+
+<!-- STORY OVERLAY -->
+<div class="story-overlay" id="storyOverlay">
+  <div class="story-box" id="storyBox"></div>
+</div>
+
+<div class="header">
+  <h1>🌌 KNOWLEDGE UNIVERSE</h1>
+  <p>Incremental Inference Engine v0.1 — Additive Forward-Chaining</p>
+</div>
+
+<div class="player-bar">
+  <span style="color:#c9a84c;">⬡</span>
+  <span style="font-size:0.85em;">PLAYER</span>
+  <div class="xp-bar"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
+  <span class="xp-label" id="xpLabel">XP: 0</span>
+  <span style="font-size:0.85em;color:#888;" id="worldLabel">📍 PORTAL</span>
+</div>
+
+<div class="container">
+
+  <!-- WORLDS -->
+  <div class="panel">
+    <h2>⬡ 7 WORLDS</h2>
+    <div class="worlds-grid" id="worldsGrid"></div>
+  </div>
+
+  <!-- STATS -->
+  <div class="panel">
+    <h2>📊 ENGINE STATE</h2>
+    <div class="stats">
+      <div class="stat"><div class="val" id="statFacts">0</div><div class="label">FACTS</div></div>
+      <div class="stat"><div class="val" id="statRules">0</div><div class="label">RULES</div></div>
+      <div class="stat"><div class="val" id="statFired">0</div><div class="label">FIRED</div></div>
+      <div class="stat"><div class="val" id="statWorlds">0</div><div class="label">UNLOCKED</div></div>
+    </div>
+    <h2>🗝️ FACT BASE</h2>
+    <div class="facts-list" id="factsList"></div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="panel">
+    <h2>🎮 ACTIONS</h2>
+    <p style="font-size:0.75em;color:#888;margin-bottom:10px;">Explore, collect clues, absorb stories. Each action adds facts. The engine infers the rest.</p>
+    <div class="actions" id="actionsPanel"></div>
+  </div>
+
+  <!-- LOG -->
+  <div class="panel">
+    <h2>📜 INFERENCE LOG</h2>
+    <div class="log" id="logPanel"></div>
+  </div>
+
+  <!-- RULES (full width) -->
+  <div class="panel full">
+    <h2>⚙️ RULE BASE <span style="font-size:0.7em;color:#888;">(click to inspect)</span></h2>
+    <div id="rulesPanel" style="font-size:0.75em; max-height:150px; overflow-y:auto;"></div>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// 🌌 KU INFERENCE ENGINE — Forward-Chaining, Additive
+// ═══════════════════════════════════════════════════════
+
+class KUEngine {
+  constructor() {
+    this.facts = new Set();
+    this.rules = [];
+    this.firedRules = new Set();
+    this.listeners = [];
+    this.ruleCounter = 0;
+  }
+
+  // --- FACTS (additive only) ---
+  addFact(fact) {
+    if (this.facts.has(fact)) return false;
+    this.facts.add(fact);
+    this.emit('fact-added', fact);
+    this.forwardChain();
+    return true;
+  }
+
+  hasFact(fact) {
+    return this.facts.has(fact);
+  }
+
+  // Pattern match: "world:*" matches any fact starting with "world:"
+  queryFacts(pattern) {
+    if (!pattern.includes('*')) return this.facts.has(pattern) ? [pattern] : [];
+    const prefix = pattern.replace('*', '');
+    return [...this.facts].filter(f => f.startsWith(prefix));
+  }
+
+  countFacts(pattern) {
+    return this.queryFacts(pattern).length;
+  }
+
+  // --- RULES ---
+  addRule(name, conditions, action, priority = 0) {
+    const id = 'R' + String(++this.ruleCounter).padStart(3, '0');
+    const rule = { id, name, conditions, action, priority, fired: false };
+    this.rules.push(rule);
+    this.rules.sort((a, b) => b.priority - a.priority);
+    this.emit('rule-added', rule);
+    // Check immediately
+    this.forwardChain();
+    return id;
+  }
+
+  // --- FORWARD CHAINING ---
+  forwardChain() {
+    let changed = true;
+    let passes = 0;
+    while (changed && passes < 100) {
+      changed = false;
+      passes++;
+      for (const rule of this.rules) {
+        if (this.firedRules.has(rule.id)) continue;
+        if (this.evaluateConditions(rule.conditions)) {
+          this.firedRules.add(rule.id);
+          rule.fired = true;
+          this.emit('rule-fired', rule);
+          const result = rule.action(this);
+          if (result) changed = true;
+        }
+      }
+    }
+  }
+
+  evaluateConditions(conditions) {
+    for (const cond of conditions) {
+      if (typeof cond === 'string') {
+        if (!this.facts.has(cond)) return false;
+      } else if (typeof cond === 'function') {
+        if (!cond(this)) return false;
+      }
+    }
+    return true;
+  }
+
+  // --- ROUTING (aiguillage) ---
+  computeRoute() {
+    const unlocked = this.queryFacts('world:unlocked:*');
+    const visited = this.queryFacts('world:visited:*');
+    const clues = this.queryFacts('clue:*');
+    const stories = this.queryFacts('story:*');
+
+    // Score each unlocked world
+    const scores = [];
+    for (const f of unlocked) {
+      const wName = f.split(':')[2];
+      const wasVisited = this.hasFact('world:visited:' + wName);
+      const worldClues = clues.filter(c => c.includes(wName)).length;
+      let score = worldClues * 10 + (wasVisited ? -5 : 15);
+      scores.push({ world: wName, score });
+    }
+    scores.sort((a, b) => b.score - a.score);
+    return scores;
+  }
+
+  // --- EVENTS ---
+  on(cb) { this.listeners.push(cb); }
+  emit(type, data) { this.listeners.forEach(cb => cb(type, data)); }
+
+  // --- SERIALIZATION ---
+  getState() {
+    return {
+      facts: [...this.facts],
+      firedRules: [...this.firedRules],
+      factCount: this.facts.size,
+      ruleCount: this.rules.length,
+      firedCount: this.firedRules.size
+    };
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// 🌍 WORLD DEFINITIONS
+// ═══════════════════════════════════════════════════════
+
+const WORLDS = [
+  { id: 'dune',      name: 'ARRAKIS',       icon: '🏜️', color: '#c9a84c', desc: 'The Desert of Spice' },
+  { id: 'templars',  name: 'TEMPLARS',      icon: '⚔️', color: '#cc3333', desc: 'Holy War & Sacred Geometry' },
+  { id: 'silvership',name: 'SILVER SHIP',   icon: '🛸', color: '#88ccff', desc: 'Pirates of the Cosmos' },
+  { id: 'alchemy',   name: 'DARK ALCHEMY',  icon: '⚗️', color: '#9b59b6', desc: 'The Philosopher\'s Stone' },
+  { id: 'quantum',   name: 'QUANTUM MIND',  icon: '⚛️', color: '#00e5ff', desc: 'The Observer Effect' },
+  { id: 'lectric',   name: 'LECTRIC',       icon: '⚡', color: '#ffeb3b', desc: 'Northern Voltage' },
+  { id: 'ku',        name: 'SINGULARITY',   icon: '🌌', color: '#e040fb', desc: 'All Worlds Converge' }
+];
+
+// ═══════════════════════════════════════════════════════
+// 🎮 GAME INSTANCE
+// ═══════════════════════════════════════════════════════
+
+const engine = new KUEngine();
+let currentWorld = null;
+let xp = 0;
+
+// --- UI REFS ---
+const worldsGrid = document.getElementById('worldsGrid');
+const factsList = document.getElementById('factsList');
+const logPanel = document.getElementById('logPanel');
+const actionsPanel = document.getElementById('actionsPanel');
+const rulesPanel = document.getElementById('rulesPanel');
+const xpFill = document.getElementById('xpFill');
+const xpLabel = document.getElementById('xpLabel');
+const worldLabel = document.getElementById('worldLabel');
+
+// --- STORY DISPLAY ---
+function showStory(title, text, facts, clue) {
+  const overlay = document.getElementById('storyOverlay');
+  const box = document.getElementById('storyBox');
+  const factsHtml = facts.map(f => `<span>+ ${f}</span>`).join('');
+  const clueHtml = clue ? `<div class="story-clue">&#x1f50d; A vision lingers... pointing toward ${clue}</div>` : '';
+  box.innerHTML = `
+    <div class="close-story" onclick="closeStory()">&#x2715;</div>
+    <div class="story-title">${title}</div>
+    <div class="story-text">${text}</div>
+    <div class="story-facts">${factsHtml}</div>
+    ${clueHtml}
+  `;
+  overlay.classList.add('visible');
+}
+function closeStory() {
+  document.getElementById('storyOverlay').classList.remove('visible');
+}
+
+// ═══════════════════════════════════════════════════════
+// 🐉 R's ARRAKIS SOFT STORY — DATA-DRIVEN
+// 26 Soft Lines + 4 Endings. Two snakes. Written by R.
+// ═══════════════════════════════════════════════════════
+
+const ARRAKIS_STORY = [
+  {
+    "id": "SL-001",
+    "text": "You tip the gourd to your lips. The Water of Life\u2014blue, thick, alive\u2014slides down your throat like a dying star. The world shatters into a thousand mirrors of sand and memory. You are nowhere and everywhere, and the desert breathes through you.",
+    "choices": [
+      {
+        "label": "Look outward\u2014into the open dunes",
+        "next": "SL-002",
+        "fact": "opened_eyes"
+      },
+      {
+        "label": "Look inward\u2014into your own depths",
+        "next": "SL-003",
+        "fact": "closed_eyes"
+      }
+    ]
+  },
+  {
+    "id": "SL-002",
+    "text": "The dunes stretch infinite, each grain a moment frozen in time. A wind howls, carrying the scent of cinnamon and old blood. You see a figure carved from bone and shadow, standing on a ridge\u2014waiting. It does not move, but its gaze cuts through you like a blade.",
+    "choices": [
+      {
+        "label": "Approach the figure",
+        "next": "SL-004",
+        "fact": "approached_figure"
+      },
+      {
+        "label": "Follow the scent of cinnamon",
+        "next": "SL-005",
+        "fact": "followed_cinnamon"
+      }
+    ]
+  },
+  {
+    "id": "SL-003",
+    "text": "Inside you, the desert is a reef of memory. You see a child drowning in spice, a mother who gave her life for water, a father who became a worm. The pain is a knot of time, and you can untie it\u2014or cut it. Your hands tremble.",
+    "choices": [
+      {
+        "label": "Untie the knot\u2014slowly, gently",
+        "next": "SL-006",
+        "fact": "untied_knot"
+      },
+      {
+        "label": "Cut the knot\u2014quickly, mercifully",
+        "next": "SL-007",
+        "fact": "cut_knot"
+      }
+    ]
+  },
+  {
+    "id": "SL-004",
+    "text": "You walk toward the figure. As you draw close, you see it is not one figure but a thousand\u2014a chorus of ancestors layered upon each other like pages of a burnt book. Their mouths open, and a single word falls out: 'Choose.' The bone dune rises behind them, white as a bleached sun.",
+    "choices": [
+      {
+        "label": "Ask for guidance\u2014'What path am I?'",
+        "next": "SL-008",
+        "fact": "asked_guidance"
+      },
+      {
+        "label": "Demand the truth\u2014'What have I become?'",
+        "next": "SL-009",
+        "fact": "demanded_truth"
+      }
+    ]
+  },
+  {
+    "id": "SL-005",
+    "text": "You follow the cinnamon scent through a canyon of rust-red rock. The walls pulse with a heartbeat not your own. At the canyon's end lies a sacred object\u2014a stillsuit woven from starlight, the fabric humming with the voices of every water-thief who ever lived. It calls to you.",
+    "choices": [
+      {
+        "label": "Wear the stillsuit\u2014become the thief",
+        "next": "SL-010",
+        "fact": "wore_stillsuit"
+      },
+      {
+        "label": "Leave it\u2014some paths are not yours",
+        "next": "SL-011",
+        "fact": "left_stillsuit"
+      }
+    ]
+  },
+  {
+    "id": "SL-006",
+    "text": "You untie the knot. Each pull reveals a memory that falls away like sand from a dune. You see your own birth, your first step, your first lie. The knot loosens, but you feel something watching\u2014a snake coiled in the marrow of your spine. It does not move. It waits.",
+    "choices": [
+      {
+        "label": "Face the snake\u2014it must be seen",
+        "next": "SL-012",
+        "fact": "faced_static_snake"
+      },
+      {
+        "label": "Ignore the snake\u2014keep untying",
+        "next": "SL-013",
+        "fact": "ignored_snake"
+      }
+    ],
+    "snake": "static"
+  },
+  {
+    "id": "SL-007",
+    "text": "You cut the knot. The pain vanishes in a single clean stroke, and the memories scatter like startled birds. But they leave wounds\u2014holes in your consciousness that fill with sand. You feel lighter, hollow, free. The desert hums around you, hungry and patient.",
+    "choices": [
+      {
+        "label": "Walk into the desert\u2014let it fill you",
+        "next": "SL-014",
+        "fact": "walked_desert"
+      },
+      {
+        "label": "Search for something to fill the holes",
+        "next": "SL-015",
+        "fact": "searched_fill"
+      }
+    ]
+  },
+  {
+    "id": "SL-008",
+    "text": "The ancestors tilt their heads as one. 'You are the path you have walked,' they whisper. 'And the path you will walk.' They offer you a single grain of sand\u2014pure, silent, dense. 'This is your truth. Carry it.' The grain burns cold in your hand.",
+    "choices": [
+      {
+        "label": "Accept the grain\u2014carry it",
+        "next": "SL-016",
+        "fact": "accepted_grain"
+      },
+      {
+        "label": "Crush the grain\u2014make your own truth",
+        "next": "SL-017",
+        "fact": "crushed_grain"
+      }
+    ]
+  },
+  {
+    "id": "SL-009",
+    "text": "The figure's form twists, and you see yourself reflected a thousand times\u2014each version of you that could have been. 'You have become a question,' it says. 'Every answer you choose will birth a new desert.' The bone dune creaks like a ship in a storm.",
+    "choices": [
+      {
+        "label": "Ask the question\u2014'Why am I here?'",
+        "next": "SL-018",
+        "fact": "asked_why"
+      },
+      {
+        "label": "Give the answer\u2014'I am here to change'",
+        "next": "SL-019",
+        "fact": "answered_change"
+      }
+    ]
+  },
+  {
+    "id": "SL-010",
+    "text": "You pull the stillsuit over your skin. It fits like a second birth, and suddenly you hear every drop of water in every body across the desert. The voices are overwhelming\u2014a flood of thirst and memory. You see a path of footprints leading into a whirlwind of sand.",
+    "choices": [
+      {
+        "label": "Follow the footprints\u2014they know where to go",
+        "next": "SL-020",
+        "fact": "followed_footprints"
+      },
+      {
+        "label": "Make your own path\u2014the voices are a trap",
+        "next": "SL-021",
+        "fact": "made_path"
+      }
+    ]
+  },
+  {
+    "id": "SL-011",
+    "text": "You leave the stillsuit. As you turn away, you hear a soft cry\u2014like a child left behind. The canyon walls groan, and a second snake emerges from the shadows. This one is not still\u2014it writhes, watching you with eyes that know your every choice. It speaks: 'You have been weighed.'",
+    "choices": [
+      {
+        "label": "Speak to the snake\u2014ask its purpose",
+        "next": "SL-022",
+        "fact": "spoke_snake"
+      },
+      {
+        "label": "Run from the snake\u2014escape the vision",
+        "next": "SL-023",
+        "fact": "ran_snake"
+      }
+    ],
+    "snake": "dynamic"
+  },
+  {
+    "id": "SL-012",
+    "text": "You face the snake coiled in your spine. It is ancient, made of sand and time, and it demands one thing: 'Remember all of it. The pain, the joy, the thirst. Do not flinch.' You look into its eyes, and you remember. The snake dissolves into a golden light that fills your bones.",
+    "choices": [
+      {
+        "label": "Accept the light\u2014let it transform you",
+        "next": "SL-024",
+        "fact": "accepted_light"
+      },
+      {
+        "label": "Reject the light\u2014hold onto yourself",
+        "next": "SL-025",
+        "fact": "rejected_light"
+      }
+    ]
+  },
+  {
+    "id": "SL-013",
+    "text": "You ignore the snake and keep untying the knot. But the knot grows tighter, and the snake strikes\u2014not with venom, but with silence. You feel yourself fading, becoming sand. The world blurs. You are losing the vision. The last thing you see is a hand reaching for you through the dark.",
+    "choices": [
+      {
+        "label": "Grasp the hand\u2014hold on",
+        "next": "SL-026",
+        "fact": "grasped_hand"
+      },
+      {
+        "label": "Let go\u2014become the sand",
+        "next": "END-GHOST",
+        "fact": "became_sand"
+      }
+    ]
+  },
+  {
+    "id": "SL-014",
+    "text": "You walk into the desert, and it fills your hollows with grit and silence. You become a vessel for the void. The sky turns to glass and the ground to memory. A worm rises before you, its mouth a cathedral of rings. It does not devour you\u2014it waits, patient as a god.",
+    "choices": [
+      {
+        "label": "Enter the worm's mouth\u2014trust the cycle",
+        "next": "END-VESSEL",
+        "fact": "entered_worm"
+      },
+      {
+        "label": "Stand your ground\u2014refuse the void",
+        "next": "END-WANDERER",
+        "fact": "stood_ground"
+      }
+    ]
+  },
+  {
+    "id": "SL-015",
+    "text": "You search for something to fill the holes, but every piece you find is already sand. You grab a shard of bone, a whisper of wind, a drop of your own sweat. They slip through your fingers. The holes do not fill\u2014they widen. You are becoming a sieve. The vision dims.",
+    "choices": [
+      {
+        "label": "Surrender to the loss\u2014let it make you new",
+        "next": "END-VESSEL",
+        "fact": "surrendered_loss"
+      },
+      {
+        "label": "Fight the loss\u2014cling to what remains",
+        "next": "END-GHOST",
+        "fact": "fought_loss"
+      }
+    ]
+  },
+  {
+    "id": "SL-016",
+    "text": "You accept the grain. It burns cold, then hot, then cold again. You feel the weight of every yes and no you have ever spoken. The ancestors bow, and the bone dune splits open like a cracked egg. Inside, a ladder of light descends. The way out is up.",
+    "choices": [
+      {
+        "label": "Climb the ladder\u2014awaken on your feet",
+        "next": "END-PROPHET",
+        "fact": "climbed_ladder"
+      },
+      {
+        "label": "Descend into the split\u2014seek deeper truth",
+        "next": "END-PROPHET",
+        "fact": "descended_split"
+      }
+    ]
+  },
+  {
+    "id": "SL-017",
+    "text": "You crush the grain. The dust blooms into a storm that blots out the sky. The ancestors scream or laugh\u2014you cannot tell. You have unmade their gift. Now you must make your own. The desert is blank, a canvas of sand. The figure from the ridge appears before you, holding a stylus of bone.",
+    "choices": [
+      {
+        "label": "Take the stylus\u2014write your own path",
+        "next": "END-WANDERER",
+        "fact": "took_stylus"
+      },
+      {
+        "label": "Refuse it\u2014walk unwritten",
+        "next": "END-WANDERER",
+        "fact": "refused_stylus"
+      }
+    ]
+  },
+  {
+    "id": "SL-018",
+    "text": "'Why am I here?' you ask. The figure dissolves into motes of light, and the light writes a single word in the air: 'CHOOSE.' The bone dune quakes, and a door of obsidian swings open. Beyond it, you hear your own heartbeat\u2014a drum calling you home.",
+    "choices": [
+      {
+        "label": "Step through the door\u2014answer the drum",
+        "next": "END-PROPHET",
+        "fact": "stepped_door"
+      },
+      {
+        "label": "Stay\u2014refuse the easy way out",
+        "next": "END-WANDERER",
+        "fact": "stayed_door"
+      }
+    ]
+  },
+  {
+    "id": "SL-019",
+    "text": "'I am here to change,' you say. The figure nods, and the sand beneath your feet turns to glass. Your reflection stares up at you, but it is older, scarred, wise. 'Then change,' it whispers. 'But know this\u2014every transformation leaves a ghost.' The glass cracks beneath your weight.",
+    "choices": [
+      {
+        "label": "Embrace the ghost\u2014change with memory",
+        "next": "END-PROPHET",
+        "fact": "embraced_ghost"
+      },
+      {
+        "label": "Shatter the glass\u2014change as rebirth",
+        "next": "END-VESSEL",
+        "fact": "shattered_glass"
+      }
+    ]
+  },
+  {
+    "id": "SL-020",
+    "text": "You follow the footprints. They lead through a forest of crystal cacti, each one holding a frozen tear of water. The path ends at a circle of stones where a fire burns without fuel. In the flames, you see the face of a child you once were, smiling. The child holds out a hand.",
+    "choices": [
+      {
+        "label": "Take the child's hand\u2014return to innocence",
+        "next": "END-PROPHET",
+        "fact": "took_child_hand"
+      },
+      {
+        "label": "Walk through the fire\u2014burn the child away",
+        "next": "END-VESSEL",
+        "fact": "walked_fire"
+      }
+    ]
+  },
+  {
+    "id": "SL-021",
+    "text": "You make your own path. The voices grow faint, then silent. You walk until you reach a dune made of bones\u2014each one a choice someone else made. At the summit, a single feather of a desert hawk rests. It is impossibly light, weighing nothing yet holding the sky.",
+    "choices": [
+      {
+        "label": "Take the feather\u2014carry the sky",
+        "next": "END-WANDERER",
+        "fact": "took_feather"
+      },
+      {
+        "label": "Leave the feather\u2014the sky is not yours",
+        "next": "END-GHOST",
+        "fact": "left_feather"
+      }
+    ]
+  },
+  {
+    "id": "SL-022",
+    "text": "You speak to the snake. It coils around you, its scales whispering secrets. 'Your path has been full of escapes and refusals,' it hisses. 'But you chose to speak to me. That is a thread.' It offers you a single scale, glowing with inner light. 'Take it, and I will sleep.'",
+    "choices": [
+      {
+        "label": "Take the scale\u2014bind the snake",
+        "next": "END-PROPHET",
+        "fact": "took_scale"
+      },
+      {
+        "label": "Reject the scale\u2014face what you've avoided",
+        "next": "END-WANDERER",
+        "fact": "rejected_scale"
+      }
+    ]
+  },
+  {
+    "id": "SL-023",
+    "text": "You run from the snake. It does not chase\u2014it simply watches you flee, and you feel its judgment like a stone in your chest. You run until you reach the edge of the vision, where the world frays into white static. The snake's voice follows you: 'You cannot outrun yourself.'",
+    "choices": [
+      {
+        "label": "Stop running\u2014turn and face it",
+        "next": "END-WANDERER",
+        "fact": "stopped_running"
+      },
+      {
+        "label": "Jump into the static\u2014wake up broken",
+        "next": "END-GHOST",
+        "fact": "jumped_static"
+      }
+    ]
+  },
+  {
+    "id": "SL-024",
+    "text": "You accept the golden light. It pours through you, burning away the last shadows. You see the vision whole\u2014every thread, every choice, every possible you. The light speaks: 'You are ready.' The desert shimmers and falls away like a curtain. You are waking. The taste of spice is still on your tongue.",
+    "choices": [
+      {
+        "label": "Wake with eyes open\u2014see the world anew",
+        "next": "END-PROPHET",
+        "fact": "awoke_open"
+      },
+      {
+        "label": "Wake with eyes closed\u2014keep the vision within",
+        "next": "END-PROPHET",
+        "fact": "awoke_closed"
+      }
+    ]
+  },
+  {
+    "id": "SL-025",
+    "text": "You reject the light. It shatters like a mirror, and you stand in a darkness that is warm and familiar. The snake returns\u2014not as a threat, but as a guide. 'You have chosen yourself,' it says. 'Now walk.' The darkness parts, revealing a path of stars. The vision ends, but the journey does not.",
+    "choices": [
+      {
+        "label": "Walk the star path\u2014awaken as a wanderer",
+        "next": "END-WANDERER",
+        "fact": "awoke_wanderer"
+      },
+      {
+        "label": "Stay in the dark\u2014awaken in silence",
+        "next": "END-GHOST",
+        "fact": "awoke_silence"
+      }
+    ]
+  },
+  {
+    "id": "SL-026",
+    "text": "You grasp the hand. It pulls you from the fading, and you find yourself standing in a garden of moonlight and cacti. A woman made of water smiles at you. 'You held on,' she says. 'That is the first lesson.' She pours a single drop of water into your mouth. The vision sharpens.",
+    "choices": [
+      {
+        "label": "Thank her\u2014drink the drop",
+        "next": "END-PROPHET",
+        "fact": "thanked_water_woman"
+      },
+      {
+        "label": "Refuse\u2014you must earn your own water",
+        "next": "END-WANDERER",
+        "fact": "refused_water"
+      }
+    ]
+  },
+  {
+    "id": "END-PROPHET",
+    "text": "The desert falls away like a shed skin. You open your eyes \u2014 both pairs, the ones of flesh and the ones of spice. The tent is real. The sand is real. But you see through it now, through all of it, to the bones of the world beneath. You are not who entered this vision. You are what the desert made. The Templars' cross burns faintly in your mind \u2014 a door you have not yet opened.",
+    "choices": [],
+    "ending": "prophet",
+    "facts_granted": [
+      "awakened_prophet",
+      "templars_clue",
+      "spice_sight"
+    ]
+  },
+  {
+    "id": "END-WANDERER",
+    "text": "You wake walking. Your feet are moving before your eyes open, and you realize you never stopped \u2014 the vision was the journey, and the journey never ends. The tent is behind you. The dunes ahead shimmer with paths no one has mapped. You carry nothing but the weight of your own choices, and that is enough. Somewhere beyond the horizon, a cross-shaped star flickers.",
+    "choices": [],
+    "ending": "wanderer",
+    "facts_granted": [
+      "awakened_wanderer",
+      "templars_clue",
+      "desert_walker"
+    ]
+  },
+  {
+    "id": "END-GHOST",
+    "text": "You wake in fragments. Pieces of the vision cling to you like wet sand \u2014 a snake's whisper, a grain of truth you dropped, a hand you didn't take. The tent feels too solid, too small. You are less than you were, but what remains is sharper, harder, truer. The spice has burned away everything that lied. In the hollow, something glows \u2014 a faint cross, waiting.",
+    "choices": [],
+    "ending": "ghost",
+    "facts_granted": [
+      "awakened_ghost",
+      "templars_clue",
+      "hollowed"
+    ]
+  },
+  {
+    "id": "END-VESSEL",
+    "text": "You do not wake \u2014 you are poured. The desert fills you and you fill the desert, and for one infinite moment there is no difference. Then the tent reforms around you like a hand closing. Your mouth tastes of cinnamon and bone. You are a vessel now \u2014 empty and full at once, carrying the desert's memory in your blood. The worm's song still hums in your marrow. A cross of light pulses behind your eyes.",
+    "choices": [],
+    "ending": "vessel",
+    "facts_granted": [
+      "awakened_vessel",
+      "templars_clue",
+      "worm_bond"
+    ]
+  }
+];
+
+// --- SOFT STORY PLAYER ---
+let storyPath = [];         // nodes visited this playthrough
+let storyFacts = new Set(); // facts collected from choices
+
+function playSoftLine(nodeId) {
+  const node = ARRAKIS_STORY.find(n => n.id === nodeId);
+  if (!node) { console.error('Missing node:', nodeId); return; }
+
+  storyPath.push(nodeId);
+  const overlay = document.getElementById('storyOverlay');
+  const box = document.getElementById('storyBox');
+
+  // Snake decoration
+  const isSnake = node.snake;
+  const snakeIcon = isSnake === 'static' ? '🐍' : isSnake === 'dynamic' ? '🐍⚡' : '';
+  const snakeLabel = isSnake === 'static' ? 'STATIC GUARDIAN' : isSnake === 'dynamic' ? 'DYNAMIC HUNTER' : '';
+  const snakeHtml = isSnake ? `<div style="text-align:center;font-size:2.5em;margin:10px 0;animation:pulse 1.5s infinite;">${snakeIcon}</div><div style="text-align:center;font-size:0.7em;color:#ff6b6b;letter-spacing:3px;margin-bottom:10px;">${snakeLabel}</div>` : '';
+
+  // Ending handling
+  const isEnding = !!node.ending;
+  const endingEmoji = { prophet: '👁️', wanderer: '🚶', ghost: '👻', vessel: '🏺' };
+  const endingTitle = { prophet: 'THE PROPHET', wanderer: 'THE WANDERER', ghost: 'THE GHOST', vessel: 'THE VESSEL' };
+
+  if (isEnding) {
+    // Grant ending facts
+    if (node.facts_granted) {
+      node.facts_granted.forEach(f => {
+        engine.addFact(f);
+        storyFacts.add(f);
+      });
+    }
+    // Core completion facts
+    ['spice_consumed', 'eyes_blue_transition', 'spice_vision_gained', 'ability:prescience', 'arrakis_path_complete'].forEach(f => engine.addFact(f));
+    addXP(40);
+    log(`⭐ AWAKENING: ${endingTitle[node.ending]} — Arrakis path COMPLETE.`, 'rule-fired');
+  }
+
+  // Facts from the choice that LED here (already added when choice was clicked)
+  const factsHtml = storyFacts.size > 0 && isEnding
+    ? `<div class="story-facts">${[...storyFacts].slice(-5).map(f => '<span>+ ' + f + '</span>').join('')}</div>` : '';
+
+  // Build choices
+  let choicesHtml = '';
+  if (node.choices && node.choices.length > 0) {
+    choicesHtml = '<div style="margin-top:20px;display:flex;flex-direction:column;gap:8px;">';
+    node.choices.forEach((c, i) => {
+      choicesHtml += `<button class="btn primary" onclick="chooseSoftLine(${i})">${c.label}</button>`;
+    });
+    choicesHtml += '</div>';
+    // Store current choices globally
+    window._currentChoices = node.choices;
+  }
+
+  // Progress indicator
+  const depth = storyPath.length;
+  const progressHtml = `<div style="display:flex;gap:4px;justify-content:center;margin-bottom:15px;">${storyPath.map((_, i) => `<div style="width:8px;height:8px;border-radius:50%;background:${i < depth - 1 ? '#c9a84c' : '#e040fb'};"></div>`).join('')}</div>`;
+
+  // Ending clue
+  const clueHtml = isEnding ? '<div class="story-clue">🔍 The Templars\' cross burns in your mind — a door not yet opened. TEMPLARS ⚔️ awaits.</div>' : '';
+
+  // Title
+  const title = isEnding ? `🏜️ AWAKENING — ${endingTitle[node.ending].toUpperCase()} ${endingEmoji[node.ending]}` 
+    : isSnake ? `🐍 ${snakeLabel}`
+    : `🏜️ ${nodeId}`;
+
+  box.innerHTML = `
+    ${isEnding ? '<div class="close-story" onclick="closeStory()">&#x2715;</div>' : ''}
+    <div class="story-title">${title}</div>
+    ${progressHtml}
+    ${snakeHtml}
+    <div class="story-text" style="line-height:1.8;font-style:italic;color:#d4c8a0;">${node.text}</div>
+    ${factsHtml}
+    ${clueHtml}
+    ${choicesHtml}
+  `;
+  overlay.classList.add('visible');
+
+  if (!isEnding) addXP(10);
+  renderFacts();
+  renderRules();
+  renderWorlds();
+}
+
+function chooseSoftLine(index) {
+  const choice = window._currentChoices[index];
+  if (!choice) return;
+  // Add fact from this choice
+  if (choice.fact) {
+    engine.addFact(choice.fact);
+    storyFacts.add(choice.fact);
+    log('+ ' + choice.fact, 'fact-added');
+  }
+  playSoftLine(choice.next);
+}
+
+function startArrakisPath() {
+  if (engine.hasFact('spice_vision_gained')) {
+    log('The spice already flows in your veins...', 'info');
+    return;
+  }
+  storyPath = [];
+  storyFacts = new Set();
+  engine.addFact('spice_consumed');
+  engine.addFact('eyes_blue_transition');
+  log('🏜️ The Water of Life touches your lips...', 'rule-fired');
+  playSoftLine('SL-001');
+}
+
+// --- RENDER WORLDS ---
+function renderWorlds() {
+  worldsGrid.innerHTML = '';
+  WORLDS.forEach(w => {
+    const unlocked = engine.hasFact('world:unlocked:' + w.id);
+    const visited = engine.hasFact('world:visited:' + w.id);
+    const isActive = currentWorld === w.id;
+    const card = document.createElement('div');
+    card.className = 'world-card' + (isActive ? ' active' : unlocked ? ' unlocked' : ' locked');
+    card.innerHTML = `
+      <div class="lock">${unlocked ? '🔓' : '🔒'}</div>
+      <div class="icon">${w.icon}</div>
+      <div class="name">${w.name}</div>
+    `;
+    card.style.borderColor = isActive || unlocked ? w.color : '';
+    if (unlocked) {
+      card.onclick = () => enterWorld(w.id);
+    }
+    worldsGrid.appendChild(card);
+  });
+}
+
+// --- RENDER FACTS ---
+function renderFacts() {
+  const facts = [...engine.facts].reverse();
+  factsList.innerHTML = facts.map(f => `<div class="fact">${f}</div>`).join('');
+  document.getElementById('statFacts').textContent = engine.facts.size;
+  document.getElementById('statRules').textContent = engine.rules.length;
+  document.getElementById('statFired').textContent = engine.firedRules.size;
+  document.getElementById('statWorlds').textContent = engine.queryFacts('world:unlocked:*').length;
+}
+
+// --- LOG ---
+function log(msg, type = 'info') {
+  const entry = document.createElement('div');
+  entry.className = 'log-entry ' + type;
+  entry.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+  logPanel.prepend(entry);
+}
+
+// --- RENDER RULES ---
+function renderRules() {
+  rulesPanel.innerHTML = engine.rules.map(r => {
+    const status = r.fired ? '✅' : '⏳';
+    const conds = r.conditions.map(c => typeof c === 'string' ? c : 'fn()').join(' + ');
+    return `<div style="padding:3px 0;border-bottom:1px solid #1a1a2a;color:${r.fired ? '#4caf50' : '#666'}">
+      ${status} <b>${r.id}</b> ${r.name} — IF [${conds}]</div>`;
+  }).join('');
+}
+
+// --- XP ---
+function addXP(amount) {
+  xp += amount;
+  const pct = Math.min(100, (xp / 500) * 100);
+  xpFill.style.width = pct + '%';
+  xpLabel.textContent = 'XP: ' + xp;
+}
+
+// --- ENTER WORLD ---
+function enterWorld(worldId) {
+  currentWorld = worldId;
+  const w = WORLDS.find(x => x.id === worldId);
+  engine.addFact('world:visited:' + worldId);
+  engine.addFact('player:location:' + worldId);
+  worldLabel.textContent = '📍 ' + w.name;
+  log(`Entered ${w.name} ${w.icon}`, 'route');
+  addXP(20);
+  renderWorlds();
+  renderActions();
+}
+
+// --- ACTIONS PER WORLD ---
+function getWorldActions(worldId) {
+  const base = [
+    { label: '🔍 Explore', action: () => { engine.addFact('explored:' + worldId); addXP(10); log('Explored ' + worldId, 'fact-added'); }},
+    { label: '📖 Absorb Story', action: () => { engine.addFact('story:' + worldId + ':lore'); addXP(15); log('Absorbed story of ' + worldId, 'fact-added'); }},
+  ];
+
+  const worldActions = {
+    dune: [
+      { label: '🏜️ Drink the Water of Life', action: () => { startArrakisPath(); }},
+    ],
+    templars: [
+      { label: '⚔️ Sacred Geometry', action: () => { engine.addFact('clue:templars:geometry'); engine.addFact('clue:quantum:pattern'); addXP(25); }},
+      { label: '📜 Decode Cipher', action: () => { engine.addFact('clue:templars:cipher'); engine.addFact('skill:decryption'); addXP(20); }},
+      { label: '🏰 Enter Fortress', action: () => { engine.addFact('clue:templars:fortress'); engine.addFact('clue:alchemy:stone'); addXP(25); }},
+    ],
+    silvership: [
+      { label: '🗺️ Star Chart', action: () => { engine.addFact('clue:silvership:starchart'); engine.addFact('clue:lectric:navigation'); addXP(20); }},
+      { label: '🏴‍☠️ Pirate Code', action: () => { engine.addFact('clue:silvership:code'); engine.addFact('skill:negotiation'); addXP(15); }},
+      { label: '💎 Loot Vault', action: () => { engine.addFact('item:cosmic-gem'); engine.addFact('clue:ku:fragment'); addXP(30); }},
+    ],
+    alchemy: [
+      { label: '🧪 Transmute', action: () => { engine.addFact('clue:alchemy:transmutation'); engine.addFact('clue:dune:melange'); addXP(25); }},
+      { label: '📕 Grimoire', action: () => { engine.addFact('clue:alchemy:grimoire'); engine.addFact('skill:synthesis'); addXP(20); }},
+      { label: '🔮 Philosopher\'s Stone', action: () => { engine.addFact('item:philosophers-stone'); engine.addFact('clue:quantum:duality'); addXP(35); }},
+    ],
+    quantum: [
+      { label: '🔬 Observe', action: () => { engine.addFact('clue:quantum:observation'); engine.addFact('clue:alchemy:collapse'); addXP(25); }},
+      { label: '🌊 Entangle', action: () => { engine.addFact('clue:quantum:entanglement'); engine.addFact('clue:silvership:warp'); addXP(25); }},
+      { label: '⚛️ Superposition', action: () => { engine.addFact('ability:superposition'); engine.addFact('clue:ku:fragment2'); addXP(30); }},
+    ],
+    lectric: [
+      { label: '⚡ Channel Voltage', action: () => { engine.addFact('clue:lectric:voltage'); engine.addFact('clue:templars:energy'); addXP(20); }},
+      { label: '🧲 Magnetic Field', action: () => { engine.addFact('clue:lectric:magnetism'); engine.addFact('skill:attraction'); addXP(20); }},
+      { label: '🌌 Northern Light', action: () => { engine.addFact('clue:lectric:aurora'); engine.addFact('clue:ku:fragment3'); addXP(30); }},
+    ],
+    ku: [
+      { label: '🌀 Converge All', action: () => { engine.addFact('clue:ku:convergence'); addXP(50); }},
+      { label: '🧠 Become the Mind', action: () => { engine.addFact('character:ku:mind'); addXP(100); }},
+    ]
+  };
+
+  return [...base, ...(worldActions[worldId] || [])];
+}
+
+function renderActions() {
+  actionsPanel.innerHTML = '';
+  if (!currentWorld) {
+    // Portal actions
+    const portalBtn = document.createElement('button');
+    portalBtn.className = 'btn primary';
+    portalBtn.textContent = '⬡ Enter the Portal';
+    portalBtn.onclick = () => {
+      engine.addFact('portal:entered');
+      addXP(10);
+      log('Portal entered. The universe awaits.', 'route');
+      renderActions();
+    };
+    actionsPanel.appendChild(portalBtn);
+
+    if (engine.hasFact('portal:entered')) {
+      const routeBtn = document.createElement('button');
+      routeBtn.className = 'btn primary';
+      routeBtn.textContent = '🧭 Route (Aiguillage)';
+      routeBtn.onclick = () => {
+        const routes = engine.computeRoute();
+        if (routes.length === 0) {
+          log('No worlds unlocked yet. Keep exploring.', 'info');
+        } else {
+          log('ROUTING → ' + routes.map(r => r.world + ':' + r.score).join(' | '), 'route');
+          enterWorld(routes[0].world);
+        }
+      };
+      actionsPanel.appendChild(routeBtn);
+    }
+    return;
+  }
+
+  // Back to portal
+  const backBtn = document.createElement('button');
+  backBtn.className = 'btn';
+  backBtn.textContent = '⬡ Return to Portal';
+  backBtn.onclick = () => {
+    currentWorld = null;
+    worldLabel.textContent = '📍 PORTAL';
+    renderActions();
+    renderWorlds();
+  };
+  actionsPanel.appendChild(backBtn);
+
+  // World actions
+  const actions = getWorldActions(currentWorld);
+  actions.forEach(a => {
+    const btn = document.createElement('button');
+    btn.className = 'btn';
+    btn.textContent = a.label;
+    btn.onclick = () => {
+      a.action();
+      renderFacts();
+      renderRules();
+      renderActions();
+      renderWorlds();
+    };
+    actionsPanel.appendChild(btn);
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// ⚙️ RULE BASE — INITIAL SET
+// ═══════════════════════════════════════════════════════
+
+// R001: Portal opens first world (Arrakis)
+engine.addRule('Portal → Arrakis', ['portal:entered'], (e) => {
+  return e.addFact('world:unlocked:dune');
+}, 100);
+
+// R002: Spice Vision + Blue Eyes → unlocks Templars (from R's Soft Line)
+engine.addRule('Spice Vision \u2192 Templars', ['spice_vision_gained', 'eyes_blue_transition'], (e) => {
+  log('\u2694\uFE0F The vision burns... faith forged in flame and stone. TEMPLARS unlocked!', 'rule-fired');
+  return e.addFact('world:unlocked:templars');
+}, 90);
+
+// R003: Templar geometry → unlocks Quantum
+engine.addRule('Geometry → Quantum', ['clue:templars:geometry'], (e) => {
+  return e.addFact('world:unlocked:quantum');
+}, 80);
+
+// R004: Templar fortress → unlocks Alchemy
+engine.addRule('Fortress → Alchemy', ['clue:templars:fortress'], (e) => {
+  return e.addFact('world:unlocked:alchemy');
+}, 80);
+
+// R005: Prescience + starchart → unlocks Silver Ship
+engine.addRule('Prescience + Chart → Silver Ship', ['ability:prescience'], (e) => {
+  if (e.hasFact('clue:silvership:starchart') || e.hasFact('explored:dune')) {
+    return e.addFact('world:unlocked:silvership');
+  }
+  return false;
+}, 70);
+
+// R006: Navigation clue → unlocks Lectric
+engine.addRule('Navigation → Lectric', ['clue:lectric:navigation'], (e) => {
+  return e.addFact('world:unlocked:lectric');
+}, 70);
+
+// Alternative: magnetism from lectric found elsewhere
+engine.addRule('Voltage → Lectric (alt)', ['clue:templars:energy'], (e) => {
+  return e.addFact('world:unlocked:lectric');
+}, 60);
+
+// R007: 3 KU fragments → unlocks Singularity
+engine.addRule('3 Fragments → Singularity', [
+  (e) => e.countFacts('clue:ku:*') >= 3
+], (e) => {
+  return e.addFact('world:unlocked:ku');
+}, 50);
+
+// R008: Alternative — visit 5 worlds → Singularity
+engine.addRule('5 Worlds → Singularity (alt)', [
+  (e) => e.countFacts('world:visited:*') >= 5
+], (e) => {
+  return e.addFact('world:unlocked:ku');
+}, 40);
+
+// R009: Become the character in any world
+WORLDS.slice(0, 6).forEach(w => {
+  engine.addRule(`Become ${w.name}`, [
+    'explored:' + w.id,
+    'story:' + w.id + ':lore',
+    (e) => e.queryFacts('clue:' + w.id + ':*').length >= 2
+  ], (e) => {
+    log(`⭐ You have BECOME the character of ${w.name}!`, 'rule-fired');
+    return e.addFact('character:' + w.id);
+  }, 30);
+});
+
+// R010: All 6 characters → KU MASTER
+engine.addRule('ALL CHARACTERS → KU MASTER', [
+  (e) => WORLDS.slice(0, 6).every(w => e.hasFact('character:' + w.id))
+], (e) => {
+  log('🌌 ★ ★ ★  YOU ARE THE KNOWLEDGE UNIVERSE  ★ ★ ★', 'rule-fired');
+  return e.addFact('master:ku');
+}, 10);
+
+// ═══════════════════════════════════════════════════════
+// 🔌 ENGINE → UI WIRING
+// ═══════════════════════════════════════════════════════
+
+engine.on((type, data) => {
+  switch (type) {
+    case 'fact-added':
+      log('+ FACT: ' + data, 'fact-added');
+      renderFacts();
+      renderWorlds();
+      break;
+    case 'rule-fired':
+      log('⚡ RULE FIRED: ' + data.id + ' — ' + data.name, 'rule-fired');
+      renderRules();
+      renderWorlds();
+      break;
+    case 'rule-added':
+      renderRules();
+      break;
+  }
+});
+
+// --- INIT ---
+renderWorlds();
+renderFacts();
+renderRules();
+renderActions();
+log('🌌 Knowledge Universe Engine v0.1 initialized', 'info');
+log(engine.rules.length + ' rules loaded. Awaiting portal entry.', 'info');
+</script>
+
+</body>
+</html>
