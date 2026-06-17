@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>KNOWLEDGE UNIVERSE — BATTLE</title>
+<title>KNOWLEDGE UNIVERSE — BATTLE ⚡ FREE UNTIL JUNE 30</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
@@ -129,6 +129,28 @@ button{font-family:'Cinzel',serif;cursor:pointer;transition:all 0.3s}
 </style>
 </head>
 <body>
+
+<!-- FREE PROMO BANNER -->
+<div id="promo-banner" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(135deg,#ff6b00,#ffd700,#ff6b00);color:#000;text-align:center;padding:10px;font-family:'Cinzel',serif;font-weight:900;font-size:1.1em;letter-spacing:2px;animation:promoPulse 3s ease-in-out infinite">
+  ⚡ FREE UNTIL JUNE 30 — <span id="promo-countdown"></span> ⚡
+</div>
+<style>
+@keyframes promoPulse{0%,100%{box-shadow:0 2px 15px rgba(255,215,0,0.4)}50%{box-shadow:0 2px 30px rgba(255,215,0,0.8)}}
+#promo-banner~.screen{padding-top:60px!important}
+</style>
+<script>
+(function(){
+  const deadline=new Date('2026-07-01T00:00:00+02:00');
+  const el=document.getElementById('promo-countdown');
+  function tick(){
+    const d=deadline-new Date();
+    if(d<=0){document.getElementById('promo-banner').innerHTML='🌪️ PROMO ENDED — <a href="https://buy.stripe.com/9B6bJ31Mjewqd9BbZk1wY00" style="color:#000;text-decoration:underline">GET AOS TORNADO €20</a>';return}
+    const days=Math.floor(d/864e5),hrs=Math.floor(d%864e5/36e5),mins=Math.floor(d%36e5/6e4),secs=Math.floor(d%6e4/1e3);
+    el.textContent=days+'d '+hrs+'h '+mins+'m '+secs+'s';
+  }
+  tick();setInterval(tick,1000);
+})();
+</script>
 
 <!-- TITLE -->
 <div id="title-screen" class="screen active">

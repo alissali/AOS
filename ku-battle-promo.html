@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>🎮 KU BATTLE — FREE Until June 30!</title>
+<meta property="og:title" content="KU BATTLE — Battle of the Sands">
+<meta property="og:description" content="Multiplayer battle game in the Knowledge Universe. FREE until June 30. July 1st, the gold rains.">
+<meta property="og:url" content="https://juxaos.com/ku-battle-promo.html">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;700&display=swap');
+body{background:#000;color:#e0d5c0;font-family:'Exo 2',sans-serif;overflow-x:hidden;min-height:100vh}
+.stars{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
+.stars canvas{width:100%;height:100%}
+.content{position:relative;z-index:1;max-width:800px;margin:0 auto;padding:20px;text-align:center}
+
+/* FREE BANNER */
+.free-banner{background:linear-gradient(135deg,#ff6b00,#ffd700,#ff6b00);color:#000;padding:15px;font-family:'Orbitron',monospace;font-size:1.4em;font-weight:900;letter-spacing:3px;border-radius:12px;margin:20px 0;animation:pulseBanner 2s ease-in-out infinite;text-transform:uppercase}
+@keyframes pulseBanner{0%,100%{transform:scale(1);box-shadow:0 0 20px rgba(255,215,0,0.5)}50%{transform:scale(1.02);box-shadow:0 0 40px rgba(255,215,0,0.8)}}
+
+/* COUNTDOWN */
+.countdown{display:flex;justify-content:center;gap:15px;margin:20px 0;flex-wrap:wrap}
+.countdown-item{background:rgba(255,215,0,0.1);border:2px solid #ffd700;border-radius:12px;padding:15px 20px;min-width:80px}
+.countdown-num{font-family:'Orbitron',monospace;font-size:2.5em;font-weight:900;color:#ffd700;line-height:1}
+.countdown-label{font-size:0.75em;color:#c8a96e;margin-top:5px;text-transform:uppercase;letter-spacing:2px}
+
+/* HERO */
+.hero-title{font-family:'Orbitron',monospace;font-size:3em;font-weight:900;background:linear-gradient(135deg,#ffd700,#ff6b00,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:30px 0 10px;line-height:1.2}
+.hero-sub{font-size:1.3em;color:#c8a96e;margin-bottom:30px;font-style:italic}
+
+/* FEATURES */
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;margin:30px 0;text-align:left}
+.feature{background:rgba(255,215,0,0.05);border:1px solid rgba(255,215,0,0.2);border-radius:12px;padding:20px}
+.feature-icon{font-size:2em;margin-bottom:8px}
+.feature-title{font-family:'Orbitron',monospace;font-size:0.9em;color:#ffd700;margin-bottom:5px}
+.feature-desc{font-size:0.85em;color:#a09080;line-height:1.4}
+
+/* HOW IT WORKS */
+.flow{display:flex;justify-content:center;align-items:center;gap:10px;margin:30px 0;flex-wrap:wrap}
+.flow-step{background:rgba(255,107,0,0.1);border:1px solid rgba(255,107,0,0.3);border-radius:10px;padding:12px 18px;font-size:0.9em}
+.flow-step .emoji{font-size:1.3em;display:block;margin-bottom:4px}
+.flow-arrow{color:#ffd700;font-size:1.5em;font-weight:bold}
+
+/* CTA */
+.cta-section{margin:40px 0}
+.play-btn{display:inline-block;background:linear-gradient(135deg,#ffd700,#ff6b00);color:#000;font-family:'Orbitron',monospace;font-size:1.5em;font-weight:900;padding:20px 50px;border-radius:50px;text-decoration:none;letter-spacing:3px;transition:all 0.3s;cursor:pointer;border:none;text-transform:uppercase}
+.play-btn:hover{transform:scale(1.05);box-shadow:0 0 50px rgba(255,215,0,0.6)}
+.play-note{margin-top:15px;color:#888;font-size:0.85em}
+
+/* JULY MESSAGE */
+.july-msg{background:linear-gradient(135deg,rgba(255,107,0,0.1),rgba(255,215,0,0.05));border:1px solid rgba(255,215,0,0.3);border-radius:15px;padding:25px;margin:30px 0}
+.july-msg h3{font-family:'Orbitron',monospace;color:#ffd700;margin-bottom:10px;font-size:1.1em}
+.july-msg p{color:#c8a96e;line-height:1.6}
+.july-msg .price{font-family:'Orbitron',monospace;font-size:2em;color:#ff6b00;font-weight:900}
+
+/* FOOTER */
+.footer{margin-top:40px;padding:20px;border-top:1px solid rgba(255,215,0,0.1);color:#555;font-size:0.8em}
+.footer a{color:#c8a96e;text-decoration:none}
+
+/* PAYWALL OVERLAY */
+.paywall{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:1000;justify-content:center;align-items:center;flex-direction:column;text-align:center;padding:20px}
+.paywall.active{display:flex}
+.paywall h2{font-family:'Orbitron',monospace;font-size:2em;color:#ffd700;margin-bottom:15px}
+.paywall p{color:#c8a96e;font-size:1.1em;margin-bottom:20px;max-width:500px}
+.paywall .price-tag{font-family:'Orbitron',monospace;font-size:3em;color:#ff6b00;font-weight:900;margin:20px 0}
+.paywall-btn{display:inline-block;background:linear-gradient(135deg,#ffd700,#ff6b00);color:#000;font-family:'Orbitron',monospace;font-size:1.2em;font-weight:900;padding:15px 40px;border-radius:50px;text-decoration:none;letter-spacing:2px}
+</style>
+</head>
+<body>
+
+<!-- PAYWALL (activates July 1) -->
+<div class="paywall" id="paywall">
+  <h2>⚡ THE GOLD RAINS ⚡</h2>
+  <p>The free promo has ended. KU Battle is now part of AOS TORNADO 🌪️</p>
+  <div class="price-tag">€20</div>
+  <p>The spiral goes UP — the cost goes DOWN. That's a TORNADO.</p>
+  <a href="https://buy.stripe.com/9B6bJ31Mjewqd9BbZk1wY00" class="paywall-btn">🌪️ GET AOS TORNADO</a>
+</div>
+
+<!-- STARS -->
+<div class="stars"><canvas id="starfield"></canvas></div>
+
+<div class="content">
+  <!-- FREE BANNER -->
+  <div class="free-banner" id="freeBanner">
+    ⚡ FREE UNTIL JUNE 30 ⚡
+  </div>
+
+  <!-- COUNTDOWN -->
+  <div class="countdown" id="countdown">
+    <div class="countdown-item"><div class="countdown-num" id="cd-days">--</div><div class="countdown-label">Days</div></div>
+    <div class="countdown-item"><div class="countdown-num" id="cd-hours">--</div><div class="countdown-label">Hours</div></div>
+    <div class="countdown-item"><div class="countdown-num" id="cd-mins">--</div><div class="countdown-label">Min</div></div>
+    <div class="countdown-item"><div class="countdown-num" id="cd-secs">--</div><div class="countdown-label">Sec</div></div>
+  </div>
+
+  <!-- HERO -->
+  <h1 class="hero-title">KU BATTLE</h1>
+  <p class="hero-sub">Battle of the Sands — Your story IS your weapon</p>
+
+  <!-- FLOW -->
+  <div class="flow">
+    <div class="flow-step"><span class="emoji">🏜️</span>EXPLORE</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step"><span class="emoji">📦</span>COLLECT</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step"><span class="emoji">🃏</span>DRAW</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step"><span class="emoji">⚔️</span>BATTLE</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step"><span class="emoji">👑</span>WIN</div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="features">
+    <div class="feature">
+      <div class="feature-icon">🏜️</div>
+      <div class="feature-title">EXPLORE ARRAKIS</div>
+      <div class="feature-desc">Walk the desert. Make choices. Every decision becomes a battle card in your hand.</div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🃏</div>
+      <div class="feature-title">TAROT WEAPONS</div>
+      <div class="feature-desc">Draw from 23 Major Arcana. The Worm heals. The Eclipse steals. The Spice bleeds.</div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">👁️</div>
+      <div class="feature-title">4 CLASSES</div>
+      <div class="feature-desc">Prophet sees. Wanderer dodges. Ghost steals. Vessel reflects. Your ending decides.</div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🐍</div>
+      <div class="feature-title">SNAKES & TRAPS</div>
+      <div class="feature-desc">Face the snakes for power. Flee for safety. The brave are rewarded. The wise survive.</div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">⚔️</div>
+      <div class="feature-title">HOT-SEAT BATTLE</div>
+      <div class="feature-desc">Two players. Same screen. Five rounds of card combat. One survivor.</div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🌌</div>
+      <div class="feature-title">KNOWLEDGE UNIVERSE</div>
+      <div class="feature-desc">Part of AOS — 7 worlds, 14+ games, infinite stories. This is just the beginning.</div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <a href="https://juxaos.com/ku-battle.html" class="play-btn" id="playBtn">🎮 PLAY FREE NOW</a>
+    <p class="play-note">No download. No signup. Just play.</p>
+  </div>
+
+  <!-- JULY MESSAGE -->
+  <div class="july-msg">
+    <h3>☀️ JULY 1ST — THE GOLD RAINS</h3>
+    <p>KU Battle becomes part of <strong>AOS TORNADO</strong> 🌪️</p>
+    <div class="price">€20</div>
+    <p><em>"Breeze invites you in. TORNADO doesn't let you go."</em></p>
+    <p style="margin-top:10px;font-size:0.9em">Play free now. Fall in love. Then ride the Tornado.</p>
+  </div>
+
+  <!-- MORE GAMES -->
+  <div class="july-msg" style="border-color:rgba(255,107,0,0.3)">
+    <h3>🌌 THE KNOWLEDGE UNIVERSE</h3>
+    <p style="margin-bottom:15px">KU Battle is ONE game in an expanding universe.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;text-align:center">
+      <a href="https://juxaos.com/knowledge-universe.html" style="color:#ffd700;text-decoration:none;padding:10px;background:rgba(255,215,0,0.05);border-radius:8px">🌌 KU Portal</a>
+      <a href="https://juxaos.com/dune-deckbuilder.html" style="color:#ff6b00;text-decoration:none;padding:10px;background:rgba(255,107,0,0.05);border-radius:8px">🏜️ Dune Cards</a>
+      <a href="https://juxaos.com/templars-deckbuilder.html" style="color:#c8a96e;text-decoration:none;padding:10px;background:rgba(200,169,110,0.05);border-radius:8px">⚔️ Templars</a>
+      <a href="https://juxaos.com/dune-tarot.html" style="color:#ffd700;text-decoration:none;padding:10px;background:rgba(255,215,0,0.05);border-radius:8px">🃏 Dune Tarot</a>
+      <a href="https://juxaos.com/silvership-deckbuilder.html" style="color:#88ccff;text-decoration:none;padding:10px;background:rgba(136,204,255,0.05);border-radius:8px">🛸 Silver Ship</a>
+      <a href="https://juxaos.com/game.html" style="color:#ff6b00;text-decoration:none;padding:10px;background:rgba(255,107,0,0.05);border-radius:8px">🎮 All Games</a>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p><strong>AOS</strong> by <a href="https://juxaos.com">JuX ITT</a> — Try Me You'll Love Me! 🌪️</p>
+  </div>
+</div>
+
+<script>
+// CHECK PAYWALL
+const julyFirst = new Date('2025-07-01T00:00:00+02:00');
+// Use 2026 for real deployment
+const deadline = new Date('2026-07-01T00:00:00+02:00');
+const now = new Date();
+
+if (now >= deadline) {
+  document.getElementById('paywall').classList.add('active');
+}
+
+// COUNTDOWN
+function updateCountdown() {
+  const now = new Date();
+  const diff = deadline - now;
+  if (diff <= 0) {
+    document.getElementById('paywall').classList.add('active');
+    return;
+  }
+  const d = Math.floor(diff / 86400000);
+  const h = Math.floor((diff % 86400000) / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const s = Math.floor((diff % 60000) / 1000);
+  document.getElementById('cd-days').textContent = String(d).padStart(2, '0');
+  document.getElementById('cd-hours').textContent = String(h).padStart(2, '0');
+  document.getElementById('cd-mins').textContent = String(m).padStart(2, '0');
+  document.getElementById('cd-secs').textContent = String(s).padStart(2, '0');
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+// STARFIELD
+const canvas = document.getElementById('starfield');
+const ctx = canvas.getContext('2d');
+function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+const stars = [];
+for (let i = 0; i < 200; i++) {
+  stars.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 1.5 + 0.5,
+    speed: Math.random() * 0.5 + 0.1,
+    alpha: Math.random()
+  });
+}
+
+function drawStars() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  stars.forEach(s => {
+    s.alpha += (Math.random() - 0.5) * 0.05;
+    if (s.alpha < 0.2) s.alpha = 0.2;
+    if (s.alpha > 1) s.alpha = 1;
+    s.y += s.speed;
+    if (s.y > canvas.height) { s.y = 0; s.x = Math.random() * canvas.width; }
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,215,0,${s.alpha * 0.6})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+drawStars();
+</script>
+</body>
+</html>
