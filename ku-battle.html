@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KNOWLEDGE UNIVERSE — BATTLE</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0508;color:#c4a265;font-family:'Cormorant Garamond',serif;min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:#0a0508}::-webkit-scrollbar-thumb{background:#2a1a08;border-radius:3px}
+h1,h2,h3{font-family:'Cinzel',serif;color:#d4af37;letter-spacing:0.1em}
+button{font-family:'Cinzel',serif;cursor:pointer;transition:all 0.3s}
+
+/* SCREENS */
+.screen{display:none;min-height:100vh;padding:30px 20px;animation:fadeIn 0.6s}
+.screen.active{display:flex;flex-direction:column;align-items:center}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* TITLE */
+#title-screen{justify-content:center;text-align:center;background:radial-gradient(ellipse at center,#1a0a00 0%,#0a0508 70%)}
+#title-screen h1{font-size:3em;margin-bottom:10px;text-shadow:0 0 40px rgba(212,175,55,0.5)}
+#title-screen .sub{font-size:1.4em;color:#8a7a5a;font-style:italic;margin-bottom:40px}
+.big-btn{padding:18px 50px;font-size:1.3em;background:rgba(212,175,55,0.1);color:#d4af37;border:2px solid #d4af37;letter-spacing:0.15em}
+.big-btn:hover{background:#d4af37;color:#0a0508;box-shadow:0 0 40px rgba(212,175,55,0.5)}
+
+/* SETUP */
+#setup-screen{justify-content:center;text-align:center}
+.player-input{margin:15px 0}
+.player-input label{font-size:1.2em;display:block;margin-bottom:5px}
+.player-input input{padding:12px 20px;font-family:'Cinzel',serif;font-size:1.1em;background:#1a0a00;border:1px solid #3a2a15;color:#d4af37;text-align:center;width:280px;border-radius:4px}
+.player-input input:focus{outline:none;border-color:#d4af37;box-shadow:0 0 15px rgba(212,175,55,0.3)}
+.setup-rules{max-width:600px;margin:30px auto;padding:20px;background:rgba(26,10,0,0.6);border:1px solid #2a1a08;border-radius:8px;text-align:left;line-height:1.7;font-size:1.05em}
+.setup-rules h3{margin-bottom:10px;font-size:1.1em}
+
+/* EXPLORE */
+#explore-screen{max-width:800px;margin:0 auto}
+.explore-header{text-align:center;margin-bottom:20px}
+.explore-header .turn-badge{display:inline-block;padding:8px 25px;background:rgba(212,175,55,0.15);border:1px solid #d4af37;border-radius:20px;font-family:'Cinzel',serif;font-size:1em;color:#d4af37;margin-bottom:10px}
+.explore-header .step-counter{color:#8a7a5a;font-size:0.95em}
+.story-text{background:rgba(26,10,0,0.5);border:1px solid #2a1a08;border-radius:8px;padding:25px;margin:20px 0;line-height:1.8;font-size:1.15em;min-height:120px}
+.story-text .snake-warn{color:#e85040;font-weight:700;display:block;margin-top:10px}
+.choice-btn{display:block;width:100%;padding:15px 20px;margin:8px 0;background:rgba(26,10,0,0.4);border:1px solid #3a2a15;color:#c4a265;font-size:1.05em;text-align:left;border-radius:6px;font-family:'Cormorant Garamond',serif}
+.choice-btn:hover{border-color:#d4af37;color:#d4af37;background:rgba(212,175,55,0.08)}
+.facts-bar{display:flex;flex-wrap:wrap;gap:6px;margin:15px 0}
+.fact-tag{padding:4px 10px;background:rgba(212,175,55,0.1);border:1px solid #3a2a15;border-radius:12px;font-size:0.85em;color:#8a7a5a}
+
+/* TAROT DRAW */
+#tarot-screen{justify-content:center;text-align:center}
+.tarot-deck{display:flex;gap:15px;flex-wrap:wrap;justify-content:center;margin:25px 0;perspective:800px}
+.tarot-card{width:120px;height:190px;border-radius:8px;border:2px solid #3a2a15;cursor:pointer;position:relative;transition:all 0.4s;transform-style:preserve-3d}
+.tarot-card:hover{transform:translateY(-8px);border-color:#d4af37;box-shadow:0 8px 25px rgba(212,175,55,0.3)}
+.tarot-card.drawn{transform:scale(0.9);opacity:0.3;pointer-events:none}
+.tarot-card .card-face{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px;border-radius:6px}
+.tarot-back{background:repeating-conic-gradient(from 0deg,#1a0a00 0deg 90deg,#0f0508 90deg 180deg) 0 0/20px 20px}
+.tarot-back::after{content:'☪';font-size:2em;color:#d4af37;opacity:0.4}
+.tarot-front{background:linear-gradient(135deg,#1a0a00,#2a1508);display:none}
+.tarot-card.revealed .tarot-back{display:none}
+.tarot-card.revealed .tarot-front{display:flex}
+.tarot-front .card-icon{font-size:2.5em;margin-bottom:8px}
+.tarot-front .card-name{font-family:'Cinzel',serif;font-size:0.7em;color:#d4af37;text-align:center}
+.tarot-front .card-power{font-size:0.8em;color:#e85040;margin-top:5px}
+.drawn-hand{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:15px 0}
+.hand-card{width:100px;height:155px;border-radius:6px;border:2px solid #d4af37;background:linear-gradient(135deg,#1a0a00,#2a1508);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px}
+.hand-card .card-icon{font-size:2em}
+.hand-card .card-name{font-family:'Cinzel',serif;font-size:0.55em;color:#d4af37;text-align:center;margin-top:4px}
+.hand-card .card-power{font-size:0.7em;color:#e85040;margin-top:3px}
+
+/* BATTLE */
+#battle-screen{max-width:900px;margin:0 auto;width:100%}
+.battle-header{text-align:center;margin-bottom:15px}
+.battle-header .round{font-size:1.4em;color:#e85040}
+.health-bars{display:flex;justify-content:space-between;gap:20px;margin:15px 0;width:100%}
+.hp-bar{flex:1;padding:12px;background:rgba(26,10,0,0.5);border:1px solid #2a1a08;border-radius:8px;text-align:center}
+.hp-bar .name{font-family:'Cinzel',serif;font-size:1em;color:#d4af37;margin-bottom:5px}
+.hp-bar .class-badge{font-size:0.8em;color:#8a7a5a;margin-bottom:8px}
+.hp-bar .bar-outer{width:100%;height:20px;background:#1a0a00;border-radius:10px;overflow:hidden;border:1px solid #3a2a15}
+.hp-bar .bar-inner{height:100%;border-radius:10px;transition:width 0.8s cubic-bezier(0.4,0,0.2,1)}
+.hp-bar .bar-inner.p1{background:linear-gradient(90deg,#d4af37,#e8c547)}
+.hp-bar .bar-inner.p2{background:linear-gradient(90deg,#6090d0,#80b0f0)}
+.hp-bar .hp-text{font-size:0.9em;margin-top:4px;color:#8a7a5a}
+.arena{width:100%;min-height:200px;margin:15px 0;background:rgba(26,10,0,0.3);border:1px solid #2a1a08;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:40px;padding:20px;position:relative}
+.arena-card{width:130px;height:200px;border-radius:8px;border:2px solid #3a2a15;background:linear-gradient(135deg,#1a0a00,#2a1508);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px;opacity:0;transition:all 0.5s}
+.arena-card.played{opacity:1;transform:scale(1.05)}
+.arena-card .card-icon{font-size:2.5em;margin-bottom:5px}
+.arena-card .card-name{font-family:'Cinzel',serif;font-size:0.65em;color:#d4af37;text-align:center}
+.arena-card .card-power{font-size:1.2em;color:#e85040;font-weight:700;margin-top:5px}
+.arena .vs{font-family:'Cinzel',serif;font-size:2em;color:#e85040;text-shadow:0 0 20px rgba(232,80,64,0.5)}
+.arena .result-text{position:absolute;bottom:10px;font-size:1.1em;color:#d4af37;font-style:italic}
+.battle-hand{margin:15px 0;text-align:center}
+.battle-hand h3{font-size:1em;margin-bottom:10px}
+.battle-cards{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.b-card{width:95px;height:145px;border-radius:6px;border:2px solid #3a2a15;background:linear-gradient(135deg,#1a0a00,#2a1508);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px;cursor:pointer;transition:all 0.3s}
+.b-card:hover{border-color:#d4af37;transform:translateY(-5px);box-shadow:0 5px 15px rgba(212,175,55,0.3)}
+.b-card.used{opacity:0.2;pointer-events:none}
+.b-card .card-icon{font-size:1.8em}
+.b-card .card-name{font-family:'Cinzel',serif;font-size:0.5em;color:#d4af37;text-align:center;margin-top:3px}
+.b-card .card-power{font-size:0.75em;color:#e85040;margin-top:2px}
+.ability-btn{padding:10px 25px;background:rgba(232,80,64,0.1);border:1px solid #e85040;color:#e85040;font-size:0.95em;margin-top:10px;border-radius:4px}
+.ability-btn:hover{background:#e85040;color:#0a0508}
+.ability-btn:disabled{opacity:0.3;cursor:not-allowed}
+.battle-log{max-height:150px;overflow-y:auto;padding:10px;background:rgba(10,5,8,0.5);border:1px solid #1a0a00;border-radius:6px;margin-top:10px;font-size:0.9em;line-height:1.6}
+.battle-log .log-entry{padding:3px 0;border-bottom:1px solid #1a0a0050}
+.log-hit{color:#e85040}.log-miss{color:#6090d0}.log-special{color:#d4af37}
+
+/* VICTORY */
+#victory-screen{justify-content:center;text-align:center;background:radial-gradient(ellipse at center,#1a0a00 0%,#0a0508 70%)}
+#victory-screen h1{font-size:3.5em;margin-bottom:10px;text-shadow:0 0 60px rgba(212,175,55,0.7);animation:pulse-gold 2s infinite}
+@keyframes pulse-gold{0%,100%{text-shadow:0 0 30px rgba(212,175,55,0.5)}50%{text-shadow:0 0 80px rgba(212,175,55,0.9)}}
+#victory-screen .winner-name{font-size:2em;color:#d4af37;margin-bottom:5px}
+#victory-screen .winner-class{font-size:1.3em;color:#8a7a5a;font-style:italic;margin-bottom:30px}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:500px;margin:20px auto}
+.stat-box{padding:15px;background:rgba(26,10,0,0.5);border:1px solid #2a1a08;border-radius:8px}
+.stat-box .label{font-size:0.85em;color:#8a7a5a}
+.stat-box .value{font-size:1.5em;color:#d4af37;font-family:'Cinzel',serif}
+
+/* WAITING OVERLAY */
+.waiting-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(10,5,8,0.95);z-index:999;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.waiting-overlay.show{display:flex}
+.waiting-overlay h2{font-size:2em;margin-bottom:15px}
+.waiting-overlay p{font-size:1.2em;color:#8a7a5a;font-style:italic;margin-bottom:30px}
+
+@media(max-width:600px){
+  #title-screen h1{font-size:2em}
+  .arena{flex-direction:column;gap:15px}
+  .health-bars{flex-direction:column}
+  .tarot-card{width:90px;height:140px}
+}
+</style>
+</head>
+<body>
+
+<!-- TITLE -->
+<div id="title-screen" class="screen active">
+  <div style="font-size:4em;margin-bottom:20px">⚔️🌌⚔️</div>
+  <h1>KNOWLEDGE UNIVERSE</h1>
+  <div class="sub">BATTLE OF THE SANDS</div>
+  <p style="max-width:500px;margin-bottom:30px;line-height:1.7;color:#8a7a5a">
+    Two players enter the desert. Each walks a different path, collecting power from choices made. 
+    Then — they fight. Your story becomes your weapon. Your ending becomes your class.
+    The Tarot deals the wild cards.
+  </p>
+  <button class="big-btn" onclick="showScreen('setup-screen')">ENTER THE ARENA</button>
+</div>
+
+<!-- SETUP -->
+<div id="setup-screen" class="screen">
+  <h1 style="font-size:2em;margin-bottom:20px">⚔️ CHOOSE YOUR FIGHTERS</h1>
+  <div class="player-input">
+    <label>🏜️ Player 1 — Gold</label>
+    <input id="p1-name" type="text" placeholder="Enter name..." value="Muad'Dib">
+  </div>
+  <div class="player-input">
+    <label>🌊 Player 2 — Blue</label>
+    <input id="p2-name" type="text" placeholder="Enter name..." value="Feyd-Rautha">
+  </div>
+  <div class="setup-rules">
+    <h3>⚔️ HOW IT WORKS</h3>
+    <p>1. <strong>EXPLORE</strong> — Each player walks Arrakis. 5 choices each. Every choice = a battle card.<br>
+    2. <strong>DRAW</strong> — Each player draws 3 Tarot cards from the Major Arcana. Special powers.<br>
+    3. <strong>BATTLE</strong> — 5 rounds. Pick a card each round. Highest power wins the clash.<br>
+    4. <strong>CLASS ABILITY</strong> — Your ending (Prophet/Wanderer/Ghost/Vessel) gives you ONE special power per battle.</p>
+    <p style="margin-top:10px;color:#e85040"><strong>🐍 Snakes grant bonus power. Facing them = reward. Fleeing = penalty.</strong></p>
+  </div>
+  <button class="big-btn" style="margin-top:20px" onclick="startGame()">BEGIN ⚔️</button>
+</div>
+
+<!-- EXPLORE -->
+<div id="explore-screen" class="screen">
+  <div class="explore-header">
+    <div class="turn-badge" id="explore-turn"></div>
+    <div class="step-counter" id="step-counter"></div>
+  </div>
+  <div class="story-text" id="story-text"></div>
+  <div id="choices-area"></div>
+  <div class="facts-bar" id="facts-bar"></div>
+</div>
+
+<!-- TAROT -->
+<div id="tarot-screen" class="screen">
+  <h1 style="font-size:2em;margin-bottom:5px">🃏 THE TAROT DEALS</h1>
+  <p id="tarot-turn" style="font-size:1.2em;color:#8a7a5a;font-style:italic;margin-bottom:20px"></p>
+  <p style="color:#8a7a5a;margin-bottom:20px">Draw 3 cards from the Major Arcana</p>
+  <div class="tarot-deck" id="tarot-deck"></div>
+  <div style="margin-top:15px">
+    <h3 style="font-size:1em" id="hand-label">Your Hand:</h3>
+    <div class="drawn-hand" id="drawn-hand"></div>
+  </div>
+  <button class="big-btn" id="tarot-done-btn" style="margin-top:20px;display:none" onclick="tarotDone()">READY ⚔️</button>
+</div>
+
+<!-- BATTLE -->
+<div id="battle-screen" class="screen">
+  <div class="battle-header">
+    <h2>⚔️ BATTLE</h2>
+    <div class="round" id="round-display">Round 1 / 5</div>
+  </div>
+  <div class="health-bars">
+    <div class="hp-bar">
+      <div class="name" id="b-p1-name"></div>
+      <div class="class-badge" id="b-p1-class"></div>
+      <div class="bar-outer"><div class="bar-inner p1" id="b-p1-bar" style="width:100%"></div></div>
+      <div class="hp-text" id="b-p1-hp">100 / 100</div>
+    </div>
+    <div class="hp-bar">
+      <div class="name" id="b-p2-name"></div>
+      <div class="class-badge" id="b-p2-class"></div>
+      <div class="bar-outer"><div class="bar-inner p2" id="b-p2-bar" style="width:100%"></div></div>
+      <div class="hp-text" id="b-p2-hp">100 / 100</div>
+    </div>
+  </div>
+  <div class="arena" id="arena">
+    <div class="arena-card" id="arena-p1"><div class="card-icon"></div><div class="card-name"></div><div class="card-power"></div></div>
+    <div class="vs">VS</div>
+    <div class="arena-card" id="arena-p2"><div class="card-icon"></div><div class="card-name"></div><div class="card-power"></div></div>
+    <div class="result-text" id="clash-result"></div>
+  </div>
+  <div id="battle-controls">
+    <div class="battle-hand" id="battle-hand-area">
+      <h3 id="battle-turn-label"></h3>
+      <div class="battle-cards" id="battle-cards"></div>
+      <button class="ability-btn" id="ability-btn" onclick="useAbility()" style="display:none">🔮 USE CLASS ABILITY</button>
+    </div>
+  </div>
+  <div class="battle-log" id="battle-log"></div>
+</div>
+
+<!-- VICTORY -->
+<div id="victory-screen" class="screen">
+  <div style="font-size:5em;margin-bottom:20px">👑</div>
+  <h1>VICTORY</h1>
+  <div class="winner-name" id="winner-name"></div>
+  <div class="winner-class" id="winner-class"></div>
+  <div class="stats-grid" id="stats-grid"></div>
+  <button class="big-btn" style="margin-top:30px" onclick="location.reload()">FIGHT AGAIN ⚔️</button>
+</div>
+
+<!-- WAITING OVERLAY -->
+<div class="waiting-overlay" id="waiting-overlay">
+  <h2 id="waiting-title">⏳ PASS THE DEVICE</h2>
+  <p id="waiting-text"></p>
+  <button class="big-btn" onclick="dismissWaiting()">I'M READY</button>
+</div>
+
+<script>
+// === STORY DATA (R's 30-node Arrakis) ===
+const STORY = {
+"SL-001":{text:"You tip the gourd to your lips. The Water of Life\u2014blue, thick, alive\u2014slides down your throat like a dying star. The world shatters into a thousand mirrors of sand and memory.",choices:[{label:"Look outward\u2014into the open dunes",next:"SL-002",fact:"opened_eyes"},{label:"Look inward\u2014into your own depths",next:"SL-003",fact:"closed_eyes"}]},
+"SL-002":{text:"The dunes stretch infinite. A wind howls, carrying the scent of cinnamon and old blood. A figure carved from bone and shadow stands on a ridge\u2014waiting.",choices:[{label:"Approach the figure",next:"SL-004",fact:"approached_figure"},{label:"Follow the scent of cinnamon",next:"SL-005",fact:"followed_cinnamon"}]},
+"SL-003":{text:"Inside you, the desert is a reef of memory. A child drowning in spice, a mother who gave her life for water, a father who became a worm. The pain is a knot of time.",choices:[{label:"Untie the knot\u2014slowly, gently",next:"SL-006",fact:"untied_knot"},{label:"Cut the knot\u2014quickly, mercifully",next:"SL-007",fact:"cut_knot"}]},
+"SL-004":{text:"A thousand ancestors layered like pages of a burnt book. Their mouths open: 'Choose.' The bone dune rises behind them, white as a bleached sun.",choices:[{label:"Ask for guidance\u2014'What path am I?'",next:"SL-008",fact:"asked_guidance"},{label:"Demand the truth\u2014'What have I become?'",next:"SL-009",fact:"demanded_truth"}]},
+"SL-005":{text:"A canyon of rust-red rock. Walls pulse with a heartbeat not your own. At the end: a stillsuit woven from starlight, humming with the voices of every water-thief.",choices:[{label:"Wear the stillsuit\u2014become the thief",next:"SL-010",fact:"wore_stillsuit"},{label:"Leave it\u2014some paths are not yours",next:"SL-011",fact:"left_stillsuit"}]},
+"SL-006":{text:"Each pull reveals a memory. You see your own birth, your first lie. The knot loosens, but a snake coils in the marrow of your spine. It waits.",choices:[{label:"Face the snake\u2014it must be seen",next:"SL-012",fact:"faced_static_snake"},{label:"Ignore the snake\u2014keep untying",next:"SL-013",fact:"ignored_snake"}],snake:"static"},
+"SL-007":{text:"You cut the knot. Memories scatter like startled birds, leaving holes that fill with sand. You feel lighter, hollow, free. The desert hums\u2014hungry and patient.",choices:[{label:"Walk into the desert\u2014let it fill you",next:"SL-014",fact:"walked_desert"},{label:"Search for something to fill the holes",next:"SL-015",fact:"searched_fill"}]},
+"SL-008":{text:"'You are the path you have walked,' they whisper. They offer a single grain of sand\u2014pure, dense. 'This is your truth. Carry it.' The grain burns cold.",choices:[{label:"Accept the grain\u2014carry it",next:"SL-016",fact:"accepted_grain"},{label:"Crush the grain\u2014make your own truth",next:"SL-017",fact:"crushed_grain"}]},
+"SL-009":{text:"'You have become a question,' it says. 'Every answer you choose will birth a new desert.' The bone dune creaks like a ship in a storm.",choices:[{label:"Ask 'Why am I here?'",next:"SL-018",fact:"asked_why"},{label:"Answer 'I am here to change'",next:"SL-019",fact:"answered_change"}]},
+"SL-010":{text:"The stillsuit fits like a second birth. You hear every drop of water across the desert. A path of footprints leads into a whirlwind of sand.",choices:[{label:"Follow the footprints",next:"SL-020",fact:"followed_footprints"},{label:"Make your own path\u2014the voices are a trap",next:"SL-021",fact:"made_path"}]},
+"SL-011":{text:"You leave the stillsuit. A cry like a child left behind. A second snake emerges\u2014it writhes, watching. It speaks: 'You have been weighed.'",choices:[{label:"Speak to the snake\u2014ask its purpose",next:"SL-022",fact:"spoke_snake"},{label:"Run from the snake\u2014escape",next:"SL-023",fact:"ran_snake"}],snake:"dynamic"},
+"SL-012":{text:"The snake demands: 'Remember all of it. Do not flinch.' You look into its eyes and remember. The snake dissolves into golden light.",choices:[{label:"Accept the light",next:"SL-024",fact:"accepted_light"},{label:"Reject the light\u2014hold onto yourself",next:"SL-025",fact:"rejected_light"}]},
+"SL-013":{text:"You ignore the snake. The knot grows tighter. The snake strikes with silence. You are fading, becoming sand. A hand reaches through the dark.",choices:[{label:"Grasp the hand\u2014hold on",next:"SL-026",fact:"grasped_hand"},{label:"Let go\u2014become the sand",next:"END-GHOST",fact:"became_sand"}]},
+"SL-014":{text:"The desert fills your hollows. The sky turns to glass. A worm rises\u2014its mouth a cathedral of rings. It waits, patient as a god.",choices:[{label:"Enter the worm's mouth\u2014trust the cycle",next:"END-VESSEL",fact:"entered_worm"},{label:"Stand your ground\u2014refuse the void",next:"END-WANDERER",fact:"stood_ground"}]},
+"SL-015":{text:"Every piece you find is already sand. Bone, wind, sweat\u2014they slip through. The holes widen. You are becoming a sieve.",choices:[{label:"Surrender to the loss",next:"END-VESSEL",fact:"surrendered_loss"},{label:"Fight the loss\u2014cling to what remains",next:"END-GHOST",fact:"fought_loss"}]},
+"SL-016":{text:"The grain burns cold, then hot. The ancestors bow. The bone dune splits open. Inside: a ladder of light. The way out is up.",choices:[{label:"Climb the ladder\u2014awaken",next:"END-PROPHET",fact:"climbed_ladder"},{label:"Descend\u2014seek deeper truth",next:"END-PROPHET",fact:"descended_split"}]},
+"SL-017":{text:"The dust blooms into a storm. The ancestors scream or laugh. You have unmade their gift. The desert is blank. A figure holds a stylus of bone.",choices:[{label:"Take the stylus\u2014write your path",next:"END-WANDERER",fact:"took_stylus"},{label:"Refuse\u2014walk unwritten",next:"END-WANDERER",fact:"refused_stylus"}]},
+"SL-018":{text:"The figure dissolves into light that writes: 'CHOOSE.' A door of obsidian swings open. Beyond: your own heartbeat calling you home.",choices:[{label:"Step through the door",next:"END-PROPHET",fact:"stepped_door"},{label:"Stay\u2014refuse the easy way",next:"END-WANDERER",fact:"stayed_door"}]},
+"SL-019":{text:"'Then change,' your reflection whispers. 'But every transformation leaves a ghost.' The glass cracks beneath your weight.",choices:[{label:"Embrace the ghost\u2014change with memory",next:"END-PROPHET",fact:"embraced_ghost"},{label:"Shatter the glass\u2014change as rebirth",next:"END-VESSEL",fact:"shattered_glass"}]},
+"SL-020":{text:"A forest of crystal cacti, each holding a frozen tear. A circle of stones, fire without fuel. In the flames: a child you once were, smiling.",choices:[{label:"Take the child's hand\u2014return to innocence",next:"END-PROPHET",fact:"took_child_hand"},{label:"Walk through the fire\u2014burn the child away",next:"END-VESSEL",fact:"walked_fire"}]},
+"SL-021":{text:"A dune of bones\u2014each one a choice someone else made. At the summit: a feather impossibly light, holding the sky.",choices:[{label:"Take the feather\u2014carry the sky",next:"END-WANDERER",fact:"took_feather"},{label:"Leave the feather\u2014the sky is not yours",next:"END-GHOST",fact:"left_feather"}]},
+"SL-022":{text:"The snake coils around you. 'Your path is full of escapes,' it hisses. 'But you chose to speak. That is a thread.' It offers a glowing scale.",choices:[{label:"Take the scale\u2014bind the snake",next:"END-PROPHET",fact:"took_scale"},{label:"Reject\u2014face what you've avoided",next:"END-WANDERER",fact:"rejected_scale"}]},
+"SL-023":{text:"You run. The snake watches, its judgment a stone in your chest. You reach the edge where the world frays into white static. 'You cannot outrun yourself.'",choices:[{label:"Stop\u2014turn and face it",next:"END-WANDERER",fact:"stopped_running"},{label:"Jump into the static\u2014wake up broken",next:"END-GHOST",fact:"jumped_static"}]},
+"SL-024":{text:"Golden light pours through you. You see the vision whole\u2014every thread, every choice. 'You are ready.' The desert falls away. You are waking.",choices:[{label:"Wake with eyes open",next:"END-PROPHET",fact:"awoke_open"},{label:"Wake with eyes closed\u2014keep the vision within",next:"END-PROPHET",fact:"awoke_closed"}]},
+"SL-025":{text:"The light shatters. Darkness\u2014warm, familiar. The snake returns as guide. 'You have chosen yourself. Now walk.' A path of stars.",choices:[{label:"Walk the star path",next:"END-WANDERER",fact:"awoke_wanderer"},{label:"Stay in the dark\u2014awaken in silence",next:"END-GHOST",fact:"awoke_silence"}]},
+"SL-026":{text:"A garden of moonlight and cacti. A woman made of water. 'You held on. That is the first lesson.' She pours a single drop into your mouth.",choices:[{label:"Thank her\u2014drink the drop",next:"END-PROPHET",fact:"thanked_water_woman"},{label:"Refuse\u2014earn your own water",next:"END-WANDERER",fact:"refused_water"}]},
+"END-PROPHET":{text:"You open both pairs of eyes. You see through everything\u2014to the bones of the world. You are what the desert made.",choices:[],ending:"prophet"},
+"END-WANDERER":{text:"You wake walking. The vision was the journey, and the journey never ends. You carry nothing but the weight of your choices.",choices:[],ending:"wanderer"},
+"END-GHOST":{text:"You wake in fragments. Less than you were, but sharper, harder, truer. The spice burned away everything that lied.",choices:[],ending:"ghost"},
+"END-VESSEL":{text:"You do not wake\u2014you are poured. Empty and full at once, carrying the desert's memory in your blood.",choices:[],ending:"vessel"}
+};
+
+// === TAROT MAJOR ARCANA ===
+const TAROT = [
+{id:0,name:"THE NAKED FOOL",icon:"\u{1F96A}",power:5,effect:"Chaos\u2014random +0 to +15"},
+{id:1,name:"THE ARCHITECT",icon:"\u{1F985}",power:12,effect:"+12 raw power"},
+{id:2,name:"IRULAN",icon:"\u{1F451}",power:10,effect:"Dominate\u2014opponent -3"},
+{id:3,name:"ORANGE SWEATER",icon:"\u{1F34A}",power:8,effect:"Warmth\u2014heal 5 HP"},
+{id:4,name:"KITCHEN TABLE",icon:"\u{1FA91}",power:7,effect:"Stability\u2014block 5 damage"},
+{id:5,name:"COLD COFFEE",icon:"\u2615",power:6,effect:"Time\u2014steal 3 power"},
+{id:6,name:"THABOR",icon:"\u{1F333}",power:11,effect:"Love\u2014+11 raw power"},
+{id:7,name:"THE SPOON",icon:"\u{1F944}",power:9,effect:"God's birth\u2014+9 power"},
+{id:8,name:"MELANGE",icon:"\u{1F379}",power:13,effect:"Universe cocktail\u2014+13"},
+{id:9,name:"DESERT WALK",icon:"\u{1F3DC}",power:8,effect:"Solitude\u2014ignore opponent ability"},
+{id:10,name:"PERPETUAL",icon:"\u267E",power:10,effect:"Wheel\u2014play again if you lose"},
+{id:11,name:"THE GROWL",icon:"\u{1F43A}",power:11,effect:"Bite\u2014+11 + 3 bleed"},
+{id:12,name:"OPEN WINDOW",icon:"\u{1FA9F}",power:7,effect:"Expose\u2014see opponent's card"},
+{id:13,name:"LA PETITE MORT",icon:"\u{1F480}",power:14,effect:"Devastation\u2014+14 power"},
+{id:14,name:"WARM MILK + HONEY",icon:"\u{1F36F}",power:6,effect:"Completion\u2014heal 8 HP"},
+{id:15,name:"THE PORN GAME",icon:"\u{1F3AE}",power:9,effect:"Nothing hidden\u2014both cards face up"},
+{id:16,name:"PERFECT CHAOS",icon:"\u{1F4A5}",power:15,effect:"BOOM\u2014highest power, no effect"},
+{id:17,name:"TECHNO",icon:"\u2B50",power:10,effect:"The Heir\u2014+10 inevitable"},
+{id:18,name:"CRYSTAL BALL",icon:"\u{1F52E}",power:8,effect:"Foresight\u2014see next round"},
+{id:19,name:"THE DIAMOND",icon:"\u{1F48E}",power:13,effect:"Pressure\u2014+13 architecture"},
+{id:20,name:"ORDINARY",icon:"\u{1F3E0}",power:7,effect:"Sacred morning\u2014heal 6 HP"},
+{id:21,name:"SSS \u2014 THE GAME",icon:"\u{1F40D}\u{1F40D}\u{1F40D}",power:12,effect:"Triple R\u2014perpetual +12"},
+{id:22,name:"THE ANGEL",icon:"\u{1F47C}\u{1F525}",power:14,effect:"Recognition\u2014+14 devastation"}
+];
+
+// === CLASS ABILITIES ===
+const CLASS_INFO = {
+  prophet: {name:"PROPHET",icon:"\u{1F441}",desc:"See opponent's played card before choosing",color:"#d4af37"},
+  wanderer: {name:"WANDERER",icon:"\u{1F6B6}",desc:"Dodge: take 50% damage this round",color:"#6090d0"},
+  ghost: {name:"GHOST",icon:"\u{1F47B}",desc:"Steal: take opponent's strongest remaining card",color:"#8a8a8a"},
+  vessel: {name:"VESSEL",icon:"\u{1F3FA}",desc:"Absorb: reflect 50% damage dealt to you",color:"#e85040"}
+};
+
+// === FACT POWER MAP ===
+const FACT_POWER = {
+  opened_eyes:7, closed_eyes:8, approached_figure:7, followed_cinnamon:6,
+  untied_knot:8, cut_knot:9, asked_guidance:6, demanded_truth:9,
+  wore_stillsuit:8, left_stillsuit:7, faced_static_snake:12, ignored_snake:4,
+  walked_desert:7, searched_fill:6, accepted_grain:8, crushed_grain:10,
+  asked_why:7, answered_change:9, followed_footprints:6, made_path:9,
+  spoke_snake:11, ran_snake:3, accepted_light:10, rejected_light:8,
+  grasped_hand:7, became_sand:5, entered_worm:8, stood_ground:9,
+  surrendered_loss:6, fought_loss:7, climbed_ladder:9, descended_split:10,
+  took_stylus:8, refused_stylus:7, stepped_door:9, stayed_door:8,
+  embraced_ghost:10, shattered_glass:8, took_child_hand:7, walked_fire:10,
+  took_feather:8, left_feather:5, took_scale:11, rejected_scale:8,
+  stopped_running:9, jumped_static:4, awoke_open:9, awoke_closed:10,
+  awoke_wanderer:8, awoke_silence:6, thanked_water_woman:9, refused_water:8
+};
+
+const FACT_ICONS = {
+  opened_eyes:"\u{1F440}",closed_eyes:"\u{1F9D1}\u200D\u{1F9AF}",approached_figure:"\u{1F6B6}",followed_cinnamon:"\u{1F33F}",
+  untied_knot:"\u{1F9F6}",cut_knot:"\u{1FA93}",asked_guidance:"\u{1F64F}",demanded_truth:"\u26A1",
+  wore_stillsuit:"\u{1F97C}",left_stillsuit:"\u{1F6AB}",faced_static_snake:"\u{1F40D}",ignored_snake:"\u{1F648}",
+  walked_desert:"\u{1F3DC}",searched_fill:"\u{1F50D}",accepted_grain:"\u{1F91D}",crushed_grain:"\u{1F4A5}",
+  asked_why:"\u2753",answered_change:"\u{1F504}",followed_footprints:"\u{1F43E}",made_path:"\u{1F5FA}",
+  spoke_snake:"\u{1F5E3}",ran_snake:"\u{1F3C3}",accepted_light:"\u2728",rejected_light:"\u{1F311}",
+  grasped_hand:"\u{1F91D}",became_sand:"\u23F3",entered_worm:"\u{1F40B}",stood_ground:"\u{1F9CD}",
+  surrendered_loss:"\u{1F54A}",fought_loss:"\u270A",climbed_ladder:"\u{1FA9C}",descended_split:"\u{1F573}",
+  took_stylus:"\u270D",refused_stylus:"\u{1F6B7}",stepped_door:"\u{1F6AA}",stayed_door:"\u{1F9D8}",
+  embraced_ghost:"\u{1F47B}",shattered_glass:"\u{1F4A2}",took_child_hand:"\u{1F476}",walked_fire:"\u{1F525}",
+  took_feather:"\u{1FAB6}",left_feather:"\u274C",took_scale:"\u{1F40D}",rejected_scale:"\u{1F6E1}",
+  stopped_running:"\u270B",jumped_static:"\u26A1",awoke_open:"\u{1F441}",awoke_closed:"\u{1F9D8}",
+  awoke_wanderer:"\u2B50",awoke_silence:"\u{1F30C}",thanked_water_woman:"\u{1F4A7}",refused_water:"\u{1F3CB}"
+};
+
+// === GAME STATE ===
+let players = [{name:"",facts:[],tarot:[],ending:null,hp:100,abilityUsed:false},
+               {name:"",facts:[],tarot:[],ending:null,hp:100,abilityUsed:false}];
+let currentPlayer = 0;
+let currentNode = "SL-001";
+let exploreSteps = 0;
+const MAX_EXPLORE_STEPS = 5;
+let tarotDrawCount = 0;
+let battleRound = 0;
+let battleP1Card = null;
+let battleP2Card = null;
+let battleLog = [];
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showWaiting(title, text) {
+  const o = document.getElementById('waiting-overlay');
+  document.getElementById('waiting-title').textContent = title;
+  document.getElementById('waiting-text').textContent = text;
+  o.classList.add('show');
+}
+
+function dismissWaiting() {
+  document.getElementById('waiting-overlay').classList.remove('show');
+}
+
+// === START ===
+function startGame() {
+  players[0].name = document.getElementById('p1-name').value || "Player 1";
+  players[1].name = document.getElementById('p2-name').value || "Player 2";
+  currentPlayer = 0;
+  currentNode = "SL-001";
+  exploreSteps = 0;
+  startExplore();
+}
+
+// === EXPLORE ===
+function startExplore() {
+  showScreen('explore-screen');
+  renderExplore();
+}
+
+function renderExplore() {
+  const p = players[currentPlayer];
+  const node = STORY[currentNode];
+  document.getElementById('explore-turn').textContent = 
+    (currentPlayer === 0 ? "\u{1F3DC} " : "\u{1F30A} ") + p.name + "'s Journey";
+  document.getElementById('step-counter').textContent = 
+    "Choice " + (exploreSteps + 1) + " / " + MAX_EXPLORE_STEPS;
+  
+  let txt = node.text;
+  if (node.snake) txt += '\n\n\u{1F40D} A SNAKE appears! (' + node.snake + ')';
+  document.getElementById('story-text').innerHTML = txt.replace(/\n/g, '<br>');
+  
+  const ca = document.getElementById('choices-area');
+  ca.innerHTML = '';
+  
+  if (node.choices && node.choices.length > 0) {
+    node.choices.forEach(c => {
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.textContent = c.label;
+      btn.onclick = () => makeChoice(c);
+      ca.appendChild(btn);
+    });
+  } else {
+    // Ending reached early
+    if (node.ending) {
+      p.ending = node.ending;
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.textContent = "\u2728 Awakening: " + CLASS_INFO[node.ending].name + " \u2014 Continue";
+      btn.onclick = () => finishExplore();
+      ca.appendChild(btn);
+    }
+  }
+  
+  // Facts bar
+  const fb = document.getElementById('facts-bar');
+  fb.innerHTML = '';
+  p.facts.forEach(f => {
+    const tag = document.createElement('span');
+    tag.className = 'fact-tag';
+    tag.textContent = (FACT_ICONS[f] || "\u2B50") + " " + f.replace(/_/g, ' ');
+    fb.appendChild(tag);
+  });
+}
+
+function makeChoice(choice) {
+  const p = players[currentPlayer];
+  if (choice.fact) p.facts.push(choice.fact);
+  exploreSteps++;
+  
+  if (exploreSteps >= MAX_EXPLORE_STEPS) {
+    // Force ending based on path
+    const nextNode = STORY[choice.next];
+    if (nextNode && nextNode.ending) {
+      p.ending = nextNode.ending;
+    } else {
+      // Determine ending from facts
+      p.ending = determineEnding(p.facts);
+    }
+    finishExplore();
+  } else {
+    currentNode = choice.next;
+    if (STORY[currentNode].ending) {
+      p.ending = STORY[currentNode].ending;
+      finishExplore();
+    } else {
+      renderExplore();
+    }
+  }
+}
+
+function determineEnding(facts) {
+  let scores = {prophet:0, wanderer:0, ghost:0, vessel:0};
+  const prophetFacts = ['faced_static_snake','accepted_light','accepted_grain','climbed_ladder','took_scale','spoke_snake','awoke_open','awoke_closed','embraced_ghost','stepped_door','took_child_hand','thanked_water_woman'];
+  const wandererFacts = ['made_path','took_stylus','refused_stylus','took_feather','stopped_running','rejected_scale','awoke_wanderer','stayed_door','refused_water','stood_ground','rejected_light'];
+  const ghostFacts = ['became_sand','fought_loss','left_feather','jumped_static','awoke_silence','ignored_snake','ran_snake'];
+  const vesselFacts = ['entered_worm','surrendered_loss','shattered_glass','walked_fire','walked_desert'];
+  facts.forEach(f => {
+    if (prophetFacts.includes(f)) scores.prophet++;
+    if (wandererFacts.includes(f)) scores.wanderer++;
+    if (ghostFacts.includes(f)) scores.ghost++;
+    if (vesselFacts.includes(f)) scores.vessel++;
+  });
+  return Object.entries(scores).sort((a,b) => b[1]-a[1])[0][0];
+}
+
+function finishExplore() {
+  if (currentPlayer === 0) {
+    currentPlayer = 1;
+    currentNode = "SL-001";
+    exploreSteps = 0;
+    showWaiting("\u{1F3DC} Pass to " + players[1].name, 
+      players[0].name + " is done exploring. Hand the device to " + players[1].name + ".");
+    document.getElementById('waiting-overlay').querySelector('button').onclick = () => {
+      dismissWaiting();
+      startExplore();
+    };
+  } else {
+    startTarot();
+  }
+}
+
+// === TAROT DRAW ===
+function startTarot() {
+  currentPlayer = 0;
+  tarotDrawCount = 0;
+  showScreen('tarot-screen');
+  renderTarotDeck();
+}
+
+function renderTarotDeck() {
+  const p = players[currentPlayer];
+  document.getElementById('tarot-turn').textContent = 
+    (currentPlayer === 0 ? "\u{1F3DC} " : "\u{1F30A} ") + p.name + " \u2014 " + 
+    CLASS_INFO[p.ending].icon + " " + CLASS_INFO[p.ending].name;
+  
+  const deck = document.getElementById('tarot-deck');
+  deck.innerHTML = '';
+  
+  // Shuffle and display
+  const shuffled = [...TAROT].sort(() => Math.random() - 0.5);
+  shuffled.forEach((card, i) => {
+    const div = document.createElement('div');
+    div.className = 'tarot-card';
+    if (p.tarot.find(t => t.id === card.id) || players[1-currentPlayer].tarot.find(t => t.id === card.id)) {
+      div.classList.add('drawn');
+    }
+    div.innerHTML = '<div class="card-face tarot-back"></div><div class="card-face tarot-front"><div class="card-icon">' + card.icon + '</div><div class="card-name">' + card.name + '</div><div class="card-power">PWR ' + card.power + '</div></div>';
+    div.onclick = () => drawTarotCard(card, div);
+    deck.appendChild(div);
+  });
+  
+  renderDrawnHand();
+  document.getElementById('tarot-done-btn').style.display = p.tarot.length >= 3 ? 'inline-block' : 'none';
+  document.getElementById('hand-label').textContent = p.name + "'s Hand:";
+}
+
+function drawTarotCard(card, el) {
+  const p = players[currentPlayer];
+  if (p.tarot.length >= 3) return;
+  if (p.tarot.find(t => t.id === card.id)) return;
+  
+  p.tarot.push(card);
+  el.classList.add('drawn','revealed');
+  
+  renderDrawnHand();
+  if (p.tarot.length >= 3) {
+    document.getElementById('tarot-done-btn').style.display = 'inline-block';
+  }
+}
+
+function renderDrawnHand() {
+  const p = players[currentPlayer];
+  const hand = document.getElementById('drawn-hand');
+  hand.innerHTML = '';
+  p.tarot.forEach(card => {
+    hand.innerHTML += '<div class="hand-card"><div class="card-icon">' + card.icon + '</div><div class="card-name">' + card.name + '</div><div class="card-power">PWR ' + card.power + '</div></div>';
+  });
+}
+
+function tarotDone() {
+  if (currentPlayer === 0) {
+    currentPlayer = 1;
+    tarotDrawCount = 0;
+    showWaiting("\u{1F3DC} Pass to " + players[1].name,
+      players[0].name + " drew their Tarot. Hand the device to " + players[1].name + ".");
+    document.getElementById('waiting-overlay').querySelector('button').onclick = () => {
+      dismissWaiting();
+      showScreen('tarot-screen');
+      renderTarotDeck();
+    };
+  } else {
+    startBattle();
+  }
+}
+
+// === BATTLE ===
+function startBattle() {
+  battleRound = 1;
+  currentPlayer = 0;
+  battleP1Card = null;
+  battleP2Card = null;
+  battleLog = [];
+  
+  // Build battle decks: facts + tarot
+  players.forEach(p => {
+    p.battleDeck = [];
+    p.facts.forEach(f => {
+      p.battleDeck.push({type:'fact',name:f.replace(/_/g,' '),icon:FACT_ICONS[f]||"\u2B50",power:FACT_POWER[f]||6,fact:f,used:false});
+    });
+    p.tarot.forEach(t => {
+      p.battleDeck.push({type:'tarot',name:t.name,icon:t.icon,power:t.power,effect:t.effect,tarotId:t.id,used:false});
+    });
+  });
+  
+  showScreen('battle-screen');
+  renderBattle();
+  showWaiting("\u2694\uFE0F BATTLE BEGINS", players[0].name + " picks first. Ready?");
+  document.getElementById('waiting-overlay').querySelector('button').onclick = () => {
+    dismissWaiting();
+  };
+}
+
+function renderBattle() {
+  document.getElementById('round-display').textContent = "Round " + battleRound + " / 5";
+  document.getElementById('b-p1-name').textContent = "\u{1F3DC} " + players[0].name;
+  document.getElementById('b-p2-name').textContent = "\u{1F30A} " + players[1].name;
+  document.getElementById('b-p1-class').textContent = CLASS_INFO[players[0].ending].icon + " " + CLASS_INFO[players[0].ending].name;
+  document.getElementById('b-p2-class').textContent = CLASS_INFO[players[1].ending].icon + " " + CLASS_INFO[players[1].ending].name;
+  
+  updateHP();
+  renderBattleHand();
+  
+  // Reset arena
+  document.getElementById('arena-p1').classList.remove('played');
+  document.getElementById('arena-p2').classList.remove('played');
+  document.getElementById('clash-result').textContent = '';
+}
+
+function updateHP() {
+  players.forEach((p, i) => {
+    const pct = Math.max(0, p.hp);
+    document.getElementById('b-p' + (i+1) + '-bar').style.width = pct + '%';
+    document.getElementById('b-p' + (i+1) + '-hp').textContent = Math.max(0,p.hp) + ' / 100';
+  });
+}
+
+function renderBattleHand() {
+  const p = players[currentPlayer];
+  document.getElementById('battle-turn-label').textContent = 
+    (currentPlayer === 0 ? "\u{1F3DC} " : "\u{1F30A} ") + p.name + " \u2014 Pick a card";
+  
+  const area = document.getElementById('battle-cards');
+  area.innerHTML = '';
+  
+  p.battleDeck.forEach((card, idx) => {
+    if (card.used) return;
+    const div = document.createElement('div');
+    div.className = 'b-card';
+    div.innerHTML = '<div class="card-icon">' + card.icon + '</div><div class="card-name">' + card.name + '</div><div class="card-power">PWR ' + card.power + '</div>';
+    if (card.type === 'tarot') div.style.borderColor = '#e85040';
+    div.onclick = () => playCard(idx);
+    area.appendChild(div);
+  });
+  
+  // Ability button
+  const abilBtn = document.getElementById('ability-btn');
+  if (!p.abilityUsed && p.ending) {
+    abilBtn.style.display = 'inline-block';
+    abilBtn.textContent = CLASS_INFO[p.ending].icon + " " + CLASS_INFO[p.ending].desc;
+    abilBtn.disabled = false;
+  } else {
+    abilBtn.style.display = 'none';
+  }
+}
+
+function playCard(idx) {
+  const p = players[currentPlayer];
+  const card = p.battleDeck[idx];
+  card.used = true;
+  
+  if (currentPlayer === 0) {
+    battleP1Card = {...card};
+    currentPlayer = 1;
+    showWaiting("\u{1F3DC} Pass to " + players[1].name, 
+      players[0].name + " played a card. Don't peek!");
+    document.getElementById('waiting-overlay').querySelector('button').onclick = () => {
+      dismissWaiting();
+      renderBattleHand();
+    };
+  } else {
+    battleP2Card = {...card};
+    resolveClash();
+  }
+}
+
+function useAbility() {
+  const p = players[currentPlayer];
+  if (p.abilityUsed) return;
+  p.abilityUsed = true;
+  
+  const ending = p.ending;
+  const opponent = players[1 - currentPlayer];
+  let msg = '';
+  
+  if (ending === 'prophet') {
+    // See opponent's hand (if P2, see P1's played card)
+    if (currentPlayer === 1 && battleP1Card) {
+      msg = CLASS_INFO.prophet.icon + " PROPHET SIGHT! " + players[0].name + " played: " + battleP1Card.icon + " " + battleP1Card.name + " (PWR " + battleP1Card.power + ")";
+    } else {
+      // Show opponent's remaining cards
+      const remaining = opponent.battleDeck.filter(c => !c.used);
+      msg = CLASS_INFO.prophet.icon + " PROPHET SIGHT! " + opponent.name + "'s hand: " + remaining.map(c => c.icon + " " + c.name + "(" + c.power + ")").join(', ');
+    }
+    addLog(msg, 'special');
+    alert(msg);
+  } else if (ending === 'ghost') {
+    // Steal strongest unused card
+    const remaining = opponent.battleDeck.filter(c => !c.used);
+    if (remaining.length > 0) {
+      remaining.sort((a,b) => b.power - a.power);
+      const stolen = remaining[0];
+      stolen.used = true;
+      p.battleDeck.push({...stolen, used: false});
+      msg = CLASS_INFO.ghost.icon + " GHOST STEAL! Stole " + stolen.icon + " " + stolen.name + " from " + opponent.name;
+      addLog(msg, 'special');
+    }
+    renderBattleHand();
+  } else if (ending === 'wanderer') {
+    p._dodgeActive = true;
+    msg = CLASS_INFO.wanderer.icon + " WANDERER DODGE active this round! 50% damage reduction.";
+    addLog(msg, 'special');
+  } else if (ending === 'vessel') {
+    p._absorbActive = true;
+    msg = CLASS_INFO.vessel.icon + " VESSEL ABSORB active! 50% damage reflected.";
+    addLog(msg, 'special');
+  }
+  
+  document.getElementById('ability-btn').disabled = true;
+  document.getElementById('ability-btn').style.display = 'none';
+}
+
+function resolveClash() {
+  const c1 = battleP1Card;
+  const c2 = battleP2Card;
+  
+  // Apply Naked Fool randomness
+  if (c1.name === 'THE NAKED FOOL' || (c1.fact && false)) c1.power += Math.floor(Math.random() * 16);
+  if (c2.name === 'THE NAKED FOOL' || (c2.fact && false)) c2.power += Math.floor(Math.random() * 16);
+  
+  // Show cards in arena
+  const a1 = document.getElementById('arena-p1');
+  a1.querySelector('.card-icon').textContent = c1.icon;
+  a1.querySelector('.card-name').textContent = c1.name;
+  a1.querySelector('.card-power').textContent = 'PWR ' + c1.power;
+  a1.classList.add('played');
+  
+  const a2 = document.getElementById('arena-p2');
+  a2.querySelector('.card-icon').textContent = c2.icon;
+  a2.querySelector('.card-name').textContent = c2.name;
+  a2.querySelector('.card-power').textContent = 'PWR ' + c2.power;
+  a2.classList.add('played');
+  
+  // Calculate damage
+  let dmg1 = 0, dmg2 = 0;
+  const diff = Math.abs(c1.power - c2.power);
+  const baseDmg = Math.max(5, diff + 5);
+  
+  if (c1.power > c2.power) {
+    dmg2 = baseDmg;
+    // Check wanderer dodge
+    if (players[1]._dodgeActive) { dmg2 = Math.floor(dmg2 * 0.5); players[1]._dodgeActive = false; }
+    // Check vessel absorb
+    if (players[1]._absorbActive) { dmg1 = Math.floor(dmg2 * 0.5); dmg2 = Math.floor(dmg2 * 0.5); players[1]._absorbActive = false; }
+    
+    players[1].hp -= dmg2;
+    players[0].hp -= dmg1;
+    document.getElementById('clash-result').innerHTML = players[0].name + " WINS! (-" + dmg2 + " HP)" + (dmg1 ? " [Reflected -" + dmg1 + "]" : "");
+    addLog("\u2694\uFE0F Round " + battleRound + ": " + c1.icon + c1.name + "(" + c1.power + ") vs " + c2.icon + c2.name + "(" + c2.power + ") \u2014 " + players[0].name + " wins! " + players[1].name + " -" + dmg2 + "HP", 'hit');
+  } else if (c2.power > c1.power) {
+    dmg1 = baseDmg;
+    if (players[0]._dodgeActive) { dmg1 = Math.floor(dmg1 * 0.5); players[0]._dodgeActive = false; }
+    if (players[0]._absorbActive) { dmg2 = Math.floor(dmg1 * 0.5); dmg1 = Math.floor(dmg1 * 0.5); players[0]._absorbActive = false; }
+    
+    players[0].hp -= dmg1;
+    players[1].hp -= dmg2;
+    document.getElementById('clash-result').innerHTML = players[1].name + " WINS! (-" + dmg1 + " HP)" + (dmg2 ? " [Reflected -" + dmg2 + "]" : "");
+    addLog("\u2694\uFE0F Round " + battleRound + ": " + c1.icon + c1.name + "(" + c1.power + ") vs " + c2.icon + c2.name + "(" + c2.power + ") \u2014 " + players[1].name + " wins! " + players[0].name + " -" + dmg1 + "HP", 'hit');
+  } else {
+    document.getElementById('clash-result').textContent = "DRAW! Both cards shatter.";
+    addLog("\u2694\uFE0F Round " + battleRound + ": DRAW! " + c1.power + " vs " + c2.power, 'miss');
+  }
+  
+  // Tarot healing effects
+  [c1, c2].forEach((c, ci) => {
+    if (c.type === 'tarot') {
+      if (c.name === 'ORANGE SWEATER') { players[ci].hp = Math.min(100, players[ci].hp + 5); addLog(c.icon + " Heals " + players[ci].name + " +5 HP", 'special'); }
+      if (c.name === 'WARM MILK + HONEY') { players[ci].hp = Math.min(100, players[ci].hp + 8); addLog(c.icon + " Heals " + players[ci].name + " +8 HP", 'special'); }
+      if (c.name === 'ORDINARY') { players[ci].hp = Math.min(100, players[ci].hp + 6); addLog(c.icon + " Heals " + players[ci].name + " +6 HP", 'special'); }
+      if (c.name === 'THE GROWL') { players[1-ci].hp -= 3; addLog(c.icon + " BLEED! " + players[1-ci].name + " -3 HP", 'hit'); }
+    }
+  });
+  
+  updateHP();
+  
+  // Check game over
+  if (players[0].hp <= 0 || players[1].hp <= 0 || battleRound >= 5) {
+    setTimeout(() => showVictory(), 2000);
+    return;
+  }
+  
+  // Next round
+  setTimeout(() => {
+    battleRound++;
+    currentPlayer = 0;
+    battleP1Card = null;
+    battleP2Card = null;
+    renderBattle();
+    showWaiting("\u2694\uFE0F Round " + battleRound, players[0].name + " picks first.");
+    document.getElementById('waiting-overlay').querySelector('button').onclick = () => { dismissWaiting(); };
+  }, 2500);
+}
+
+function addLog(msg, cls) {
+  battleLog.push({msg, cls});
+  const log = document.getElementById('battle-log');
+  log.innerHTML += '<div class="log-entry log-' + cls + '">' + msg + '</div>';
+  log.scrollTop = log.scrollHeight;
+}
+
+// === VICTORY ===
+function showVictory() {
+  let winner, loser;
+  if (players[0].hp > players[1].hp) { winner = players[0]; loser = players[1]; }
+  else if (players[1].hp > players[0].hp) { winner = players[1]; loser = players[0]; }
+  else { winner = players[0]; loser = players[1]; } // tie = P1 wins
+  
+  showScreen('victory-screen');
+  document.getElementById('winner-name').textContent = winner.name;
+  document.getElementById('winner-class').textContent = CLASS_INFO[winner.ending].icon + " " + CLASS_INFO[winner.ending].name;
+  
+  document.getElementById('stats-grid').innerHTML = 
+    '<div class="stat-box"><div class="label">' + players[0].name + ' HP</div><div class="value">' + Math.max(0, players[0].hp) + '</div></div>' +
+    '<div class="stat-box"><div class="label">' + players[1].name + ' HP</div><div class="value">' + Math.max(0, players[1].hp) + '</div></div>' +
+    '<div class="stat-box"><div class="label">' + players[0].name + ' Class</div><div class="value">' + CLASS_INFO[players[0].ending].icon + ' ' + CLASS_INFO[players[0].ending].name + '</div></div>' +
+    '<div class="stat-box"><div class="label">' + players[1].name + ' Class</div><div class="value">' + CLASS_INFO[players[1].ending].icon + ' ' + CLASS_INFO[players[1].ending].name + '</div></div>' +
+    '<div class="stat-box"><div class="label">Rounds Played</div><div class="value">' + battleRound + '</div></div>' +
+    '<div class="stat-box"><div class="label">Total Facts</div><div class="value">' + (players[0].facts.length + players[1].facts.length) + '</div></div>';
+}
+</script>
+</body>
+</html>
