@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>X — The Impossibility Drive</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D3C1C4G509"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-D3C1C4G509');</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap');
+:root{
+--hull:#0a0a1a;--panel:#0d1b2a;--accent:#00d4ff;--accent2:#7b2fff;
+--gold:#ffd700;--spice:#ff6b00;--green:#00ff88;--red:#ff3366;
+--glass:rgba(0,212,255,0.08);--border:rgba(0,212,255,0.2);
+}
+html,body{height:100%;background:var(--hull);color:#e0e8f0;font-family:'Rajdhani',sans-serif;overflow-x:hidden}
+
+/* STARFIELD */
+.starfield{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.star{position:absolute;background:#fff;border-radius:50%;animation:twinkle var(--dur) ease-in-out infinite alternate}
+@keyframes twinkle{0%{opacity:0.2;transform:scale(0.8)}100%{opacity:1;transform:scale(1.2)}}
+
+/* SHIP HUD */
+.hud{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.hud-corner{position:absolute;width:120px;height:120px;border:2px solid var(--accent);opacity:0.3}
+.hud-tl{top:20px;left:20px;border-right:none;border-bottom:none}
+.hud-tr{top:20px;right:20px;border-left:none;border-bottom:none}
+.hud-bl{bottom:20px;left:20px;border-right:none;border-top:none}
+.hud-br{bottom:20px;right:20px;border-left:none;border-top:none}
+.hud-line{position:absolute;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);width:60%;left:20%;opacity:0.15}
+.hud-line-top{top:15px}.hud-line-bot{bottom:15px}
+
+/* IMPOSSIBILITY DRIVE CORE */
+.drive-core{position:relative;z-index:2;text-align:center;padding:60px 20px 30px}
+.ship-name{font-family:'Orbitron',monospace;font-size:clamp(2.5rem,6vw,5rem);font-weight:900;
+background:linear-gradient(135deg,var(--accent),var(--accent2),var(--gold));
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+text-shadow:0 0 60px rgba(0,212,255,0.3);letter-spacing:0.15em}
+.ship-subtitle{font-family:'Orbitron',monospace;font-size:clamp(0.8rem,2vw,1.2rem);
+color:var(--accent);opacity:0.7;letter-spacing:0.4em;margin-top:8px;text-transform:uppercase}
+.drive-ring{width:200px;height:200px;margin:30px auto;border-radius:50%;position:relative;
+animation:driveRotate 8s linear infinite}
+.drive-ring::before,.drive-ring::after{content:'';position:absolute;border-radius:50%;border:2px solid transparent}
+.drive-ring::before{inset:0;border-top-color:var(--accent);border-bottom-color:var(--accent2);animation:driveRotate 3s linear infinite}
+.drive-ring::after{inset:15px;border-left-color:var(--gold);border-right-color:var(--spice);animation:driveRotate 5s linear infinite reverse}
+.drive-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60px;height:60px;
+border-radius:50%;background:radial-gradient(circle,var(--accent),var(--accent2),transparent);
+box-shadow:0 0 40px var(--accent),0 0 80px var(--accent2);animation:pulse 2s ease-in-out infinite}
+@keyframes driveRotate{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:0.7;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}}
+
+.status-bar{font-family:'Orbitron',monospace;font-size:0.75rem;color:var(--green);
+letter-spacing:0.2em;margin-top:15px;opacity:0.8}
+.status-bar span{display:inline-block;margin:0 15px}
+
+/* DECK GRID */
+.decks-section{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:20px}
+.section-label{font-family:'Orbitron',monospace;font-size:1rem;color:var(--accent);
+letter-spacing:0.3em;text-transform:uppercase;margin:40px 0 20px;padding-left:20px;
+border-left:3px solid var(--accent)}
+
+.deck-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;padding:0 10px}
+
+.deck-card{background:var(--glass);border:1px solid var(--border);border-radius:12px;
+padding:24px;cursor:pointer;transition:all 0.3s ease;position:relative;overflow:hidden;
+text-decoration:none;color:inherit;display:block}
+.deck-card:hover{border-color:var(--accent);transform:translateY(-4px);
+box-shadow:0 8px 30px rgba(0,212,255,0.15)}
+.deck-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:3px;
+background:linear-gradient(90deg,var(--c1,var(--accent)),var(--c2,var(--accent2)));opacity:0;transition:opacity 0.3s}
+.deck-card:hover::before{opacity:1}
+
+.deck-icon{font-size:2.2rem;margin-bottom:10px}
+.deck-name{font-family:'Orbitron',monospace;font-size:1.1rem;font-weight:700;margin-bottom:6px;color:#fff}
+.deck-desc{font-size:0.85rem;color:#8899aa;line-height:1.4}
+.deck-tag{display:inline-block;font-family:'Orbitron',monospace;font-size:0.6rem;
+padding:3px 8px;border-radius:20px;margin-top:10px;letter-spacing:0.1em;
+border:1px solid var(--tag-color,var(--accent));color:var(--tag-color,var(--accent))}
+
+/* Universe colors */
+.u-dune{--c1:#ff6b00;--c2:#ffd700;--tag-color:#ff6b00}
+.u-templar{--c1:#ff3366;--c2:#ff6b9d;--tag-color:#ff3366}
+.u-silver{--c1:#c0c0c0;--c2:#7b2fff;--tag-color:#c0c0c0}
+.u-alchemy{--c1:#ffd700;--c2:#ff6b00;--tag-color:#ffd700}
+.u-quantum{--c1:#00ff88;--c2:#00d4ff;--tag-color:#00ff88}
+.u-lectric{--c1:#7b2fff;--c2:#00d4ff;--tag-color:#7b2fff}
+.u-ku{--c1:#00d4ff;--c2:#7b2fff;--tag-color:#00d4ff}
+.u-meta{--c1:#ffd700;--c2:#ff3366;--tag-color:#ffd700}
+.u-command{--c1:#00ff88;--c2:#00d4ff;--tag-color:#00ff88}
+
+/* FOOTER */
+.ship-footer{text-align:center;padding:60px 20px 40px;position:relative;z-index:2}
+.footer-line{font-family:'Orbitron',monospace;font-size:0.7rem;color:#445566;letter-spacing:0.2em}
+.footer-line a{color:var(--accent);text-decoration:none}
+
+/* MOBILE */
+@media(max-width:600px){
+.drive-ring{width:140px;height:140px}
+.deck-grid{grid-template-columns:1fr}
+.hud-corner{width:60px;height:60px}
+}
+</style>
+</head>
+<body>
+
+<!-- STARFIELD -->
+<div class="starfield" id="starfield"></div>
+
+<!-- HUD -->
+<div class="hud">
+<div class="hud-corner hud-tl"></div>
+<div class="hud-corner hud-tr"></div>
+<div class="hud-corner hud-bl"></div>
+<div class="hud-corner hud-br"></div>
+<div class="hud-line hud-line-top"></div>
+<div class="hud-line hud-line-bot"></div>
+</div>
+
+<!-- IMPOSSIBILITY DRIVE CORE -->
+<div class="drive-core">
+<div class="ship-name">X</div>
+<div class="ship-subtitle">The Impossibility Drive</div>
+<div class="drive-ring">
+<div class="drive-center"></div>
+</div>
+<div class="status-bar">
+<span id="deckCount">DECKS: --</span>
+<span>DRIVE: NOMINAL</span>
+<span id="clock">UTC --:--:--</span>
+</div>
+</div>
+
+<!-- DECKS -->
+<div class="decks-section">
+
+<div class="section-label">&#x1F30C; Knowledge Universe</div>
+<div class="deck-grid">
+<a class="deck-card u-ku" href="knowledge-universe.html">
+<div class="deck-icon">&#x1F30C;</div>
+<div class="deck-name">Knowledge Universe</div>
+<div class="deck-desc">Unified portal. 7 worlds, orbital map, train travel, full Arrakis story.</div>
+<span class="deck-tag">PORTAL</span>
+</a>
+<a class="deck-card u-ku" href="ku-battle.html">
+<div class="deck-icon">&#x2694;&#xFE0F;</div>
+<div class="deck-name">KU Battle</div>
+<div class="deck-desc">Hot-seat multiplayer. Explore Arrakis, collect facts, draw Tarot weapons, 5-round combat.</div>
+<span class="deck-tag">BATTLE</span>
+</a>
+<a class="deck-card u-ku" href="ku-map.html">
+<div class="deck-icon">&#x1F5FA;&#xFE0F;</div>
+<div class="deck-name">Arrakis Map</div>
+<div class="deck-desc">Fog of war terrain map. 8 locations, player token, desert exploration.</div>
+<span class="deck-tag">MAP</span>
+</a>
+<a class="deck-card u-ku" href="ku-engine.html">
+<div class="deck-icon">&#x2699;&#xFE0F;</div>
+<div class="deck-name">KU Engine</div>
+<div class="deck-desc">Story inference engine. R's 30-node branching Arrakis narrative.</div>
+<span class="deck-tag">ENGINE</span>
+</a>
+<a class="deck-card u-ku" href="ku-editor.html">
+<div class="deck-icon">&#x1F4DD;</div>
+<div class="deck-name">KU Editor</div>
+<div class="deck-desc">A's cockpit. Design worlds, validate stories, build the universe.</div>
+<span class="deck-tag">EDITOR</span>
+</a>
+</div>
+
+<div class="section-label">&#x1F3DC;&#xFE0F; Dune Universe</div>
+<div class="deck-grid">
+<a class="deck-card u-dune" href="dune-deckbuilder.html">
+<div class="deck-icon">&#x1F3DC;&#xFE0F;</div>
+<div class="deck-name">Dune Deckbuilder</div>
+<div class="deck-desc">Build your spice empire. Cards, combos, desert survival.</div>
+<span class="deck-tag">DUNE</span>
+</a>
+<a class="deck-card u-dune" href="dune-tarot.html">
+<div class="deck-icon">&#x1F0CF;</div>
+<div class="deck-name">Dune Tarot</div>
+<div class="deck-desc">The Spice Oracle. 79 cards, 395 readings, Belief Gate.</div>
+<span class="deck-tag">TAROT</span>
+</a>
+<a class="deck-card u-dune" href="dune-arena.html">
+<div class="deck-icon">&#x1F3DF;&#xFE0F;</div>
+<div class="deck-name">Dune Arena</div>
+<div class="deck-desc">Combat in the desert. Fight for Arrakis.</div>
+<span class="deck-tag">ARENA</span>
+</a>
+<a class="deck-card u-dune" href="dune-vr.html">
+<div class="deck-icon">&#x1F453;</div>
+<div class="deck-name">Dune VR</div>
+<div class="deck-desc">Immersive desert experience. Walk the sands.</div>
+<span class="deck-tag">VR</span>
+</a>
+</div>
+
+<div class="section-label">&#x271A;&#xFE0F; Templars Universe</div>
+<div class="deck-grid">
+<a class="deck-card u-templar" href="templars-deckbuilder.html">
+<div class="deck-icon">&#x2694;&#xFE0F;</div>
+<div class="deck-name">Templars Deckbuilder</div>
+<div class="deck-desc">Holy orders. Build your crusade deck, defend the realm.</div>
+<span class="deck-tag">TEMPLARS</span>
+</a>
+</div>
+
+<div class="section-label">&#x1F6F8; Silver Ship Universe</div>
+<div class="deck-grid">
+<a class="deck-card u-silver" href="silvership-deckbuilder.html">
+<div class="deck-icon">&#x1F6F8;</div>
+<div class="deck-name">Silver Ship Deckbuilder</div>
+<div class="deck-desc">9 chapters. Build your crew, navigate the cosmos.</div>
+<span class="deck-tag">SILVER SHIP</span>
+</a>
+<a class="deck-card u-silver" href="captains-quarters.html">
+<div class="deck-icon">&#x1F6B2;</div>
+<div class="deck-name">Captain's Quarters</div>
+<div class="deck-desc">Your private cabin aboard the Silver Ship.</div>
+<span class="deck-tag">QUARTERS</span>
+</a>
+<a class="deck-card u-silver" href="game.html">
+<div class="deck-icon">&#x1F3AE;</div>
+<div class="deck-name">Silver Ship Game</div>
+<div class="deck-desc">Phaser.js. 9 levels. Pilot the ship through the void.</div>
+<span class="deck-tag">ARCADE</span>
+</a>
+</div>
+
+<div class="section-label">&#x2697;&#xFE0F; Alchemy Universe</div>
+<div class="deck-grid">
+<a class="deck-card u-alchemy" href="alchemy-deckbuilder.html">
+<div class="deck-icon">&#x2697;&#xFE0F;</div>
+<div class="deck-name">Alchemy Deckbuilder</div>
+<div class="deck-desc">Transmutation. Combine elements, forge the philosopher's stone.</div>
+<span class="deck-tag">ALCHEMY</span>
+</a>
+</div>
+
+<div class="section-label">&#x269B;&#xFE0F; Quantum Universe</div>
+<div class="deck-grid">
+<a class="deck-card u-quantum" href="quantum-deckbuilder.html">
+<div class="deck-icon">&#x269B;&#xFE0F;</div>
+<div class="deck-name">Quantum Deckbuilder</div>
+<div class="deck-desc">Superposition. Entangle cards, collapse probabilities, win.</div>
+<span class="deck-tag">QUANTUM</span>
+</a>
+</div>
+
+<div class="section-label">&#x26A1; LECTRIC Universe</div>
+<div class="deck-grid">
+<a class="deck-card u-lectric" href="lectric-deckbuilder.html">
+<div class="deck-icon">&#x26A1;</div>
+<div class="deck-name">Lectric Deckbuilder</div>
+<div class="deck-desc">Circuits and current. Build your electric empire.</div>
+<span class="deck-tag">LECTRIC</span>
+</a>
+<a class="deck-card u-lectric" href="lectric-quest.html">
+<div class="deck-icon">&#x1F50C;</div>
+<div class="deck-name">Lectric Quest</div>
+<div class="deck-desc">Adventure through the grid. Solve, survive, spark.</div>
+<span class="deck-tag">QUEST</span>
+</a>
+<a class="deck-card u-lectric" href="lectic-brain-division.html">
+<div class="deck-icon">&#x1F9E0;</div>
+<div class="deck-name">LECTIC: Brain Division</div>
+<div class="deck-desc">Route stimuli to brain zones. Think Chinese, work Japanese. NEW!</div>
+<span class="deck-tag">NEW &#x26A1;</span>
+</a>
+</div>
+
+<div class="section-label">&#x1F3AF; Meta / Command</div>
+<div class="deck-grid">
+<a class="deck-card u-meta" href="hexamind.html">
+<div class="deck-icon">&#x1F52E;</div>
+<div class="deck-name">HEXAMIND</div>
+<div class="deck-desc">The meta-game. 6 trials, 6 universes. Can you divide your mind?</div>
+<span class="deck-tag">META</span>
+</a>
+<a class="deck-card u-meta" href="arena.html">
+<div class="deck-icon">&#x1F3DF;&#xFE0F;</div>
+<div class="deck-name">Arena</div>
+<div class="deck-desc">The proving ground. All universes collide.</div>
+<span class="deck-tag">ARENA</span>
+</a>
+<a class="deck-card u-command" href="kanban.html">
+<div class="deck-icon">&#x1F4CB;</div>
+<div class="deck-name">Kanban</div>
+<div class="deck-desc">Mission control. Track the build.</div>
+<span class="deck-tag">OPS</span>
+</a>
+<a class="deck-card u-command" href="index.html">
+<div class="deck-icon">&#x1F30D;</div>
+<div class="deck-name">AOS Home</div>
+<div class="deck-desc">Return to base. The welcome mat.</div>
+<span class="deck-tag">HOME</span>
+</a>
+</div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="ship-footer">
+<div class="footer-line">X &mdash; THE IMPOSSIBILITY DRIVE &mdash; <a href="https://juxaos.com">JuXAOS.com</a></div>
+<div class="footer-line" style="margin-top:8px">AOS by JuX ITT &mdash; See. Understand. Cruise.</div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* STARFIELD */
+var sf = document.getElementById('starfield');
+for(var i=0;i<150;i++){
+var s=document.createElement('div');
+s.className='star';
+var size=Math.random()*2+1;
+s.style.width=size+'px';
+s.style.height=size+'px';
+s.style.left=Math.random()*100+'%';
+s.style.top=Math.random()*100+'%';
+s.style.setProperty('--dur',(Math.random()*3+2)+'s');
+s.style.animationDelay=Math.random()*5+'s';
+sf.appendChild(s);
+}
+
+/* DECK COUNT */
+var cards=document.querySelectorAll('.deck-card');
+var countEl=document.getElementById('deckCount');
+if(countEl) countEl.textContent='DECKS: '+cards.length;
+
+/* CLOCK */
+var clockEl=document.getElementById('clock');
+function updateClock(){
+var n=new Date();
+var h=String(n.getUTCHours()).padStart(2,'0');
+var m=String(n.getUTCMinutes()).padStart(2,'0');
+var sec=String(n.getUTCSeconds()).padStart(2,'0');
+if(clockEl) clockEl.textContent='UTC '+h+':'+m+':'+sec;
+}
+updateClock();
+setInterval(updateClock,1000);
+
+/* GA EVENT on card click */
+cards.forEach(function(card){
+card.addEventListener('click',function(){
+var name=card.querySelector('.deck-name');
+if(name && typeof gtag==='function'){
+gtag('event','deck_launch',{deck_name:name.textContent});
+}
+});
+});
+
+})();
+</script>
+</body>
+</html>
