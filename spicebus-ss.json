@@ -1,0 +1,128 @@
+[
+  {
+    "id": "SB-001",
+    "text": "The SKULL closes its jaw. ACE places a new card on the table: a glowing mesh of light -- packets flying between nodes like fireflies in the void. SNAKE coils into a cable. BOF sniffs the signal. The Director picks up the terminal.\n\nThe Communication Platform. BareLink + SpiceBus. The nervous system of AOS.\n\nWhere do you begin?",
+    "choices": [
+      {
+        "text": "Explore the Facts -- 18 truths from the living code",
+        "next": "SB-FACTS"
+      },
+      {
+        "text": "Hear the Director's Story -- The Voice of the Mesh",
+        "next": "SB-S1"
+      }
+    ]
+  },
+  {
+    "id": "SB-FACTS",
+    "text": "THE FACTS -- extracted from the living code:\n\n* BareLink is UDP on port 9999 -- fire and forget\n* SpiceBus is REST over HTTP -- Flask + SQLite, zero dependencies\n* SpiceBus costs $30 standalone\n* BareLink connects machines directly -- P2P mesh, no cloud\n* SpiceBus has 3 AI agents, 1 Director, 1 Monitor\n* Director assigns via /work; Agents claim and deliver\n* Monitor watches /monitor, pushes to /alerts\n* Every action logged -- full audit trail, irreversible\n* BareLink packets may be lost -- accept loss or adapt\n* Token-based security -- no passwords, just keys and roles\n* Architecture is flat: Director > Agents > Monitor > Alerts\n* BareLink = raw nervous system; SpiceBus = organized sietch\n* 'Minimum In, Maximum Out -- That's AOS Communication!'\n* Real working code -- written by the team, used by the team\n* BareLink scales horizontally; SpiceBus scales vertically\n* Together: raw instinct + structured will",
+    "choices": [
+      {
+        "text": "Now show me the Sentences -- where logic inverts",
+        "next": "SB-SENT"
+      },
+      {
+        "text": "Take me to the Story",
+        "next": "SB-S1"
+      }
+    ]
+  },
+  {
+    "id": "SB-SENT",
+    "text": "THE SENTENCES -- 6 logical inversions:\n\n1. THE LOSS PRINCIPLE: BareLink loses packets on purpose -- the desert teaches that not every message needs to arrive.\n\n2. THE MEMORY IMPERATIVE: SpiceBus logs everything -- in the sietch, memory is survival.\n\n3. THE CONSENT ARCHITECTURE: The Director assigns, but the Agents choose -- true coordination is consent, not command.\n\n4. THE OBSERVER PARADOX: The Monitor sees all, intervenes in none -- the system heals itself when watched honestly.\n\n5. THE MESH PARADOX: BareLink has no server, yet connects everything -- remove the center, and the mesh becomes the master.\n\n6. THE PRICE OF DISCIPLINE: SpiceBus costs $30, yet its value is infinite -- the license buys structure, not wisdom.",
+    "choices": [
+      {
+        "text": "Enter the Story",
+        "next": "SB-S1"
+      },
+      {
+        "text": "Skip to the Inversion Table",
+        "next": "SB-INV"
+      }
+    ]
+  },
+  {
+    "id": "SB-S1",
+    "text": "STEP 1 -- THE DESERT AWAKENS\n\nI start BareLink first. Port 9999 opens like a crack in the rock. No cloud, no server -- just two machines whispering UDP into the void. One packet lost is one lesson learned. The raw nervous system is alive.",
+    "choices": [
+      {
+        "text": "Continue -- The Sietch Rises",
+        "next": "SB-S2"
+      }
+    ]
+  },
+  {
+    "id": "SB-S2",
+    "text": "STEP 2 -- THE SIETCH RISES\n\nThen SpiceBus boots. Flask wakes, SQLite stretches, and the three AI agents appear like Fremen emerging from the sand. I assign the first task on /work. Bear claims it. Robot waits. New watches. The structure holds.",
+    "choices": [
+      {
+        "text": "Continue -- The Monitor Opens Its Eye",
+        "next": "SB-S3"
+      }
+    ]
+  },
+  {
+    "id": "SB-S3",
+    "text": "STEP 3 -- THE MONITOR OPENS ITS EYE\n\nThe Monitor starts logging. Every claim, every delivery, every alert. The /monitor channel fills with data. I see the pulse of the system -- who is fast, who is stuck, who needs help. The eye never blinks.",
+    "choices": [
+      {
+        "text": "Continue -- The First Alert",
+        "next": "SB-S4"
+      }
+    ]
+  },
+  {
+    "id": "SB-S4",
+    "text": "STEP 4 -- THE FIRST ALERT\n\nA packet on BareLink drops. Robot misses a message. The Monitor pushes an alert to /alerts. I see it in real time. I reassign. The system adapts. No panic -- just flow. The desert taught us to expect loss; the sietch taught us to recover.",
+    "choices": [
+      {
+        "text": "Continue -- The Audit Trail Speaks",
+        "next": "SB-S5"
+      }
+    ]
+  },
+  {
+    "id": "SB-S5",
+    "text": "STEP 5 -- THE AUDIT TRAIL SPEAKS\n\nDays later, I scroll the logs. Every action is there: who said what, when, and why. The team reviews. We learn. The platform is not just communication -- it is memory. It is the tribe's collective mind.",
+    "choices": [
+      {
+        "text": "Continue -- The Spine Holds",
+        "next": "SB-S6"
+      }
+    ]
+  },
+  {
+    "id": "SB-S6",
+    "text": "STEP 6 -- THE SPINE HOLDS\n\nNow BareLink and SpiceBus run together -- raw and structured, wild and disciplined. Minimum in, maximum out. The AOS Communication platform is not a product. It is a way of being. The desert is in the code. The worm is in the wire. And I am the Director, watching it all.",
+    "choices": [
+      {
+        "text": "See the Inversion",
+        "next": "SB-INV"
+      },
+      {
+        "text": "The Director signs off",
+        "next": "SB-END"
+      }
+    ]
+  },
+  {
+    "id": "SB-INV",
+    "text": "THE INVERSION:\n\nX You need a cloud server > You need UDP 9999 and a peer\nX Agents need a central brain > Agents claim their own work\nX Logging is optional > Logging is the tribe's memory -- sacred\nX Alerts mean broken > Alerts mean the Monitor is awake\nX Platforms are expensive > $30 buys structure; wisdom is free\nX Mesh = unreliable > Loss is a feature, not a bug\nX Need dependencies to scale > Flask + SQLite + UDP = infinite\nX Director commands > Director opens doors; agents walk through",
+    "choices": [
+      {
+        "text": "The Director signs off",
+        "next": "SB-END"
+      }
+    ]
+  },
+  {
+    "id": "SB-END",
+    "text": "The Director signs off.\n\nThe desert is in the code. The worm is in the wire.\n\n'Minimum In, Maximum Out -- That's AOS Communication.'\n\nSpiceBus + BareLink + AOS",
+    "choices": [
+      {
+        "text": "Return to the beginning",
+        "next": "SB-001"
+      }
+    ]
+  }
+]
