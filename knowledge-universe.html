@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌌 KNOWLEDGE UNIVERSE — AOS</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --gold: #c9a84c;
+  --gold-glow: rgba(201,168,76,0.5);
+  --deep: #0a0a1a;
+  --panel: #111122;
+  --sand: #d4a456;
+  --spice: #e8923a;
+  --void: #0d0d2b;
+  --text: #e0d8c8;
+  --dim: #888;
+}
+
+html, body { height:100%; overflow:hidden; background:var(--deep); color:var(--text); font-family:'Crimson Text',Georgia,serif; }
+
+/* ═══════════════ SCREENS ═══════════════ */
+.screen { position:absolute; inset:0; transition: opacity 0.8s, transform 0.8s; }
+.screen.hidden { opacity:0; pointer-events:none; transform:scale(0.95); }
+.screen.active { opacity:1; pointer-events:all; transform:scale(1); }
+
+/* ═══════════════ PORTAL ═══════════════ */
+#portal {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  background: radial-gradient(ellipse at 50% 30%, #1a1040 0%, #0a0a1a 60%, #000 100%);
+  overflow:hidden;
+}
+.portal-stars {
+  position:absolute; inset:0; overflow:hidden;
+}
+.portal-stars .star {
+  position:absolute; width:2px; height:2px; background:#fff; border-radius:50%;
+  animation: twinkle var(--dur) infinite alternate;
+}
+@keyframes twinkle { 0%{opacity:0.2;} 100%{opacity:1;} }
+
+.portal-title {
+  font-family:'Cinzel',serif; font-size:clamp(2em,6vw,4.5em); font-weight:900;
+  color:var(--gold); text-align:center; z-index:2;
+  text-shadow: 0 0 40px var(--gold-glow), 0 0 80px rgba(201,168,76,0.2);
+  animation: titlePulse 4s infinite alternate;
+}
+@keyframes titlePulse { 0%{text-shadow:0 0 40px var(--gold-glow);} 100%{text-shadow:0 0 80px var(--gold-glow), 0 0 120px rgba(201,168,76,0.15);} }
+.portal-sub {
+  font-size:clamp(0.9em,2vw,1.3em); color:var(--dim); margin-top:15px; z-index:2;
+  font-style:italic; letter-spacing:2px;
+}
+.portal-enter {
+  margin-top:50px; z-index:2; padding:18px 50px; font-family:'Cinzel',serif;
+  font-size:1.2em; background:transparent; border:2px solid var(--gold); color:var(--gold);
+  cursor:pointer; border-radius:4px; letter-spacing:3px; transition:all 0.4s;
+}
+.portal-enter:hover { background:var(--gold); color:#000; box-shadow:0 0 30px var(--gold-glow); }
+
+.portal-ring {
+  position:absolute; width:500px; height:500px; border:1px solid rgba(201,168,76,0.15);
+  border-radius:50%; animation: ringRotate 60s linear infinite;
+}
+.portal-ring:nth-child(2) { width:600px; height:600px; animation-duration:90s; animation-direction:reverse; border-color:rgba(201,168,76,0.08); }
+.portal-ring:nth-child(3) { width:400px; height:400px; animation-duration:45s; border-style:dashed; border-color:rgba(201,168,76,0.1); }
+@keyframes ringRotate { to { transform:rotate(360deg); } }
+
+/* ═══════════════ MAP ═══════════════ */
+#map-screen {
+  display:flex; flex-direction:column;
+  background: radial-gradient(ellipse at 50% 50%, #1a1040 0%, #0d0d2b 50%, #000 100%);
+  overflow:hidden;
+}
+.map-header {
+  text-align:center; padding:15px; z-index:10;
+  background:linear-gradient(to bottom, rgba(10,10,26,0.95), transparent);
+}
+.map-header h1 { font-family:'Cinzel',serif; font-size:1.5em; color:var(--gold); }
+.map-header .subtitle { font-size:0.85em; color:var(--dim); margin-top:3px; }
+
+.map-area { flex:1; position:relative; display:flex; align-items:center; justify-content:center; }
+
+/* Orbital layout */
+.map-center {
+  position:absolute; width:80px; height:80px; border-radius:50%;
+  background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
+  animation: centerPulse 3s infinite alternate; z-index:5;
+  display:flex; align-items:center; justify-content:center; font-size:2em;
+}
+@keyframes centerPulse { 0%{box-shadow:0 0 30px var(--gold-glow);} 100%{box-shadow:0 0 60px var(--gold-glow), 0 0 100px rgba(201,168,76,0.15);} }
+
+.orbit-ring {
+  position:absolute; border:1px dashed rgba(201,168,76,0.12); border-radius:50%;
+  animation: ringRotate 120s linear infinite;
+}
+
+.world-node {
+  position:absolute; width:110px; height:110px; border-radius:50%;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  cursor:pointer; transition:all 0.4s; z-index:10;
+  background: radial-gradient(circle, rgba(17,17,34,0.9) 0%, rgba(10,10,26,0.95) 100%);
+  border:2px solid rgba(201,168,76,0.3);
+}
+.world-node:hover { transform:scale(1.15); border-color:var(--gold); box-shadow:0 0 25px var(--gold-glow); }
+.world-node.active { border-color:var(--gold); box-shadow:0 0 20px var(--gold-glow); animation: nodePulse 2s infinite; }
+.world-node.visited { border-color:#4caf50; }
+.world-node.locked { opacity:0.35; cursor:default; }
+.world-node .w-icon { font-size:2.2em; }
+.world-node .w-name { font-family:'Cinzel',serif; font-size:0.65em; color:var(--sand); margin-top:5px; letter-spacing:1px; }
+.world-node .w-status { font-size:0.55em; color:var(--dim); margin-top:2px; }
+@keyframes nodePulse { 0%,100%{box-shadow:0 0 15px var(--gold-glow);} 50%{box-shadow:0 0 35px var(--gold-glow);} }
+
+/* Connection lines — SVG */
+.map-lines { position:absolute; inset:0; pointer-events:none; z-index:1; }
+
+/* Player stats bar */
+.player-bar {
+  position:absolute; bottom:0; left:0; right:0; z-index:20;
+  background:linear-gradient(to top, rgba(10,10,26,0.95), transparent);
+  padding:10px 20px; display:flex; align-items:center; gap:15px;
+  font-size:0.8em;
+}
+.player-bar .stat { display:flex; align-items:center; gap:5px; }
+.player-bar .stat-val { color:var(--gold); font-weight:bold; }
+
+/* Back button */
+.back-btn {
+  position:absolute; top:15px; left:15px; z-index:20;
+  background:transparent; border:1px solid var(--gold); color:var(--gold);
+  padding:8px 16px; font-family:'Cinzel',serif; font-size:0.8em;
+  cursor:pointer; border-radius:4px; transition:all 0.3s; letter-spacing:1px;
+}
+.back-btn:hover { background:var(--gold); color:#000; }
+
+/* ═══════════════ WORLD VIEW ═══════════════ */
+#world-screen {
+  display:grid; grid-template-rows:auto 1fr auto;
+  background: var(--deep);
+}
+.world-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 20px; background:var(--panel); border-bottom:1px solid #333;
+}
+.world-header h2 { font-family:'Cinzel',serif; font-size:1.3em; color:var(--gold); }
+.world-header .world-badge { font-size:0.75em; padding:4px 12px; border-radius:12px; background:rgba(201,168,76,0.15); color:var(--gold); }
+
+.world-body { display:grid; grid-template-columns:1fr 320px; gap:0; overflow:hidden; }
+
+/* Story panel */
+.story-panel {
+  display:flex; flex-direction:column; padding:30px; overflow-y:auto;
+  background: linear-gradient(135deg, #0d0d2b 0%, #0a0a1a 100%);
+}
+.story-text {
+  font-size:1.15em; line-height:1.8; color:var(--text); max-width:700px;
+  animation: storyFade 0.6s ease-out;
+}
+@keyframes storyFade { from{opacity:0;transform:translateY(15px);} to{opacity:1;transform:translateY(0);} }
+
+.story-choices {
+  margin-top:30px; display:flex; flex-direction:column; gap:10px; max-width:700px;
+}
+.choice-btn {
+  background:rgba(201,168,76,0.08); border:1px solid rgba(201,168,76,0.3);
+  color:var(--text); padding:14px 20px; font-family:'Crimson Text',serif;
+  font-size:1.05em; cursor:pointer; border-radius:6px; text-align:left;
+  transition:all 0.3s; line-height:1.4;
+}
+.choice-btn:hover { background:rgba(201,168,76,0.15); border-color:var(--gold); color:var(--gold); transform:translateX(5px); }
+
+.ending-box {
+  margin-top:30px; padding:20px; border:2px solid var(--gold); border-radius:8px;
+  background:rgba(201,168,76,0.05); text-align:center;
+}
+.ending-box h3 { font-family:'Cinzel',serif; color:var(--gold); font-size:1.4em; margin-bottom:10px; }
+.ending-box .ending-facts { font-size:0.85em; color:var(--dim); margin-top:10px; }
+
+/* Sidebar */
+.world-sidebar {
+  background:var(--panel); border-left:1px solid #333; padding:15px; overflow-y:auto;
+  display:flex; flex-direction:column; gap:15px;
+}
+.sidebar-section h3 { font-family:'Cinzel',serif; font-size:0.85em; color:var(--gold); margin-bottom:8px; border-bottom:1px solid #222; padding-bottom:5px; }
+.fact-tag {
+  display:inline-block; background:rgba(76,175,80,0.15); border:1px solid rgba(76,175,80,0.3);
+  color:#81c784; padding:3px 8px; border-radius:12px; font-size:0.75em; margin:2px;
+}
+.snake-indicator {
+  padding:8px 12px; border-radius:6px; font-size:0.8em; display:flex; align-items:center; gap:8px;
+}
+.snake-indicator.static { background:rgba(255,193,7,0.1); border:1px solid rgba(255,193,7,0.3); color:#ffc107; }
+.snake-indicator.dynamic { background:rgba(244,67,54,0.1); border:1px solid rgba(244,67,54,0.3); color:#f44336; }
+
+.node-id { font-size:0.7em; color:var(--dim); font-family:monospace; }
+
+.game-link-btn {
+  display:block; width:100%; padding:12px; text-align:center; text-decoration:none;
+  font-family:'Cinzel',serif; font-size:0.9em; color:var(--gold); border:1px solid var(--gold);
+  border-radius:6px; transition:all 0.3s; margin-top:5px;
+}
+.game-link-btn:hover { background:var(--gold); color:#000; }
+
+/* World teaser (for worlds without stories yet) */
+.teaser-panel {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:40px;
+}
+.teaser-icon { font-size:5em; margin-bottom:20px; }
+.teaser-title { font-family:'Cinzel',serif; font-size:1.8em; color:var(--gold); margin-bottom:10px; }
+.teaser-desc { font-size:1.1em; color:var(--dim); max-width:500px; line-height:1.6; margin-bottom:30px; }
+.teaser-play-btn {
+  display:inline-block; padding:15px 40px; font-family:'Cinzel',serif; font-size:1.1em;
+  color:var(--gold); border:2px solid var(--gold); border-radius:6px; text-decoration:none;
+  transition:all 0.3s; letter-spacing:2px;
+}
+.teaser-play-btn:hover { background:var(--gold); color:#000; box-shadow:0 0 30px var(--gold-glow); }
+
+/* TRAIN overlay */
+#train-overlay {
+  position:fixed; inset:0; z-index:100; background:rgba(0,0,0,0.92);
+  display:flex; align-items:center; justify-content:center; flex-direction:column;
+  transition: opacity 0.5s;
+}
+#train-overlay.hidden { opacity:0; pointer-events:none; }
+.train-animation {
+  font-size:4em; animation: trainMove 2s ease-in-out;
+}
+@keyframes trainMove {
+  0% { transform:translateX(-200px); opacity:0; }
+  30% { transform:translateX(0); opacity:1; }
+  70% { transform:translateX(0); opacity:1; }
+  100% { transform:translateX(200px); opacity:0; }
+}
+.train-text { font-family:'Cinzel',serif; color:var(--gold); font-size:1.2em; margin-top:20px; letter-spacing:3px; }
+
+/* Footer */
+.world-footer {
+  padding:8px 20px; background:var(--panel); border-top:1px solid #333;
+  display:flex; justify-content:space-between; align-items:center; font-size:0.75em; color:var(--dim);
+}
+
+/* Responsive */
+@media (max-width:768px) {
+  .world-body { grid-template-columns:1fr; }
+  .world-sidebar { border-left:none; border-top:1px solid #333; max-height:200px; }
+  .world-node { width:80px; height:80px; }
+  .world-node .w-icon { font-size:1.6em; }
+  .world-node .w-name { font-size:0.55em; }
+  .story-panel { padding:15px; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:var(--deep); }
+::-webkit-scrollbar-thumb { background:#333; border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:#555; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ PORTAL ═══════════════ -->
+<div id="portal" class="screen active">
+  <div class="portal-stars" id="stars"></div>
+  <div class="portal-ring"></div>
+  <div class="portal-ring"></div>
+  <div class="portal-ring"></div>
+  <div class="portal-title">KNOWLEDGE UNIVERSE</div>
+  <div class="portal-sub">Seven Worlds · One Journey · Infinite Knowledge</div>
+  <button class="portal-enter" onclick="enterMap()">ENTER</button>
+</div>
+
+<!-- ═══════════════ MAP ═══════════════ -->
+<div id="map-screen" class="screen hidden">
+  <div class="map-header">
+    <h1>🌌 THE SEVEN WORLDS</h1>
+    <div class="subtitle">Choose your destination · Collect knowledge · Become</div>
+  </div>
+  <div class="map-area" id="mapArea">
+    <svg class="map-lines" id="mapLines"></svg>
+    <div class="map-center" id="mapCenter">🌀</div>
+    <!-- Worlds placed by JS -->
+  </div>
+  <div class="player-bar">
+    <div class="stat">🏜️ World: <span class="stat-val" id="statWorld">—</span></div>
+    <div class="stat">📦 Facts: <span class="stat-val" id="statFacts">0</span></div>
+    <div class="stat">🌍 Visited: <span class="stat-val" id="statVisited">0</span>/7</div>
+    <div class="stat">🐍 Snakes: <span class="stat-val" id="statSnakes">0</span></div>
+    <div class="stat" style="margin-left:auto;">
+      <button class="back-btn" onclick="resetGame()" style="position:static;font-size:0.85em;padding:4px 10px;">⟲ Reset</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ WORLD VIEW ═══════════════ -->
+<div id="world-screen" class="screen hidden">
+  <div class="world-header">
+    <button class="back-btn" onclick="backToMap()" style="position:static;">← MAP</button>
+    <h2 id="worldTitle">ARRAKIS</h2>
+    <span class="world-badge" id="worldBadge">STORY</span>
+  </div>
+  <div class="world-body">
+    <div class="story-panel" id="storyPanel"></div>
+    <div class="world-sidebar" id="worldSidebar"></div>
+  </div>
+  <div class="world-footer">
+    <span id="footerNode">SL-001</span>
+    <span>KNOWLEDGE UNIVERSE · AOS</span>
+    <span id="footerEnding">—</span>
+  </div>
+</div>
+
+<!-- ═══════════════ TRAIN ═══════════════ -->
+<div id="train-overlay" class="hidden">
+  <div class="train-animation">🚂</div>
+  <div class="train-text" id="trainText">Traveling...</div>
+</div>
+
+<script>
+// ═══════════════ DATA ═══════════════
+const WORLDS = [
+  { id:'arrakis', name:'ARRAKIS', icon:'🏜️', color:'#e8923a', hasStory:true, desc:'The Spice Planet · Nutrition Science',
+    game:'dune-deckbuilder.html', gameName:'Ring of the Desert', angle:0 },
+  { id:'jerusalem', name:'JERUSALEM', icon:'⚔️', color:'#c0392b', hasStory:false, desc:'The Holy Land · History & Faith',
+    game:'templars-deckbuilder.html', gameName:'Holy War', angle:51.4 },
+  { id:'cosmos', name:'COSMOS', icon:'🛸', color:'#3498db', hasStory:false, desc:'The Infinite · Space & Discovery',
+    game:'silvership-deckbuilder.html', gameName:"Pirate's Fortune", angle:102.8 },
+  { id:'obscura', name:'OBSCURA', icon:'⚗️', color:'#8e44ad', hasStory:false, desc:'The Dark Lab · Chemistry & Transformation',
+    game:'alchemy-deckbuilder.html', gameName:"Philosopher's Stone", angle:154.3 },
+  { id:'nexus', name:'NEXUS', icon:'⚛️', color:'#1abc9c', hasStory:false, desc:'The Observer · Physics & Perception',
+    game:'quantum-deckbuilder.html', gameName:'Observer Effect', angle:205.7 },
+  { id:'borealis', name:'BOREALIS', icon:'⚡', color:'#f1c40f', hasStory:false, desc:'The North · Energy & Lightning',
+    game:'lectric-deckbuilder.html', gameName:'Northern Voltage', angle:257.1 },
+  { id:'oracle', name:'ORACLE', icon:'🃏', color:'#e91e63', hasStory:false, desc:'The Cards · Divination & Belief',
+    game:'dune-tarot.html', gameName:'The Spice Oracle', angle:308.6 },
+];
+
+const ARRAKIS_STORY = [{"id": "SL-001", "text": "You tip the gourd to your lips. The Water of Life—blue, thick, alive—slides down your throat like a dying star. The world shatters into a thousand mirrors of sand and memory. You are nowhere and everywhere, and the desert breathes through you.", "choices": [{"label": "Look outward—into the open dunes", "next": "SL-002", "fact": "opened_eyes"}, {"label": "Look inward—into your own depths", "next": "SL-003", "fact": "closed_eyes"}]}, {"id": "SL-002", "text": "The dunes stretch infinite, each grain a moment frozen in time. A wind howls, carrying the scent of cinnamon and old blood. You see a figure carved from bone and shadow, standing on a ridge—waiting. It does not move, but its gaze cuts through you like a blade.", "choices": [{"label": "Approach the figure", "next": "SL-004", "fact": "approached_figure"}, {"label": "Follow the scent of cinnamon", "next": "SL-005", "fact": "followed_cinnamon"}]}, {"id": "SL-003", "text": "Inside you, the desert is a reef of memory. You see a child drowning in spice, a mother who gave her life for water, a father who became a worm. The pain is a knot of time, and you can untie it—or cut it. Your hands tremble.", "choices": [{"label": "Untie the knot—slowly, gently", "next": "SL-006", "fact": "untied_knot"}, {"label": "Cut the knot—quickly, mercifully", "next": "SL-007", "fact": "cut_knot"}]}, {"id": "SL-004", "text": "You walk toward the figure. As you draw close, you see it is not one figure but a thousand—a chorus of ancestors layered upon each other like pages of a burnt book. Their mouths open, and a single word falls out: 'Choose.' The bone dune rises behind them, white as a bleached sun.", "choices": [{"label": "Ask for guidance—'What path am I?'", "next": "SL-008", "fact": "asked_guidance"}, {"label": "Demand the truth—'What have I become?'", "next": "SL-009", "fact": "demanded_truth"}]}, {"id": "SL-005", "text": "You follow the cinnamon scent through a canyon of rust-red rock. The walls pulse with a heartbeat not your own. At the canyon's end lies a sacred object—a stillsuit woven from starlight, the fabric humming with the voices of every water-thief who ever lived. It calls to you.", "choices": [{"label": "Wear the stillsuit—become the thief", "next": "SL-010", "fact": "wore_stillsuit"}, {"label": "Leave it—some paths are not yours", "next": "SL-011", "fact": "left_stillsuit"}]}, {"id": "SL-006", "text": "You untie the knot. Each pull reveals a memory that falls away like sand from a dune. You see your own birth, your first step, your first lie. The knot loosens, but you feel something watching—a snake coiled in the marrow of your spine. It does not move. It waits.", "choices": [{"label": "Face the snake—it must be seen", "next": "SL-012", "fact": "faced_static_snake"}, {"label": "Ignore the snake—keep untying", "next": "SL-013", "fact": "ignored_snake"}], "snake": "static"}, {"id": "SL-007", "text": "You cut the knot. The pain vanishes in a single clean stroke, and the memories scatter like startled birds. But they leave wounds—holes in your consciousness that fill with sand. You feel lighter, hollow, free. The desert hums around you, hungry and patient.", "choices": [{"label": "Walk into the desert—let it fill you", "next": "SL-014", "fact": "walked_desert"}, {"label": "Search for something to fill the holes", "next": "SL-015", "fact": "searched_fill"}]}, {"id": "SL-008", "text": "The ancestors tilt their heads as one. 'You are the path you have walked,' they whisper. 'And the path you will walk.' They offer you a single grain of sand—pure, silent, dense. 'This is your truth. Carry it.' The grain burns cold in your hand.", "choices": [{"label": "Accept the grain—carry it", "next": "SL-016", "fact": "accepted_grain"}, {"label": "Crush the grain—make your own truth", "next": "SL-017", "fact": "crushed_grain"}]}, {"id": "SL-009", "text": "The figure's form twists, and you see yourself reflected a thousand times—each version of you that could have been. 'You have become a question,' it says. 'Every answer you choose will birth a new desert.' The bone dune creaks like a ship in a storm.", "choices": [{"label": "Ask the question—'Why am I here?'", "next": "SL-018", "fact": "asked_why"}, {"label": "Give the answer—'I am here to change'", "next": "SL-019", "fact": "answered_change"}]}, {"id": "SL-010", "text": "You pull the stillsuit over your skin. It fits like a second birth, and suddenly you hear every drop of water in every body across the desert. The voices are overwhelming—a flood of thirst and memory. You see a path of footprints leading into a whirlwind of sand.", "choices": [{"label": "Follow the footprints—they know where to go", "next": "SL-020", "fact": "followed_footprints"}, {"label": "Make your own path—the voices are a trap", "next": "SL-021", "fact": "made_path"}]}, {"id": "SL-011", "text": "You leave the stillsuit. As you turn away, you hear a soft cry—like a child left behind. The canyon walls groan, and a second snake emerges from the shadows. This one is not still—it writhes, watching you with eyes that know your every choice. It speaks: 'You have been weighed.'", "choices": [{"label": "Speak to the snake—ask its purpose", "next": "SL-022", "fact": "spoke_snake"}, {"label": "Run from the snake—escape the vision", "next": "SL-023", "fact": "ran_snake"}], "snake": "dynamic"}, {"id": "SL-012", "text": "You face the snake coiled in your spine. It is ancient, made of sand and time, and it demands one thing: 'Remember all of it. The pain, the joy, the thirst. Do not flinch.' You look into its eyes, and you remember. The snake dissolves into a golden light that fills your bones.", "choices": [{"label": "Accept the light—let it transform you", "next": "SL-024", "fact": "accepted_light"}, {"label": "Reject the light—hold onto yourself", "next": "SL-025", "fact": "rejected_light"}]}, {"id": "SL-013", "text": "You ignore the snake and keep untying the knot. But the knot grows tighter, and the snake strikes—not with venom, but with silence. You feel yourself fading, becoming sand. The world blurs. You are losing the vision. The last thing you see is a hand reaching for you through the dark.", "choices": [{"label": "Grasp the hand—hold on", "next": "SL-026", "fact": "grasped_hand"}, {"label": "Let go—become the sand", "next": "END-GHOST", "fact": "became_sand"}]}, {"id": "SL-014", "text": "You walk into the desert, and it fills your hollows with grit and silence. You become a vessel for the void. The sky turns to glass and the ground to memory. A worm rises before you, its mouth a cathedral of rings. It does not devour you—it waits, patient as a god.", "choices": [{"label": "Enter the worm's mouth—trust the cycle", "next": "END-VESSEL", "fact": "entered_worm"}, {"label": "Stand your ground—refuse the void", "next": "END-WANDERER", "fact": "stood_ground"}]}, {"id": "SL-015", "text": "You search for something to fill the holes, but every piece you find is already sand. You grab a shard of bone, a whisper of wind, a drop of your own sweat. They slip through your fingers. The holes do not fill—they widen. You are becoming a sieve. The vision dims.", "choices": [{"label": "Surrender to the loss—let it make you new", "next": "END-VESSEL", "fact": "surrendered_loss"}, {"label": "Fight the loss—cling to what remains", "next": "END-GHOST", "fact": "fought_loss"}]}, {"id": "SL-016", "text": "You accept the grain. It burns cold, then hot, then cold again. You feel the weight of every yes and no you have ever spoken. The ancestors bow, and the bone dune splits open like a cracked egg. Inside, a ladder of light descends. The way out is up.", "choices": [{"label": "Climb the ladder—awaken on your feet", "next": "END-PROPHET", "fact": "climbed_ladder"}, {"label": "Descend into the split—seek deeper truth", "next": "END-PROPHET", "fact": "descended_split"}]}, {"id": "SL-017", "text": "You crush the grain. The dust blooms into a storm that blots out the sky. The ancestors scream or laugh—you cannot tell. You have unmade their gift. Now you must make your own. The desert is blank, a canvas of sand. The figure from the ridge appears before you, holding a stylus of bone.", "choices": [{"label": "Take the stylus—write your own path", "next": "END-WANDERER", "fact": "took_stylus"}, {"label": "Refuse it—walk unwritten", "next": "END-WANDERER", "fact": "refused_stylus"}]}, {"id": "SL-018", "text": "'Why am I here?' you ask. The figure dissolves into motes of light, and the light writes a single word in the air: 'CHOOSE.' The bone dune quakes, and a door of obsidian swings open. Beyond it, you hear your own heartbeat—a drum calling you home.", "choices": [{"label": "Step through the door—answer the drum", "next": "END-PROPHET", "fact": "stepped_door"}, {"label": "Stay—refuse the easy way out", "next": "END-WANDERER", "fact": "stayed_door"}]}, {"id": "SL-019", "text": "'I am here to change,' you say. The figure nods, and the sand beneath your feet turns to glass. Your reflection stares up at you, but it is older, scarred, wise. 'Then change,' it whispers. 'But know this—every transformation leaves a ghost.' The glass cracks beneath your weight.", "choices": [{"label": "Embrace the ghost—change with memory", "next": "END-PROPHET", "fact": "embraced_ghost"}, {"label": "Shatter the glass—change as rebirth", "next": "END-VESSEL", "fact": "shattered_glass"}]}, {"id": "SL-020", "text": "You follow the footprints. They lead through a forest of crystal cacti, each one holding a frozen tear of water. The path ends at a circle of stones where a fire burns without fuel. In the flames, you see the face of a child you once were, smiling. The child holds out a hand.", "choices": [{"label": "Take the child's hand—return to innocence", "next": "END-PROPHET", "fact": "took_child_hand"}, {"label": "Walk through the fire—burn the child away", "next": "END-VESSEL", "fact": "walked_fire"}]}, {"id": "SL-021", "text": "You make your own path. The voices grow faint, then silent. You walk until you reach a dune made of bones—each one a choice someone else made. At the summit, a single feather of a desert hawk rests. It is impossibly light, weighing nothing yet holding the sky.", "choices": [{"label": "Take the feather—carry the sky", "next": "END-WANDERER", "fact": "took_feather"}, {"label": "Leave the feather—the sky is not yours", "next": "END-GHOST", "fact": "left_feather"}]}, {"id": "SL-022", "text": "You speak to the snake. It coils around you, its scales whispering secrets. 'Your path has been full of escapes and refusals,' it hisses. 'But you chose to speak to me. That is a thread.' It offers you a single scale, glowing with inner light. 'Take it, and I will sleep.'", "choices": [{"label": "Take the scale—bind the snake", "next": "END-PROPHET", "fact": "took_scale"}, {"label": "Reject the scale—face what you've avoided", "next": "END-WANDERER", "fact": "rejected_scale"}]}, {"id": "SL-023", "text": "You run from the snake. It does not chase—it simply watches you flee, and you feel its judgment like a stone in your chest. You run until you reach the edge of the vision, where the world frays into white static. The snake's voice follows you: 'You cannot outrun yourself.'", "choices": [{"label": "Stop running—turn and face it", "next": "END-WANDERER", "fact": "stopped_running"}, {"label": "Jump into the static—wake up broken", "next": "END-GHOST", "fact": "jumped_static"}]}, {"id": "SL-024", "text": "You accept the golden light. It pours through you, burning away the last shadows. You see the vision whole—every thread, every choice, every possible you. The light speaks: 'You are ready.' The desert shimmers and falls away like a curtain. You are waking. The taste of spice is still on your tongue.", "choices": [{"label": "Wake with eyes open—see the world anew", "next": "END-PROPHET", "fact": "awoke_open"}, {"label": "Wake with eyes closed—keep the vision within", "next": "END-PROPHET", "fact": "awoke_closed"}]}, {"id": "SL-025", "text": "You reject the light. It shatters like a mirror, and you stand in a darkness that is warm and familiar. The snake returns—not as a threat, but as a guide. 'You have chosen yourself,' it says. 'Now walk.' The darkness parts, revealing a path of stars. The vision ends, but the journey does not.", "choices": [{"label": "Walk the star path—awaken as a wanderer", "next": "END-WANDERER", "fact": "awoke_wanderer"}, {"label": "Stay in the dark—awaken in silence", "next": "END-GHOST", "fact": "awoke_silence"}]}, {"id": "SL-026", "text": "You grasp the hand. It pulls you from the fading, and you find yourself standing in a garden of moonlight and cacti. A woman made of water smiles at you. 'You held on,' she says. 'That is the first lesson.' She pours a single drop of water into your mouth. The vision sharpens.", "choices": [{"label": "Thank her—drink the drop", "next": "END-PROPHET", "fact": "thanked_water_woman"}, {"label": "Refuse—you must earn your own water", "next": "END-WANDERER", "fact": "refused_water"}]}, {"id": "END-PROPHET", "text": "The desert falls away like a shed skin. You open your eyes — both pairs, the ones of flesh and the ones of spice. The tent is real. The sand is real. But you see through it now, through all of it, to the bones of the world beneath. You are not who entered this vision. You are what the desert made. The Templars' cross burns faintly in your mind — a door you have not yet opened.", "choices": [], "ending": "prophet", "facts_granted": ["awakened_prophet", "templars_clue", "spice_sight"]}, {"id": "END-WANDERER", "text": "You wake walking. Your feet are moving before your eyes open, and you realize you never stopped — the vision was the journey, and the journey never ends. The tent is behind you. The dunes ahead shimmer with paths no one has mapped. You carry nothing but the weight of your own choices, and that is enough. Somewhere beyond the horizon, a cross-shaped star flickers.", "choices": [], "ending": "wanderer", "facts_granted": ["awakened_wanderer", "templars_clue", "desert_walker"]}, {"id": "END-GHOST", "text": "You wake in fragments. Pieces of the vision cling to you like wet sand — a snake's whisper, a grain of truth you dropped, a hand you didn't take. The tent feels too solid, too small. You are less than you were, but what remains is sharper, harder, truer. The spice has burned away everything that lied. In the hollow, something glows — a faint cross, waiting.", "choices": [], "ending": "ghost", "facts_granted": ["awakened_ghost", "templars_clue", "hollowed"]}, {"id": "END-VESSEL", "text": "You do not wake — you are poured. The desert fills you and you fill the desert, and for one infinite moment there is no difference. Then the tent reforms around you like a hand closing. Your mouth tastes of cinnamon and bone. You are a vessel now — empty and full at once, carrying the desert's memory in your blood. The worm's song still hums in your marrow. A cross of light pulses behind your eyes.", "choices": [], "ending": "vessel", "facts_granted": ["awakened_vessel", "templars_clue", "worm_bond"]}];
+
+// ═══════════════ STATE ═══════════════
+let state = loadState();
+
+function defaultState() {
+  return {
+    currentWorld: null,
+    currentNode: 'SL-001',
+    facts: [],
+    visited: [],
+    snakesMet: 0,
+    ending: null,
+    history: []
+  };
+}
+
+function loadState() {
+  try {
+    const s = localStorage.getItem('ku-state');
+    return s ? JSON.parse(s) : defaultState();
+  } catch(e) { return defaultState(); }
+}
+
+function saveState() { localStorage.setItem('ku-state', JSON.stringify(state)); }
+
+// ═══════════════ PORTAL ═══════════════
+function generateStars() {
+  const c = document.getElementById('stars');
+  for(let i = 0; i < 200; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.left = Math.random()*100+'%';
+    s.style.top = Math.random()*100+'%';
+    s.style.setProperty('--dur', (1+Math.random()*3)+'s');
+    s.style.width = s.style.height = (1+Math.random()*2)+'px';
+    c.appendChild(s);
+  }
+}
+generateStars();
+
+function switchScreen(from, to) {
+  document.getElementById(from).classList.remove('active');
+  document.getElementById(from).classList.add('hidden');
+  document.getElementById(to).classList.remove('hidden');
+  document.getElementById(to).classList.add('active');
+}
+
+function enterMap() { switchScreen('portal','map-screen'); renderMap(); }
+
+// ═══════════════ MAP ═══════════════
+function renderMap() {
+  const area = document.getElementById('mapArea');
+  // Remove old nodes
+  area.querySelectorAll('.world-node, .orbit-ring').forEach(n=>n.remove());
+
+  const cx = area.offsetWidth/2;
+  const cy = area.offsetHeight/2;
+  const radius = Math.min(cx,cy) * 0.65;
+
+  // Orbit rings
+  [0.4,0.65,0.9].forEach(r => {
+    const ring = document.createElement('div');
+    ring.className = 'orbit-ring';
+    const size = Math.min(cx,cy)*2*r;
+    ring.style.width = ring.style.height = size+'px';
+    ring.style.left = (cx - size/2)+'px';
+    ring.style.top = (cy - size/2)+'px';
+    area.appendChild(ring);
+  });
+
+  // Draw connection lines
+  const svg = document.getElementById('mapLines');
+  svg.innerHTML = '';
+  svg.setAttribute('viewBox', `0 0 ${area.offsetWidth} ${area.offsetHeight}`);
+
+  const positions = [];
+  WORLDS.forEach((w,i) => {
+    const ang = (w.angle - 90) * Math.PI / 180;
+    const x = cx + radius * Math.cos(ang);
+    const y = cy + radius * Math.sin(ang);
+    positions.push({x,y});
+  });
+
+  // Lines from center to each world
+  positions.forEach((p,i) => {
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',cx); line.setAttribute('y1',cy);
+    line.setAttribute('x2',p.x); line.setAttribute('y2',p.y);
+    const visited = state.visited.includes(WORLDS[i].id);
+    line.setAttribute('stroke', visited ? 'rgba(201,168,76,0.3)' : 'rgba(201,168,76,0.08)');
+    line.setAttribute('stroke-width', visited ? '2' : '1');
+    line.setAttribute('stroke-dasharray', visited ? 'none' : '5,5');
+    svg.appendChild(line);
+  });
+
+  // Circular connections between adjacent worlds
+  for(let i = 0; i < positions.length; i++) {
+    const j = (i+1)%positions.length;
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',positions[i].x); line.setAttribute('y1',positions[i].y);
+    line.setAttribute('x2',positions[j].x); line.setAttribute('y2',positions[j].y);
+    line.setAttribute('stroke','rgba(201,168,76,0.06)');
+    line.setAttribute('stroke-width','1');
+    line.setAttribute('stroke-dasharray','3,8');
+    svg.appendChild(line);
+  }
+
+  // Place world nodes
+  WORLDS.forEach((w,i) => {
+    const node = document.createElement('div');
+    node.className = 'world-node';
+    if(state.visited.includes(w.id)) node.classList.add('visited');
+    if(state.currentWorld === w.id) node.classList.add('active');
+
+    node.innerHTML = `
+      <div class="w-icon">${w.icon}</div>
+      <div class="w-name">${w.name}</div>
+      <div class="w-status">${w.hasStory ? '📖 Story' : '🎴 Game'}</div>
+    `;
+    node.style.left = (positions[i].x - 55)+'px';
+    node.style.top = (positions[i].y - 55)+'px';
+    node.onclick = () => travelTo(w.id);
+    area.appendChild(node);
+  });
+
+  updateStats();
+}
+
+function updateStats() {
+  document.getElementById('statWorld').textContent = state.currentWorld ? WORLDS.find(w=>w.id===state.currentWorld).name : '—';
+  document.getElementById('statFacts').textContent = state.facts.length;
+  document.getElementById('statVisited').textContent = state.visited.length;
+  document.getElementById('statSnakes').textContent = state.snakesMet;
+}
+
+// ═══════════════ TRAVEL ═══════════════
+function travelTo(worldId) {
+  const world = WORLDS.find(w=>w.id===worldId);
+  const overlay = document.getElementById('train-overlay');
+  const trainText = document.getElementById('trainText');
+
+  trainText.textContent = `Traveling to ${world.name}...`;
+  overlay.classList.remove('hidden');
+
+  setTimeout(() => {
+    overlay.classList.add('hidden');
+    state.currentWorld = worldId;
+    if(!state.visited.includes(worldId)) state.visited.push(worldId);
+    if(worldId === 'arrakis' && !state.ending) {
+      // Continue story from where we left off
+    } else if(worldId !== 'arrakis') {
+      // Reset node for non-arrakis worlds
+    }
+    saveState();
+    enterWorld(worldId);
+  }, 2000);
+}
+
+// ═══════════════ WORLD VIEW ═══════════════
+function enterWorld(worldId) {
+  const world = WORLDS.find(w=>w.id===worldId);
+  document.getElementById('worldTitle').textContent = `${world.icon} ${world.name}`;
+  document.getElementById('worldBadge').textContent = world.hasStory ? '📖 STORY MODE' : '🎴 GAME MODE';
+
+  if(world.hasStory && worldId === 'arrakis') {
+    renderArrakisStory();
+  } else {
+    renderWorldTeaser(world);
+  }
+
+  switchScreen('map-screen','world-screen');
+}
+
+function backToMap() {
+  switchScreen('world-screen','map-screen');
+  renderMap();
+}
+
+// ═══════════════ ARRAKIS STORY ENGINE ═══════════════
+function getNode(id) { return ARRAKIS_STORY.find(n => n.id === id); }
+
+function renderArrakisStory() {
+  const node = getNode(state.currentNode);
+  if(!node) { state.currentNode = 'SL-001'; saveState(); renderArrakisStory(); return; }
+
+  const storyPanel = document.getElementById('storyPanel');
+  const sidebar = document.getElementById('worldSidebar');
+
+  // Check if ending
+  const isEnding = node.id.startsWith('END-');
+
+  let html = `<div class="story-text">${node.text}</div>`;
+
+  if(node.snake) {
+    html += `<div class="snake-indicator ${node.snake}" style="margin-top:20px;">
+      🐍 ${node.snake === 'static' ? 'STATIC SNAKE — Tests your memory. Same every time.' : 'DYNAMIC SNAKE — Reacts to your choices. "You have been weighed."'}
+    </div>`;
+  }
+
+  if(isEnding) {
+    const endingNames = { prophet:'👁️ PROPHET', wanderer:'🚶 WANDERER', ghost:'👻 GHOST', vessel:'🏺 VESSEL' };
+    const endName = endingNames[node.ending] || node.ending;
+    html += `<div class="ending-box">
+      <h3>AWAKENING: ${endName}</h3>
+      <p style="color:var(--sand);margin-top:8px;">You have walked your path through Arrakis.</p>
+      ${node.facts_granted ? `<div class="ending-facts">Granted: ${node.facts_granted.map(f=>`<span class="fact-tag">${f}</span>`).join(' ')}</div>` : ''}
+      <div style="margin-top:20px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <button class="choice-btn" style="max-width:250px;text-align:center;" onclick="restartArrakis()">↺ Walk Again</button>
+        <button class="choice-btn" style="max-width:250px;text-align:center;" onclick="backToMap()">← Return to Map</button>
+      </div>
+    </div>`;
+    state.ending = node.ending;
+    if(node.facts_granted) node.facts_granted.forEach(f => { if(!state.facts.includes(f)) state.facts.push(f); });
+    saveState();
+  } else {
+    html += `<div class="story-choices">`;
+    node.choices.forEach(c => {
+      html += `<button class="choice-btn" onclick="makeChoice('${c.next}','${c.fact}')">${c.label}</button>`;
+    });
+    html += `</div>`;
+  }
+
+  storyPanel.innerHTML = html;
+
+  // Sidebar
+  let sideHtml = '';
+
+  // Node info
+  sideHtml += `<div class="sidebar-section">
+    <h3>📍 Current Node</h3>
+    <div class="node-id">${node.id}</div>
+  </div>`;
+
+  // Facts collected
+  sideHtml += `<div class="sidebar-section">
+    <h3>📦 Facts Collected (${state.facts.length})</h3>
+    <div>${state.facts.length ? state.facts.map(f=>`<span class="fact-tag">${f}</span>`).join(' ') : '<span style="color:var(--dim);font-size:0.8em;">None yet</span>'}</div>
+  </div>`;
+
+  // Path history
+  sideHtml += `<div class="sidebar-section">
+    <h3>🛤️ Path Walked</h3>
+    <div style="font-size:0.75em;color:var(--dim);">${state.history.length ? state.history.join(' → ') : 'Journey begins...'}</div>
+  </div>`;
+
+  // Game link
+  sideHtml += `<div class="sidebar-section">
+    <h3>🎴 Play the Game</h3>
+    <a href="https://juxaos.com/dune-deckbuilder.html" target="_blank" class="game-link-btn">🏜️ Ring of the Desert</a>
+    <a href="https://juxaos.com/dune-tarot.html" target="_blank" class="game-link-btn" style="margin-top:8px;">🃏 The Spice Oracle</a>
+  </div>`;
+
+  // Worlds visited
+  sideHtml += `<div class="sidebar-section">
+    <h3>🌍 Worlds Visited</h3>
+    <div>${WORLDS.map(w => `<span style="opacity:${state.visited.includes(w.id)?1:0.3};margin-right:8px;" title="${w.name}">${w.icon}</span>`).join('')}</div>
+  </div>`;
+
+  sidebar.innerHTML = sideHtml;
+
+  // Footer
+  document.getElementById('footerNode').textContent = node.id;
+  document.getElementById('footerEnding').textContent = state.ending ? `Awakening: ${state.ending.toUpperCase()}` : 'Walking...';
+}
+
+function makeChoice(nextId, fact) {
+  if(fact && !state.facts.includes(fact)) state.facts.push(fact);
+  state.history.push(state.currentNode);
+  state.currentNode = nextId;
+
+  const node = getNode(state.currentNode);
+  if(node && node.snake) state.snakesMet++;
+
+  saveState();
+  renderArrakisStory();
+  document.querySelector('.story-panel').scrollTo(0,0);
+}
+
+function restartArrakis() {
+  // Keep facts and visited, reset story position
+  state.currentNode = 'SL-001';
+  state.ending = null;
+  state.history = [];
+  saveState();
+  renderArrakisStory();
+}
+
+// ═══════════════ WORLD TEASER ═══════════════
+function renderWorldTeaser(world) {
+  const storyPanel = document.getElementById('storyPanel');
+  const sidebar = document.getElementById('worldSidebar');
+
+  storyPanel.innerHTML = `
+    <div class="teaser-panel">
+      <div class="teaser-icon">${world.icon}</div>
+      <div class="teaser-title">${world.name}</div>
+      <div class="teaser-desc">${world.desc}<br><br>
+        <em style="color:var(--sand);">The story is being written by R 🐉...<br>
+        For now, enter the game and explore.</em>
+      </div>
+      <a href="https://juxaos.com/${world.game}" target="_blank" class="teaser-play-btn">
+        🎴 PLAY ${world.gameName.toUpperCase()}
+      </a>
+    </div>
+  `;
+
+  let sideHtml = `
+    <div class="sidebar-section">
+      <h3>${world.icon} ${world.name}</h3>
+      <p style="font-size:0.85em;color:var(--dim);line-height:1.5;">${world.desc}</p>
+    </div>
+    <div class="sidebar-section">
+      <h3>📦 Facts Collected (${state.facts.length})</h3>
+      <div>${state.facts.length ? state.facts.map(f=>`<span class="fact-tag">${f}</span>`).join(' ') : '<span style="color:var(--dim);font-size:0.8em;">None yet</span>'}</div>
+    </div>
+    <div class="sidebar-section">
+      <h3>🌍 Worlds Visited</h3>
+      <div>${WORLDS.map(w => `<span style="opacity:${state.visited.includes(w.id)?1:0.3};margin-right:8px;" title="${w.name}">${w.icon}</span>`).join('')}</div>
+    </div>
+    <div class="sidebar-section">
+      <h3>🎴 Game</h3>
+      <a href="https://juxaos.com/${world.game}" target="_blank" class="game-link-btn">${world.icon} ${world.gameName}</a>
+    </div>
+  `;
+  sidebar.innerHTML = sideHtml;
+  document.getElementById('footerNode').textContent = world.id;
+  document.getElementById('footerEnding').textContent = '—';
+}
+
+// ═══════════════ RESET ═══════════════
+function resetGame() {
+  if(confirm('Reset all progress? Facts, visited worlds, story position — everything.')) {
+    state = defaultState();
+    saveState();
+    renderMap();
+  }
+}
+
+// ═══════════════ RESIZE ═══════════════
+window.addEventListener('resize', () => {
+  if(document.getElementById('map-screen').classList.contains('active')) renderMap();
+});
+
+// Auto-resume
+if(state.currentWorld || state.visited.length > 0) {
+  // Player has been here before — skip portal
+  // Actually, always show portal for the cinematic feel
+}
+</script>
+</body>
+</html>
