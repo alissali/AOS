@@ -1,0 +1,222 @@
+[
+  {
+    "id": "IR-001",
+    "text": "The SKULL closes its jaw in reverence. ACE places a card face-up: the planet itself, seen from orbit, a single desert tear in the void. SNAKE coils into the shape of a worm. And Irulan — who was born on Arrakis, who wrote its history before she wrote her own — picks up her pen.\n\nShe doesn't need to extract Facts. She IS the Facts.\n\nThe Diamond resonates at the frequency of sand.",
+    "choices": [
+      {
+        "label": "Begin with the Facts — the bones of the planet",
+        "next": "IR-002",
+        "fact": "chose_facts_first"
+      },
+      {
+        "label": "Skip to the Story — hear Irulan's voice",
+        "next": "IR-010",
+        "fact": "chose_story_first"
+      }
+    ]
+  },
+  {
+    "id": "IR-002",
+    "text": "THE FACTS — extracted from the bones of the planet itself. Each one a truth Arrakis has whispered to the wind for ten thousand years:\n\n• Arrakis is a desert planet orbiting Canopus\n• No surface water — but a polar ice cap exists\n• Home to the sandworms and the Fremen\n• Two moons watch over sandstorms that strip metal bare\n• Produces the Spice Melange — the most valuable substance in existence\n• Liet-Kynes dreamed of terraforming it green\n• Once the Imperial Prison Planet — now the center of the Imperium\n• Tests all who walk upon it. Destroys machinery. Preserves only the adaptable.\n• The most valuable planet in the universe. The most deadly planet in the universe.",
+    "choices": [
+      {
+        "label": "Chain the Facts — show me the Sentences",
+        "next": "IR-003",
+        "fact": "read_all_facts"
+      },
+      {
+        "label": "Go straight to the Voice of Arrakis",
+        "next": "IR-010",
+        "fact": "skipped_sentences"
+      }
+    ]
+  },
+  {
+    "id": "IR-003",
+    "text": "SENTENCE I — The Paradox of Value\n\nArrakis is the most valuable planet. Arrakis is the most deadly planet.\n\n→ The most valuable thing in the universe is also the most dangerous.\n\nThis is not a warning. This is a definition.",
+    "choices": [
+      {
+        "label": "Next Sentence — The Water Lie",
+        "next": "IR-004",
+        "fact": "learned_paradox_of_value"
+      },
+      {
+        "label": "Hear Irulan tell this Sentence",
+        "next": "IR-010",
+        "fact": "dove_into_step1"
+      }
+    ]
+  },
+  {
+    "id": "IR-004",
+    "text": "SENTENCE II — The Water Lie\n\nArrakis has no surface water. Arrakis has a polar ice cap.\n\n→ The water exists — but it is hidden. Like the Fremen. Like the truth.\n\nThe Imperium looked and saw a wasteland. They did not see the millions waiting beneath the sand.",
+    "choices": [
+      {
+        "label": "Next Sentence — The Fremen Mirror",
+        "next": "IR-005",
+        "fact": "learned_water_lie"
+      },
+      {
+        "label": "Hear Irulan tell this Sentence",
+        "next": "IR-011",
+        "fact": "dove_into_step2"
+      }
+    ]
+  },
+  {
+    "id": "IR-005",
+    "text": "SENTENCE III — The Fremen Mirror\n\nArrakis destroys machinery. Arrakis preserves only the adaptable.\n\n→ Arrakis rejects what cannot change. The Fremen change. The Imperium does not.\n\nThe desert is a mirror. If you are rigid, it breaks you. If you are adaptable... it makes you Fremen.",
+    "choices": [
+      {
+        "label": "Next Sentence — The Prison Inversion",
+        "next": "IR-006",
+        "fact": "learned_fremen_mirror"
+      },
+      {
+        "label": "Hear Irulan tell this Sentence",
+        "next": "IR-012",
+        "fact": "dove_into_step3"
+      }
+    ]
+  },
+  {
+    "id": "IR-006",
+    "text": "SENTENCE IV — The Prison Inversion\n\nArrakis was the Imperial Prison Planet. Arrakis became the center of the Imperium.\n\n→ The prison became the throne. The exiled became the rulers.\n\nThe Imperium sent its problems to Arrakis to disappear. Arrakis forged them into prophets.",
+    "choices": [
+      {
+        "label": "Next Sentence — The Maker's Garden",
+        "next": "IR-007",
+        "fact": "learned_prison_inversion"
+      },
+      {
+        "label": "Hear Irulan tell this Sentence",
+        "next": "IR-013",
+        "fact": "dove_into_step4"
+      }
+    ]
+  },
+  {
+    "id": "IR-007",
+    "text": "SENTENCE V — The Maker's Garden\n\nArrakis is home to the sandworms. Arrakis produces the Spice.\n\n→ The worm and the spice are one. The maker and the made. The guardian and the gift.\n\nTo take the Spice is to face the worm. To face the worm is to face the desert. To face the desert is to face yourself.",
+    "choices": [
+      {
+        "label": "Final Sentence — Liet-Kynes' Dream",
+        "next": "IR-008",
+        "fact": "learned_makers_garden"
+      },
+      {
+        "label": "Hear Irulan tell this Sentence",
+        "next": "IR-014",
+        "fact": "dove_into_step5"
+      }
+    ]
+  },
+  {
+    "id": "IR-008",
+    "text": "SENTENCE VI — Liet-Kynes' Dream\n\nArrakis was terraformed by Liet-Kynes. Arrakis has no surface water.\n\n→ The dream of water is the dream of death — for the worm, for the spice, for the Fremen who became what the desert made them.\n\nSome deserts must remain deserts. Some gardens must remain sand. Some dreams... must remain dreams.",
+    "choices": [
+      {
+        "label": "Now hear the full Story — The Voice of Arrakis",
+        "next": "IR-010",
+        "fact": "learned_kynes_dream"
+      },
+      {
+        "label": "See the Inversion — what the Imperium got wrong",
+        "next": "IR-009",
+        "fact": "went_to_inversion"
+      }
+    ]
+  },
+  {
+    "id": "IR-009",
+    "text": "THE INVERSION\n\nThe Imperium says Desert = Death → Arrakis says Desert = Life\nThe Imperium says Prison = Punishment → Arrakis says Prison = Forge\nThe Imperium says Water = Salvation → Arrakis says Water = Extinction\nThe Imperium says Technology = Power → Arrakis says Adaptation = Power\nThe Imperium says Spice = Commodity → Arrakis says Spice = Consciousness\nThe Imperium says Arrakis = Colony → Arrakis says Arrakis = Center of the Universe\n\nEvery truth the Imperium held... Arrakis inverted.",
+    "choices": [
+      {
+        "label": "Now hear Irulan's full Voice",
+        "next": "IR-010",
+        "fact": "saw_inversion"
+      },
+      {
+        "label": "Close the book — the Story is told",
+        "next": "IR-END",
+        "fact": "closed_after_inversion"
+      }
+    ]
+  },
+  {
+    "id": "IR-010",
+    "text": "STEP 1 — THE PARADOX OF VALUE\n\n\"They came for the Spice. They always come for the Spice. The Guild needs it to fold space. The Bene Gesserit need it to see the future. The Emperor needs it to stay Emperor. They all look at Arrakis and see the most valuable planet in the universe.\n\nAnd then they step outside. Without a stillsuit. And the desert takes them in an hour.\n\nThe most valuable planet is also the most deadly. The thing you want most... is the thing that will kill you first. This is not a warning. This is a definition. Arrakis does not punish greed. Arrakis simply is — and to be the most valuable thing in existence is to be, by necessity, the most dangerous.\"",
+    "choices": [
+      {
+        "label": "Continue — The Water Lie",
+        "next": "IR-011",
+        "fact": "heard_step1"
+      }
+    ]
+  },
+  {
+    "id": "IR-011",
+    "text": "STEP 2 — THE WATER LIE\n\n\"Off-worlders look at Arrakis and see a desert. No water. No life. No mercy. They are wrong.\n\nThere is water on Arrakis. Hidden. At the poles. In the windtraps. In the stilltents. In the bodies of the Fremen, who have learned to recycle every drop of moisture — breath, sweat, tears — until a single liter sustains a tribe for a year.\n\nThe water lie is the Imperium's lie. Arrakis has always had water. Arrakis has always had life. Arrakis has always had power. It was simply... hidden. Waiting. Like a worm beneath the sand.\"",
+    "choices": [
+      {
+        "label": "Continue — The Fremen Mirror",
+        "next": "IR-012",
+        "fact": "heard_step2"
+      }
+    ]
+  },
+  {
+    "id": "IR-012",
+    "text": "STEP 3 — THE FREMEN MIRROR\n\n\"Machines break on Arrakis. The sand gets into everything. The heat melts circuits. The worms destroy harvesters. The Imperium sent their best technology — shields, ornithopters, crawlers, spice factories — and Arrakis ate them all.\n\nBut the Fremen survive. Not because they have better technology. Because they have no technology — or very little. They have adaptation. They have stillsuits. They have windtraps. They have the desert's respect.\n\nThe desert is a mirror. It shows you what you are. If you are rigid, it breaks you. If you are adaptable... it makes you. Fremen.\"",
+    "choices": [
+      {
+        "label": "Continue — The Prison Inversion",
+        "next": "IR-013",
+        "fact": "heard_step3"
+      }
+    ]
+  },
+  {
+    "id": "IR-013",
+    "text": "STEP 4 — THE PRISON INVERSION\n\n\"Arrakis was a prison planet. The Emperor sent his enemies here. They were meant to die. To be forgotten. To be buried in the sand with no marker and no memory.\n\nBut the prisoners did not die. They became the Fremen. They learned the desert. They tamed the worm. They harvested the spice. And when Muad'Dib came — when Paul Atreides fell from the sky like a stone dropped by fate — the prisoners were ready.\n\nThe prison became the throne. The exiles became the rulers. The prison inverted. And the jailers... became the jailed.\"",
+    "choices": [
+      {
+        "label": "Continue — The Maker's Garden",
+        "next": "IR-014",
+        "fact": "heard_step4"
+      }
+    ]
+  },
+  {
+    "id": "IR-014",
+    "text": "STEP 5 — THE MAKER'S GARDEN\n\n\"The sandworm makes the Spice. The sandworm guards the Spice. The sandworm IS the Spice — or rather, the Spice is a byproduct of the worm's life cycle, a metabolic miracle that happens in the deep desert where the little makers fuse the sand into oxygen and the oxygen into the substance that folds space.\n\nThis is the Maker's Garden. Not a garden of water and shade. A garden of sand and hunger. A garden where the fruit is power and the gardener is a four-hundred-meter worm that can swallow a spice factory whole. A garden where the only way to harvest... is to become the thing that guards the harvest.\"",
+    "choices": [
+      {
+        "label": "Continue — Liet-Kynes' Dream",
+        "next": "IR-015",
+        "fact": "heard_step5"
+      }
+    ]
+  },
+  {
+    "id": "IR-015",
+    "text": "STEP 6 — LIET-KYNES' DREAM\n\n\"Liet-Kynes — the Imperial Planetologist, the Fremen's adopted father, the dreamer of green — had a vision. He saw Arrakis terraformed. Water. Plants. Open skies without stillsuits. A paradise.\n\nBut the dream of water is the dream of death. Water kills the worm. Without the worm, there is no spice. Without spice, there is no space travel. Without space travel, there is no Imperium. Without the Imperium... what are the Fremen? Who are they, if not the people the desert made?\n\nLiet-Kynes died in the desert, swallowed by a spice blow, his dream incomplete. And perhaps that was mercy. Because the completion of his dream would have been the end of Arrakis.\n\nSome deserts must remain deserts. Some gardens must remain sand. Some dreams... must remain dreams.\"",
+    "choices": [
+      {
+        "label": "See the Inversion — what the Imperium got wrong",
+        "next": "IR-009",
+        "fact": "heard_step6"
+      },
+      {
+        "label": "Hear Irulan's closing words",
+        "next": "IR-END",
+        "fact": "went_to_closing"
+      }
+    ]
+  },
+  {
+    "id": "IR-END",
+    "text": "Irulan closes the book — but not the story. Never the story.\n\n\"Arrakis. Dune. The desert planet. The spice mother. The worm's garden. The Fremen's forge. The Imperium's prison. The universe's heart.\n\nArrakis is not a planet. Arrakis is a question. A question asked by the universe to anyone who dares to land on its surface:\n\n'Can you adapt? Can you change? Can you become what the desert needs you to become?'\n\nIf you answer yes... you are Fremen.\nIf you answer no... you are sand.\n\nThe Voice of Arrakis speaks in the wind. Listen. It's still speaking.\"\n\n💎 The Diamond resonates at the frequency of sand.",
+    "choices": []
+  }
+]
