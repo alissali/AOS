@@ -1,1 +1,531 @@
-file:///tmp/lectic-brain-division.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LECTIC: Brain Division ⚡🧠</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#003333;color:#e0e0e0;font-family:'Courier New',monospace;overflow-x:hidden;min-height:100vh;display:flex;align-items:center;justify-content:center}
+#game-container{position:relative;width:100vw;max-width:900px;height:100vh;max-height:700px;background:#002222;border:2px solid #00ff88;border-radius:16px;overflow:hidden;user-select:none}
+
+/* SCREENS */
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#002222;z-index:100;text-align:center;padding:20px}
+.screen h1{font-size:42px;color:#00ff88;text-shadow:0 0 30px rgba(0,255,136,.5);margin-bottom:5px}
+.sub{color:#ffcc00;font-size:18px;margin-bottom:20px;letter-spacing:2px}
+.tagline{color:#aaa;font-size:13px;margin-bottom:30px;line-height:1.8}
+.approach{display:inline-block;padding:4px 12px;border-radius:12px;font-size:12px;margin:3px;font-weight:bold}
+.approach-think{background:rgba(255,50,50,.15);color:#ff6666;border:1px solid #ff4444}
+.approach-work{background:rgba(0,150,255,.15);color:#4488ff;border:1px solid #4488ff}
+.approach-bg{background:rgba(255,170,0,.15);color:#ffaa00;border:1px solid #ffaa00}
+.start-btn{background:linear-gradient(135deg,#00ff88,#00cc66);color:#003333;border:none;padding:16px 50px;border-radius:12px;font-size:20px;font-weight:bold;cursor:pointer;font-family:inherit;transition:all .2s;letter-spacing:1px}
+.start-btn:hover{transform:scale(1.05);box-shadow:0 0 30px rgba(0,255,136,.6)}
+.start-btn:active{transform:scale(.97)}
+.rules{color:#667;font-size:11px;margin-top:15px;max-width:400px;line-height:1.6}
+
+/* PLAY AREA */
+#play-area{display:none;width:100%;height:100%}
+
+/* INCOMING TASK */
+#task-area{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:10}
+#task-card{background:#001a1a;border:2px solid #00ff88;border-radius:12px;padding:14px 28px;min-width:300px;text-align:center;box-shadow:0 0 20px rgba(0,255,136,.15);transition:opacity .2s}
+#task-card .task-emoji{font-size:30px;margin-bottom:4px}
+#task-card .task-text{color:#00ffaa;font-size:15px;font-weight:bold}
+#task-card .task-hint{color:#555;font-size:11px;margin-top:4px}
+
+/* BRAIN ZONES */
+#brain{position:absolute;top:50%;left:50%;transform:translate(-50%,-46%);width:600px;height:320px;display:flex;align-items:center;justify-content:space-around}
+.zone{width:160px;display:flex;flex-direction:column;align-items:center;cursor:pointer;transition:all .15s}
+.zone:hover .zone-circle{transform:scale(1.08);box-shadow:0 0 30px rgba(0,255,136,.4)}
+.zone:active .zone-circle{transform:scale(.94)}
+.zone-circle{width:140px;height:140px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:3px solid transparent;transition:all .2s;font-weight:bold;text-align:center}
+.zone-label{font-size:14px;margin-top:8px;letter-spacing:1px}
+.zone-culture{font-size:11px;color:#888;margin-top:2px}
+.zone-count{font-size:11px;margin-top:6px;color:#aaa}
+
+/* Zone colors */
+#z-think .zone-circle{background:rgba(255,50,50,.15);border-color:#ff4444}
+#z-work .zone-circle{background:rgba(0,120,255,.15);border-color:#4488ff}
+#z-bg .zone-circle{background:rgba(255,170,0,.15);border-color:#ffaa00}
+
+/* Zone heat bars */
+.zone-heat-wrap{width:100px;height:8px;background:#001a1a;border:1px solid #335;border-radius:4px;overflow:hidden;margin-top:6px}
+.zone-heat-fill{height:100%;width:0%;transition:width .3s;background:linear-gradient(90deg,#00ff88,#ffcc00)}
+
+/* Animations */
+.zone.correct .zone-circle{animation:zflash-g .5s}
+.zone.wrong .zone-circle{animation:zflash-r .5s}
+@keyframes zflash-g{0%,100%{box-shadow:none}50%{box-shadow:0 0 50px rgba(0,255,136,.9)}}
+@keyframes zflash-r{0%,100%{box-shadow:none}50%{box-shadow:0 0 50px rgba(255,50,50,.9)}}
+
+/* Combo burst */
+.combo-burst{position:fixed;font-size:26px;font-weight:bold;color:#00ff88;pointer-events:none;z-index:200;animation:burst .7s forwards}
+@keyframes burst{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-50px) scale(1.8)}}
+
+/* HUD */
+#hud{position:absolute;bottom:0;left:0;right:0;height:60px;background:rgba(0,20,20,.95);border-top:1px solid #00ff88;display:flex;align-items:center;justify-content:space-between;padding:0 15px;z-index:10}
+.hud-item{text-align:center}
+.hud-label{font-size:9px;color:#556;text-transform:uppercase;letter-spacing:1px}
+.hud-val{font-size:17px;color:#00ff88;font-weight:bold}
+#wash-btn{background:linear-gradient(135deg,#0066cc,#00aaff);color:#fff;border:none;padding:10px 18px;border-radius:8px;cursor:pointer;font-family:inherit;font-size:14px;font-weight:bold;transition:all .2s}
+#wash-btn:hover{transform:scale(1.05);box-shadow:0 0 15px rgba(0,170,255,.5)}
+#wash-btn:disabled{opacity:.3;cursor:not-allowed;transform:none}
+#combo-display{font-size:15px;color:#ffcc00}
+
+/* END SCREEN */
+#end-screen h1{font-size:40px;margin-bottom:8px}
+#end-screen .stats{color:#00ffaa;font-size:15px;line-height:2}
+
+/* WASH flash */
+.wash-flash{animation:wflash .6s}
+@keyframes wflash{0%,100%{box-shadow:none}50%{box-shadow:inset 0 0 60px rgba(0,170,255,.4)}}
+
+/* MOBILE */
+@media(max-width:650px){
+  #brain{width:360px;height:280px;flex-wrap:wrap;gap:5px}
+  .zone-circle{width:100px;height:100px}
+  .zone-label{font-size:11px}
+  #task-card{min-width:240px;padding:10px 15px}
+  .screen h1{font-size:28px}
+  #hud{height:50px;padding:0 8px}
+  .hud-val{font-size:14px}
+  #wash-btn{padding:8px 12px;font-size:12px}
+}
+</style>
+</head>
+<body>
+
+<div id="game-container">
+  <!-- TITLE -->
+  <div class="screen" id="title-screen">
+    <h1>LECTIC</h1>
+    <div class="sub">BRAIN DIVISION</div>
+    <div class="tagline">
+      <span class="approach approach-think">&#x1F432; Think Chinese</span>
+      <span class="approach approach-work">&#x1F5FC; Work Japanese</span>
+      <span class="approach approach-bg">&#x2638;&#xFE0F; Background Indian</span><br><br>
+      Route stimuli to the correct brain layer.<br>
+      WASH to keep zones cool.<br>
+      Don't let the brain MELT.
+    </div>
+    <button class="start-btn" id="btn-start">DIVIDE</button>
+    <div class="rules">
+      &#x1F3AF; Win: Reach Level 7 with 10+ washes, all zones empty &amp; cool = BRAIN CLEAN<br>
+      &#x1F525; Lose: All 3 zones overheat = MELTDOWN
+    </div>
+  </div>
+
+  <!-- PLAY -->
+  <div id="play-area">
+    <div id="task-area">
+      <div id="task-card">
+        <div class="task-emoji" id="t-emoji"></div>
+        <div class="task-text" id="t-text"></div>
+        <div class="task-hint" id="t-hint"></div>
+      </div>
+    </div>
+
+    <div id="brain">
+      <div class="zone" id="z-think" data-zone="think">
+        <div class="zone-circle">
+          <span style="font-size:32px">&#x1F432;</span>
+          <span style="font-size:12px;margin-top:4px">THINK</span>
+        </div>
+        <div class="zone-label">&#x1F432; THINK</div>
+        <div class="zone-culture">Chinese</div>
+        <div class="zone-count" id="count-think">0 queued</div>
+        <div class="zone-heat-wrap"><div class="zone-heat-fill" id="heat-think"></div></div>
+      </div>
+
+      <div class="zone" id="z-work" data-zone="work">
+        <div class="zone-circle">
+          <span style="font-size:32px">&#x1F5FC;</span>
+          <span style="font-size:12px;margin-top:4px">WORK</span>
+        </div>
+        <div class="zone-label">&#x1F5FC; WORK</div>
+        <div class="zone-culture">Japanese</div>
+        <div class="zone-count" id="count-work">0 queued</div>
+        <div class="zone-heat-wrap"><div class="zone-heat-fill" id="heat-work"></div></div>
+      </div>
+
+      <div class="zone" id="z-bg" data-zone="bg">
+        <div class="zone-circle">
+          <span style="font-size:32px">&#x2638;&#xFE0F;</span>
+          <span style="font-size:12px;margin-top:4px">BACKGROUND</span>
+        </div>
+        <div class="zone-label">&#x2638;&#xFE0F; BACKGROUND</div>
+        <div class="zone-culture">Indian</div>
+        <div class="zone-count" id="count-bg">0 queued</div>
+        <div class="zone-heat-wrap"><div class="zone-heat-fill" id="heat-bg"></div></div>
+      </div>
+    </div>
+
+    <div id="hud">
+      <div class="hud-item"><div class="hud-label">Level</div><div class="hud-val" id="h-level">1</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="h-score">0</div></div>
+      <div id="combo-display"></div>
+      <button id="wash-btn">&#x1F4A7; WASH</button>
+      <div class="hud-item"><div class="hud-label">Washed</div><div class="hud-val" id="h-washed">0</div></div>
+      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="h-time">0:00</div></div>
+    </div>
+  </div>
+
+  <!-- END -->
+  <div class="screen" id="end-screen" style="display:none">
+    <h1 id="end-title"></h1>
+    <div id="end-sub" style="color:#888;font-size:14px;margin-bottom:12px"></div>
+    <div class="stats" id="end-stats"></div>
+    <button class="start-btn" id="btn-restart" style="margin-top:20px">AGAIN</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ── TASKS: 20 per zone ── */
+  var TASKS = {
+    think: [
+      {e:"\u{1F9EE}",t:"Analyze the pattern",h:"Pattern recognition"},
+      {e:"\u265F\uFE0F",t:"Plan 5 moves ahead",h:"Strategic depth"},
+      {e:"\u{1F4D0}",t:"Prove the theorem",h:"Geometric logic"},
+      {e:"\u2699\uFE0F",t:"Debug the recursion",h:"Code analysis"},
+      {e:"\u{1F4CA}",t:"Read the data flow",h:"Statistical reasoning"},
+      {e:"\u{1F9E9}",t:"Solve the constraint",h:"Logical deduction"},
+      {e:"\u262F\uFE0F",t:"Balance yin and yang",h:"Harmony of opposites"},
+      {e:"\u{1F30A}",t:"Follow the water path",h:"Flow like Lao Tzu"},
+      {e:"\u{1F3AF}",t:"Name the truth",h:"Direct perception"},
+      {e:"\u{1F52D}",t:"See the whole system",h:"Think in wholes"},
+      {e:"\u{1F9ED}",t:"Map the long game",h:"Sun Tzu strategy"},
+      {e:"\u{1F500}",t:"Find the hidden flow",h:"Tao of movement"},
+      {e:"\u{1F4A1}",t:"Distill the essence",h:"Core extraction"},
+      {e:"\u{1F9D0}",t:"Question the assumption",h:"Critical doubt"},
+      {e:"\u{1F310}",t:"Connect the systems",h:"Network thinking"},
+      {e:"\u{1F54A}\uFE0F",t:"Release the attachment",h:"Wu wei"},
+      {e:"\u{1F3B2}",t:"Calculate the probability",h:"Risk assessment"},
+      {e:"\u{1F5FA}\uFE0F",t:"Chart the territory",h:"Cartographic mind"},
+      {e:"\u{1F4A0}",t:"Abstract the principle",h:"Conceptual leap"},
+      {e:"\u{1F300}",t:"Observe the spiral",h:"Fractal awareness"}
+    ],
+    work: [
+      {e:"\u2694\uFE0F",t:"Cut precisely",h:"One stroke, perfect"},
+      {e:"\u{1F528}",t:"Forge the blade",h:"Discipline of fire"},
+      {e:"\u2702\uFE0F",t:"Zero waste",h:"Every cut counts"},
+      {e:"\u{1F3AF}",t:"Kaizen the flow",h:"Continuous improvement"},
+      {e:"\u{1F3D7}\uFE0F",t:"Build the structure",h:"Engineering ritual"},
+      {e:"\u{1F5E1}\uFE0F",t:"Sharpen the tool",h:"Preparation is work"},
+      {e:"\u{1F4CF}",t:"Measure twice",h:"Precision doctrine"},
+      {e:"\u{1F6E0}\uFE0F",t:"Maintain the machine",h:"Operational care"},
+      {e:"\u{1F9F9}",t:"Clean the workspace",h:"Order before action"},
+      {e:"\u{1F3CB}\uFE0F",t:"Repeat the kata",h:"Muscle memory"},
+      {e:"\u{1F4E6}",t:"Package the output",h:"Delivery discipline"},
+      {e:"\u{1F50D}",t:"Inspect every joint",h:"Quality control"},
+      {e:"\u2696\uFE0F",t:"Calibrate the scale",h:"Accuracy check"},
+      {e:"\u23F1\uFE0F",t:"Time the sequence",h:"Rhythm of production"},
+      {e:"\u{1F9F1}",t:"Stack the blocks",h:"Modular construction"},
+      {e:"\u{1F4CB}",t:"Follow the checklist",h:"Process fidelity"},
+      {e:"\u{1F527}",t:"Tighten the bolt",h:"No loose ends"},
+      {e:"\u{1F3A3}",t:"Cast with precision",h:"Controlled release"},
+      {e:"\u{1F9EA}",t:"Run the test",h:"Verify before ship"},
+      {e:"\u{1F6A2}",t:"Ship the product",h:"Done means shipped"}
+    ],
+    bg: [
+      {e:"\u{1F9D8}",t:"Breathe deeply",h:"Pranayama"},
+      {e:"\u{1F4A7}",t:"Wash the residue",h:"Mental cleanse"},
+      {e:"\u{1F3F5}\uFE0F",t:"Return to center",h:"Dharma reset"},
+      {e:"\u{1F30C}",t:"Trust the background",h:"The substrate holds"},
+      {e:"\u{1F54C}",t:"Sit with the silence",h:"Meditation gate"},
+      {e:"\u2638\uFE0F",t:"Rotate the wheel",h:"Dharma cycle"},
+      {e:"\u{1F9E0}",t:"Let thoughts pass",h:"Non-attachment"},
+      {e:"\u{1F33F}",t:"Ground in the earth",h:"Root connection"},
+      {e:"\u{1F525}",t:"Burn the impurity",h:"Tapas fire"},
+      {e:"\u{1F30D}",t:"Feel the substrate",h:"Consciousness base"},
+      {e:"\u{1F3B6}",t:"Hum the mantra",h:"Vibration alignment"},
+      {e:"\u{1F4AB}",t:"Release the ego",h:"Ahamkara dissolves"},
+      {e:"\u{1F33B}",t:"Open the chakra",h:"Energy flow"},
+      {e:"\u{1F30A}",t:"Surrender to the current",h:"Let it carry you"},
+      {e:"\u{1F311}",t:"Embrace the void",h:"Shunya — emptiness"},
+      {e:"\u2728",t:"Witness without judging",h:"Sakshi bhava"},
+      {e:"\u{1F331}",t:"Plant the seed silently",h:"Karma yoga"},
+      {e:"\u{1F56F}\uFE0F",t:"Light the inner flame",h:"Atman recognition"},
+      {e:"\u{1F30E}",t:"Hold space for all",h:"Universal compassion"},
+      {e:"\u{1F48E}",t:"The diamond holds still",h:"Vajra stability"}
+    ]
+  };
+
+  var ZONES = ["think","work","bg"];
+  var ZONE_NAMES = {think:"THINK",work:"WORK",bg:"BACKGROUND"};
+
+  var state, spawnTimer, tickTimer, startTime;
+
+  function $(id){return document.getElementById(id)}
+  function shuffle(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=0|Math.random()*(i+1);var t=b[i];b[i]=b[j];b[j]=t}return b}
+
+  /* ── START ── */
+  function startGame(){
+    $("title-screen").style.display="none";
+    $("end-screen").style.display="none";
+    $("play-area").style.display="block";
+
+    state={
+      active:true,
+      level:1,
+      score:0,
+      combo:0,
+      maxCombo:0,
+      correct:0,
+      wrong:0,
+      washed:0,
+      queued:{think:[],work:[],bg:[]},
+      heat:{think:0,work:0,bg:0},
+      pool:buildPool(),
+      poolIdx:0,
+      incoming:null
+    };
+    startTime=Date.now();
+    updateHUD();
+    nextTask();
+    spawnTimer=setInterval(spawnTick, getSpawnInterval());
+    tickTimer=setInterval(gameTick, 1000);
+  }
+
+  function buildPool(){
+    var all=[];
+    ZONES.forEach(function(z){
+      TASKS[z].forEach(function(t){all.push({e:t.e,t:t.t,h:t.h,zone:z})});
+    });
+    return shuffle(all);
+  }
+
+  function getSpawnInterval(){
+    return Math.max(1200, 3500 - state.level * 300);
+  }
+
+  /* ── TASK DISPLAY ── */
+  function nextTask(){
+    if(!state.active)return;
+    if(state.poolIdx >= state.pool.length) state.pool = shuffle(state.pool), state.poolIdx=0;
+    state.incoming = state.pool[state.poolIdx++];
+    var card=$("task-card");
+    $("t-emoji").textContent = state.incoming.e;
+    $("t-text").textContent = state.incoming.t;
+    $("t-hint").textContent = state.incoming.h;
+    card.style.opacity="0";
+    setTimeout(function(){card.style.opacity="1"},50);
+  }
+
+  /* ── ROUTE ── */
+  function routeTo(zone){
+    if(!state.active||!state.incoming)return;
+    var task=state.incoming;
+    var el=$("z-"+zone);
+
+    if(task.zone===zone){
+      el.classList.remove("wrong");el.classList.add("correct");
+      setTimeout(function(){el.classList.remove("correct")},500);
+      state.combo++;
+      if(state.combo>state.maxCombo)state.maxCombo=state.combo;
+      var bonus=Math.min(state.combo,5);
+      state.score+=10+bonus*5;
+      state.correct++;
+      state.heat[zone]=Math.max(0,state.heat[zone]-3);
+      if(state.combo>=3)spawnBurst(el,state.combo+"x COMBO!");
+    } else {
+      el.classList.remove("correct");el.classList.add("wrong");
+      setTimeout(function(){el.classList.remove("wrong")},500);
+      state.combo=0;
+      state.heat[zone]=Math.min(100,state.heat[zone]+15);
+      state.wrong++;
+      // Also heat the correct zone a bit (misrouted = accumulation)
+      state.heat[task.zone]=Math.min(100,state.heat[task.zone]+5);
+    }
+
+    state.queued[task.zone].push(task);
+    updateHUD();
+    checkMeltdown();
+    if(state.active){
+      state.incoming=null;
+      setTimeout(nextTask,300);
+    }
+  }
+
+  /* ── WASH ── */
+  function washZone(zone){
+    if(!state.active)return;
+    if(state.score<5)return; // costs 5 points
+    state.score-=5;
+    state.washed++;
+    state.heat[zone]=Math.max(0,state.heat[zone]-30);
+    state.queued[zone]=state.queued[zone].slice(Math.max(0,state.queued[zone].length-3)); // clear up to 3
+    var el=$("z-"+zone);
+    el.classList.add("wash-anim");
+    $("game-container").classList.add("wash-flash");
+    setTimeout(function(){el.classList.remove("wash-anim");$("game-container").classList.remove("wash-flash")},600);
+    updateHUD();
+    checkBrainClean();
+  }
+
+  /* ── GAME TICK (1s) ── */
+  function gameTick(){
+    if(!state.active)return;
+    var elapsed=Math.floor((Date.now()-startTime)/1000);
+    var mm=Math.floor(elapsed/60);
+    var ss=elapsed%60;
+    $("h-time").textContent=mm+":"+(ss<10?"0":"")+ss;
+
+    // Level up every 30 seconds
+    var newLevel=Math.min(10,1+Math.floor(elapsed/30));
+    if(newLevel!==state.level){
+      state.level=newLevel;
+      clearInterval(spawnTimer);
+      spawnTimer=setInterval(spawnTick,getSpawnInterval());
+      updateHUD();
+      checkBrainClean();
+    }
+
+    // Passive heat: queued tasks heat their zone
+    ZONES.forEach(function(z){
+      if(state.queued[z].length>0){
+        state.heat[z]=Math.min(100,state.heat[z]+state.queued[z].length*0.8);
+      }
+      // Passive cooling when empty
+      if(state.queued[z].length===0 && state.heat[z]>0){
+        state.heat[z]=Math.max(0,state.heat[z]-1.5);
+      }
+    });
+    updateHUD();
+    checkMeltdown();
+
+    // Process queued tasks (zones work through their queue)
+    ZONES.forEach(function(z){
+      if(state.queued[z].length>0 && Math.random()<0.3){
+        state.queued[z].shift();
+      }
+    });
+    updateHUD();
+  }
+
+  /* ── SPAWN TICK ── */
+  function spawnTick(){
+    if(!state.active||state.incoming)return;
+    nextTask();
+  }
+
+  /* ── CHECK CONDITIONS ── */
+  function checkMeltdown(){
+    var allHot=true;
+    ZONES.forEach(function(z){if(state.heat[z]<100)allHot=false});
+    if(allHot)endGame(false);
+  }
+
+  function checkBrainClean(){
+    if(state.level<7)return;
+    if(state.washed<10)return;
+    var allEmpty=true, allCool=true;
+    ZONES.forEach(function(z){
+      if(state.queued[z].length>0)allEmpty=false;
+      if(state.heat[z]>0)allCool=false;
+    });
+    if(allEmpty && allCool && !state.incoming) endGame(true);
+  }
+
+  /* ── HUD ── */
+  function updateHUD(){
+    $("h-level").textContent=state.level;
+    $("h-score").textContent=state.score;
+    $("h-washed").textContent=state.washed;
+    $("combo-display").textContent=state.combo>=2?state.combo+"x COMBO":"";
+    $("wash-btn").disabled=state.score<5;
+
+    ZONES.forEach(function(z){
+      var fill=$("heat-"+z);
+      var h=state.heat[z];
+      fill.style.width=h+"%";
+      if(h>75)fill.style.background="linear-gradient(90deg,#ff4444,#ff0000)";
+      else if(h>50)fill.style.background="linear-gradient(90deg,#ffcc00,#ff4444)";
+      else fill.style.background="linear-gradient(90deg,#00ff88,#ffcc00)";
+      $("count-"+z).textContent=state.queued[z].length+" queued";
+    });
+  }
+
+  /* ── END ── */
+  function endGame(clean){
+    state.active=false;
+    clearInterval(spawnTimer);
+    clearInterval(tickTimer);
+    $("play-area").style.display="none";
+    $("end-screen").style.display="flex";
+
+    var elapsed=Math.floor((Date.now()-startTime)/1000);
+    var mm=Math.floor(elapsed/60);var ss=elapsed%60;
+
+    if(clean){
+      $("end-title").textContent="\u{1F9E0} BRAIN CLEAN";
+      $("end-title").style.color="#00ff88";
+      $("end-sub").textContent="Level "+state.level+". All zones empty. All heat at zero. You washed "+state.washed+" times. The brain is clean.";
+    } else {
+      $("end-title").textContent="\u{1F525} MELTDOWN";
+      $("end-title").style.color="#ff4444";
+      $("end-sub").textContent="All three zones overheated. The brain melted at Level "+state.level+".";
+    }
+
+    var pct=state.correct+state.wrong>0?Math.round(state.correct/(state.correct+state.wrong)*100):0;
+    $("end-stats").innerHTML=
+      "Score: "+state.score+"<br>"+
+      "Accuracy: "+pct+"% ("+state.correct+"/"+(state.correct+state.wrong)+")<br>"+
+      "Max Combo: "+state.maxCombo+"x<br>"+
+      "Washes: "+state.washed+"<br>"+
+      "Time: "+mm+":"+(ss<10?"0":"")+ss+"<br>"+
+      "Level reached: "+state.level;
+  }
+
+  /* ── BURST ── */
+  function spawnBurst(el,text){
+    var b=document.createElement("div");
+    b.className="combo-burst";b.textContent=text;
+    var r=el.getBoundingClientRect();
+    b.style.left=(r.left+r.width/2-40)+"px";
+    b.style.top=(r.top-30)+"px";
+    document.body.appendChild(b);
+    setTimeout(function(){if(b.parentNode)b.parentNode.removeChild(b)},700);
+  }
+
+  /* ── EVENT LISTENERS ── */
+  document.addEventListener("DOMContentLoaded",function(){
+    $("btn-start").addEventListener("click",startGame);
+    $("btn-restart").addEventListener("click",startGame);
+
+    // Click zone = route task there
+    ZONES.forEach(function(z){
+      $("z-"+z).addEventListener("click",function(e){
+        // If WASH mode (holding shift or double-click), wash instead
+        routeTo(z);
+      });
+    });
+
+    // WASH button = wash the hottest zone
+    $("wash-btn").addEventListener("click",function(){
+      if(!state.active)return;
+      // Find hottest zone
+      var hottest=ZONES[0];
+      ZONES.forEach(function(z){if(state.heat[z]>state.heat[hottest])hottest=z});
+      washZone(hottest);
+    });
+
+    // Right-click on zone = wash that specific zone
+    ZONES.forEach(function(z){
+      $("z-"+z).addEventListener("contextmenu",function(e){
+        e.preventDefault();
+        washZone(z);
+      });
+    });
+  });
+
+})();
+</script>
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D3C1C4G509"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-D3C1C4G509');</script>
+</body>
+</html>
