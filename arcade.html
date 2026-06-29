@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D3C1C4G509"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-D3C1C4G509');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta property="og:title" content="JuX ARCADE — 6 Games · 48 Prizes">
+    <meta property="og:description" content="MONOPOLY · DUNE TAROT · SNAKE · JuXYams · HOLD'EM — Play free, win prizes, fight for territory. Built by Mamoun Alissali.">
+    <meta property="og:url" content="https://raw.githack.com/alissali/Learn/main/ARCADE.html">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="JuX ARCADE — 6 Games · 48 Prizes">
+    <meta name="twitter:description" content="MONOPOLY · DUNE TAROT · SNAKE · JuXYams · HOLD'EM — Play free, win prizes, fight for territory. Built by Mamoun Alissali.">
+    <meta name="description" content="MONOPOLY · DUNE TAROT · SNAKE · JuXYams · HOLD'EM — Play free, win prizes, fight for territory. Built by Mamoun Alissali.">
+<title>🎰 JuX ARCADE — All Games. One Desert.</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=IBM+Plex+Mono:wght@400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a12;color:#e8d5c0;font-family:'IBM Plex Mono',monospace;min-height:100vh;overflow-x:hidden}
+
+/* Stars background */
+.stars{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.star{position:absolute;width:2px;height:2px;background:#e8d5c0;border-radius:50%;animation:twinkle var(--dur) ease-in-out infinite alternate}
+@keyframes twinkle{0%{opacity:0.1;transform:scale(0.8)}100%{opacity:var(--max-o);transform:scale(1.2)}}
+
+/* Hero */
+.hero{text-align:center;padding:60px 20px 20px;position:relative;z-index:1}
+.hero h1{font-family:'Cinzel Decorative',serif;font-size:3.5em;color:#e8a045;text-shadow:0 0 60px rgba(232,160,69,0.4),0 0 120px rgba(232,160,69,0.15);letter-spacing:8px;margin-bottom:12px}
+.hero .tagline{font-family:'Cormorant Garamond',serif;font-size:1.5em;font-style:italic;color:rgba(232,213,192,0.5);letter-spacing:5px;margin-bottom:8px}
+.hero .sig{font-size:0.85em;color:rgba(232,213,192,0.25);letter-spacing:3px}
+.hero .stats{margin-top:18px;display:flex;gap:30px;justify-content:center;flex-wrap:wrap}
+.hero .stat{text-align:center}
+.hero .stat .num{font-family:'Cinzel Decorative',serif;font-size:2em;color:#2ec4b6;display:block}
+.hero .stat .lbl{font-size:0.7em;color:rgba(232,213,192,0.4);letter-spacing:3px;text-transform:uppercase}
+
+/* Section headers */
+.section-head{font-family:'Cinzel Decorative',serif;font-size:1.8em;color:#e8a045;text-align:center;letter-spacing:5px;margin:40px 0 25px;position:relative;z-index:1}
+.section-head::after{content:'';display:block;width:60px;height:2px;background:linear-gradient(90deg,transparent,#e8a045,transparent);margin:10px auto 0}
+
+/* Games grid */
+.games{max-width:1100px;margin:0 auto;padding:0 20px 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px;position:relative;z-index:1}
+
+.game-card{border:1px solid rgba(232,213,192,0.08);border-radius:14px;padding:28px;background:rgba(255,255,255,0.012);transition:all 0.5s cubic-bezier(0.25,0.8,0.25,1);position:relative;overflow:hidden;text-decoration:none;color:inherit;display:block;cursor:pointer}
+.game-card:hover{transform:translateY(-6px) scale(1.01);box-shadow:0 20px 60px rgba(0,0,0,0.4)}
+.game-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:14px 14px 0 0;transition:height 0.3s}
+.game-card:hover::before{height:5px}
+.game-card::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 30% 0%,var(--glow) 0%,transparent 60%);opacity:0;transition:opacity 0.5s;pointer-events:none}
+.game-card:hover::after{opacity:1}
+.game-card .icon{font-size:3.2em;margin-bottom:12px;display:block;filter:drop-shadow(0 0 10px rgba(232,160,69,0.3))}
+.game-card h2{font-family:'Cinzel Decorative',serif;font-size:1.3em;margin-bottom:6px;letter-spacing:2px}
+.game-card p{font-size:0.82em;color:rgba(232,213,192,0.5);line-height:1.7;margin-bottom:10px}
+.game-card .meta{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.game-card .badge{font-size:0.65em;padding:3px 10px;border-radius:20px;letter-spacing:2px;text-transform:uppercase;border:1px solid}
+.game-card .play-btn{display:inline-block;margin-top:8px;padding:10px 28px;border:1px solid rgba(232,160,69,0.4);border-radius:4px;font-size:0.85em;letter-spacing:3px;transition:all 0.3s;font-family:'Cinzel Decorative',serif}
+.game-card:hover .play-btn{background:rgba(232,160,69,0.15);box-shadow:0 0 15px rgba(232,160,69,0.15)}
+.game-card .sub-link{display:block;margin-top:8px;font-size:0.72em;color:rgba(232,213,192,0.35);letter-spacing:2px;text-decoration:none}
+.game-card .sub-link:hover{color:#e8a045}
+.game-card .sub-btn{display:inline-block;margin-top:8px;margin-left:8px;padding:8px 16px;border:1px solid rgba(46,196,182,0.4);border-radius:4px;font-size:0.75em;letter-spacing:2px;color:#2ec4b6;font-family:'IBM Plex Mono',monospace;cursor:pointer;text-decoration:none;transition:all 0.3s;background:none}
+.game-card .sub-btn:hover{background:rgba(46,196,182,0.15);box-shadow:0 0 12px rgba(46,196,182,0.2)}
+
+/* Card colors */
+.card-snake{--glow:rgba(46,196,182,0.06)}.card-snake::before{background:#2ec4b6}.card-snake h2{color:#2ec4b6}.card-snake .play-btn{border-color:rgba(46,196,182,0.4);color:#2ec4b6}.card-snake .badge{border-color:rgba(46,196,182,0.3);color:#2ec4b6}
+.card-yams{--glow:rgba(46,196,182,0.06)}.card-yams::before{background:#2ec4b6}.card-yams h2{color:#2ec4b6}.card-yams .play-btn{border-color:rgba(46,196,182,0.4);color:#2ec4b6}.card-yams .badge{border-color:rgba(46,196,182,0.3);color:#2ec4b6}
+.card-monopoly{--glow:rgba(232,160,69,0.06)}.card-monopoly::before{background:#e8a045}.card-monopoly h2{color:#e8a045}.card-monopoly .play-btn{border-color:rgba(232,160,69,0.4);color:#e8a045}.card-monopoly .badge{border-color:rgba(232,160,69,0.3);color:#e8a045}
+.card-tarot{--glow:rgba(180,40,20,0.06)}.card-tarot::before{background:#b42814}.card-tarot h2{color:#b42814}.card-tarot .play-btn{border-color:rgba(180,40,20,0.4);color:#b42814}.card-tarot .badge{border-color:rgba(180,40,20,0.3);color:#b42814}
+.card-holdem{--glow:rgba(123,79,166,0.06)}.card-holdem::before{background:#7b4fa6}.card-holdem h2{color:#7b4fa6}.card-holdem .play-btn{border-color:rgba(123,79,166,0.4);color:#7b4fa6}.card-holdem .badge{border-color:rgba(123,79,166,0.3);color:#7b4fa6}
+.card-porn{--glow:rgba(180,40,20,0.06)}.card-porn::before{background:#b42814}.card-porn h2{color:#b42814}.card-porn .play-btn{border-color:rgba(180,40,20,0.4);color:#b42814}.card-porn .badge{border-color:rgba(180,40,20,0.3);color:#b42814}
+
+/* Literary section */
+.literary{max-width:1100px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;position:relative;z-index:1}
+.lit-card{border:1px solid rgba(232,213,192,0.08);border-radius:12px;padding:22px;text-align:center;text-decoration:none;color:inherit;display:block;transition:all 0.4s;background:rgba(255,255,255,0.01)}
+.lit-card:hover{border-color:rgba(232,160,69,0.3);transform:translateY(-3px)}
+.lit-card .lit-icon{font-size:2em;margin-bottom:8px;display:block}
+.lit-card h3{font-family:'Cinzel Decorative',serif;font-size:1em;color:#e8a045;margin-bottom:6px;letter-spacing:2px}
+.lit-card p{font-size:0.75em;color:rgba(232,213,192,0.4);line-height:1.6;font-style:italic}
+
+/* Pricing section */
+.pricing{max-width:1100px;margin:0 auto;padding:20px;position:relative;z-index:1}
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.tier{border:1px solid rgba(232,213,192,0.08);border-radius:14px;padding:26px;text-align:center;background:rgba(255,255,255,0.012);transition:all 0.4s}
+.tier:hover{border-color:rgba(232,160,69,0.4);transform:translateY(-3px)}
+.tier .tier-icon{font-size:2.5em;margin-bottom:10px}
+.tier h3{font-family:'Cinzel Decorative',serif;font-size:1.1em;color:#e8a045;margin-bottom:6px;letter-spacing:2px}
+.tier .price{font-size:2.2em;font-family:'Cinzel Decorative',serif;color:#e8d5c0;margin:10px 0}
+.tier .price small{font-size:0.45em;color:rgba(232,213,192,0.3)}
+.tier ul{list-style:none;text-align:left;margin:10px 0;font-size:0.78em;color:rgba(232,213,192,0.55);line-height:2}
+.tier ul li::before{content:'✓ ';color:#2ec4b6}
+.tier .buy-link{display:inline-block;margin-top:10px;padding:10px 28px;border:1px solid rgba(232,160,69,0.5);border-radius:4px;color:#e8a045;text-decoration:none;font-family:'Cinzel Decorative',serif;letter-spacing:2px;transition:all 0.3s;font-size:0.9em}
+.tier .buy-link:hover{background:rgba(232,160,69,0.15);box-shadow:0 0 25px rgba(232,160,69,0.2)}
+.tier.free .buy-link{border-color:rgba(46,196,182,0.4);color:#2ec4b6}
+.tier.featured{border-color:rgba(232,160,69,0.3);box-shadow:0 0 40px rgba(232,160,69,0.08);position:relative}
+.tier.featured::before{content:'★ MOST POPULAR';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#e8a045;color:#0a0a12;font-size:0.6em;padding:4px 16px;border-radius:20px;letter-spacing:2px;font-family:'Cinzel Decorative',serif}
+
+/* SSS section */
+.sss-section{max-width:800px;margin:30px auto;padding:30px 20px;text-align:center;border-top:1px solid rgba(180,40,20,0.15);position:relative;z-index:1}
+.sss-section h2{font-family:'Cinzel Decorative',serif;color:#b42814;font-size:1.4em;letter-spacing:4px;margin-bottom:10px}
+.sss-section p{font-family:'Cormorant Garamond',serif;font-size:1.1em;font-style:italic;color:rgba(232,213,192,0.45);line-height:1.8}
+.sss-section a{color:#b42814;text-decoration:none;border-bottom:1px solid rgba(180,40,20,0.3);transition:all 0.3s}
+.sss-section a:hover{color:#e8a045;border-color:#e8a045}
+
+footer{text-align:center;padding:30px;font-size:0.73em;color:rgba(232,213,192,0.18);letter-spacing:2px;border-top:1px solid rgba(232,213,192,0.04);margin-top:30px;position:relative;z-index:1}
+footer a{color:#e8a045;text-decoration:none}
+a:focus,button:focus{outline:2px solid #ff6600;outline-offset:2px}
+</style>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzBhMGEwZiIvPgogIDxwb2x5Z29uIHBvaW50cz0iMTYsMiAzMCwxNiAxNiwzMCAyLDE2IiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZykiIHN0cm9rZS13aWR0aD0iMiIvPgogIDx0ZXh0IHg9IjE2IiB5PSIyMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmNjYwMCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTIiPko8L3RleHQ+CiAgPGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmNjYwMCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFhMWFmZiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPgo8L3N2Zz4=">
+    <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a0a0f">
+<link rel="canonical" href="https://raw.githack.com/alissali/Learn/main/ARCADE.html">
+
+<style>
+.rewards-bar{position:fixed;top:0;left:0;right:0;background:linear-gradient(90deg,#1a0a2e,#0a0a12);border-bottom:1px solid #e8a045;padding:8px 15px;display:flex;align-items:center;justify-content:center;gap:15px;z-index:9999;font-family:monospace;font-size:.75em}
+.rewards-bar .streak{color:#e8a045;font-weight:bold}
+.rewards-bar .dots{display:flex;gap:4px}
+.rewards-bar .dot{width:18px;height:18px;border-radius:50%;border:2px solid #333;display:flex;align-items:center;justify-content:center;font-size:.65em}
+.rewards-bar .dot.earned{border-color:#e8a045;background:rgba(232,160,69,.2);color:#e8a045}
+.rewards-bar .dot.today{border-color:#4caf50;background:rgba(76,175,80,.2);color:#4caf50;animation:pulse 1.5s infinite}
+.rewards-bar .claim-btn{padding:3px 10px;border:1px solid #4caf50;color:#4caf50;background:none;border-radius:4px;cursor:pointer;font-family:monospace;font-size:.85em}
+.rewards-bar .claim-btn:hover{background:rgba(76,175,80,.15)}
+.rewards-bar .claim-btn.claimed{border-color:#666;color:#666;cursor:default}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.rewards-toast{position:fixed;top:50px;left:50%;transform:translateX(-50%);background:#e8a045;color:#0a0a12;padding:8px 20px;border-radius:6px;font-family:monospace;font-size:.85em;font-weight:bold;z-index:10000;opacity:0;transition:opacity .3s}
+.rewards-toast.show{opacity:1}
+</style>
+
+</head>
+<body>
+<div id="bootOverlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0a12;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer" onclick="skipBoot()">
+<style>
+@keyframes bootFlicker{0%,100%{opacity:1}50%{opacity:.7}}
+@keyframes bootScanline{0%{top:-100%}100%{top:100%}}
+@keyframes coinDrop{0%{transform:translateY(-100px) rotateY(0);opacity:0}40%{opacity:1}100%{transform:translateY(0) rotateY(720deg);opacity:1}}
+#bootOverlay::after{content:'';position:absolute;top:0;left:0;width:100%;height:4px;background:rgba(232,160,69,.15);animation:bootScanline 2s linear infinite;pointer-events:none}
+#bootText span{opacity:0;animation:bootFlicker .1s forwards}
+#bootCoin{font-size:3em;opacity:0;animation:coinDrop .6s ease-out 1.8s forwards}
+#bootReady{opacity:0;animation:bootFlicker .3s 2.5s forwards;cursor:pointer}
+</style>
+<div id="bootCoin">🪙</div>
+<div id="bootText" style="font-family:'Cinzel Decorative',serif;font-size:2.5em;color:#e8a045;letter-spacing:8px;text-shadow:0 0 30px rgba(232,160,69,.6);margin:20px 0"></div>
+<div style="color:#888;font-size:0.8em;font-family:monospace;margin:10px 0" id="bootLog"></div>
+<div id="bootReady" style="color:#e8a045;font-family:monospace;font-size:1.1em;margin-top:20px;animation:bootFlicker 1s infinite">[ INSERT COIN TO PLAY ]</div>
+<script>
+(function(){
+  const text='JuX ARCADE';
+  const el=document.getElementById('bootText');
+  text.split('').forEach((ch,i)=>{
+    const s=document.createElement('span');
+    s.textContent=ch;
+    s.style.animationDelay=(0.3+i*0.12)+'s';
+    el.appendChild(s);
+  });
+  const logs=['> INITIALIZING JuX ARCADE SYSTEM...','> LOADING 6 GAMES...','> 48 PRIZES DETECTED','> 79 TAROT CARDS IN DECK','> 24 STREETS MAPPED','> AUDIO SYSTEM: READY','> ALL SYSTEMS NOMINAL','> '];
+  const logEl=document.getElementById('bootLog');
+  logs.forEach((l,i)=>{
+    setTimeout(()=>{logEl.textContent=l},800+i*200);
+  });
+  setTimeout(()=>{
+    document.getElementById('bootOverlay').style.transition='opacity 0.5s';
+    document.getElementById('bootOverlay').style.opacity='0';
+    setTimeout(()=>{document.getElementById('bootOverlay').style.display='none'},500);
+  },4000);
+})();
+function skipBoot(){
+  const o=document.getElementById('bootOverlay');
+  o.style.transition='opacity 0.3s';o.style.opacity='0';
+  setTimeout(()=>{o.style.display='none'},300);
+}
+</script>
+</div>
+<a href="#main" class="skip-link" style="position:absolute;top:-40px;left:0;background:#ff6600;color:#0a0a0f;padding:8px;z-index:9999;font-family:monospace;text-decoration:none;transition:top .3s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">Skip to content</a>
+
+<div class="stars" id="stars"></div>
+
+<div class="hero">
+  <h1>🎰 JuX ARCADE</h1>
+  <div class="tagline">All Games. One Desert. No Limits.</div>
+  <div class="sig">born 6/6/66 · deployed 12 June 2026</div>
+  <div class="stats">
+    <div class="stat"><span class="num">6</span><span class="lbl">Games</span></div>
+    <div class="stat"><span class="num">48</span><span class="lbl">Prizes</span></div>
+    <div class="stat"><span class="num">24</span><span class="lbl">Streets</span></div>
+    <div class="stat"><span class="num">79</span><span class="lbl">Cards</span></div>
+  </div>
+</div>
+
+<div id="dailyChallenge" style="text-align:center;margin:20px auto;padding:16px;background:linear-gradient(135deg,#2a1a00,#1a0a00);border:2px solid #e8a045;border-radius:12px;max-width:600px;position:relative;z-index:1;animation:dailyPulse 3s infinite"></div>
+<style>@keyframes dailyPulse{0%,100%{box-shadow:0 0 10px rgba(232,160,69,.3)}50%{box-shadow:0 0 30px rgba(232,160,69,.6)}}</style>
+<script>
+(function(){
+  const games=[
+    {name:'DUNE TAROT',emoji:'\u{1F3B4}',url:'https://raw.githack.com/alissali/Learn/main/DUNE.TAROT.PORN.html'},
+    {name:'MONOPOLY',emoji:'\u{1F3B2}',url:'https://raw.githack.com/alissali/Learn/main/MONOPOLY.html'},
+    {name:'SNAKE',emoji:'\u{1F40D}',url:'https://raw.githack.com/alissali/Learn/main/SNAKE.html'},
+    {name:'YAMS',emoji:'\u{1F3AF}',url:'https://raw.githack.com/alissali/Learn/main/JuXYams.html'},
+    {name:"HOLD\'EM",emoji:'\u2660\uFE0F',url:'https://raw.githack.com/alissali/Learn/main/HOLDEM.TRAINING.html'}
+  ];
+  const d=new Date(),seed=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();
+  const g=games[seed%games.length];
+  const chals=['Win 3 rounds','Play for 10 minutes','Beat your record','Unlock a new prize','Complete a full game','Score maximum points'];
+  const c=chals[(seed*7)%chals.length];
+  document.getElementById('dailyChallenge').innerHTML=
+    '<div style="color:#e8a045;font-size:1.2em;font-weight:bold;font-family:Cinzel Decorative,serif">\u{1F3AF} DAILY CHALLENGE</div>'+
+    '<div style="color:#e8d5c0;margin:8px 0;font-size:1em">'+g.emoji+' '+c+' in '+g.name+'</div>'+
+    '<a href="'+g.url+'" style="display:inline-block;background:#e8a045;color:#0a0a12;padding:8px 20px;text-decoration:none;font-weight:bold;font-family:monospace;border-radius:4px;margin-top:4px">GO \u2192</a>';
+})();
+</script>
+<div class="section-head">🎮 THE GAMES</div>
+
+<div class="games">
+
+  <a class="game-card card-snake" href="https://raw.githack.com/alissali/Learn/main/SNAKE.html">
+    <span class="icon">🐍</span>
+    <h2>JuX SNAKE</h2>
+    <div class="meta">
+      <span class="badge">9 PRIZES</span>
+      <span class="badge">FREE</span>
+    </div>
+    <p>The serpent moves. Eat the spice. Grow. Survive. Classic snake with neon desert heat. From First Bite to Shai-Hulud.</p>
+    <span class="play-btn">PLAY NOW</span>
+    <span class="sub-btn" onclick="event.preventDefault();event.stopPropagation();window.open('https://buy.stripe.com/3cI4gB0Ifcoi0mP0gC1wY0i')">🔄 €1/mo</span>
+  </a>
+
+  <a class="game-card card-yams" href="https://raw.githack.com/alissali/Learn/main/JuXYams.html">
+    <span class="icon">🎲</span>
+    <h2>JuXYams</h2>
+    <div class="meta">
+      <span class="badge">9 PRIZES</span>
+      <span class="badge">THE ULTIMATE</span>
+    </div>
+    <p>A game of dice. Played once, on an afternoon that never quite ended. For Sandrine TELLIER, M.A. The Ultimate.</p>
+    <span class="play-btn">PLAY NOW</span>
+    <span class="sub-btn" onclick="event.preventDefault();event.stopPropagation();window.open('https://buy.stripe.com/8x26oJ9eL4VQglN7J41wY0j')">🔄 €1/mo</span>
+  </a>
+
+  <a class="game-card card-monopoly" href="https://raw.githack.com/alissali/Learn/main/MONOPOLY.html">
+    <span class="icon">🏠</span>
+    <h2>JuX MONOPOLY</h2>
+    <div class="meta">
+      <span class="badge">12 PRIZES</span>
+      <span class="badge">2-4 FIGHTERS</span>
+      <span class="badge">⚔️ COMBAT</span>
+    </div>
+    <p>Freedom Fighters. 24 international streets — Las Vegas, Melbourne, Frankfurt, Damascus. Fight for territory. Liberate enemy property. Mazzeh Villat before GO.</p>
+    <span class="play-btn">PLAY NOW</span>
+    <span class="sub-btn" onclick="event.preventDefault();event.stopPropagation();window.open('https://buy.stripe.com/aFa00l3Uraga5H91kG1wY0k')">🔄 €1/mo</span>
+  </a>
+
+  <a class="game-card card-tarot" href="https://raw.githack.com/alissali/Learn/main/DUNE.TAROT.GAME.html">
+    <span class="icon">🃏</span>
+    <h2>DUNE TAROT GAME</h2>
+    <div class="meta">
+      <span class="badge">12 PRIZES</span>
+      <span class="badge">MULTIPLAYER</span>
+      <span class="badge">79 CARDS</span>
+    </div>
+    <p>23 Major Arcana. 4 suits. Core Audio. SKIN · GRIP · SIGHT · BURN · RELEASE. The desert deals truth.</p>
+    <span class="play-btn">PLAY NOW</span>
+    <span class="sub-btn" onclick="event.preventDefault();event.stopPropagation();window.open('https://buy.stripe.com/dRmbJ376D882d9B5AW1wY0l')">🔄 €1/mo</span>
+  </a>
+
+  <a class="game-card card-holdem" href="https://raw.githack.com/alissali/Learn/main/HOLDEM.TRAINING.html">
+    <span class="icon">🂡</span>
+    <h2>HOLD'EM TRAINING</h2>
+    <div class="meta">
+      <span class="badge">9 PRIZES</span>
+      <span class="badge">TRAINER</span>
+    </div>
+    <p>Texas Hold'em trainer. Learn the hands. Know the odds. From Pocket Rockets to The Grinder. Also in Arabic.</p>
+    <span class="play-btn">PLAY NOW</span>
+    <span class="sub-btn" onclick="event.preventDefault();event.stopPropagation();window.open('https://buy.stripe.com/4gM8wRaiP1JE8TlaVg1wY0m')">🔄 €1/mo</span>
+    <span class="sub-link" onclick="event.preventDefault();window.open('https://raw.githack.com/alissali/Learn/main/HOLDEM.TRAINING.AR.html')">🇸🇦 النسخة العربية</span>
+  </a>
+
+  <a class="game-card card-porn" href="https://raw.githack.com/alissali/Learn/main/DUNE.TAROT.PORN.html">
+    <span class="icon">🔥</span>
+    <h2>DUNE TAROT — PORN</h2>
+    <div class="meta">
+      <span class="badge">☪ BELIEF GATE</span>
+      <span class="badge">TRUTH</span>
+    </div>
+    <p>Nothing hidden. Nothing ashamed. The PORN GAME. Truth in perpetual operation. بِسْمِ ٱللَّهِ — Do you believe?</p>
+    <span class="play-btn">ENTER</span>
+    <span class="sub-btn" onclick="event.preventDefault();event.stopPropagation();window.open('https://buy.stripe.com/cNi9AVcqXcoi4D58N81wY0n')">🔄 €1/mo</span>
+  </a>
+
+</div>
+
+<div class="section-head">📜 THE WORDS</div>
+
+<div class="literary">
+  <a class="lit-card" href="https://raw.githack.com/alissali/Learn/main/SSS.html">
+    <span class="lit-icon">🐍</span>
+    <h3>SSS</h3>
+    <p>Soft Sex Story. Born 6/6/66+60. Prose leads. Architecture follows.</p>
+  </a>
+  <a class="lit-card" href="https://raw.githack.com/alissali/Learn/main/IRULAN.SS.html">
+    <span class="lit-icon">💎</span>
+    <h3>IRULAN</h3>
+    <p>The Dominator. Held the heir. Heart reconsidered. Became Diamond.</p>
+  </a>
+  <a class="lit-card" href="https://raw.githack.com/alissali/Learn/main/OCB.VERSES.html">
+    <span class="lit-icon">📜</span>
+    <h3>OCB VERSES</h3>
+    <p>22 verses. One for each Major Arcana. Orange County Buddhist whispers.</p>
+  </a>
+  <a class="lit-card" href="https://raw.githack.com/alissali/Learn/main/DUNE.TAROT.html">
+    <span class="lit-icon">🔮</span>
+    <h3>TAROT READER</h3>
+    <p>The static reader. All 79 cards. All art. All meaning. No game — pure knowledge.</p>
+  </a>
+</div>
+
+<div class="section-head">💰 ENTER THE ARCADE</div>
+
+<div class="pricing">
+  <div class="pricing-grid">
+
+    <div class="tier free">
+      <div class="tier-icon">🐍</div>
+      <h3>PLAYER</h3>
+      <div class="price" style="color:rgba(232,213,192,0.5)">FREE</div>
+      <ul>
+        <li>Snake — full game + 9 prizes</li>
+        <li>JuXYams — full game + 9 prizes</li>
+        <li>Hold'em Training + Arabic</li>
+        <li>DUNE TAROT Reader</li>
+      </ul>
+      <a class="buy-link" href="#" onclick="event.preventDefault();alert('Already free. Just play.')">PLAY FREE</a>
+    </div>
+
+    <div class="tier">
+      <div class="tier-icon">🎲</div>
+      <h3>CHAMPION</h3>
+      <div class="price">€6.66</div>
+      <ul>
+        <li>Everything FREE +</li>
+        <li>Monopoly — Freedom Fighters</li>
+        <li>DUNE TAROT GAME</li>
+        <li>Priority updates</li>
+      </ul>
+      <a class="buy-link" href="https://buy.stripe.com/fZu5kFgHd3RM1qT3sO1wY0f">BUY €6.66</a>
+    </div>
+
+    <div class="tier featured">
+      <div class="tier-icon">🏆</div>
+      <h3>MOGUL</h3>
+      <div class="price">€22</div>
+      <ul>
+        <li>Everything CHAMPION +</li>
+        <li>DUNE TAROT PORN</li>
+        <li>IRULAN + OCB Verses</li>
+        <li>All prizes unlockable</li>
+        <li>Future games included</li>
+      </ul>
+      <a class="buy-link" href="https://buy.stripe.com/7sY7sN4YvfAu5H96F01wY0g">BUY €22</a>
+    </div>
+
+    <div class="tier">
+      <div class="tier-icon">🎰</div>
+      <h3>FULL ARCADE</h3>
+      <div class="price">€66</div>
+      <ul>
+        <li>EVERYTHING. Forever.</li>
+        <li>SSS — Soft Sex Story</li>
+        <li>Ali Baba's Cavern</li>
+        <li>All future content</li>
+        <li>Architect's signature</li>
+      </ul>
+      <a class="buy-link" href="https://buy.stripe.com/9B6bJ34Yv3RMfhJ7J41wY0h">BUY €66</a>
+    </div>
+
+  </div>
+</div>
+
+<div class="sss-section">
+  <h2>🐍 SSS — SOFT SEX STORY</h2>
+  <p>Born 6/6/66+60. IRULAN. TECHNO. MELANGE.<br>Truth in perpetual operation. Nothing hidden.<br>PORN GAME = voluntary, perpetual, free inside rules.</p>
+  <p style="margin-top:15px">
+    <a href="https://raw.githack.com/alissali/Learn/main/SSS.html">Read SSS →</a> ·
+    <a href="https://raw.githack.com/alissali/Learn/main/CAVERN.html">Ali Baba's Cavern →</a>
+  </p>
+</div>
+
+<footer>
+  JuX ARCADE · <a href="https://juxitt.com">juxitt.com</a> · <a href="https://juxaos.com">juxaos.com</a><br>
+  MIT License · born 12 June 2026<br>
+  🦅 aRchitect / softwaRe expeRt / Soft SeX StoRy telleR
+</footer>
+
+<script>
+// Stars
+const starsEl=document.getElementById('stars');
+for(let i=0;i<80;i++){
+  const s=document.createElement('div');s.className='star';
+  s.style.left=Math.random()*100+'%';
+  s.style.top=Math.random()*100+'%';
+  s.style.setProperty('--dur',(2+Math.random()*4)+'s');
+  s.style.setProperty('--max-o',0.2+Math.random()*0.6);
+  s.style.width=s.style.height=(1+Math.random()*2)+'px';
+  starsEl.appendChild(s);
+}
+</script>
+
+<script>
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}
+</script>
+<div style="text-align:center;padding:8px;font-family:monospace;font-size:.7em;border-top:1px solid #222;margin-top:10px">
+<a href="https://juxaos.com/privacy.html" style="color:#666;text-decoration:none">Privacy</a> ·
+<a href="https://juxaos.com/terms.html" style="color:#666;text-decoration:none">Terms</a> ·
+© JuX ITT</div>
+<div style="text-align:center;margin:12px;position:relative;z-index:1"><a href="https://raw.githack.com/alissali/Learn/main/ARCADE.TOURNAMENT.html" style="display:inline-block;background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;padding:10px 28px;text-decoration:none;font-weight:bold;font-family:Cinzel Decorative,serif;border-radius:8px;font-size:1em;box-shadow:0 0 15px rgba(231,76,60,.3);letter-spacing:2px">⚔️ TOURNAMENT</a></div>
+<div style="text-align:center;margin:12px;position:relative;z-index:1"><a href="https://raw.githack.com/alissali/Learn/main/ARCADE.GUIDE.html" style="display:inline-block;background:linear-gradient(135deg,#2ecc71,#27ae60);color:#fff;padding:10px 28px;text-decoration:none;font-weight:bold;font-family:Cinzel Decorative,serif;border-radius:8px;font-size:1em;box-shadow:0 0 15px rgba(46,204,113,.3);letter-spacing:2px">&#128214; PLAYER GUIDE</a></div>
+<div style="text-align:center;margin:12px;position:relative;z-index:1"><a href="https://raw.githack.com/alissali/Learn/main/ARCADE.TRAILER.html" style="display:inline-block;background:linear-gradient(135deg,#ff4488,#9b59b6);color:#fff;padding:10px 28px;text-decoration:none;font-weight:bold;font-family:Cinzel Decorative,serif;border-radius:8px;font-size:1em;box-shadow:0 0 15px rgba(155,89,182,.3);letter-spacing:2px">&#127916; WATCH THE TRAILER</a></div>
+<div style="text-align:center;margin:12px;position:relative;z-index:1"><a href="https://raw.githack.com/alissali/Learn/main/ARCADE.MAP.html" style="display:inline-block;background:linear-gradient(135deg,#00d4ff,#4a9eff);color:#0a0a12;padding:10px 28px;text-decoration:none;font-weight:bold;font-family:Cinzel Decorative,serif;border-radius:8px;font-size:1em;box-shadow:0 0 15px rgba(74,158,255,.3);letter-spacing:2px">&#9733; STAR MAP</a></div>
+<div style="text-align:center;margin:12px;position:relative;z-index:1"><a href="https://raw.githack.com/alissali/Learn/main/ARCADE.STATS.html" style="display:inline-block;background:linear-gradient(135deg,#4a9eff,#00d4ff);color:#0a0a12;padding:10px 28px;text-decoration:none;font-weight:bold;font-family:Cinzel Decorative,serif;border-radius:8px;font-size:1em;box-shadow:0 0 15px rgba(74,158,255,.3);letter-spacing:2px">&#128202; STATS DASHBOARD</a></div>
+<div style="text-align:center;margin:12px;position:relative;z-index:1"><a href="https://raw.githack.com/alissali/Learn/main/ARCADE.CHALLENGE.html" style="display:inline-block;background:linear-gradient(135deg,#ff4488,#ff0066);color:#fff;padding:10px 28px;text-decoration:none;font-weight:bold;font-family:Cinzel Decorative,serif;border-radius:8px;font-size:1em;box-shadow:0 0 15px rgba(255,68,136,.3);letter-spacing:2px">&#127915; CHALLENGE A FRIEND</a></div>
+<div style="text-align:center;margin:20px;position:relative;z-index:1"><a href="https://raw.githack.com/alissali/Learn/main/ARCADE.HALL.html" style="display:inline-block;background:linear-gradient(135deg,#e8a045,#c48030);color:#0a0a12;padding:12px 32px;text-decoration:none;font-weight:bold;font-family:Cinzel Decorative,serif;border-radius:8px;font-size:1.1em;box-shadow:0 0 20px rgba(232,160,69,.4);letter-spacing:2px">&#127942; HALL OF FAME</a></div>
+<div style="max-width:800px;margin:30px auto;padding:20px;border:1px solid #2a2a3a;border-radius:12px;background:rgba(10,10,18,.9);position:relative;z-index:1">
+<h2 style="text-align:center;color:#e8a045;font-family:Cinzel Decorative,serif;letter-spacing:3px;margin-bottom:20px">&#127941; ACHIEVEMENTS</h2>
+<div id="achieveGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px"></div>
+<p style="text-align:center;color:#444;font-family:monospace;font-size:.8em;margin-top:12px"><span id="achieveCount">0</span>/12 unlocked</p>
+</div>
+<script>
+(function(){
+var A=[
+{id:'first_visit',name:'FIRST STEPS',icon:'&#128099;',desc:'Visit the ARCADE'},
+{id:'play_tarot',name:'CARD READER',icon:'&#127924;',desc:'Play Dune Tarot'},
+{id:'play_monopoly',name:'MOGUL',icon:'&#127922;',desc:'Play Monopoly'},
+{id:'play_snake',name:'DESERT WALKER',icon:'&#128013;',desc:'Play Snake'},
+{id:'play_yams',name:'DICE ROLLER',icon:'&#127919;',desc:'Play Yams'},
+{id:'play_holdem',name:'POKER FACE',icon:'&#9824;&#65039;',desc:'Play Hold Em'},
+{id:'visit_hall',name:'HALL WALKER',icon:'&#127942;',desc:'Visit Hall of Fame'},
+{id:'visit_stats',name:'ANALYST',icon:'&#128202;',desc:'Visit Stats'},
+{id:'daily_check',name:'DAILY PLAYER',icon:'&#128197;',desc:'Check Daily Challenge'},
+{id:'challenge_sent',name:'CHALLENGER',icon:'&#9876;&#65039;',desc:'Create Challenge Card'},
+{id:'all_games',name:'COMPLETIONIST',icon:'&#11088;',desc:'Visit all 6 games'},
+{id:'legend',name:'LEGEND',icon:'&#128081;',desc:'Unlock all achievements'}
+];
+var s=JSON.parse(localStorage.getItem('jux_achievements')||'{}');
+function unlock(id){if(!s[id]){s[id]=Date.now();localStorage.setItem('jux_achievements',JSON.stringify(s));render()}}
+function render(){
+var g=document.getElementById('achieveGrid');if(!g)return;g.innerHTML='';var c=0;
+A.forEach(function(a){var u=!!s[a.id];if(u)c++;var d=document.createElement('div');
+d.style.cssText='text-align:center;padding:10px;border-radius:8px;border:1px solid '+(u?'#e8a045':'#1a1a2e')+';background:'+(u?'rgba(232,160,69,.08)':'rgba(10,10,18,.5)')+';transition:.3s';
+d.innerHTML='<div style="font-size:2em;filter:'+(u?'none':'grayscale(1) opacity(.3)')+'">'+a.icon+'</div><div style="font-size:.75em;font-family:monospace;color:'+(u?'#e8a045':'#333')+';margin-top:4px">'+a.name+'</div><div style="font-size:.65em;color:#555;margin-top:2px">'+a.desc+'</div>';
+g.appendChild(d)});
+var ce=document.getElementById('achieveCount');if(ce)ce.textContent=c;
+if(c>=11&&!s.legend)unlock('legend')}
+unlock('first_visit');unlock('daily_check');render();
+window.juxAchieve=unlock;
+})();
+</script>
+<div id="radioBtn" onclick="toggleRadio()" style="position:fixed;bottom:20px;right:20px;width:50px;height:50px;background:rgba(10,10,18,.9);border:1px solid #333;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.5em;z-index:100;transition:.3s" title="ARCADE Radio">&#127925;</div>
+<script>
+(function(){
+var actx,playing=false,nodes=[];
+function createRadio(){
+  actx=new(window.AudioContext||window.webkitAudioContext)();
+  // Pad 1 — deep drone
+  var o1=actx.createOscillator();o1.type='sine';o1.frequency.value=55;
+  var g1=actx.createGain();g1.gain.value=0.08;
+  o1.connect(g1);g1.connect(actx.destination);o1.start();
+  // Pad 2 — warm fifth
+  var o2=actx.createOscillator();o2.type='sine';o2.frequency.value=82.5;
+  var g2=actx.createGain();g2.gain.value=0.05;
+  o2.connect(g2);g2.connect(actx.destination);o2.start();
+  // Pad 3 — shimmer
+  var o3=actx.createOscillator();o3.type='triangle';o3.frequency.value=220;
+  var g3=actx.createGain();g3.gain.value=0.02;
+  var lfo=actx.createOscillator();lfo.frequency.value=0.3;
+  var lfoG=actx.createGain();lfoG.gain.value=15;
+  lfo.connect(lfoG);lfoG.connect(o3.frequency);lfo.start();
+  o3.connect(g3);g3.connect(actx.destination);o3.start();
+  // Ambient noise — filtered
+  var bufSize=2*actx.sampleRate;var buf=actx.createBuffer(1,bufSize,actx.sampleRate);
+  var d=buf.getChannelData(0);for(var i=0;i<bufSize;i++)d[i]=(Math.random()*2-1)*0.015;
+  var noise=actx.createBufferSource();noise.buffer=buf;noise.loop=true;
+  var filt=actx.createBiquadFilter();filt.type='lowpass';filt.frequency.value=400;
+  noise.connect(filt);filt.connect(actx.destination);noise.start();
+  nodes=[o1,o2,o3,lfo,noise];
+}
+window.toggleRadio=function(){
+  var btn=document.getElementById('radioBtn');
+  if(!playing){
+    if(!actx)createRadio();else actx.resume();
+    playing=true;btn.style.borderColor='#e8a045';btn.style.boxShadow='0 0 15px rgba(232,160,69,.4)';btn.innerHTML='&#127925;';btn.title='Radio ON — click to mute';
+  }else{
+    actx.suspend();playing=false;btn.style.borderColor='#333';btn.style.boxShadow='none';btn.innerHTML='&#128263;';btn.title='Radio OFF — click to play';
+  }
+};
+})();
+</script>
+
+<script>
+(function(){
+const REWARDS=['🎯','⭐','🔥','💎','👑','🏆','🌟'];
+const MSGS=['Day 1: Welcome back!','Day 2: On a roll!','Day 3: Hat trick! 🎩','Day 4: Dedicated!','Day 5: Unstoppable!','Day 6: Legend status!','Day 7: WEEKLY CHAMPION! 🏆'];
+const k='jux_arcade_streak';
+let data=JSON.parse(localStorage.getItem(k)||'{"streak":0,"lastVisit":"","claimed":false}');
+const today=new Date().toDateString();
+if(data.lastVisit!==today){
+  const yesterday=new Date(Date.now()-86400000).toDateString();
+  if(data.lastVisit===yesterday){data.streak=Math.min(data.streak+1,7)}
+  else if(data.lastVisit){data.streak=1}
+  else{data.streak=1}
+  data.lastVisit=today;data.claimed=false;
+  localStorage.setItem(k,JSON.stringify(data));
+}
+const bar=document.createElement('div');bar.className='rewards-bar';
+let dots='';
+for(let i=1;i<=7;i++){
+  let cls=i<=data.streak?(i===data.streak?'dot today':'dot earned'):'dot';
+  dots+=`<span class="${cls}">${i<=data.streak?REWARDS[i-1]:i}</span>`;
+}
+bar.innerHTML=`<span class="streak">🔥 ${data.streak}-DAY STREAK</span><span class="dots">${dots}</span>`+
+  (data.claimed?`<span class="claim-btn claimed">✓ Claimed</span>`:`<button class="claim-btn" id="claim-reward">🎁 Claim</button>`);
+document.body.style.paddingTop='45px';
+document.body.insertBefore(bar,document.body.firstChild);
+const toast=document.createElement('div');toast.className='rewards-toast';document.body.appendChild(toast);
+if(!data.claimed){
+  const btn=document.getElementById('claim-reward');
+  if(btn)btn.onclick=function(){
+    data.claimed=true;localStorage.setItem(k,JSON.stringify(data));
+    this.textContent='✓ Claimed';this.className='claim-btn claimed';
+    toast.textContent=MSGS[data.streak-1];toast.classList.add('show');
+    setTimeout(()=>toast.classList.remove('show'),3000);
+  };
+}
+})();
+</script>
+
+</body>
+</html>

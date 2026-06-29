@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D3C1C4G509"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-D3C1C4G509');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Open Graph -->
+    <meta property="og:title" content="HOLD'EM Training — Texas Hold'em Trainer">
+    <meta property="og:description" content="Learn Texas Hold'em poker. 9 prizes. Hand rankings, betting rounds, strategy training.">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="HOLD'EM Training — Texas Hold'em Trainer">
+    <meta name="twitter:description" content="Learn Texas Hold'em poker. 9 prizes. Hand rankings, betting rounds, strategy training.">
+    <meta name="description" content="Learn Texas Hold'em poker. 9 prizes. Hand rankings, betting rounds, strategy training.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzBhMGEwZiIvPgogIDxwb2x5Z29uIHBvaW50cz0iMTYsMiAzMCwxNiAxNiwzMCAyLDE2IiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZykiIHN0cm9rZS13aWR0aD0iMiIvPgogIDx0ZXh0IHg9IjE2IiB5PSIyMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmNjYwMCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTIiPko8L3RleHQ+CiAgPGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmNjYwMCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFhMWFmZiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPgo8L3N2Zz4=">
+<title>HOLDEM.TRAINING — JuX</title>
+<style>
+:root {
+  --opal-void:   #010206;
+  --opal-deep:   #03050c;
+  --opal-teal:   #2ec4b6;
+  --opal-amber:  #e8a045;
+  --opal-violet: #7b4fa6;
+  --opal-gold:   #f5c842;
+  --opal-smoke:  #667788;
+  --opal-frost:  #b8c8d4;
+  --aos-diamond: #a0c4e0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--opal-void);
+  color: var(--opal-frost);
+  font-family: 'IBM Plex Mono', 'Courier New', monospace;
+  font-size: 16px;
+  line-height: 1.7;
+  padding: 2rem 1rem;
+}
+.page {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* ── HEADER ── */
+.header {
+  border-bottom: 1px solid var(--opal-teal);
+  padding-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+.header .label {
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: var(--opal-smoke);
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+.header h1 {
+  font-size: 2rem;
+  color: var(--opal-teal);
+  letter-spacing: 0.05em;
+}
+.header .sub {
+  color: var(--opal-amber);
+  font-size: 0.9rem;
+  margin-top: 0.3rem;
+}
+
+/* ── SECTION ── */
+.section {
+  margin-bottom: 2.5rem;
+}
+.section-title {
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--opal-smoke);
+  margin-bottom: 1rem;
+  border-left: 3px solid var(--opal-teal);
+  padding-left: 0.75rem;
+}
+
+/* ── EXPRESSION BLOCK ── */
+.expr {
+  background: var(--opal-deep);
+  border: 1px solid #1a2a3a;
+  border-radius: 6px;
+  padding: 1.2rem 1.4rem;
+  margin-bottom: 1rem;
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 0.4rem 1rem;
+}
+.expr-row {
+  display: contents;
+}
+.expr-key {
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--opal-teal);
+  padding-top: 0.1rem;
+}
+.expr-val {
+  color: var(--opal-frost);
+}
+.expr-val.amber { color: var(--opal-amber); }
+.expr-val.violet { color: var(--opal-violet); }
+.expr-val.gold { color: var(--opal-gold); font-style: italic; }
+
+/* ── DICTIONARY TABLE ── */
+.dict-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 0.5rem;
+}
+.dict-table th {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--opal-smoke);
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid #1a2a3a;
+}
+.dict-table td {
+  padding: 0.65rem 0.75rem;
+  border-bottom: 1px solid #0d1520;
+  font-size: 0.9rem;
+  vertical-align: top;
+}
+.dict-table tr:hover td { background: #0a1020; }
+.td-name { color: var(--opal-teal); width: 180px; }
+.td-fact { color: var(--opal-frost); }
+.td-target { color: var(--opal-amber); width: 220px; }
+
+/* ── CODE BLOCK ── */
+.code-block {
+  background: var(--opal-deep);
+  border: 1px solid #1a2a3a;
+  border-left: 3px solid var(--opal-violet);
+  border-radius: 4px;
+  padding: 1rem 1.2rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--opal-frost);
+  margin-bottom: 1rem;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+/* ── VERDICT ── */
+.verdict {
+  background: var(--opal-deep);
+  border: 1px solid var(--opal-teal);
+  border-radius: 6px;
+  padding: 1.2rem 1.4rem;
+  margin-top: 2rem;
+}
+.verdict-title {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--opal-teal);
+  margin-bottom: 0.6rem;
+}
+.verdict-text {
+  color: var(--opal-frost);
+  font-size: 0.95rem;
+}
+
+/* ── DELTA TABLE ── */
+.delta-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 0.5rem;
+}
+.delta-table th {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--opal-smoke);
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid #1a2a3a;
+}
+.delta-table td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid #0d1520;
+  font-size: 0.88rem;
+  vertical-align: top;
+}
+.td-comp { color: var(--opal-smoke); width: 180px; }
+.td-model { color: var(--opal-teal); }
+.td-project { color: var(--opal-amber); }
+
+/* ── FOOTER ── */
+.footer {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid #1a2a3a;
+  font-size: 0.75rem;
+  color: var(--opal-smoke);
+  display: flex;
+  justify-content: space-between;
+}
+.prizes-hld{position:fixed;bottom:0;left:0;right:0;background:rgba(0,0,0,0.9);border-top:1px solid rgba(232,160,69,0.2);padding:8px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center;z-index:100}
+.ph{font-size:0.65rem;padding:4px 8px;border:1px solid rgba(232,160,69,0.15);border-radius:4px;color:rgba(232,213,192,0.3)}
+.ph.won{border-color:#e8a045;color:#e8a045;background:rgba(232,160,69,0.1)}
+#htoast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-100px);background:#e8a045;color:#010206;padding:10px 20px;border-radius:6px;font-size:0.85rem;z-index:200;transition:transform 0.4s}
+#htoast.show{transform:translateX(-50%) translateY(0)}
+a:focus,button:focus{outline:2px solid #ff6600;outline-offset:2px}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "JuX ITT",
+  "url": "https://juxaos.com",
+  "email": "jux@juxitt.com",
+  "description": "Software architecture, games, stories, and spice."
+}
+</script>
+<meta name="theme-color" content="#0a0a0f">
+<link rel="canonical" href="https://raw.githack.com/alissali/Learn/main/HOLDEM.TRAINING.html">
+</head>
+<body>
+<a href="#main" class="skip-link" style="position:absolute;top:-40px;left:0;background:#ff6600;color:#0a0a0f;padding:8px;z-index:9999;font-family:monospace;text-decoration:none;transition:top .3s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">Skip to content</a>
+<div id="main" class="page">
+
+  <div class="header">
+    <div class="label">JuX · Training Project · AOS</div>
+    <h1>HOLDEM.TRAINING</h1>
+    <div class="sub">Build Texas Hold'em from the 5-Card Draw model.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Project Expression</div>
+
+    <div class="expr">
+      <div class="expr-key">NAME</div>
+      <div class="expr-val">HOLDEM.TRAINING</div>
+      <div class="expr-key">FACT</div>
+      <div class="expr-val amber">A Training Project. The student receives a working model (5-Card Draw) and extends it into Texas Hold'em. Same card engine. Same chip system. New flow.</div>
+      <div class="expr-key">TARGET</div>
+      <div class="expr-val violet">Playable 2-player Texas Hold'em in browser. No server. No framework. Pure JS.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">The Model — 5-Card Draw (Given)</div>
+
+    <table class="dict-table">
+      <thead>
+        <tr>
+          <th>NAME</th>
+          <th>FACT</th>
+          <th>TARGET</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-name">renderCard()</td>
+          <td class="td-fact">Renders one card — rank corners, suit center, red/black</td>
+          <td class="td-target">Reuse unchanged</td>
+        </tr>
+        <tr>
+          <td class="td-name">evaluateHand()</td>
+          <td class="td-fact">Ranks 5 cards — Pair → Royal Flush</td>
+          <td class="td-target">Reuse unchanged</td>
+        </tr>
+        <tr>
+          <td class="td-name">Chips</td>
+          <td class="td-fact">100 per player, ante 10, displayed top bar</td>
+          <td class="td-target">Extend with betting rounds</td>
+        </tr>
+        <tr>
+          <td class="td-name">Phase engine</td>
+          <td class="td-fact">Deal → Hold → Draw → Showdown</td>
+          <td class="td-target">Replace with Hold'em flow</td>
+        </tr>
+        <tr>
+          <td class="td-name">Deck</td>
+          <td class="td-fact">52 cards, shuffled, dealt by index</td>
+          <td class="td-target">Reuse unchanged</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">The Delta — What the Student Builds</div>
+
+    <table class="delta-table">
+      <thead>
+        <tr>
+          <th>COMPONENT</th>
+          <th>5-Card Draw (Model)</th>
+          <th>Hold'em (Project)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-comp">Private cards</td>
+          <td class="td-model">5 per player</td>
+          <td class="td-project">2 per player (hole cards)</td>
+        </tr>
+        <tr>
+          <td class="td-comp">Community cards</td>
+          <td class="td-model">None</td>
+          <td class="td-project">5 shared — Flop(3) + Turn(1) + River(1)</td>
+        </tr>
+        <tr>
+          <td class="td-comp">Best hand</td>
+          <td class="td-model">5 of your 5</td>
+          <td class="td-project">Best 5 of 7 (2 hole + 5 community)</td>
+        </tr>
+        <tr>
+          <td class="td-comp">Betting rounds</td>
+          <td class="td-model">None (ante only)</td>
+          <td class="td-project">Pre-flop / Flop / Turn / River</td>
+        </tr>
+        <tr>
+          <td class="td-comp">Actions</td>
+          <td class="td-model">Hold / Draw</td>
+          <td class="td-project">Check / Bet / Call / Fold</td>
+        </tr>
+        <tr>
+          <td class="td-comp">Phase engine</td>
+          <td class="td-model">4 phases</td>
+          <td class="td-project">6 phases</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Formal Sentences (AOS)</div>
+
+    <div class="code-block">deal(player, 2)              → hole cards
+deal(community, 3)           → flop
+deal(community, 1)           → turn
+deal(community, 1)           → river
+evaluate(hole + community)   → best_hand(5)
+compare(best_hand(P1), best_hand(P2)) → winner</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Training Dictionary — Milestones</div>
+
+    <table class="dict-table">
+      <thead>
+        <tr>
+          <th>NAME</th>
+          <th>FACT</th>
+          <th>TARGET</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-name">M1 — DEAL</td>
+          <td class="td-fact">Deal 2 hole cards per player. Display face-down for P2.</td>
+          <td class="td-target">Same as Draw model. Copy + trim.</td>
+        </tr>
+        <tr>
+          <td class="td-name">M2 — COMMUNITY</td>
+          <td class="td-fact">Reveal Flop, Turn, River one click each.</td>
+          <td class="td-target">3 new DOM slots. 3 new phase steps.</td>
+        </tr>
+        <tr>
+          <td class="td-name">M3 — BEST HAND</td>
+          <td class="td-fact">Pick best 5 from 7. evaluateHand() takes 5 — generate all C(7,2) combos.</td>
+          <td class="td-target">bestOf7(hand, community) → score</td>
+        </tr>
+        <tr>
+          <td class="td-name">M4 — BETTING</td>
+          <td class="td-fact">Check / Bet / Call / Fold buttons per round. Simple: no raise limit.</td>
+          <td class="td-target">pot += bet. winner takes pot.</td>
+        </tr>
+        <tr>
+          <td class="td-name">M5 — SHOWDOWN</td>
+          <td class="td-fact">Flip P2 hole cards. Compare best hands. Declare winner.</td>
+          <td class="td-target">compare() already exists in model.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">The Rule</div>
+    <div class="code-block">execute(HOLDEM.TRAINING, JeuX.DICTIONARY) → Playable Hold'em</div>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-title">Verdict</div>
+    <div class="verdict-text">
+      The model is 80% of the project. The student does not start from zero — they start from a working system and extend it. Five milestones. Each one compiles. Each one runs. No dead ends.<br><br>
+      <span style="color:var(--opal-gold)">Hold'em is not a new game. It is 5-Card Draw with community cards and a betting protocol. The architecture is the same. Only the flow changes.</span>
+    </div>
+  </div>
+
+  <div class="footer">
+<div id="htoast"></div>
+<div class="prizes-hld" id="hPrizes"></div>
+<script>
+const HP=[{id:'first_hand',n:'First Hand',i:'🃏'},{id:'pair',n:'Pair',i:'👫'},{id:'two_pair',n:'Two Pair',i:'✌️'},{id:'trips',n:'Three of a Kind',i:'🎯'},{id:'straight',n:'Straight',i:'📏'},{id:'flush',n:'Flush',i:'💧'},{id:'full_house',n:'Full House',i:'🏠'},{id:'quads',n:'Four of a Kind',i:'🎰'},{id:'streak',n:'Hot Streak',i:'🔥'}];
+let hW=new Set(JSON.parse(localStorage.getItem('holdem_prizes')||'[]'));
+function hS(){localStorage.setItem('holdem_prizes',JSON.stringify([...hW]))}
+function hT(m){const t=document.getElementById('htoast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
+function hC(id){if(hW.has(id))return;hW.add(id);hS();const p=HP.find(x=>x.id===id);if(p)hT('🏆 '+p.n+'!');hR()}
+function hR(){const c=document.getElementById('hPrizes');c.innerHTML=HP.map(p=>'<div class="ph'+(hW.has(p.id)?' won':'')+'">'+p.i+' '+p.n+'</div>').join('')}
+hR();
+</script>
+    <span>JuX · AOS · HOLDEM.TRAINING</span>
+    <span>MIT — Open. Free. Forever.</span>
+  </div>
+
+</div>
+<div style="text-align:center;padding:12px"><a href="https://raw.githack.com/alissali/Learn/main/ARCADE.html" style="color:#e8a045;text-decoration:none;font-size:1.2em;letter-spacing:2px">🎰 ARCADE</a></div>
+<div style="text-align:center;padding:8px;font-family:monospace;font-size:.7em;border-top:1px solid #222;margin-top:10px">
+<a href="https://juxaos.com/privacy.html" style="color:#666;text-decoration:none">Privacy</a> ·
+<a href="https://juxaos.com/terms.html" style="color:#666;text-decoration:none">Terms</a> ·
+© JuX ITT</div>
+</body>
+</html>

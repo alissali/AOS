@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D3C1C4G509"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-D3C1C4G509');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Open Graph -->
+    <meta property="og:title" content="JuXYams — Dice Mastery Game">
+    <meta property="og:description" content="Roll the dice. Chase 9 prizes. Full Yahtzee-style game with JuX flavor.">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="JuXYams — Dice Mastery Game">
+    <meta name="twitter:description" content="Roll the dice. Chase 9 prizes. Full Yahtzee-style game with JuX flavor.">
+    <meta name="description" content="Roll the dice. Chase 9 prizes. Full Yahtzee-style game with JuX flavor.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzBhMGEwZiIvPgogIDxwb2x5Z29uIHBvaW50cz0iMTYsMiAzMCwxNiAxNiwzMCAyLDE2IiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZykiIHN0cm9rZS13aWR0aD0iMiIvPgogIDx0ZXh0IHg9IjE2IiB5PSIyMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmNjYwMCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTIiPko8L3RleHQ+CiAgPGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmNjYwMCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFhMWFmZiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPgo8L3N2Zz4=">
+<title>JuXYams — AOS Game</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600;700&display=swap');
+
+:root {
+  --bg:             #f4f6f9;
+  --surface:        #ffffff;
+  --text:           #1a1a2e;
+  --muted:          #667788;
+  --teal:           #2ec4b6;
+  --teal-light:     #e0f7f5;
+  --amber:          #e8a045;
+  --amber-light:    #fff3e0;
+  --violet:         #7b4fa6;
+  --border:         #dde2ea;
+  --danger:         #d94f4f;
+  --held-bg:        #d6f4f1;
+  --held-border:    #2ec4b6;
+  --sel-bg:         #fff3e0;
+  --sel-border:     #e8a045;
+  --done-bg:        #f0f0f4;
+  --done-text:      #999aab;
+  --bonus-bg:       #f0e8fc;
+  --mono:           'IBM Plex Mono', 'Courier New', monospace;
+  --sans:           'IBM Plex Sans', 'Segoe UI', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+header {
+  background: var(--surface);
+  border-bottom: 2px solid var(--border);
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+header h1 {
+  font-family: var(--mono);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--teal);
+  letter-spacing: 0.08em;
+}
+header .sub {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+#turn-indicator {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: var(--teal-light);
+  color: var(--teal);
+  border: 1.5px solid var(--teal);
+  border-radius: 20px;
+  padding: 6px 18px;
+}
+
+/* ── LAYOUT ── */
+main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 24px 28px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+@media (max-width: 720px) {
+  main { grid-template-columns: 1fr; }
+}
+
+/* ── PANEL ── */
+.panel {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 22px;
+}
+.panel h2 {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+}
+
+/* ── DICE ── */
+#dice-area {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.die {
+  width: 62px;
+  height: 62px;
+  font-size: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2.5px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.15s ease;
+  line-height: 1;
+}
+.die:hover { border-color: var(--teal); background: var(--teal-light); }
+.die.held {
+  border-color: var(--held-border);
+  background: var(--held-bg);
+  box-shadow: 0 0 0 3px rgba(46,196,182,0.2);
+}
+.die.held::after {
+  content: '↓';
+  position: absolute;
+  font-size: 0.6rem;
+  color: var(--teal);
+  bottom: -14px;
+  font-family: var(--mono);
+}
+.die { position: relative; }
+
+/* ── CONTROLS ── */
+.controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.btn {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 10px 22px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  letter-spacing: 0.05em;
+}
+.btn-teal {
+  background: var(--teal);
+  color: white;
+}
+.btn-teal:hover { background: #26b0a3; }
+.btn-teal:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; }
+
+.btn-amber {
+  background: var(--amber);
+  color: white;
+}
+.btn-amber:hover { background: #d4923a; }
+.btn-amber:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; }
+
+.roll-counter {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+/* ── POTENTIAL ── */
+#potential-area {
+  background: var(--amber-light);
+  border: 1.5px solid var(--amber);
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--text);
+  min-height: 38px;
+  display: none;
+}
+#potential-area.active { display: block; }
+
+/* ── SCORE TABLE ── */
+#score-panel { overflow: hidden; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+thead th {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  padding: 6px 8px;
+  border-bottom: 2px solid var(--border);
+  text-align: center;
+}
+thead th:first-child { text-align: left; }
+
+tbody tr {
+  cursor: pointer;
+  transition: background 0.1s;
+}
+tbody tr:hover td { background: var(--teal-light); }
+tbody tr.selectable:hover td { background: var(--sel-bg); }
+tbody tr.selected td {
+  background: var(--sel-bg);
+  border-left: 3px solid var(--amber);
+}
+tbody tr.done td {
+  background: var(--done-bg);
+  color: var(--done-text);
+  cursor: default;
+}
+tbody tr.bonus-row td {
+  background: var(--bonus-bg);
+  font-style: italic;
+  cursor: default;
+  font-size: 0.75rem;
+}
+tbody tr.total-row td {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 0.88rem;
+  border-top: 2px solid var(--border);
+  cursor: default;
+}
+
+td {
+  padding: 7px 8px;
+  border-bottom: 1px solid var(--border);
+}
+td:first-child {
+  font-weight: 600;
+  white-space: nowrap;
+}
+td.score-cell {
+  text-align: center;
+  font-family: var(--mono);
+  min-width: 44px;
+}
+td.potential {
+  color: var(--amber);
+  font-style: italic;
+}
+td.current-player {
+  background: var(--teal-light);
+  color: var(--teal);
+  font-weight: 700;
+}
+
+/* ── GAME OVER ── */
+#gameover {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(26,26,46,0.7);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+}
+#gameover.show { display: flex; }
+#gameover-card {
+  background: var(--surface);
+  border-radius: 14px;
+  padding: 42px 52px;
+  text-align: center;
+  border: 2px solid var(--teal);
+  max-width: 400px;
+}
+#gameover-card h2 {
+  font-family: var(--mono);
+  font-size: 1.8rem;
+  color: var(--teal);
+  margin-bottom: 12px;
+}
+#gameover-card .winner {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--amber);
+  margin-bottom: 8px;
+}
+#gameover-card .scores {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: 24px;
+}
+/* PRIZES */
+.prizes-bar{background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:14px;margin:0 28px 10px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.prize-badge{background:rgba(46,196,182,0.05);border:1px solid rgba(46,196,182,0.15);border-radius:6px;padding:6px 10px;text-align:center;font-size:0.7rem;color:var(--muted);transition:all 0.3s}
+.prize-badge.won{border-color:var(--amber);color:var(--amber);background:var(--amber-light)}
+.prize-badge .icon{font-size:1.3em;display:block;margin-bottom:2px}
+#toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-100px);background:var(--amber);color:white;padding:12px 24px;border-radius:8px;font-family:var(--mono);font-size:0.85rem;z-index:200;transition:transform 0.4s ease;box-shadow:0 4px 20px rgba(232,160,69,0.4)}
+#toast.show{transform:translateX(-50%) translateY(0)}
+.stripe-bar{text-align:center;padding:16px 28px;border-top:2px solid var(--border);margin-top:10px;background:var(--surface)}
+.stripe-bar a{display:inline-block;margin:0 8px;padding:8px 18px;border:1.5px solid var(--amber);border-radius:6px;color:var(--amber);text-decoration:none;font-family:var(--mono);font-size:0.8rem;transition:all 0.2s}
+.stripe-bar a:hover{background:var(--amber);color:white}
+.prize-counter{font-family:var(--mono);font-size:0.8rem;color:var(--muted);text-align:center;margin:4px 0}
+a:focus,button:focus{outline:2px solid #ff6600;outline-offset:2px}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "JuX ITT",
+  "url": "https://juxaos.com",
+  "email": "jux@juxitt.com",
+  "description": "Software architecture, games, stories, and spice."
+}
+</script>
+<meta name="theme-color" content="#0a0a0f">
+<link rel="canonical" href="https://raw.githack.com/alissali/Learn/main/JuXYams.html">
+</head>
+<body>
+<a href="#main" class="skip-link" style="position:absolute;top:-40px;left:0;background:#ff6600;color:#0a0a0f;padding:8px;z-index:9999;font-family:monospace;text-decoration:none;transition:top .3s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">Skip to content</a>
+
+<header>
+  <div>
+    <h1>JuXYams</h1>
+    <div class="sub">JuX Game — AOS Service — Two Clip Points</div>
+  </div>
+  <div id="turn-indicator">Joueur 1 — Lancer 0/3</div>
+</header>
+
+<main>
+
+  <div class="panel">
+    <h2>Dés</h2>
+
+    <div id="dice-area">
+      <div class="die" id="d0" onclick="toggleHold(0)">⚀</div>
+      <div class="die" id="d1" onclick="toggleHold(1)">⚀</div>
+      <div class="die" id="d2" onclick="toggleHold(2)">⚀</div>
+      <div class="die" id="d3" onclick="toggleHold(3)">⚀</div>
+      <div class="die" id="d4" onclick="toggleHold(4)">⚀</div>
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-teal" id="btn-lancer" onclick="lancer()">⟳ LANCER</button>
+      <button class="btn btn-amber" id="btn-valider" onclick="valider()" disabled>✓ VALIDER</button>
+      <span class="roll-counter" id="roll-counter">Lancer 0 / 3</span>
+    </div>
+
+    <div id="potential-area"></div>
+  </div>
+
+  <div class="panel" id="score-panel">
+    <h2>Scores</h2>
+    <table id="score-table">
+      <thead>
+        <tr>
+          <th>Figure</th>
+          <th>Alt</th>
+          <th id="th-j1">J1</th>
+          <th id="th-j2">J2</th>
+        </tr>
+      </thead>
+      <tbody id="score-body">
+
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<div id="gameover">
+  <div id="gameover-card">
+    <h2>FIN DE PARTIE</h2>
+    <div class="winner" id="go-winner"></div>
+    <div class="scores" id="go-scores"></div>
+    <button class="btn btn-teal" onclick="newGame()" style="width:100%">↺ NOUVELLE PARTIE</button>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════
+   AOS.CLIP-POINT-A: setHasard(garder[])
+   AOS.CLIP-POINT-B: Jeu.Yams → evaluerScore() / validerScore()
+   ═══════════════════════════════════════════════ */
+
+/* ── DICE FACES ── */
+const FACES = ['⚀','⚁','⚂','⚃','⚄','⚅'];
+
+/* ── FIGURES (faithful to DescJeuYams.xml + Java engine) ── */
+const FIGURES = [
+  { name:'As',       alt:'•',      type:'somme', val:1 },
+  { name:'Deux',     alt:'••',     type:'somme', val:2 },
+  { name:'Trois',    alt:'•••',    type:'somme', val:3 },
+  { name:'Quatre',   alt:'••••',   type:'somme', val:4 },
+  { name:'Cinq',     alt:'•••••',  type:'somme', val:5 },
+  { name:'Six',      alt:'••••••', type:'somme', val:6 },
+  { name:'P. Suite', alt:'12345',  type:'suite',    val:7,  score:15 },
+  { name:'G. Suite', alt:'23456',  type:'suite',    val:8,  score:20 },
+  { name:'Brelan',   alt:'xxxyz',  type:'egalite',  val:3,  score:25 },
+  { name:'Full',     alt:'xxxyy',  type:'full',     score:30 },
+  { name:'Carré',    alt:'xxxxy',  type:'egalite',  val:4,  score:40 },
+  { name:'Yams',     alt:'xxxxx',  type:'egalite',  val:5,  score:50 },
+  { name:'Plus',     alt:'+sum',   type:'option',   val:1 },
+  { name:'Moins',    alt:'-sum',   type:'option',   val:-1 },
+];
+
+/* ── BONUS (Somme total ≥ 63 → +35) ── */
+const BONUS_SEUIL = 63;
+const BONUS_VAL = 35;
+const NB_SOMME = 6;
+const NB_JOUEURS = 2;
+const NB_FIGURES = FIGURES.length; // 14
+const NB_ROLLS = 3;
+
+/* ── STATE ── */
+let state = {};
+
+function newGame() {
+  state = {
+    dice:    [1,1,1,1,1],
+    kept:    [false,false,false,false,false],
+    rolls:   0,
+    player:  0,              // 0 or 1
+    scores:  [new Array(NB_FIGURES).fill(null), new Array(NB_FIGURES).fill(null)],
+    selected: -1,
+    gameOver: false
+  };
+  document.getElementById('gameover').classList.remove('show');
+  renderTable();
+  updateControls();
+  clearDice();
+  updateIndicator();
+}
+
+/* ═══════════════════════════════
+   SCORING ENGINE — Jeu.Yams
+   ═══════════════════════════════ */
+
+function counts(dice) {
+  const c = [0,0,0,0,0,0];
+  dice.forEach(d => c[d-1]++);
+  return c;
+}
+
+// CLIP POINT B: evaluerScore(figure, dice) → score value
+function evaluerScore(fig, dice) {
+  const f = FIGURES[fig];
+  const c = counts(dice);
+
+  if (f.type === 'somme') {
+    return c[f.val-1] * f.val;
+  }
+  if (f.type === 'suite') {
+    // All 5 different (nbEgaux(0)==1 in Java ≡ all unique)
+    const unique = new Set(dice);
+    if (unique.size !== 5) return 0;
+    const sorted = [...unique].sort((a,b)=>a-b);
+    if (f.val === 7) return (sorted[4] === 5) ? f.score : 0; // 1-2-3-4-5
+    if (f.val === 8) return (sorted[0] === 2) ? f.score : 0; // 2-3-4-5-6
+    return 0;
+  }
+  if (f.type === 'egalite') {
+    // nbEgaux(typeFigure) == typeFigure → exactly one group of exactly f.val
+    return c.some(v => v === f.val) ? f.score : 0;
+  }
+  if (f.type === 'full') {
+    const has3 = c.some(v => v === 3);
+    const has2 = c.some(v => v === 2);
+    return (has3 && has2) ? f.score : 0;
+  }
+  if (f.type === 'option') {
+    const sum = dice.reduce((a,b)=>a+b,0);
+    return f.val * sum; // +sum or -sum
+  }
+  return 0;
+}
+
+function computeBonus(playerScores) {
+  let sommeTotal = 0;
+  let allSommePlayed = true;
+  for (let i = 0; i < NB_SOMME; i++) {
+    if (playerScores[i] === null) { allSommePlayed = false; break; }
+    sommeTotal += playerScores[i];
+  }
+  if (!allSommePlayed) return null;
+  return sommeTotal >= BONUS_SEUIL ? BONUS_VAL : 0;
+}
+
+function computeTotal(playerScores) {
+  let total = 0;
+  for (let i = 0; i < NB_FIGURES; i++) {
+    if (playerScores[i] !== null) total += playerScores[i];
+  }
+  const bonus = computeBonus(playerScores);
+  if (bonus !== null) total += bonus;
+  return total;
+}
+
+/* ═══════════════════════════════
+   CLIP POINT A: setHasard(garder[])
+   Roll non-kept dice
+   ═══════════════════════════════ */
+function setHasard(garder) {
+  for (let i = 0; i < 5; i++) {
+    if (!garder[i]) {
+      state.dice[i] = Math.floor(Math.random() * 6) + 1;
+    }
+  }
+}
+
+/* ═══════════════════════════════
+   UI ACTIONS
+   ═══════════════════════════════ */
+
+function lancer() {
+  if (state.rolls >= NB_ROLLS) return;
+  // Clip Point A
+  setHasard(state.kept);
+  state.rolls++;
+  state.selected = -1;
+  renderDice();
+  updateControls();
+  updatePotential();
+  renderTable();
+}
+
+function toggleHold(i) {
+  if (state.rolls === 0) return; // can't hold before first roll
+  if (state.rolls >= NB_ROLLS) return; // all rolls used
+  state.kept[i] = !state.kept[i];
+  renderDice();
+}
+
+function selectFigure(fig) {
+  if (state.rolls === 0) return;
+  if (state.scores[state.player][fig] !== null) return; // already played
+  state.selected = fig;
+  updatePotential();
+  renderTable();
+  document.getElementById('btn-valider').disabled = false;
+}
+
+// CLIP POINT B: validerScore()
+function valider() {
+  if (state.selected === -1) return;
+  const fig = state.selected;
+  const score = evaluerScore(fig, state.dice);
+  state.scores[state.player][fig] = score;
+
+  // Next player / next turn
+  state.selected = -1;
+  state.kept = [false,false,false,false,false];
+  state.rolls = 0;
+
+  // Check if all figures played → game over
+  if (isGameOver()) {
+    endGame();
+    return;
+  }
+
+  // Next player
+  state.player = (state.player + 1) % NB_JOUEURS;
+  renderDice();
+  renderTable();
+  updateControls();
+  updatePotential();
+  clearDice();
+  updateIndicator();
+}
+
+function isGameOver() {
+  for (let p = 0; p < NB_JOUEURS; p++)
+    for (let f = 0; f < NB_FIGURES; f++)
+      if (state.scores[p][f] === null) return false;
+  return true;
+}
+
+function endGame() {
+  state.gameOver = true;
+  const t0 = computeTotal(state.scores[0]);
+  const t1 = computeTotal(state.scores[1]);
+  let winner;
+  if (t0 > t1) winner = 'Joueur 1 gagne !';
+  else if (t1 > t0) winner = 'Joueur 2 gagne !';
+  else winner = 'Égalité !';
+  document.getElementById('go-winner').textContent = winner;
+  document.getElementById('go-scores').textContent = `J1: ${t0} pts   |   J2: ${t1} pts`;
+  document.getElementById('gameover').classList.add('show');
+  renderTable();
+}
+
+/* ═══════════════════════════════
+   RENDER
+   ═══════════════════════════════ */
+
+function renderDice() {
+  for (let i = 0; i < 5; i++) {
+    const el = document.getElementById('d'+i);
+    el.textContent = FACES[state.dice[i]-1];
+    el.className = 'die' + (state.kept[i] ? ' held' : '');
+  }
+}
+
+function clearDice() {
+  for (let i = 0; i < 5; i++) {
+    const el = document.getElementById('d'+i);
+    el.textContent = '⚀';
+    el.className = 'die';
+  }
+}
+
+function updateControls() {
+  const lancer = document.getElementById('btn-lancer');
+  const valider = document.getElementById('btn-valider');
+  const counter = document.getElementById('roll-counter');
+
+  lancer.disabled = state.rolls >= NB_ROLLS;
+  valider.disabled = state.selected === -1 || state.rolls === 0;
+  counter.textContent = `Lancer ${state.rolls} / ${NB_ROLLS}`;
+}
+
+function updateIndicator() {
+  const el = document.getElementById('turn-indicator');
+  el.textContent = `Joueur ${state.player+1} — Lancer ${state.rolls}/${NB_ROLLS}`;
+}
+
+function updatePotential() {
+  const el = document.getElementById('potential-area');
+  if (state.rolls === 0) { el.classList.remove('active'); return; }
+  if (state.selected !== -1) {
+    const score = evaluerScore(state.selected, state.dice);
+    const name = FIGURES[state.selected].name;
+    el.innerHTML = `<b>${name}</b> → <span style="color:var(--amber);font-weight:700">${score} pts</span>`;
+    el.classList.add('active');
+  } else {
+    el.textContent = 'Sélectionner une figure dans le tableau →';
+    el.classList.add('active');
+  }
+}
+
+function renderTable() {
+  const tbody = document.getElementById('score-body');
+  tbody.innerHTML = '';
+
+  // Header player highlight
+  document.getElementById('th-j1').style.color = state.player === 0 ? 'var(--teal)' : '';
+  document.getElementById('th-j2').style.color = state.player === 1 ? 'var(--teal)' : '';
+
+  for (let f = 0; f < NB_FIGURES; f++) {
+    const fig = FIGURES[f];
+    const tr = document.createElement('tr');
+
+    const s0 = state.scores[0][f];
+    const s1 = state.scores[1][f];
+
+    const isDone0 = s0 !== null;
+    const isDone1 = s1 !== null;
+    const curPlayer = state.player;
+    const curDone = curPlayer === 0 ? isDone0 : isDone1;
+    const isSelected = state.selected === f;
+
+    if (isSelected) tr.className = 'selected';
+    else if (!curDone && state.rolls > 0) tr.className = 'selectable';
+    else if (curDone && (curPlayer === 0 ? isDone1 : isDone0)) tr.className = 'done';
+
+    tr.onclick = () => selectFigure(f);
+
+    // Figure name
+    const tdName = document.createElement('td');
+    tdName.textContent = fig.name;
+    tr.appendChild(tdName);
+
+    // Alt hint
+    const tdAlt = document.createElement('td');
+    tdAlt.textContent = fig.alt;
+    tdAlt.style.color = 'var(--muted)';
+    tdAlt.style.fontSize = '0.72rem';
+    tdAlt.style.fontFamily = 'var(--mono)';
+    tr.appendChild(tdAlt);
+
+    // Score cells
+    for (let p = 0; p < NB_JOUEURS; p++) {
+      const td = document.createElement('td');
+      td.className = 'score-cell';
+      const ps = state.scores[p][f];
+      const isCur = p === state.player;
+
+      if (ps !== null) {
+        td.textContent = ps;
+        td.style.color = ps > 0 ? 'var(--teal)' : 'var(--danger)';
+        td.style.fontWeight = '700';
+      } else if (isCur && state.rolls > 0 && isSelected) {
+        const pot = evaluerScore(f, state.dice);
+        td.textContent = pot;
+        td.className += ' potential';
+      } else if (isCur && state.rolls > 0) {
+        const pot = evaluerScore(f, state.dice);
+        td.textContent = pot > 0 ? pot : '—';
+        td.style.color = pot > 0 ? 'var(--amber)' : 'var(--done-text)';
+        td.style.opacity = '0.7';
+      } else {
+        td.textContent = '—';
+        td.style.color = 'var(--done-text)';
+      }
+
+      if (isCur && !ps && state.rolls > 0) {
+        td.style.background = 'var(--teal-light)';
+      }
+      tr.appendChild(td);
+    }
+
+    tbody.appendChild(tr);
+
+    // Insert BONUS row after Six (index 5)
+    if (f === NB_SOMME - 1) {
+      const trB = document.createElement('tr');
+      trB.className = 'bonus-row';
+      const tdBN = document.createElement('td');
+      tdBN.textContent = 'Bonus';
+      tdBN.colSpan = 2;
+      trB.appendChild(tdBN);
+      for (let p = 0; p < NB_JOUEURS; p++) {
+        const bonus = computeBonus(state.scores[p]);
+        const td = document.createElement('td');
+        td.className = 'score-cell';
+        if (bonus === null) {
+          const played = state.scores[p].slice(0, NB_SOMME).filter(s => s !== null).length;
+          const partial = state.scores[p].slice(0, NB_SOMME).reduce((a,b) => a + (b||0), 0);
+          td.textContent = `${partial}/${BONUS_SEUIL}`;
+          td.style.color = 'var(--muted)';
+          td.style.fontSize = '0.72rem';
+        } else {
+          td.textContent = bonus > 0 ? `+${bonus}` : '—';
+          td.style.color = bonus > 0 ? 'var(--violet)' : 'var(--done-text)';
+          td.style.fontWeight = '700';
+        }
+        trB.appendChild(td);
+      }
+      tbody.appendChild(trB);
+    }
+  }
+
+  // TOTAL row
+  const trT = document.createElement('tr');
+  trT.className = 'total-row';
+  const tdTN = document.createElement('td');
+  tdTN.textContent = 'TOTAL';
+  tdTN.colSpan = 2;
+  trT.appendChild(tdTN);
+  for (let p = 0; p < NB_JOUEURS; p++) {
+    const td = document.createElement('td');
+    td.className = 'score-cell';
+    td.textContent = computeTotal(state.scores[p]);
+    td.style.color = p === state.player ? 'var(--teal)' : 'var(--text)';
+    trT.appendChild(td);
+  }
+  tbody.appendChild(trT);
+
+  updateIndicator();
+}
+
+/* ── START ── */
+newGame();
+/* ── PRIZES ── */
+const YAMS_PRIZES=[
+{id:'first_roll',name:'First Roll',icon:'🎲',desc:'Roll the dice'},
+{id:'yams',name:'YAMS!',icon:'🎯',desc:'Score a Yams'},
+{id:'full',name:'Full House',icon:'🏠',desc:'Score a Full'},
+{id:'grande',name:'Grand Suite',icon:'📏',desc:'Score Grande Suite'},
+{id:'petite',name:'Petite Suite',icon:'📐',desc:'Score Petite Suite'},
+{id:'carre',name:'Carré',icon:'🎰',desc:'Score a Carré'},
+{id:'bonus',name:'Bonus!',icon:'⭐',desc:'Get the 63+ bonus'},
+{id:'winner',name:'Victor',icon:'🏆',desc:'Win a game'},
+{id:'perfect',name:'Perfect Game',icon:'💎',desc:'Win with 300+ pts'}
+];
+let yWon=new Set(JSON.parse(localStorage.getItem('yams_prizes')||'[]'));
+function ySave(){localStorage.setItem('yams_prizes',JSON.stringify([...yWon]))}
+function yToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
+function yCheck(id){if(yWon.has(id))return;yWon.add(id);ySave();const p=YAMS_PRIZES.find(x=>x.id===id);if(p)yToast('🏆 '+p.name+'! — '+p.desc);yRender()}
+function yRender(){const c=document.getElementById('prizesBar');if(!c)return;c.innerHTML=YAMS_PRIZES.map(p=>'<div class="prize-badge'+(yWon.has(p.id)?' won':'')+'">'+'<span class="icon">'+p.icon+'</span>'+p.name+'</div>').join('');document.getElementById('prizeCount').textContent=yWon.size}
+/* Hook into existing game */
+const _origLancer=lancer;
+lancer=function(){_origLancer();yCheck('first_roll')};
+const _origValider=valider;
+valider=function(){const fig=state.selected;_origValider();if(fig>=0){const f=FIGURES[fig];if(f.name==='Yams')yCheck('yams');if(f.name==='Full')yCheck('full');if(f.name==='G. Suite')yCheck('grande');if(f.name==='P. Suite')yCheck('petite');if(f.name==='Carré')yCheck('carre')}};
+const _origEndGame=endGame;
+endGame=function(){_origEndGame();const t0=computeTotal(state.scores[0]);const t1=computeTotal(state.scores[1]);const b0=computeBonus(state.scores[0]);const b1=computeBonus(state.scores[1]);if(b0>0||b1>0)yCheck('bonus');yCheck('winner');if(Math.max(t0,t1)>=300)yCheck('perfect')};
+yRender();
+</script>
+<div id="toast"></div>
+<div class="prizes-bar" id="prizesBar"></div>
+<div class="prize-counter">🏆 <span id="prizeCount">0</span>/9</div>
+<div class="stripe-bar">
+<a href="https://raw.githack.com/alissali/Learn/main/ARCADE.html">🎰 ARCADE</a>
+<a href="https://buy.stripe.com/9B6bJ31Mj4VQ2uX1kG1wY0a">🎲 CHAMPION €6.66</a>
+<a href="https://buy.stripe.com/fZu14pez5gEy6Ldfbw1wY0b">🏆 MOGUL €22</a>
+<a href="https://buy.stripe.com/fZucN71Mj73YedFd3o1wY0c">🎰 FULL ARCADE €66</a>
+</div>
+<div style="text-align:center;padding:8px;font-family:monospace;font-size:.7em;border-top:1px solid #222;margin-top:10px">
+<a href="https://juxaos.com/privacy.html" style="color:#666;text-decoration:none">Privacy</a> ·
+<a href="https://juxaos.com/terms.html" style="color:#666;text-decoration:none">Terms</a> ·
+© JuX ITT</div>
+</body>
+</html>

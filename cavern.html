@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D3C1C4G509"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-D3C1C4G509');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Open Graph -->
+    <meta property="og:title" content="Ali Baba's Cavern — Iraqi-Kurdish Grocery">
+    <meta property="og:description" content="17 products. 5 curated boxes. Spice, Sweets, Frozen, Chai, Full Cavern. Authentic flavors delivered.">
+    <meta property="og:url" content="https://raw.githack.com/alissali/Learn/main/CAVERN.html">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Ali Baba's Cavern — Iraqi-Kurdish Grocery">
+    <meta name="twitter:description" content="17 products. 5 curated boxes. Spice, Sweets, Frozen, Chai, Full Cavern. Authentic flavors delivered.">
+    <meta name="description" content="17 products. 5 curated boxes. Spice, Sweets, Frozen, Chai, Full Cavern. Authentic flavors delivered.">
+<title>🧞 Ali Baba's Cavern — Iraqi-Kurdish Grocery</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: #05070f;
+  color: #e8f4f8;
+  font-family: Georgia, 'Times New Roman', serif;
+  line-height: 1.8;
+  min-height: 100vh;
+}
+
+/* ═══ HEADER ═══ */
+.header {
+  text-align: center;
+  padding: 60px 20px 30px;
+  background: linear-gradient(180deg, #1a0d00 0%, #05070f 100%);
+  border-bottom: 1px solid #e8a045;
+}
+
+.header .genie { font-size: 4rem; margin-bottom: 10px; }
+
+.header h1 {
+  font-size: 2.8rem;
+  color: #f5c842;
+  letter-spacing: 0.2em;
+  text-shadow: 0 0 25px rgba(245,200,66,0.4);
+  margin-bottom: 5px;
+}
+
+.header .subtitle {
+  font-size: 1.1rem;
+  color: #e8a045;
+  font-style: italic;
+  letter-spacing: 0.1em;
+}
+
+.header .location {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 10px;
+  letter-spacing: 0.15em;
+}
+
+/* ═══ CATEGORY ═══ */
+.category {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.category h2 {
+  color: #f5c842;
+  font-size: 1.6rem;
+  letter-spacing: 0.2em;
+  text-align: center;
+  margin-bottom: 25px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #1a1d2e;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 15px;
+}
+
+.product {
+  background: #0a0d14;
+  border: 1px solid #1a1d2e;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s;
+}
+
+.product:hover {
+  border-color: #e8a045;
+  transform: translateY(-2px);
+}
+
+.product .name {
+  font-weight: bold;
+  color: #e8f4f8;
+  font-size: 1.05rem;
+}
+
+.product .fact {
+  color: #888;
+  font-size: 0.85rem;
+  font-style: italic;
+  margin-top: 4px;
+}
+
+.product .price {
+  color: #f5c842;
+  font-weight: bold;
+  font-size: 1.1rem;
+  white-space: nowrap;
+  margin-left: 15px;
+}
+
+/* ═══ DIVIDER ═══ */
+.divider {
+  text-align: center;
+  color: #e8a045;
+  font-size: 1.2rem;
+  padding: 15px;
+  letter-spacing: 0.5em;
+}
+
+/* ═══ BOXES ═══ */
+.boxes {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 50px 20px;
+}
+
+.boxes h2 {
+  text-align: center;
+  color: #f5c842;
+  font-size: 2rem;
+  letter-spacing: 0.2em;
+  margin-bottom: 15px;
+}
+
+.boxes .boxes-subtitle {
+  text-align: center;
+  color: #888;
+  font-style: italic;
+  margin-bottom: 40px;
+}
+
+.box-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.box {
+  background: linear-gradient(135deg, #1a0d00 0%, #0a0d14 100%);
+  border: 1px solid #333;
+  padding: 25px;
+  text-align: center;
+  transition: all 0.3s;
+  border-radius: 8px;
+}
+
+.box:hover {
+  border-color: #f5c842;
+  transform: translateY(-3px);
+}
+
+.box .icon { font-size: 2.5rem; margin-bottom: 10px; }
+
+.box h3 {
+  color: #f5c842;
+  font-size: 1.2rem;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+
+.box .contents {
+  color: #888;
+  font-size: 0.85rem;
+  font-style: italic;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+.box .save {
+  color: #2ec4b6;
+  font-size: 0.8rem;
+  margin-bottom: 10px;
+}
+
+.box .box-price {
+  font-size: 2rem;
+  color: #fff;
+  margin: 10px 0;
+}
+
+.box .buy-btn {
+  display: inline-block;
+  padding: 12px 30px;
+  background: #f5c842;
+  color: #000;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.box .buy-btn:hover {
+  background: #ffe066;
+  transform: scale(1.05);
+}
+
+/* ═══ FULL CAVERN ═══ */
+.full-cavern {
+  max-width: 600px;
+  margin: 0 auto 50px;
+  background: linear-gradient(135deg, #2a1500 0%, #0a0d14 100%);
+  border: 2px solid #f5c842;
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+}
+
+.full-cavern .icon { font-size: 3rem; margin-bottom: 10px; }
+
+.full-cavern h3 {
+  color: #f5c842;
+  font-size: 1.8rem;
+  letter-spacing: 0.15em;
+  margin-bottom: 10px;
+}
+
+.full-cavern .contents {
+  color: #aaa;
+  font-style: italic;
+  margin-bottom: 15px;
+}
+
+.full-cavern .save {
+  color: #2ec4b6;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+
+.full-cavern .box-price {
+  font-size: 2.5rem;
+  color: #fff;
+  margin: 15px 0;
+}
+
+.full-cavern .buy-btn {
+  display: inline-block;
+  padding: 15px 40px;
+  background: #f5c842;
+  color: #000;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.2rem;
+  letter-spacing: 0.15em;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.full-cavern .buy-btn:hover {
+  background: #ffe066;
+  transform: scale(1.08);
+}
+
+/* ═══ STORY ═══ */
+.story {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 40px 30px;
+  text-align: center;
+}
+
+.story h2 {
+  color: #e8a045;
+  font-size: 1.4rem;
+  letter-spacing: 0.2em;
+  margin-bottom: 20px;
+}
+
+.story p {
+  color: #aaa;
+  font-style: italic;
+  font-size: 1.05rem;
+  margin-bottom: 15px;
+}
+
+.story .highlight {
+  color: #f5c842;
+  font-weight: bold;
+  font-style: normal;
+}
+
+/* ═══ FOOTER ═══ */
+.footer {
+  text-align: center;
+  padding: 40px 20px;
+  border-top: 1px solid #1a1d2e;
+  color: #555;
+  font-size: 0.85rem;
+}
+
+.footer a { color: #f5c842; text-decoration: none; }
+
+.footer .sig {
+  color: #e8a045;
+  font-style: italic;
+  margin-top: 10px;
+}
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 600px) {
+  .header h1 { font-size: 1.8rem; letter-spacing: 0.1em; }
+  .product-grid { grid-template-columns: 1fr; }
+  .box-grid { grid-template-columns: 1fr; }
+  .product { flex-direction: column; align-items: flex-start; }
+  .product .price { margin-left: 0; margin-top: 8px; }
+}
+a:focus,button:focus{outline:2px solid #ff6600;outline-offset:2px}
+</style>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzBhMGEwZiIvPgogIDxwb2x5Z29uIHBvaW50cz0iMTYsMiAzMCwxNiAxNiwzMCAyLDE2IiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZykiIHN0cm9rZS13aWR0aD0iMiIvPgogIDx0ZXh0IHg9IjE2IiB5PSIyMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmNjYwMCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTIiPko8L3RleHQ+CiAgPGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmNjYwMCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFhMWFmZiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPgo8L3N2Zz4=">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "JuX ITT",
+  "url": "https://juxaos.com",
+  "email": "jux@juxitt.com",
+  "description": "Software architecture, games, stories, and spice."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "Ali Baba's Cavern \u2014 SPICE BOX",
+  "description": "Iraqi-Kurdish grocery \u2014 Spice Box",
+  "brand": {
+    "@type": "Brand",
+    "name": "JuX ITT"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "20.00",
+    "priceCurrency": "EUR",
+    "availability": "https://schema.org/InStock",
+    "url": "https://buy.stripe.com/9B6bJ31Mj4VQ2uX1kG1wY0a",
+    "seller": {
+      "@type": "Organization",
+      "name": "JuX ITT"
+    }
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "Ali Baba's Cavern \u2014 SWEETS BOX",
+  "description": "Iraqi-Kurdish grocery \u2014 Sweets Box",
+  "brand": {
+    "@type": "Brand",
+    "name": "JuX ITT"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "38.00",
+    "priceCurrency": "EUR",
+    "availability": "https://schema.org/InStock",
+    "url": "https://buy.stripe.com/fZu14pez5gEy6Ldfbw1wY0b",
+    "seller": {
+      "@type": "Organization",
+      "name": "JuX ITT"
+    }
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "Ali Baba's Cavern \u2014 FROZEN BOX",
+  "description": "Iraqi-Kurdish grocery \u2014 Frozen Box",
+  "brand": {
+    "@type": "Brand",
+    "name": "JuX ITT"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "28.00",
+    "priceCurrency": "EUR",
+    "availability": "https://schema.org/InStock",
+    "url": "https://buy.stripe.com/fZucN71Mj73YedFd3o1wY0c",
+    "seller": {
+      "@type": "Organization",
+      "name": "JuX ITT"
+    }
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "Ali Baba's Cavern \u2014 CHAI BOX",
+  "description": "Iraqi-Kurdish grocery \u2014 Chai Box",
+  "brand": {
+    "@type": "Brand",
+    "name": "JuX ITT"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "16.00",
+    "priceCurrency": "EUR",
+    "availability": "https://schema.org/InStock",
+    "url": "https://buy.stripe.com/bJebJ376DgEy7PhaVg1wY0d",
+    "seller": {
+      "@type": "Organization",
+      "name": "JuX ITT"
+    }
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "Ali Baba's Cavern \u2014 FULL CAVERN",
+  "description": "Iraqi-Kurdish grocery \u2014 Full Cavern collection",
+  "brand": {
+    "@type": "Brand",
+    "name": "JuX ITT"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "99.00",
+    "priceCurrency": "EUR",
+    "availability": "https://schema.org/InStock",
+    "url": "https://buy.stripe.com/00w8wR4Yv5ZU1qT9Rc1wY0e",
+    "seller": {
+      "@type": "Organization",
+      "name": "JuX ITT"
+    }
+  }
+}
+</script>
+<meta name="theme-color" content="#0a0a0f">
+<link rel="canonical" href="https://raw.githack.com/alissali/Learn/main/CAVERN.html">
+</head>
+<body>
+<a href="#main" class="skip-link" style="position:absolute;top:-40px;left:0;background:#ff6600;color:#0a0a0f;padding:8px;z-index:9999;font-family:monospace;text-decoration:none;transition:top .3s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">Skip to content</a>
+
+<div class="header">
+  <div class="genie">🧞</div>
+  <h1>ALI BABA'S CAVERN</h1>
+  <div class="subtitle">Iraqi-Kurdish Grocery</div>
+  <div class="location">LE MANS · FRANCE</div>
+</div>
+
+<div class="category">
+  <h2>🧂 SPICES</h2>
+  <div class="product-grid">
+    <div class="product">
+      <div><div class="name">Sumac</div><div class="fact">Deep red Kurdish sumac. Tangy, citrusy.</div></div>
+      <div class="price">€3.50</div>
+    </div>
+    <div class="product">
+      <div><div class="name">Za'atar</div><div class="fact">Blend with Kurdish thyme. Aromatic.</div></div>
+      <div class="price">€4.00</div>
+    </div>
+    <div class="product">
+      <div><div class="name">Kurdish Cumin</div><div class="fact">Black cumin. Smoky, earthy.</div></div>
+      <div class="price">€3.00</div>
+    </div>
+    <div class="product">
+      <div><div class="name">Green Cardamom</div><div class="fact">Whole pods. Essential for chai.</div></div>
+      <div class="price">€4.50</div>
+    </div>
+    <div class="product">
+      <div><div class="name">Turmeric</div><div class="fact">Vibrant orange-yellow. Iraqi-grown.</div></div>
+      <div class="price">€2.50</div>
+    </div>
+    <div class="product">
+      <div><div class="name">Seven Spice (Baharat)</div><div class="fact">Iraqi blend. 7 spices.</div></div>
+      <div class="price">€5.00</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider">✦ ✦ ✦</div>
+
+<div class="category">
+  <h2>🍯 SWEETS</h2>
+  <div class="product-grid">
+    <div class="product">
+      <div><div class="name">Baklava</div><div class="fact">Handmade pistachio. Mosul recipe.</div></div>
+      <div class="price">€18.00/kg</div>
+    </div>
+    <div class="product">
+      <div><div class="name">Ma'amoul</div><div class="fact">Date-filled semolina cookies.</div></div>
+      <div class="price">€10.00/box</div>
+    </div>
+    <div class="product">
+      <div><div class="name">Kurdish Halwa</div><div class="fact">Saffron and rosewater.</div></div>
+      <div class="price">€7.00/tray</div>
+    </div>
+    <div class="product">
+      <div><div class="name">Kurdish Mountain Honey</div><div class="fact">Raw honey from Halabja.</div></div>
+      <div class="price">€8.00/500g</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider">✦ ✦ ✦</div>
+
+<div class="category">
+  <h2>🧊 FROZEN</h2>
+  <div class="product-grid">
+    <div class="product">
+      <div><div class="name">Kubba Halab</div><div class="fact">Semolina dumplings. Spiced meat.</div></div>
+      <div class="price">€12.00/dz</div>
+    </div>
+    <div class="product">
+      <div><div class="name">Sambousek</div><div class="fact">Mini pastry turnovers.</div></div>
+      <div class="price">€9.00/dz</div>
+    </div>
+    <div class="product">
+      <div><div class="name">Kebbeh</div><div class="fact">Bulgur and meat patties.</div></div>
+      <div class="price">€11.00/kg</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider">✦ ✦ ✦</div>
+
+<div class="category">
+  <h2>☕ DRINKS</h2>
+  <div class="product-grid">
+    <div class="product">
+      <div><div class="name">Chai Kurdi</div><div class="fact">Black tea with cardamom.</div></div>
+      <div class="price">€5.50</div>
+    </div>
+    <div class="product">
+      <div><div class="name">Arabic Coffee</div><div class="fact">Green beans with cardamom.</div></div>
+      <div class="price">€6.00</div>
+    </div>
+    <div class="product">
+      <div><div class="name">Doogh</div><div class="fact">Yogurt drink with mint.</div></div>
+      <div class="price">€3.00</div>
+    </div>
+    <div class="product">
+      <div><div class="name">Tamarind Juice</div><div class="fact">Sweet-sour concentrate.</div></div>
+      <div class="price">€4.00</div>
+    </div>
+  </div>
+</div>
+
+<div class="boxes">
+  <h2>📦 THE BOXES</h2>
+  <div class="boxes-subtitle">Bundle &amp; save. Curated selections. Delivered.</div>
+
+  <div class="box-grid">
+    <div class="box">
+      <div class="icon">🧂</div>
+      <h3>SPICE BOX</h3>
+      <div class="contents">All 6 Kurdish spices<br>Sumac · Za'atar · Cumin · Cardamom · Turmeric · Baharat</div>
+      <div class="save">Save €2.50 vs individual</div>
+      <div class="box-price">€20</div>
+      <a href="https://buy.stripe.com/9B6bJ31Mj4VQ2uX1kG1wY0a" target="_blank" class="buy-btn">BUY</a>
+    </div>
+
+    <div class="box">
+      <div class="icon">🍯</div>
+      <h3>SWEETS BOX</h3>
+      <div class="contents">Baklava · Ma'amoul · Kurdish Halwa · Mountain Honey</div>
+      <div class="save">Save €5.00 vs individual</div>
+      <div class="box-price">€38</div>
+      <a href="https://buy.stripe.com/fZu14pez5gEy6Ldfbw1wY0b" target="_blank" class="buy-btn">BUY</a>
+    </div>
+
+    <div class="box">
+      <div class="icon">🧊</div>
+      <h3>FROZEN BOX</h3>
+      <div class="contents">Kubba Halab · Sambousek · Kebbeh</div>
+      <div class="save">Save €4.00 vs individual</div>
+      <div class="box-price">€28</div>
+      <a href="https://buy.stripe.com/fZucN71Mj73YedFd3o1wY0c" target="_blank" class="buy-btn">BUY</a>
+    </div>
+
+    <div class="box">
+      <div class="icon">☕</div>
+      <h3>CHAI BOX</h3>
+      <div class="contents">Chai Kurdi · Arabic Coffee · Doogh · Tamarind Juice</div>
+      <div class="save">Save €2.50 vs individual</div>
+      <div class="box-price">€16</div>
+      <a href="https://buy.stripe.com/bJebJ376DgEy7PhaVg1wY0d" target="_blank" class="buy-btn">BUY</a>
+    </div>
+  </div>
+
+  <div class="full-cavern">
+    <div class="icon">🧞</div>
+    <h3>FULL CAVERN</h3>
+    <div class="contents">EVERYTHING. All 17 products.<br>6 spices + 4 sweets + 3 frozen + 4 drinks.<br>The complete Ali Baba experience.</div>
+    <div class="save">Save €17+ vs individual — the best deal</div>
+    <div class="box-price">€99</div>
+    <a href="https://buy.stripe.com/00w8wR4Yv5ZU1qT9Rc1wY0e" target="_blank" class="buy-btn">OPEN THE CAVERN</a>
+  </div>
+</div>
+
+<div class="story">
+  <h2>THE STORY</h2>
+  <p>An Iraqi-Kurdish grocery in Le Mans, France. Not a concept. Not a brand. <span class="highlight">A cavern.</span></p>
+  <p>The spices come from Kurdistan. The recipes come from Mosul. The honey comes from Halabja. The hands that make the baklava know what they're doing because they've been doing it forever.</p>
+  <p>Ali Baba didn't find gold in his cave. He found <span class="highlight">something better</span>. He found the ordinary — sumac, cardamom, tea — made extraordinary by the simple fact of being real.</p>
+  <p>This is that cavern. <span class="highlight">Open Sesame.</span></p>
+</div>
+
+<div class="footer">
+  🧞 Ali Baba's Cavern · Iraqi-Kurdish Grocery · Le Mans · <a href="https://juxitt.com" target="_blank">juxitt.com</a><br>
+  All payments via Stripe. Secure. No subscriptions. One price. Delivered.<br>
+  <div class="sig">JuXITT · NAME / FACT / TARGET</div>
+</div>
+
+<div style="text-align:center;padding:8px;font-family:monospace;font-size:.7em;border-top:1px solid #222;margin-top:10px">
+<a href="https://juxaos.com/privacy.html" style="color:#666;text-decoration:none">Privacy</a> ·
+<a href="https://juxaos.com/terms.html" style="color:#666;text-decoration:none">Terms</a> ·
+© JuX ITT</div>
+</body>
+</html>

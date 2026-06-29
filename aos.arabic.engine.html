@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D3C1C4G509"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-D3C1C4G509');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AOS · نظام التشغيل الموائم</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+  html{background:#05070f}
+  *{box-sizing:border-box;margin:0;padding:0}
+
+  body{
+    background:#05070f;
+    color:#e8e8ec;
+    font-family:'Amiri',serif;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:2rem 1rem;
+  }
+
+  h1{
+    font-size:2.2rem;
+    color:#2ec4b6;
+    text-align:center;
+    letter-spacing:.05em;
+    margin-bottom:.3rem;
+  }
+  .subtitle{
+    font-size:1rem;
+    color:#7b4fa6;
+    text-align:center;
+    margin-bottom:2rem;
+    font-family:'IBM Plex Mono',monospace;
+    direction:ltr;
+  }
+
+  .engine{
+    width:100%;
+    max-width:780px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:1.4rem;
+  }
+
+  /* Input row */
+  .input-row{
+    display:flex;
+    gap:.6rem;
+    width:100%;
+    max-width:500px;
+    direction:rtl;
+  }
+  .input-row input{
+    flex:1;
+    background:#0d1117;
+    border:1px solid #2ec4b6;
+    border-radius:6px;
+    padding:.6rem 1rem;
+    font-size:1.4rem;
+    color:#f5c842;
+    font-family:'Amiri',serif;
+    text-align:center;
+    outline:none;
+  }
+  .input-row input::placeholder{color:#555}
+  .input-row input:focus{border-color:#f5c842;box-shadow:0 0 0 2px rgba(245,200,66,.2)}
+  .btn-derive{
+    background:#2ec4b6;
+    color:#05070f;
+    border:none;
+    border-radius:6px;
+    padding:.6rem 1.4rem;
+    font-size:1rem;
+    font-family:'IBM Plex Mono',monospace;
+    font-weight:600;
+    cursor:pointer;
+    direction:ltr;
+    white-space:nowrap;
+  }
+  .btn-derive:hover{background:#3dd6c8}
+
+  /* Presets */
+  .presets{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.5rem;
+    justify-content:center;
+    direction:ltr;
+  }
+  .btn-preset{
+    background:transparent;
+    border:1px solid #7b4fa6;
+    color:#7b4fa6;
+    border-radius:20px;
+    padding:.3rem .9rem;
+    font-size:1.1rem;
+    font-family:'Amiri',serif;
+    cursor:pointer;
+    transition:all .2s;
+  }
+  .btn-preset:hover{background:#7b4fa6;color:#fff}
+
+  /* Error */
+  .error-msg{
+    display:none;
+    color:#e8a045;
+    font-size:.9rem;
+    font-family:'IBM Plex Mono',monospace;
+    direction:ltr;
+  }
+
+  /* AOS Expression */
+  .expr-box{
+    display:none;
+    flex-direction:row;
+    gap:1.5rem;
+    justify-content:center;
+    flex-wrap:wrap;
+    background:#0d1117;
+    border:1px solid #252535;
+    border-radius:10px;
+    padding:1.2rem 2rem;
+    width:100%;
+    max-width:600px;
+  }
+  .expr-item{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:.3rem;
+  }
+  .expr-label{
+    font-size:.7rem;
+    font-family:'IBM Plex Mono',monospace;
+    letter-spacing:.1em;
+    direction:ltr;
+  }
+  .expr-value{
+    font-size:1.6rem;
+    font-family:'Amiri',serif;
+    font-weight:700;
+  }
+  .expr-item.name .expr-label{color:#2ec4b6}
+  .expr-item.name .expr-value{color:#2ec4b6}
+  .expr-item.fact .expr-label{color:#e8a045}
+  .expr-item.fact .expr-value{color:#e8a045}
+  .expr-item.target .expr-label{color:#7b4fa6}
+  .expr-item.target .expr-value{color:#7b4fa6}
+
+  /* Tabs */
+  .tabs{
+    display:flex;
+    gap:.5rem;
+    direction:ltr;
+  }
+  .tab-btn{
+    background:transparent;
+    border:1px solid #252535;
+    color:#888;
+    border-radius:6px;
+    padding:.4rem 1.2rem;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.85rem;
+    cursor:pointer;
+    transition:all .2s;
+  }
+  .tab-btn.active{
+    background:#252535;
+    color:#e8e8ec;
+    border-color:#2ec4b6;
+  }
+
+  /* Tables */
+  .table-wrap{width:100%;overflow-x:auto}
+  table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:.95rem;
+    direction:ltr;
+  }
+  thead th{
+    background:#0d1117;
+    color:#666;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.72rem;
+    letter-spacing:.08em;
+    text-align:center;
+    padding:.6rem .5rem;
+    border-bottom:1px solid #1e2030;
+    text-transform:uppercase;
+  }
+  tbody tr{border-bottom:1px solid #10121f}
+  tbody tr:hover{background:#0d1117}
+  tbody td{
+    padding:.55rem .6rem;
+    text-align:center;
+    vertical-align:middle;
+  }
+  .ar{font-family:'Amiri',serif;font-size:1.25rem;direction:rtl}
+  .gold{color:#f5c842;font-weight:700;font-size:1.35rem}
+  .mono{font-family:'IBM Plex Mono',monospace;font-size:.82rem;color:#888}
+  .empty-msg{color:#444;font-style:italic;font-family:'IBM Plex Mono',monospace;padding:1.5rem}
+
+  .hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<h1>AOS · نظام التشغيل الموائم</h1>
+<div class="subtitle">لغة برمجة الأغراض الموائمة · Adequate Object Programming Language</div>
+
+<div class="engine">
+
+  <div class="input-row">
+    <input type="text" id="rootInput" placeholder="أدخل الجذر · k-t-b" />
+    <button class="btn-derive" id="btnDerive">derive()</button>
+  </div>
+
+  <div class="presets">
+    <button class="btn-preset" data-root="ك-ت-ب">ك-ت-ب</button>
+    <button class="btn-preset" data-root="ع-ل-م">ع-ل-م</button>
+    <button class="btn-preset" data-root="ف-ه-م">ف-ه-م</button>
+    <button class="btn-preset" data-root="ق-ر-أ">ق-ر-أ</button>
+    <button class="btn-preset" data-root="د-ر-س">د-ر-س</button>
+  </div>
+
+  <div class="error-msg" id="errorMsg">أدخل جذراً ثلاثياً · Enter a trilateral root (3 letters)</div>
+
+  <div class="expr-box" id="exprBox">
+    <div class="expr-item name">
+      <div class="expr-label">NAME · اسم</div>
+      <div class="expr-value" id="exprName">—</div>
+    </div>
+    <div class="expr-item fact">
+      <div class="expr-label">FACT · حقيقة</div>
+      <div class="expr-value" id="exprFact">—</div>
+    </div>
+    <div class="expr-item target">
+      <div class="expr-label">TARGET · هدف</div>
+      <div class="expr-value" id="exprTarget">—</div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" id="tabVerb">Verb Forms · الأفعال</button>
+    <button class="tab-btn" id="tabNoun">Noun Patterns · الأسماء</button>
+  </div>
+
+  <div class="table-wrap" id="verbTable">
+    <table>
+      <thead>
+        <tr>
+          <th>Form</th>
+          <th>Pattern · الوزن</th>
+          <th>Derivative · المشتق</th>
+          <th>Operation</th>
+          <th>AOS</th>
+        </tr>
+      </thead>
+      <tbody id="verbBody">
+        <tr><td colspan="5" class="empty-msg">Enter a root above · أدخل جذراً</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-wrap hidden" id="nounTable">
+    <table>
+      <thead>
+        <tr>
+          <th>Pattern · الوزن</th>
+          <th>Derivative · المشتق</th>
+          <th>Role · الدور</th>
+          <th>AOS</th>
+        </tr>
+      </thead>
+      <tbody id="nounBody">
+        <tr><td colspan="4" class="empty-msg">Enter a root above · أدخل جذراً</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+const VERB_FORMS = [
+  {form:"I",    pattern:["ف","ع","ل"],              op:"do()",             aos:"TARGET", color:"#7b4fa6"},
+  {form:"II",   pattern:["ف","ع","ّ","ل"],          op:"amplify()",        aos:"TARGET", color:"#7b4fa6"},
+  {form:"III",  pattern:["ف","ا","ع","ل"],          op:"interact()",       aos:"TARGET", color:"#7b4fa6"},
+  {form:"IV",   pattern:["أ","ف","ع","ل"],          op:"trigger()",        aos:"TARGET", color:"#7b4fa6"},
+  {form:"V",    pattern:["ت","ف","ع","ّ","ل"],      op:"self_transform()", aos:"TARGET", color:"#7b4fa6"},
+  {form:"VI",   pattern:["ت","ف","ا","ع","ل"],      op:"sync()",           aos:"TARGET", color:"#7b4fa6"},
+  {form:"VII",  pattern:["ا","ن","ف","ع","ل"],      op:"receive()",        aos:"TARGET", color:"#7b4fa6"},
+  {form:"VIII", pattern:["ا","ف","ت","ع","ل"],      op:"absorb()",         aos:"TARGET", color:"#7b4fa6"},
+  {form:"X",    pattern:["ا","س","ت","ف","ع","ل"],  op:"request()",        aos:"TARGET", color:"#7b4fa6"},
+];
+
+const NOUN_PATTERNS = [
+  {pattern:["ف","ا","ع","ل"],         role:"Doer · الفاعل",         aos:"NAME",   color:"#2ec4b6"},
+  {pattern:["م","ف","ع","و","ل"],      role:"Receiver · المفعول به", aos:"FACT",   color:"#e8a045"},
+  {pattern:["ف","ع","ا","ل"],         role:"Object · الاسم الجامد", aos:"TARGET", color:"#7b4fa6"},
+  {pattern:["م","ف","ع","ل"],         role:"Place · اسم المكان",    aos:"TARGET", color:"#7b4fa6"},
+  {pattern:["ف","ع","ّ","ا","ل"],     role:"Profession · المهنة",   aos:"NAME",   color:"#2ec4b6"},
+  {pattern:["ت","ف","ع","ي","ل"],     role:"Verbal Noun II",         aos:"FACT",   color:"#e8a045"},
+  {pattern:["ا","س","ت","ف","ع","ا","ل"], role:"Verbal Noun X",     aos:"FACT",   color:"#e8a045"},
+];
+
+// Extract the 3 Arabic letters from input
+function extractLetters(raw) {
+  // Remove dashes, spaces, vowel marks
+  const clean = raw.replace(/[-\s]/g, '');
+  const letters = [];
+  for (const ch of clean) {
+    const code = ch.charCodeAt(0);
+    // Arabic letters range 0x0621–0x063A, 0x0641–0x064A (base letters only)
+    if ((code >= 0x0621 && code <= 0x063A) || (code >= 0x0641 && code <= 0x064A)) {
+      letters.push(ch);
+    }
+  }
+  return letters;
+}
+
+// Apply pattern array to root letters [f, a, l]
+// Pattern is array of chars: "ف"→f, "ع"→a, "ل"→l, others pass through
+function applyPattern(patternArr, letters) {
+  const f = letters[0], a = letters[1], l = letters[2];
+  return patternArr.map(ch => {
+    if (ch === 'ف') return f;
+    if (ch === 'ع') return a;
+    if (ch === 'ل') return l;
+    return ch;  // shadda 'ّ', ا, ت, م, أ, ن, س, و, ي pass through
+  }).join('');
+}
+
+let currentLetters = [];
+
+function runDerive() {
+  const raw = document.getElementById('rootInput').value.trim();
+  const letters = extractLetters(raw);
+  const err = document.getElementById('errorMsg');
+  const expr = document.getElementById('exprBox');
+
+  if (letters.length < 3) {
+    err.style.display = 'block';
+    expr.style.display = 'none';
+    renderEmpty();
+    return;
+  }
+
+  err.style.display = 'none';
+  currentLetters = letters;
+  const [f, a, l] = letters;
+
+  // AOS Expression
+  document.getElementById('exprName').textContent = f + '-' + a + '-' + l;
+  document.getElementById('exprFact').textContent = applyPattern(['ف','ع','ا','ل'], letters);
+  document.getElementById('exprTarget').textContent = applyPattern(['ف','ا','ع','ل'], letters);
+  expr.style.display = 'flex';
+
+  renderVerb();
+  renderNoun();
+}
+
+function renderEmpty() {
+  document.getElementById('verbBody').innerHTML =
+    '<tr><td colspan="5" class="empty-msg">Enter a root above · أدخل جذراً</td></tr>';
+  document.getElementById('nounBody').innerHTML =
+    '<tr><td colspan="4" class="empty-msg">Enter a root above · أدخل جذراً</td></tr>';
+}
+
+function renderVerb() {
+  const rows = VERB_FORMS.map(row => {
+    const d = applyPattern(row.pattern, currentLetters);
+    return `<tr>
+      <td class="mono">${row.form}</td>
+      <td class="ar">${row.pattern.join('')}</td>
+      <td class="ar gold">${d}</td>
+      <td class="mono">${row.op}</td>
+      <td class="mono" style="color:${row.color}">${row.aos}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('verbBody').innerHTML = rows;
+}
+
+function renderNoun() {
+  const rows = NOUN_PATTERNS.map(row => {
+    const d = applyPattern(row.pattern, currentLetters);
+    return `<tr>
+      <td class="ar">${row.pattern.join('')}</td>
+      <td class="ar gold">${d}</td>
+      <td>${row.role}</td>
+      <td class="mono" style="color:${row.color}">${row.aos}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('nounBody').innerHTML = rows;
+}
+
+function switchTab(t) {
+  document.getElementById('verbTable').classList.toggle('hidden', t !== 'verb');
+  document.getElementById('nounTable').classList.toggle('hidden', t !== 'noun');
+  document.getElementById('tabVerb').classList.toggle('active', t === 'verb');
+  document.getElementById('tabNoun').classList.toggle('active', t === 'noun');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('btnDerive').addEventListener('click', runDerive);
+  document.getElementById('rootInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') runDerive();
+  });
+  document.querySelectorAll('.btn-preset').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.getElementById('rootInput').value = btn.dataset.root;
+      runDerive();
+    });
+  });
+  document.getElementById('tabVerb').addEventListener('click', function() { switchTab('verb'); });
+  document.getElementById('tabNoun').addEventListener('click', function() { switchTab('noun'); });
+});
+</script>
+</body>
+</html>

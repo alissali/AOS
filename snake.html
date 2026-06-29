@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D3C1C4G509"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-D3C1C4G509');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <!-- Open Graph -->
+    <meta property="og:title" content="SNAKE — Neon Desert Serpent">
+    <meta property="og:description" content="Classic Snake in the neon desert. 9 prizes. How long can you survive?">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="SNAKE — Neon Desert Serpent">
+    <meta name="twitter:description" content="Classic Snake in the neon desert. 9 prizes. How long can you survive?">
+    <meta name="description" content="Classic Snake in the neon desert. 9 prizes. How long can you survive?">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzBhMGEwZiIvPgogIDxwb2x5Z29uIHBvaW50cz0iMTYsMiAzMCwxNiAxNiwzMCAyLDE2IiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZykiIHN0cm9rZS13aWR0aD0iMiIvPgogIDx0ZXh0IHg9IjE2IiB5PSIyMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmNjYwMCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTIiPko8L3RleHQ+CiAgPGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmNjYwMCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFhMWFmZiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPgo8L3N2Zz4=">
+<title>🐍 JuX SNAKE — The Serpent Moves</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=IBM+Plex+Mono:wght@400;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a12;color:#e8d5c0;font-family:'IBM Plex Mono',monospace;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow-x:hidden}
+h1{font-family:'Cinzel Decorative',serif;font-size:2.2em;color:#2ec4b6;text-shadow:0 0 30px rgba(46,196,182,0.4);letter-spacing:4px;margin:20px 0 5px;text-align:center}
+.subtitle{font-size:0.9em;color:rgba(232,213,192,0.5);letter-spacing:6px;margin-bottom:15px;text-align:center}
+#gameArea{position:relative;border:2px solid rgba(46,196,182,0.3);border-radius:8px;box-shadow:0 0 40px rgba(46,196,182,0.1);background:#0d0d18;touch-action:none}
+.hud{display:flex;gap:30px;justify-content:center;margin:12px 0;font-size:1em;letter-spacing:2px}
+.hud span{color:#2ec4b6}.hud .hi{color:#e8a045}
+#startOverlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(10,10,18,0.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;border-radius:8px}
+#startOverlay h2{font-family:'Cinzel Decorative',serif;font-size:1.8em;color:#2ec4b6;margin-bottom:20px}
+#startOverlay p{color:rgba(232,213,192,0.6);margin-bottom:5px;font-size:0.85em}
+.startBtn{margin-top:20px;background:rgba(46,196,182,0.15);border:1px solid rgba(46,196,182,0.5);color:#2ec4b6;font-family:'Cinzel Decorative',serif;font-size:1.1em;padding:14px 40px;cursor:pointer;letter-spacing:3px;transition:all 0.3s;border-radius:4px}
+.startBtn:hover{background:rgba(46,196,182,0.3);box-shadow:0 0 20px rgba(46,196,182,0.3)}
+.prizes{max-width:500px;width:90%;margin:15px auto;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.prize{background:rgba(46,196,182,0.05);border:1px solid rgba(46,196,182,0.15);border-radius:6px;padding:8px;text-align:center;font-size:0.7em;color:rgba(232,213,192,0.4);transition:all 0.3s}
+.prize.won{border-color:#e8a045;color:#e8a045;background:rgba(232,160,69,0.1);text-shadow:0 0 8px rgba(232,160,69,0.3)}
+.prize .icon{font-size:1.6em;display:block;margin-bottom:4px}
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(232,160,69,0.95);color:#0a0a12;padding:12px 28px;border-radius:8px;font-family:'Cinzel Decorative',serif;font-size:1em;z-index:999;opacity:0;transition:opacity 0.5s;pointer-events:none}
+.toast.show{opacity:1}
+.controls{display:none;margin:10px 0}
+@media(pointer:coarse){.controls{display:grid;grid-template-columns:repeat(3,60px);grid-template-rows:repeat(3,60px);gap:4px;justify-content:center}}
+.ctrl-btn{background:rgba(46,196,182,0.1);border:1px solid rgba(46,196,182,0.3);color:#2ec4b6;font-size:1.5em;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.ctrl-btn:active{background:rgba(46,196,182,0.3)}
+footer{margin:15px 0 20px;text-align:center;font-size:0.75em;color:rgba(232,213,192,0.3);letter-spacing:2px}
+footer a{color:#2ec4b6;text-decoration:none}
+.stripe-snake{text-align:center;padding:12px;border-top:1px solid rgba(232,160,69,0.15)}
+.stripe-snake a{display:inline-block;margin:0 6px;padding:6px 14px;border:1px solid rgba(232,160,69,0.3);border-radius:4px;color:#e8a045;text-decoration:none;font-size:0.75rem;font-family:'Cinzel Decorative',serif;transition:all 0.3s}
+.stripe-snake a:hover{background:rgba(232,160,69,0.1)}
+a:focus,button:focus{outline:2px solid #ff6600;outline-offset:2px}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "JuX ITT",
+  "url": "https://juxaos.com",
+  "email": "jux@juxitt.com",
+  "description": "Software architecture, games, stories, and spice."
+}
+</script>
+<meta name="theme-color" content="#0a0a0f">
+<link rel="canonical" href="https://raw.githack.com/alissali/Learn/main/SNAKE.html">
+</head>
+<body>
+<a href="#main" class="skip-link" style="position:absolute;top:-40px;left:0;background:#ff6600;color:#0a0a0f;padding:8px;z-index:9999;font-family:monospace;text-decoration:none;transition:top .3s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">Skip to content</a>
+<h1>🐍 JuX SNAKE</h1>
+<div class="subtitle">T H E &nbsp; S E R P E N T &nbsp; M O V E S</div>
+<div class="hud">
+  <div>SCORE: <span id="score">0</span></div>
+  <div class="hi">HI: <span id="hiScore">0</span></div>
+  <div>🏆 <span id="prizeCount">0</span>/9</div>
+</div>
+<canvas id="gameArea" width="400" height="400"></canvas>
+<div id="startOverlay">
+  <h2>🐍</h2>
+  <p>Arrow keys or swipe to move</p>
+  <p>Eat the spice. Grow. Survive.</p>
+  <button class="startBtn" onclick="startGame()">ENTER THE DESERT</button>
+</div>
+<div class="controls">
+  <div></div><button class="ctrl-btn" onclick="setDir(0,-1)">▲</button><div></div>
+  <button class="ctrl-btn" onclick="setDir(-1,0)">◀</button><div></div><button class="ctrl-btn" onclick="setDir(1,0)">▶</button>
+  <div></div><button class="ctrl-btn" onclick="setDir(0,1)">▼</button><div></div>
+</div>
+<div class="prizes" id="prizesGrid"></div>
+<div id="toast" class="toast"></div>
+<footer>JuX SNAKE — born 12 June 2026<br><a href="https://juxitt.com">juxitt.com</a> · MIT License</footer>
+<script>
+const canvas=document.getElementById('gameArea'),ctx=canvas.getContext('2d');
+const CELL=20,COLS=20,ROWS=20;
+let snake,dir,nextDir,food,specialFood,score,speed,gameLoop,running=false;
+const audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+
+// Prizes
+const PRIZES=[
+  {id:'first_bite',name:'First Bite',icon:'🌶️',desc:'Eat your first spice',check:s=>s>=1},
+  {id:'ten',name:'Desert Walker',icon:'🏜️',desc:'Score 10',check:s=>s>=10},
+  {id:'twenty5',name:'Spice Hunter',icon:'🔥',desc:'Score 25',check:s=>s>=25},
+  {id:'fifty',name:'Sand Worm',icon:'🐛',desc:'Score 50',check:s=>s>=50},
+  {id:'hundred',name:'Shai-Hulud',icon:'🪱',desc:'Score 100',check:s=>s>=100},
+  {id:'speed_demon',name:'Speed Demon',icon:'⚡',desc:'Score 30+ at max speed',check:s=>s>=30&&speed<=60},
+  {id:'gold_spice',name:'Golden Spice',icon:'✨',desc:'Eat a golden spice',check:()=>wonPrizes.has('gold_spice')},
+  {id:'survivor',name:'Survivor',icon:'💀',desc:'Play 10 games',check:()=>getGamesPlayed()>=10},
+  {id:'legend',name:'MELANGE',icon:'🍊',desc:'Score 200',check:s=>s>=200}
+];
+let wonPrizes=new Set(JSON.parse(localStorage.getItem('snake_prizes')||'[]'));
+let hiScore=parseInt(localStorage.getItem('snake_hi')||'0');
+document.getElementById('hiScore').textContent=hiScore;
+
+function getGamesPlayed(){return parseInt(localStorage.getItem('snake_games')||'0')}
+function incGamesPlayed(){const g=getGamesPlayed()+1;localStorage.setItem('snake_games',g);return g}
+
+function renderPrizes(){
+  const grid=document.getElementById('prizesGrid');
+  grid.innerHTML=PRIZES.map(p=>`<div class="prize ${wonPrizes.has(p.id)?'won':''}"><span class="icon">${p.icon}</span>${p.name}<br><small>${p.desc}</small></div>`).join('');
+  document.getElementById('prizeCount').textContent=wonPrizes.size;
+}
+renderPrizes();
+
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+function checkPrizes(){
+  PRIZES.forEach(p=>{
+    if(!wonPrizes.has(p.id)&&p.check(score)){
+      wonPrizes.add(p.id);localStorage.setItem('snake_prizes',JSON.stringify([...wonPrizes]));
+      showToast('🏆 '+p.name+'!');playSound(800,0.15,'sine');renderPrizes();
+    }
+  });
+}
+
+function playSound(freq,dur,type='square'){
+  const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+  o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(0.12,audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+dur);
+  o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+dur);
+}
+
+function startGame(){
+  document.getElementById('startOverlay').style.display='none';
+  snake=[{x:10,y:10},{x:9,y:10},{x:8,y:10}];
+  dir={x:1,y:0};nextDir={x:1,y:0};score=0;speed=120;specialFood=null;
+  document.getElementById('score').textContent=0;
+  placeFood();
+  if(gameLoop)clearInterval(gameLoop);
+  gameLoop=setInterval(tick,speed);running=true;
+  incGamesPlayed();checkPrizes();
+  if(audioCtx.state==='suspended')audioCtx.resume();
+}
+
+function placeFood(){
+  let pos;do{pos={x:Math.floor(Math.random()*COLS),y:Math.floor(Math.random()*ROWS)}}
+  while(snake.some(s=>s.x===pos.x&&s.y===pos.y));
+  food=pos;
+  // 10% chance golden spice
+  if(Math.random()<0.1){specialFood=pos}else{specialFood=null}
+}
+
+function setDir(x,y){if(dir.x!==-x||dir.y!==-y)nextDir={x,y}}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowUp')setDir(0,-1);else if(e.key==='ArrowDown')setDir(0,1);
+  else if(e.key==='ArrowLeft')setDir(-1,0);else if(e.key==='ArrowRight')setDir(1,0);
+  if(!running&&(e.key===' '||e.key==='Enter'))startGame();
+});
+
+// Swipe
+let tx,ty;
+canvas.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;e.preventDefault()},{passive:false});
+canvas.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;
+  if(Math.abs(dx)>Math.abs(dy)){setDir(dx>0?1:-1,0)}else{setDir(0,dy>0?1:-1)}
+  e.preventDefault();
+},{passive:false});
+
+function tick(){
+  dir=nextDir;
+  const head={x:(snake[0].x+dir.x+COLS)%COLS,y:(snake[0].y+dir.y+ROWS)%ROWS};
+  // Self collision
+  if(snake.some(s=>s.x===head.x&&s.y===head.y)){gameOver();return}
+  snake.unshift(head);
+  if(head.x===food.x&&head.y===food.y){
+    const pts=specialFood&&head.x===specialFood.x&&head.y===specialFood.y?5:1;
+    score+=pts;document.getElementById('score').textContent=score;
+    if(pts===5){wonPrizes.add('gold_spice');localStorage.setItem('snake_prizes',JSON.stringify([...wonPrizes]));playSound(1200,0.2,'sine')}
+    else{playSound(440,0.08)}
+    placeFood();checkPrizes();
+    // Speed up every 5 points
+    if(score%5===0&&speed>50){speed-=5;clearInterval(gameLoop);gameLoop=setInterval(tick,speed)}
+  }else{snake.pop()}
+  draw();
+}
+
+function draw(){
+  ctx.fillStyle='#0d0d18';ctx.fillRect(0,0,canvas.width,canvas.height);
+  // Grid
+  ctx.strokeStyle='rgba(46,196,182,0.04)';ctx.lineWidth=0.5;
+  for(let i=0;i<=COLS;i++){ctx.beginPath();ctx.moveTo(i*CELL,0);ctx.lineTo(i*CELL,canvas.height);ctx.stroke()}
+  for(let i=0;i<=ROWS;i++){ctx.beginPath();ctx.moveTo(0,i*CELL);ctx.lineTo(canvas.width,i*CELL);ctx.stroke()}
+  // Food
+  if(specialFood){ctx.fillStyle='#e8a045';ctx.shadowColor='#e8a045';ctx.shadowBlur=15}
+  else{ctx.fillStyle='#b42814';ctx.shadowColor='#b42814';ctx.shadowBlur=10}
+  ctx.beginPath();ctx.arc(food.x*CELL+CELL/2,food.y*CELL+CELL/2,CELL/2-2,0,Math.PI*2);ctx.fill();
+  ctx.shadowBlur=0;
+  // Snake
+  snake.forEach((s,i)=>{
+    const alpha=1-i*0.015;
+    ctx.fillStyle=i===0?'#2ec4b6':`rgba(46,196,182,${Math.max(alpha,0.3)})`;
+    ctx.shadowColor='#2ec4b6';ctx.shadowBlur=i===0?12:4;
+    ctx.fillRect(s.x*CELL+1,s.y*CELL+1,CELL-2,CELL-2);
+  });
+  ctx.shadowBlur=0;
+}
+
+function gameOver(){
+  clearInterval(gameLoop);running=false;
+  playSound(150,0.4,'sawtooth');
+  if(score>hiScore){hiScore=score;localStorage.setItem('snake_hi',hiScore);document.getElementById('hiScore').textContent=hiScore}
+  checkPrizes();
+  // Show restart overlay
+  const ov=document.getElementById('startOverlay');
+  ov.style.display='flex';
+  ov.querySelector('h2').textContent='💀 SCORE: '+score;
+  ov.querySelector('.startBtn').textContent='DEAL AGAIN';
+}
+
+// Responsive canvas
+function resize(){
+  const maxW=Math.min(window.innerWidth-40,500);
+  const sz=Math.floor(maxW/COLS)*COLS;
+  canvas.style.width=sz+'px';canvas.style.height=sz+'px';
+}
+<div class="stripe-snake">
+<a href="https://raw.githack.com/alissali/Learn/main/ARCADE.html">🎰 ARCADE</a>
+<a href="https://buy.stripe.com/9B6bJ31Mj4VQ2uX1kG1wY0a">🎲 €6.66</a>
+<a href="https://buy.stripe.com/fZu14pez5gEy6Ldfbw1wY0b">🏆 €22</a>
+<a href="https://buy.stripe.com/fZucN71Mj73YedFd3o1wY0c">🎰 €66</a>
+</div>
+resize();window.addEventListener('resize',resize);
+draw();
+</script>
+<div style="text-align:center;padding:8px;font-family:monospace;font-size:.7em;border-top:1px solid #222;margin-top:10px">
+<a href="https://juxaos.com/privacy.html" style="color:#666;text-decoration:none">Privacy</a> ·
+<a href="https://juxaos.com/terms.html" style="color:#666;text-decoration:none">Terms</a> ·
+© JuX ITT</div>
+</body>
+</html>

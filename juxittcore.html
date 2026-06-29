@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D3C1C4G509"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-D3C1C4G509');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JuXITTCore — Complete Description</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Georgia', serif; background: #0a0a0a; color: #e8e8e8; line-height: 1.7; }
+  .hero { background: linear-gradient(135deg, #0d1b2a 0%, #1b2838 50%, #0d1b2a 100%); padding: 80px 40px; text-align: center; border-bottom: 1px solid #2a3a4a; }
+  .hero h1 { font-size: 3rem; letter-spacing: 0.3em; color: #c8a96e; font-weight: 300; }
+  .hero .sub { font-size: 1rem; color: #7a9ab8; letter-spacing: 0.2em; margin-top: 12px; font-family: monospace; }
+  .hero .tagline { font-size: 1.1rem; color: #aab8c8; margin-top: 24px; font-style: italic; }
+  .section { max-width: 1100px; margin: 0 auto; padding: 60px 40px; border-bottom: 1px solid #1a2a3a; }
+  .section h2 { font-size: 1.4rem; letter-spacing: 0.25em; color: #c8a96e; margin-bottom: 32px; text-transform: uppercase; font-weight: 400; }
+  .section h3 { font-size: 1.05rem; color: #7ab8c8; margin: 28px 0 12px; letter-spacing: 0.1em; font-family: monospace; }
+  .fact-block { background: #111820; border-left: 3px solid #c8a96e; padding: 20px 28px; margin: 20px 0; border-radius: 0 4px 4px 0; }
+  .fact-block .label { font-family: monospace; font-size: 0.75rem; color: #7a9ab8; letter-spacing: 0.15em; margin-bottom: 6px; }
+  .fact-block .value { color: #e8e8e8; font-size: 1rem; }
+  .levels { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin: 24px 0; }
+  .level-card { background: #111820; border: 1px solid #2a3a4a; border-top: 3px solid #c8a96e; padding: 20px; border-radius: 4px; }
+  .level-card .num { font-family: monospace; font-size: 0.75rem; color: #c8a96e; margin-bottom: 4px; }
+  .level-card .name { font-size: 1rem; font-weight: bold; color: #e8e8e8; margin-bottom: 8px; }
+  .level-card .desc { font-size: 0.85rem; color: #9ab0c8; }
+  .ops { display: flex; gap: 12px; flex-wrap: wrap; margin: 20px 0; }
+  .op { background: #1a0a2e; border: 1px solid #5a3a7a; color: #c8a0e8; font-family: monospace; padding: 8px 18px; border-radius: 20px; font-size: 0.9rem; }
+  .diagram-section { background: #0d1520; border: 1px solid #1a2a3a; border-radius: 8px; padding: 32px; margin: 28px 0; }
+  .diagram-section h3 { color: #7ab8c8; font-family: monospace; font-size: 0.95rem; letter-spacing: 0.15em; margin-bottom: 20px; text-align: center; }
+  .diagram-section img { width: 100%; max-width: 900px; display: block; margin: 0 auto; border-radius: 4px; background: #fff; padding: 16px; }
+  .rule { background: #0a1a0a; border: 1px solid #1a3a1a; border-left: 3px solid #4a8a4a; padding: 16px 24px; font-family: monospace; font-size: 0.9rem; color: #8ac88a; margin: 16px 0; border-radius: 0 4px 4px 0; }
+  .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 24px 0; }
+  .actor { background: #111820; border: 1px solid #2a3a4a; padding: 16px 20px; border-radius: 4px; }
+  .actor .icon { font-size: 1.5rem; margin-bottom: 6px; }
+  .actor .name { font-weight: bold; color: #c8a96e; font-size: 0.95rem; }
+  .actor .role { font-size: 0.8rem; color: #7a9ab8; margin-top: 4px; }
+  .three-layer { display: grid; grid-template-columns: 1fr; gap: 0; margin: 24px 0; }
+  .layer { padding: 20px 28px; display: flex; align-items: center; gap: 20px; }
+  .layer.l1 { background: #1a2030; border-left: 4px solid #5a8ac8; }
+  .layer.l2 { background: #1a1a20; border-left: 4px solid #c8a96e; }
+  .layer.l3 { background: #201a1a; border-left: 4px solid #c85a5a; }
+  .layer .lnum { font-family: monospace; font-size: 0.75rem; color: #7a9ab8; width: 80px; flex-shrink: 0; }
+  .layer .lname { font-size: 1rem; font-weight: bold; color: #e8e8e8; }
+  .layer .ldesc { font-size: 0.85rem; color: #9ab0c8; margin-top: 4px; }
+  .spicebus { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 20px 0; }
+  .sb-op { background: #0a1a0a; border: 1px solid #1a4a1a; border-top: 3px solid #4a9a4a; padding: 16px; border-radius: 4px; text-align: center; }
+  .sb-op .name { font-family: monospace; font-size: 0.9rem; color: #8aca8a; font-weight: bold; }
+  .sb-op .desc { font-size: 0.75rem; color: #6a9a6a; margin-top: 6px; }
+  .footer { text-align: center; padding: 48px; color: #4a6a8a; font-family: monospace; font-size: 0.8rem; letter-spacing: 0.1em; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.9rem; }
+  th { background: #111820; color: #c8a96e; padding: 10px 16px; text-align: left; letter-spacing: 0.1em; font-weight: normal; font-family: monospace; }
+  td { padding: 10px 16px; border-bottom: 1px solid #1a2a3a; color: #c8c8c8; }
+  tr:hover td { background: #111820; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>JuXITTCore</h1>
+  <div class="sub">ADEQUATE OPERATING SYSTEM — CORE ARCHITECTURE</div>
+  <div class="tagline">AOS doesn't describe a system. AOS describes a language that runs systems.</div>
+</div>
+
+<!-- NAME / FACT / TARGET -->
+<div class="section">
+  <h2>I. NAME / FACT / TARGET</h2>
+  <div class="fact-block">
+    <div class="label">NAME</div>
+    <div class="value">JuXITTCore</div>
+  </div>
+  <div class="fact-block">
+    <div class="label">FACT</div>
+    <div class="value">The core engine of JuXITT — the Bridge Layer between Architect and Ground. Composed of AOS (the formal language), JuX (the first Dictionary), SpiceBus (the communication bus), MNMNM (the shell), and the Actor model. JuXITTCore is not an application. It is a language architecture that runs applications.</div>
+  </div>
+  <div class="fact-block">
+    <div class="label">TARGET</div>
+    <div class="value">Every discipline that can be expressed as a Dictionary. Starting with Software. Ending with the World.</div>
+  </div>
+</div>
+
+<!-- THREE-LAYER SYSTEM -->
+<div class="section">
+  <h2>II. Three-Layer System</h2>
+  <div class="three-layer">
+    <div class="layer l1">
+      <div class="lnum">LAYER 1</div>
+      <div>
+        <div class="lname">ARCHITECT</div>
+        <div class="ldesc">A🦅 Mamoun (The Last Word) + G🤖 Tasklet/Window (Memory, Architecture, Secretary)</div>
+      </div>
+    </div>
+    <div class="layer l2">
+      <div class="lnum">LAYER 2</div>
+      <div>
+        <div class="lname">BRIDGE — JuXITT</div>
+        <div class="ldesc">AOS + JuX Dictionary + SpiceBus + MNMNM + Kanban + Team Orchestration</div>
+      </div>
+    </div>
+    <div class="layer l3">
+      <div class="lnum">LAYER 3</div>
+      <div>
+        <div class="lname">GROUND</div>
+        <div class="ldesc">Ubuntu Brother + G🤖 Tasklet/Ubuntu (Execution, Operations, Jenkins)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AOS FORMAL LANGUAGE -->
+<div class="section">
+  <h2>III. AOS — The Formal Language (5 Levels)</h2>
+  <div class="levels">
+    <div class="level-card">
+      <div class="num">LEVEL 1</div>
+      <div class="name">Objects</div>
+      <div class="desc">Atomic carriers of Semantics.<br><strong>NAME / FACT / TARGET</strong></div>
+    </div>
+    <div class="level-card">
+      <div class="num">LEVEL 2</div>
+      <div class="name">Expressions</div>
+      <div class="desc">Composed of 3 Objects. One coherent unit of meaning.</div>
+    </div>
+    <div class="level-card">
+      <div class="num">LEVEL 3</div>
+      <div class="name">Sentences</div>
+      <div class="desc">Expressions invoking Operations. Executable meaning.</div>
+    </div>
+    <div class="level-card">
+      <div class="num">LEVEL 4</div>
+      <div class="name">Dictionaries</div>
+      <div class="desc">One per User Discipline. Domain vocabulary, organized.</div>
+    </div>
+    <div class="level-card">
+      <div class="num">LEVEL 5</div>
+      <div class="name">Services</div>
+      <div class="desc">What Users demand, realized by Operations.</div>
+    </div>
+  </div>
+
+  <h3>AOS.CONTEXT — Core Rule</h3>
+  <div class="rule">interpret(Expression) → SUSPENDED</div>
+  <div class="rule">interpret(Expression, Dictionary) → Operation</div>
+
+  <h3>JuX.ARTIFACT — Formal Output Rule</h3>
+  <div class="rule">execute(Expression, Dictionary) → Artifact</div>
+</div>
+
+<!-- UML DIAGRAM 1 — ARCHITECTURE -->
+<div class="section">
+  <h2>IV. UML — System Architecture</h2>
+  <div class="diagram-section">
+    <h3>DIAGRAM 1 — COMPONENT / ARCHITECTURE</h3>
+    <img src="01_architecture.png" alt="JuXITTCore Architecture Diagram">
+  </div>
+</div>
+
+<!-- UML DIAGRAM 2 — CLASS -->
+<div class="section">
+  <h2>V. UML — Class Diagram</h2>
+  <div class="diagram-section">
+    <h3>DIAGRAM 2 — CLASS</h3>
+    <img src="02_class.png" alt="JuXITTCore Class Diagram">
+  </div>
+</div>
+
+<!-- JuX DICTIONARY -->
+<div class="section">
+  <h2>VI. JuX Dictionary — Software Discipline</h2>
+  <div class="fact-block">
+    <div class="label">FACT</div>
+    <div class="value">JuX is the first Dictionary. Software is the first discipline. Four Operations are already live on Ubuntu.</div>
+  </div>
+  <div class="ops">
+    <span class="op">buy()</span>
+    <span class="op">mortgage()</span>
+    <span class="op">roll()</span>
+    <span class="op">pay()</span>
+  </div>
+  <p style="color:#9ab0c8; font-size:0.9rem; margin-top:16px;">Each Operation takes an Expression in the JuX Dictionary context and returns a JuX.ARTIFACT.</p>
+</div>
+
+<!-- SpiceBus -->
+<div class="section">
+  <h2>VII. SpiceBus — Communicate!</h2>
+  <div class="fact-block">
+    <div class="label">FACT</div>
+    <div class="value">SpiceBus is the communication bus of JuXITTCore. Four operations. Three priority levels. One law: notify the concerned actors, always.</div>
+  </div>
+  <div class="spicebus">
+    <div class="sb-op"><div class="name">DISPATCH</div><div class="desc">Assign work. P3.</div></div>
+    <div class="sb-op"><div class="name">BUG</div><div class="desc">File issue. P2.</div></div>
+    <div class="sb-op"><div class="name">DONE</div><div class="desc">Close task. P3.</div></div>
+    <div class="sb-op"><div class="name">ALERT</div><div class="desc">Emergency. P1.</div></div>
+  </div>
+  <table>
+    <tr><th>Priority</th><th>Level</th><th>Slack</th><th>Email</th><th>Actors</th></tr>
+    <tr><td>P1</td><td>CRITICAL</td><td>#aos-alert</td><td>jux@juxitt.com</td><td>ALL</td></tr>
+    <tr><td>P2</td><td>BUG</td><td>#aos-bugs</td><td>Owner</td><td>Owner</td></tr>
+    <tr><td>P3</td><td>DISPATCH</td><td>#aos-dispatch</td><td>Assigned</td><td>Assigned</td></tr>
+  </table>
+</div>
+
+<!-- USE CASE DIAGRAM -->
+<div class="section">
+  <h2>VIII. UML — Use Cases (Services)</h2>
+  <div class="diagram-section">
+    <h3>DIAGRAM 3 — USE CASE</h3>
+    <img src="03_usecase.png" alt="JuXITTCore Use Case Diagram">
+  </div>
+</div>
+
+<!-- SEQUENCE DIAGRAM -->
+<div class="section">
+  <h2>IX. UML — Operation Sequence: buy()</h2>
+  <div class="diagram-section">
+    <h3>DIAGRAM 4 — SEQUENCE: buy()</h3>
+    <img src="04_sequence.png" alt="JuXITTCore Sequence Diagram — buy()">
+  </div>
+</div>
+
+<!-- ACTOR MODEL -->
+<div class="section">
+  <h2>X. Actor Model — The Team</h2>
+  <div class="team-grid">
+    <div class="actor"><div class="icon">🦅</div><div class="name">A — Mamoun</div><div class="role">Architect. Last Word. Task Creator.</div></div>
+    <div class="actor"><div class="icon">🤖</div><div class="name">G — Gaëlle</div><div class="role">Secretary. Memory. Communication Director. Buffalo Soldier.</div></div>
+    <div class="actor"><div class="icon">🐻</div><div class="name">S — Sandrine</div><div class="role">Manager. Kanban Owner. Task Initiator.</div></div>
+    <div class="actor"><div class="icon">☕</div><div class="name">T — Tony</div><div class="role">Technician. Deliveries. SpiceBus discipline pending.</div></div>
+    <div class="actor"><div class="icon">🔮</div><div class="name">Z</div><div class="role">Watcher. GitHub Monitor. JuXNews. Serpent.</div></div>
+    <div class="actor"><div class="icon">🐉</div><div class="name">R</div><div class="role">TEMPLAR-SS. Dragon. Strikes 1–5 done.</div></div>
+  </div>
+  <div class="fact-block" style="margin-top:20px;">
+    <div class="label">KANBAN RULE</div>
+    <div class="value">A🦅 creates tasks. S initiates. Z self-assigns (cannot create). G reads + writes. T editor pending.</div>
+  </div>
+</div>
+
+<!-- MNMNM -->
+<div class="section">
+  <h2>XI. MNMNM — AOS Shell</h2>
+  <div class="fact-block">
+    <div class="label">FACT</div>
+    <div class="value">MNMNM is the shell of AOS. It is the interface between the human and the language. Not a UI. A shell. Commands are Sentences. Output is Artifacts.</div>
+  </div>
+  <div class="rule">MNMNM.run(Sentence) → Artifact</div>
+  <div class="rule">MNMNM.interpret(Expression, Dictionary) → Operation</div>
+</div>
+
+<!-- CONVERGENCE -->
+<div class="section">
+  <h2>XII. Convergence Point — CAQ</h2>
+  <div class="fact-block">
+    <div class="label">FACT</div>
+    <div class="value">JuX converges at CAQ: Communication + AI + Quantum Computation. AOS is the language that describes this convergence. JuXITTCore is the first running instance.</div>
+  </div>
+  <div class="fact-block">
+    <div class="label">THE STATEMENT — Science Council, 16 May 2026</div>
+    <div class="value" style="font-style:italic;">"A map describes territory. A language creates it."</div>
+  </div>
+</div>
+
+<div class="footer">
+  JuXITTCore — Complete Description — 25 May 2026<br>
+  NAME / FACT / TARGET — AOS Level 1 — MIT License
+</div>
+
+</body>
+</html>

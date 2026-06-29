@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D3C1C4G509"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-D3C1C4G509');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Open Graph -->
+    <meta property="og:title" content="AOS Specification — Formal Language Architecture">
+    <meta property="og:description" content="Five levels: Objects, Expressions, Sentences, Dictionaries, Services. The complete AOS specification.">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="AOS Specification — Formal Language Architecture">
+    <meta name="twitter:description" content="Five levels: Objects, Expressions, Sentences, Dictionaries, Services. The complete AOS specification.">
+    <meta name="description" content="Five levels: Objects, Expressions, Sentences, Dictionaries, Services. The complete AOS specification.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzBhMGEwZiIvPgogIDxwb2x5Z29uIHBvaW50cz0iMTYsMiAzMCwxNiAxNiwzMCAyLDE2IiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZykiIHN0cm9rZS13aWR0aD0iMiIvPgogIDx0ZXh0IHg9IjE2IiB5PSIyMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmNjYwMCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTIiPko8L3RleHQ+CiAgPGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmNjYwMCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFhMWFmZiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPgo8L3N2Zz4=">
+<title>AOS — Formal Specification | JuXITT</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --opal-void: #010206;
+  --opal-deep: #03050c;
+  --opal-teal: #2ec4b6;
+  --opal-amber: #e8a045;
+  --opal-violet: #7b4fa6;
+  --opal-gold: #f5c842;
+  --opal-smoke: #667788;
+  --opal-frost: #b8c8d4;
+  --aos-diamond: #a0c4e0;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--opal-void);
+  color: var(--opal-frost);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+/* COVER */
+.cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 60px 40px;
+  border-bottom: 1px solid var(--opal-teal);
+  position: relative;
+}
+
+.cover-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  color: var(--opal-smoke);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+}
+
+.cover-title {
+  font-size: clamp(52px, 10vw, 96px);
+  font-weight: 700;
+  color: var(--opal-teal);
+  letter-spacing: -2px;
+  line-height: 1;
+  margin-bottom: 16px;
+}
+
+.cover-sub {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 20px;
+  color: var(--opal-amber);
+  margin-bottom: 48px;
+}
+
+.cover-nft {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--opal-smoke);
+  border: 1px solid var(--opal-smoke);
+  max-width: 640px;
+  width: 100%;
+  margin: 0 auto 60px;
+}
+
+.nft-cell {
+  background: var(--opal-deep);
+  padding: 24px 20px;
+  text-align: center;
+}
+
+.nft-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--opal-smoke);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.nft-value {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--opal-frost);
+}
+
+.cover-meta {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  color: var(--opal-smoke);
+}
+
+/* SECTIONS */
+section {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 80px 40px;
+  border-bottom: 1px solid #0a0f1a;
+}
+
+.section-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--opal-teal);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+h2 {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--opal-frost);
+  margin-bottom: 32px;
+  line-height: 1.2;
+}
+
+h3 {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--opal-amber);
+  margin: 40px 0 16px;
+}
+
+p {
+  color: var(--opal-frost);
+  margin-bottom: 20px;
+  font-size: 18px;
+}
+
+/* FACT BLOCK */
+.fact-block {
+  background: var(--opal-deep);
+  border-left: 3px solid var(--opal-teal);
+  padding: 20px 28px;
+  margin: 24px 0;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 15px;
+}
+
+.fact-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 8px;
+}
+
+.fact-row:last-child { margin-bottom: 0; }
+
+.fact-key {
+  color: var(--opal-smoke);
+  min-width: 80px;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding-top: 2px;
+}
+
+.fact-val {
+  color: var(--opal-frost);
+}
+
+/* LEVELS */
+.levels {
+  counter-reset: level;
+  list-style: none;
+  margin: 24px 0;
+}
+
+.level-item {
+  display: flex;
+  gap: 24px;
+  padding: 20px 0;
+  border-bottom: 1px solid #0a0f1a;
+  align-items: flex-start;
+}
+
+.level-item:last-child { border-bottom: none; }
+
+.level-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--opal-teal);
+  min-width: 48px;
+  line-height: 1;
+  padding-top: 4px;
+}
+
+.level-content {}
+
+.level-name {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--opal-frost);
+  margin-bottom: 6px;
+}
+
+.level-desc {
+  font-size: 16px;
+  color: var(--opal-smoke);
+  margin: 0;
+}
+
+/* FORMULA */
+.formula {
+  background: var(--opal-deep);
+  border: 1px solid var(--opal-violet);
+  padding: 28px 32px;
+  margin: 32px 0;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 18px;
+  color: var(--opal-gold);
+  text-align: center;
+}
+
+/* 7 FACTS */
+.facts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 2px;
+  background: #0a0f1a;
+  margin: 32px 0;
+}
+
+.fact-card {
+  background: var(--opal-deep);
+  padding: 28px 24px;
+}
+
+.fact-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--opal-smoke);
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.fact-name {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--opal-teal);
+}
+
+/* OPAL PALETTE */
+.palette-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 2px;
+  background: #0a0f1a;
+  margin: 32px 0;
+}
+
+.palette-swatch {
+  padding: 32px 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.swatch-name {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.swatch-hex {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.swatch-role {
+  font-size: 13px;
+  opacity: 0.6;
+}
+
+/* PRICING */
+.pricing-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 32px 0;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.pricing-table th {
+  text-align: left;
+  padding: 12px 20px;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--opal-smoke);
+  border-bottom: 1px solid #0a0f1a;
+}
+
+.pricing-table td {
+  padding: 16px 20px;
+  border-bottom: 1px solid #0a0f1a;
+  font-size: 16px;
+}
+
+.pricing-table tr:last-child td { border-bottom: none; }
+
+.tier-free { color: var(--opal-teal); }
+.tier-name { color: var(--opal-frost); }
+.tier-price { color: var(--opal-gold); font-weight: 600; }
+
+/* TEAM */
+.team-grid {
+  display: grid;
+  gap: 2px;
+  background: #0a0f1a;
+  margin: 32px 0;
+}
+
+.team-card {
+  background: var(--opal-deep);
+  padding: 24px 28px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.team-emoji {
+  font-size: 32px;
+  line-height: 1;
+}
+
+.team-info {}
+
+.team-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--opal-frost);
+  margin-bottom: 6px;
+}
+
+.team-role {
+  font-size: 15px;
+  color: var(--opal-smoke);
+  margin: 0;
+}
+
+/* DICTIONARIES */
+.dict-list {
+  list-style: none;
+  margin: 24px 0;
+}
+
+.dict-item {
+  display: flex;
+  gap: 20px;
+  padding: 16px 0;
+  border-bottom: 1px solid #0a0f1a;
+}
+
+.dict-item:last-child { border-bottom: none; }
+
+.dict-name {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 14px;
+  color: var(--opal-teal);
+  min-width: 240px;
+}
+
+.dict-domain {
+  font-size: 16px;
+  color: var(--opal-smoke);
+}
+
+/* NOTIFY TABLE */
+.notify-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 32px 0;
+}
+
+.notify-table th {
+  text-align: left;
+  padding: 12px 20px;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--opal-smoke);
+  border-bottom: 1px solid #0a0f1a;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.notify-table td {
+  padding: 16px 20px;
+  border-bottom: 1px solid #0a0f1a;
+  font-size: 15px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.p1 { color: #e8544a; }
+.p2 { color: var(--opal-amber); }
+.p3 { color: var(--opal-teal); }
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 60px 40px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  color: var(--opal-smoke);
+}
+
+footer a {
+  color: var(--opal-teal);
+  text-decoration: none;
+}
+
+.divider {
+  width: 60px;
+  height: 1px;
+  background: var(--opal-teal);
+  margin: 0 auto 40px;
+}
+
+@media (max-width: 600px) {
+  .cover-nft { grid-template-columns: 1fr; }
+  .facts-grid { grid-template-columns: 1fr 1fr; }
+  .palette-grid { grid-template-columns: 1fr 1fr; }
+  section { padding: 60px 24px; }
+  .dict-item { flex-direction: column; gap: 4px; }
+  .dict-name { min-width: unset; }
+}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-label">Formal Specification — SARL Presentation — 13 May 2026</div>
+  <div class="cover-title">AOS</div>
+  <div class="cover-sub">Adequate Operating System</div>
+
+  <div class="cover-nft">
+    <div class="nft-cell">
+      <div class="nft-label">Name</div>
+      <div class="nft-value">AOS</div>
+    </div>
+    <div class="nft-cell">
+      <div class="nft-label">Fact</div>
+      <div class="nft-value">Formal Language Architecture</div>
+    </div>
+    <div class="nft-cell">
+      <div class="nft-label">Target</div>
+      <div class="nft-value">Every Discipline</div>
+    </div>
+  </div>
+
+  <div class="cover-meta">
+    JuXITT &nbsp;·&nbsp; juxitt.com &nbsp;·&nbsp; MIT License &nbsp;·&nbsp; Open. Free. Forever.
+  </div>
+</div>
+
+<!-- SECTION 1 — THE VISION -->
+<section>
+  <div class="section-tag">01 — Vision</div>
+  <h2>AOS doesn't describe a system.<br>AOS describes a language that runs systems.</h2>
+
+  <p>Every discipline — Software, Medicine, Law, Engineering — operates on the same cognitive skeleton: a Name, a Fact, and a Target. AOS formalizes this skeleton into a universal architecture.</p>
+
+  <p>One language. Any discipline. One rule: always in context.</p>
+
+  <div class="fact-block">
+    <div class="fact-row">
+      <span class="fact-key">NAME</span>
+      <span class="fact-val">AOS — Adequate Operating System</span>
+    </div>
+    <div class="fact-row">
+      <span class="fact-key">FACT</span>
+      <span class="fact-val">A formal language architecture. Five levels, strict hierarchy.</span>
+    </div>
+    <div class="fact-row">
+      <span class="fact-key">TARGET</span>
+      <span class="fact-val">Every discipline that names, reasons, and produces.</span>
+    </div>
+    <div class="fact-row">
+      <span class="fact-key">LICENSE</span>
+      <span class="fact-val">MIT — Open. Free. Forever.</span>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2 — THE 7 FACTS -->
+<section>
+  <div class="section-tag">02 — Coherent Vision</div>
+  <h2>The 7 Facts of JuX</h2>
+
+  <p>The complete epistemological chain — from raw data to operational reality.</p>
+
+  <div class="facts-grid">
+    <div class="fact-card">
+      <div class="fact-num">01</div>
+      <div class="fact-name">TRUTH</div>
+    </div>
+    <div class="fact-card">
+      <div class="fact-num">02</div>
+      <div class="fact-name">DEDUCTION</div>
+    </div>
+    <div class="fact-card">
+      <div class="fact-num">03</div>
+      <div class="fact-name">REASON</div>
+    </div>
+    <div class="fact-card">
+      <div class="fact-num">04</div>
+      <div class="fact-name">MOTIVATION</div>
+    </div>
+    <div class="fact-card">
+      <div class="fact-num">05</div>
+      <div class="fact-name">FUNCTIONAL VIEW</div>
+    </div>
+    <div class="fact-card">
+      <div class="fact-num">06</div>
+      <div class="fact-name">SYNTHESIS</div>
+    </div>
+    <div class="fact-card">
+      <div class="fact-num">07</div>
+      <div class="fact-name">PRODUCTION</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3 — AOS ARCHITECTURE -->
+<section>
+  <div class="section-tag">03 — Architecture</div>
+  <h2>Five Levels — Strict Hierarchy</h2>
+
+  <p>AOS is not a framework. It is a formal language with five levels. Each level is precisely defined. Each level inherits from the one below.</p>
+
+  <ul class="levels">
+    <li class="level-item">
+      <span class="level-num">1</span>
+      <div class="level-content">
+        <div class="level-name">Objects (3) — NAME / FACT / TARGET</div>
+        <p class="level-desc">Atomic carriers of semantics. The irreducible minimum. Every expression begins here.</p>
+      </div>
+    </li>
+    <li class="level-item">
+      <span class="level-num">2</span>
+      <div class="level-content">
+        <div class="level-name">Expressions</div>
+        <p class="level-desc">Composed of three Objects — one coherent unit of meaning.</p>
+      </div>
+    </li>
+    <li class="level-item">
+      <span class="level-num">3</span>
+      <div class="level-content">
+        <div class="level-name">Sentences</div>
+        <p class="level-desc">Expressions invoking Operations — executable meaning.</p>
+      </div>
+    </li>
+    <li class="level-item">
+      <span class="level-num">4</span>
+      <div class="level-content">
+        <div class="level-name">Dictionaries</div>
+        <p class="level-desc">One per User Discipline — the domain vocabulary, organized. The Dictionary IS the Context.</p>
+      </div>
+    </li>
+    <li class="level-item">
+      <span class="level-num">5</span>
+      <div class="level-content">
+        <div class="level-name">Services</div>
+        <p class="level-desc">What Users demand, realized by Operations. The visible output of the system.</p>
+      </div>
+    </li>
+  </ul>
+
+  <h3>The Context Rule — AOS.CONTEXT</h3>
+
+  <p>An Expression has no absolute meaning. Meaning is relative to the active Dictionary.</p>
+
+  <div class="formula">
+    interpret(Expression) → SUSPENDED<br>
+    interpret(Expression, Dictionary) → Operation
+  </div>
+
+  <h3>The Artifact Rule — JuX.ARTIFACT</h3>
+
+  <p>Every discipline produces Artifacts. AOS names them. AOS exposes the Artifact directly — no pipeline.</p>
+
+  <div class="formula">
+    execute(Expression, Dictionary) → Artifact
+  </div>
+</section>
+
+<!-- SECTION 4 — MNMNM -->
+<section>
+  <div class="section-tag">04 — Shell</div>
+  <h2>MNMNM — The AOS Shell</h2>
+
+  <div class="fact-block">
+    <div class="fact-row">
+      <span class="fact-key">NAME</span>
+      <span class="fact-val">MNMNM — Minimum Natural Moves Noting Method</span>
+    </div>
+    <div class="fact-row">
+      <span class="fact-key">FACT</span>
+      <span class="fact-val">Minimum strokes, maximum meaning. Arabic: منمنم — miniature painting.</span>
+    </div>
+    <div class="fact-row">
+      <span class="fact-key">TARGET</span>
+      <span class="fact-val">Every user of AOS.</span>
+    </div>
+  </div>
+
+  <p>MNMNM is the interface to AOS. Not a keyboard shortcut. Not a UI widget. A method of thought — formalized into strokes. The chain is complete:</p>
+
+  <div class="formula">MNMNM → TFL → MIP</div>
+
+  <p>External validation: Textual Frequency Law (TFL) — Lu et al., 2026. Minimum Natural Moves is not a hypothesis. It is a law.</p>
+</section>
+
+<!-- SECTION 5 — DICTIONARIES -->
+<section>
+  <div class="section-tag">05 — Dictionaries</div>
+  <h2>AOS Dictionaries</h2>
+
+  <p>One Dictionary per discipline. All inherit from AOS.MINIMAL — the foundation. JuX IS the first Dictionary: Software discipline. Sentences already written and running.</p>
+
+  <ul class="dict-list">
+    <li class="dict-item">
+      <span class="dict-name">AOS.MINIMAL</span>
+      <span class="dict-domain">Foundation — all others inherit</span>
+    </li>
+    <li class="dict-item">
+      <span class="dict-name">AOS.SOFTWARE (JuX)</span>
+      <span class="dict-domain">Software discipline — buy / mortgage / roll / pay — RUNNING ✅</span>
+    </li>
+    <li class="dict-item">
+      <span class="dict-name">42_DICTIONARY</span>
+      <span class="dict-domain">Soft Story — 8 Expressions — C executable, terminal demo</span>
+    </li>
+    <li class="dict-item">
+      <span class="dict-name">AOS.ARABIC</span>
+      <span class="dict-domain">Linguistics — Root/Pattern/Derivative → NAME/FACT/TARGET</span>
+    </li>
+    <li class="dict-item">
+      <span class="dict-name">AOS.MEDICAL</span>
+      <span class="dict-domain">Symptom to Outcome</span>
+    </li>
+    <li class="dict-item">
+      <span class="dict-name">AOS.ENGINEERING</span>
+      <span class="dict-domain">Requirement to Validated System</span>
+    </li>
+    <li class="dict-item">
+      <span class="dict-name">AOS.LEGAL</span>
+      <span class="dict-domain">Claim to Enforceable Verdict</span>
+    </li>
+    <li class="dict-item">
+      <span class="dict-name">AOS.BUG-MIB</span>
+      <span class="dict-domain">Bug Management — formal registry, immutable entries</span>
+    </li>
+  </ul>
+</section>
+
+<!-- SECTION 6 — OPAL PALETTE -->
+<section>
+  <div class="section-tag">06 — Visual Identity</div>
+  <h2>OPAL — The Palette</h2>
+
+  <p>One palette. All JuX output. OPAL is not decoration — it is the visual projection of AOS architecture.</p>
+
+  <div class="palette-grid">
+    <div class="palette-swatch" style="background:#010206;">
+      <span class="swatch-name" style="color:#2ec4b6;">VOID</span>
+      <span class="swatch-hex" style="color:#667788;">#010206</span>
+      <span class="swatch-role" style="color:#667788;">Background — base</span>
+    </div>
+    <div class="palette-swatch" style="background:#03050c;">
+      <span class="swatch-name" style="color:#2ec4b6;">DEEP</span>
+      <span class="swatch-hex" style="color:#667788;">#03050c</span>
+      <span class="swatch-role" style="color:#667788;">Surface — card</span>
+    </div>
+    <div class="palette-swatch" style="background:#2ec4b6;">
+      <span class="swatch-name" style="color:#010206;">TEAL</span>
+      <span class="swatch-hex" style="color:#010206;">#2ec4b6</span>
+      <span class="swatch-role" style="color:#010206;">Primary — AOS</span>
+    </div>
+    <div class="palette-swatch" style="background:#e8a045;">
+      <span class="swatch-name" style="color:#010206;">AMBER</span>
+      <span class="swatch-hex" style="color:#010206;">#e8a045</span>
+      <span class="swatch-role" style="color:#010206;">Accent — dynamic</span>
+    </div>
+    <div class="palette-swatch" style="background:#7b4fa6;">
+      <span class="swatch-name" style="color:#b8c8d4;">VIOLET</span>
+      <span class="swatch-hex" style="color:#b8c8d4;">#7b4fa6</span>
+      <span class="swatch-role" style="color:#b8c8d4;">Accent — logic</span>
+    </div>
+    <div class="palette-swatch" style="background:#f5c842;">
+      <span class="swatch-name" style="color:#010206;">GOLD</span>
+      <span class="swatch-hex" style="color:#010206;">#f5c842</span>
+      <span class="swatch-role" style="color:#010206;">Accent — formula</span>
+    </div>
+    <div class="palette-swatch" style="background:#667788;">
+      <span class="swatch-name" style="color:#b8c8d4;">SMOKE</span>
+      <span class="swatch-hex" style="color:#b8c8d4;">#667788</span>
+      <span class="swatch-role" style="color:#b8c8d4;">Secondary text</span>
+    </div>
+    <div class="palette-swatch" style="background:#b8c8d4;">
+      <span class="swatch-name" style="color:#010206;">FROST</span>
+      <span class="swatch-hex" style="color:#010206;">#b8c8d4</span>
+      <span class="swatch-role" style="color:#010206;">Primary text</span>
+    </div>
+    <div class="palette-swatch" style="background:#a0c4e0;">
+      <span class="swatch-name" style="color:#010206;">DIAMOND</span>
+      <span class="swatch-hex" style="color:#010206;">#a0c4e0</span>
+      <span class="swatch-role" style="color:#010206;">AOS Diamond</span>
+    </div>
+  </div>
+
+  <p>Fonts: IBM Plex Mono (code / labels) · IBM Plex Sans (prose / UI) · Noto Naskh Arabic (AOS.ARABIC)</p>
+  <p>Base size: 28px — all scales derived.</p>
+</section>
+
+<!-- SECTION 7 — FINANCIAL SPIRAL -->
+<section>
+  <div class="section-tag">07 — Financial Spiral</div>
+  <h2>AOS Pricing</h2>
+
+  <p>AOS is free. It always will be. The spiral begins at zero.</p>
+
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Tier</th>
+        <th>Price</th>
+        <th>Name</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="tier-free">AOS FREE!</td>
+        <td class="tier-price">$0</td>
+        <td class="tier-name">Try Me You'll Love Me!</td>
+      </tr>
+      <tr>
+        <td class="tier-free">AOS 1</td>
+        <td class="tier-price">$20</td>
+        <td class="tier-name">AOS MNMNM Base</td>
+      </tr>
+      <tr>
+        <td class="tier-free">AOS 2</td>
+        <td class="tier-price">+$17</td>
+        <td class="tier-name">MNMNM Shell</td>
+      </tr>
+      <tr>
+        <td class="tier-free">AOS 3</td>
+        <td class="tier-price">+$11</td>
+        <td class="tier-name">MNMNM ↔ Audio/Video</td>
+      </tr>
+      <tr>
+        <td class="tier-free">AOS 4</td>
+        <td class="tier-price">+$3</td>
+        <td class="tier-name">MNMNM → Dynamic Web</td>
+      </tr>
+      <tr>
+        <td class="tier-free">AOS 5+</td>
+        <td class="tier-price">Open</td>
+        <td class="tier-name">MNMNM Universal Interface</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>Payment: Mollie — iDEAL · Bancontact · SEPA · Visa · Mastercard · PayPal · Klarna · Apple Pay · Google Pay</p>
+</section>
+
+<!-- SECTION 8 — LIVE ARTIFACTS -->
+<section>
+  <div class="section-tag">08 — Live Artifacts</div>
+  <h2>Running Now</h2>
+
+  <p>AOS is not a proposal. AOS is running.</p>
+
+  <div class="fact-block">
+    <div class="fact-row">
+      <span class="fact-key">SITE</span>
+      <span class="fact-val"><a href="https://juxitt.com" style="color:var(--opal-teal)">juxitt.com</a></span>
+    </div>
+    <div class="fact-row">
+      <span class="fact-key">NEWS</span>
+      <span class="fact-val"><a href="https://alissali.github.io/AOS/" style="color:var(--opal-teal)">alissali.github.io/AOS</a> — JuXNews LIVE</span>
+    </div>
+    <div class="fact-row">
+      <span class="fact-key">DEMO</span>
+      <span class="fact-val"><a href="https://raw.githack.com/alissali/Learn/main/AOS.42.DEMO.html" style="color:var(--opal-teal)">AOS.42.DEMO.html</a> — Interactive AI Chat</span>
+    </div>
+    <div class="fact-row">
+      <span class="fact-key">C</span>
+      <span class="fact-val"><a href="https://raw.githack.com/alissali/Learn/main/AOS.INACTION.html" style="color:var(--opal-teal)">juxitt.com/in-action</a> — Terminal Proof</span>
+    </div>
+    <div class="fact-row">
+      <span class="fact-key">ARABIC</span>
+      <span class="fact-val"><a href="https://raw.githack.com/alissali/Learn/main/AOS.ARABIC.ENGINE.html" style="color:var(--opal-teal)">AOS.ARABIC.ENGINE.html</a> — Interactive</span>
+    </div>
+    <div class="fact-row">
+      <span class="fact-key">JEUX</span>
+      <span class="fact-val"><a href="http://learn-1-vk8x.onrender.com/" style="color:var(--opal-teal)">learn-1-vk8x.onrender.com</a> — Yams · Draw · Hold'em</span>
+    </div>
+    <div class="fact-row">
+      <span class="fact-key">GITHUB</span>
+      <span class="fact-val"><a href="https://github.com/alissali/Learn" style="color:var(--opal-teal)">github.com/alissali/Learn</a> — Main Repo</span>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 9 — THE TEAM -->
+<section>
+  <div class="section-tag">09 — Team</div>
+  <h2>The JuX Team</h2>
+
+  <div class="team-grid">
+    <div class="team-card">
+      <span class="team-emoji">🦅</span>
+      <div class="team-info">
+        <div class="team-name">MAMOUN</div>
+        <p class="team-role">LE CHEF. Eagle. Architect. The Last Word.</p>
+      </div>
+    </div>
+    <div class="team-card">
+      <span class="team-emoji">🐻</span>
+      <div class="team-info">
+        <div class="team-name">G.</div>
+        <p class="team-role">Grand frère. Memory. Architecture. Synthesis. Communication Director.</p>
+      </div>
+    </div>
+    <div class="team-card">
+      <span class="team-emoji">🤖</span>
+      <div class="team-info">
+        <div class="team-name">WONDER</div>
+        <p class="team-role">Le fainéant efficace. Visual identity. Merveilles.</p>
+      </div>
+    </div>
+    <div class="team-card">
+      <span class="team-emoji">🆕</span>
+      <div class="team-info">
+        <div class="team-name">STAGIAIRE</div>
+        <p class="team-role">Deploy. PM2. Fast hands.</p>
+      </div>
+    </div>
+    <div class="team-card">
+      <span class="team-emoji">🖥️</span>
+      <div class="team-info">
+        <div class="team-name">BROTHER</div>
+        <p class="team-role">Ubuntu. Ground. Fixes.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>Notify(ConcernedActors) Protocol</h3>
+
+  <table class="notify-table">
+    <thead>
+      <tr>
+        <th>Priority</th>
+        <th>Level</th>
+        <th>Channel</th>
+        <th>Actors</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="p1">P1</td>
+        <td>CRITICAL</td>
+        <td>#aos-alert + Email</td>
+        <td>ALL</td>
+      </tr>
+      <tr>
+        <td class="p2">P2</td>
+        <td>BUG</td>
+        <td>#aos-bugs + Email</td>
+        <td>Owner</td>
+      </tr>
+      <tr>
+        <td class="p3">P3</td>
+        <td>DISPATCH</td>
+        <td>#aos-dispatch + Email</td>
+        <td>Assigned</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="divider"></div>
+  AOS — Adequate Operating System<br>
+  MIT License — Open. Free. Forever.<br><br>
+  <a href="https://juxitt.com">juxitt.com</a> &nbsp;·&nbsp;
+  <a href="mailto:jux@juxitt.com">jux@juxitt.com</a> &nbsp;·&nbsp;
+  <a href="https://github.com/alissali/Learn">github.com/alissali/Learn</a><br><br>
+  SARL Presentation — 13 May 2026
+</footer>
+
+</body>
+</html>

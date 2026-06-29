@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D3C1C4G509"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-D3C1C4G509');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Open Graph -->
+    <meta property="og:title" content="AOS Download — Get the Adequate Operating System">
+    <meta property="og:description" content="Download AOS for Linux and Windows. MIT License. Free forever.">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="AOS Download — Get the Adequate Operating System">
+    <meta name="twitter:description" content="Download AOS for Linux and Windows. MIT License. Free forever.">
+    <meta name="description" content="Download AOS for Linux and Windows. MIT License. Free forever.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzBhMGEwZiIvPgogIDxwb2x5Z29uIHBvaW50cz0iMTYsMiAzMCwxNiAxNiwzMCAyLDE2IiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZykiIHN0cm9rZS13aWR0aD0iMiIvPgogIDx0ZXh0IHg9IjE2IiB5PSIyMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmNjYwMCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTIiPko8L3RleHQ+CiAgPGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmNjYwMCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFhMWFmZiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPgo8L3N2Zz4=">
+<title>AOS — Download</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;600&family=IBM+Plex+Sans:wght@300;400;600&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --opal-void: #010206;
+    --opal-deep: #03050c;
+    --opal-teal: #2ec4b6;
+    --opal-amber: #e8a045;
+    --opal-violet: #7b4fa6;
+    --opal-gold: #f5c842;
+    --opal-smoke: #667788;
+    --opal-frost: #b8c8d4;
+    --aos-diamond: #a0c4e0;
+  }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--opal-void);
+    color: var(--opal-frost);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 20px;
+    font-weight: 300;
+  }
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 4rem 2rem 6rem;
+  }
+  .header {
+    border-bottom: 1px solid rgba(46,196,182,0.15);
+    padding-bottom: 2.5rem;
+    margin-bottom: 3rem;
+  }
+  .title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    font-weight: 600;
+    color: var(--aos-diamond);
+    letter-spacing: -0.02em;
+    margin: 0 0 0.4rem;
+  }
+  .subtitle {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1rem;
+    color: var(--opal-smoke);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin: 0 0 1rem;
+  }
+  .license-badge {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--opal-teal);
+    border: 1px solid rgba(46,196,182,0.3);
+    padding: 0.25rem 0.7rem;
+    letter-spacing: 0.1em;
+  }
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--opal-teal);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin: 3rem 0 1rem;
+    border-left: 2px solid var(--opal-teal);
+    padding-left: 0.8rem;
+  }
+  .file-card {
+    background: var(--opal-deep);
+    border: 1px solid rgba(160,196,224,0.08);
+    padding: 1.4rem 1.6rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .file-card:hover {
+    border-color: rgba(46,196,182,0.2);
+  }
+  .file-info { flex: 1; min-width: 200px; }
+  .file-name {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--opal-amber);
+    margin-bottom: 0.3rem;
+  }
+  .file-desc {
+    font-size: 0.85rem;
+    color: var(--opal-smoke);
+    line-height: 1.5;
+  }
+  .btn-group {
+    display: flex;
+    gap: 0.6rem;
+    flex-shrink: 0;
+  }
+  .btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.5rem 1.1rem;
+    display: inline-block;
+    transition: all 0.15s;
+  }
+  .btn-view {
+    color: var(--opal-teal);
+    border: 1px solid rgba(46,196,182,0.4);
+  }
+  .btn-view:hover {
+    background: rgba(46,196,182,0.1);
+    border-color: var(--opal-teal);
+  }
+  .btn-dl {
+    color: var(--opal-void);
+    background: var(--opal-teal);
+    border: 1px solid var(--opal-teal);
+  }
+  .btn-dl:hover {
+    background: var(--aos-diamond);
+    border-color: var(--aos-diamond);
+  }
+  .footer {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(46,196,182,0.1);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--opal-smoke);
+  }
+  .footer a { color: var(--opal-teal); text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="title">AOS</div>
+    <div class="subtitle">Adequate Operating System — Download</div>
+    <span class="license-badge">MIT — Open. Free. Forever.</span>
+  </div>
+
+  <!-- CORE SPEC -->
+  <div class="section-label">Core Specification</div>
+
+  <div class="file-card">
+    <div class="file-info">
+      <div class="file-name">AOS.html</div>
+      <div class="file-desc">Formal specification. Five levels. NAME / FACT / TARGET. The Diamond.</div>
+    </div>
+    <div class="btn-group">
+      <a class="btn btn-view" href="https://raw.githack.com/alissali/Learn/main/AOS.html" target="_blank">VIEW</a>
+      <a class="btn btn-dl" href="https://raw.githubusercontent.com/alissali/Learn/main/AOS.html" download="AOS.html">DOWNLOAD</a>
+    </div>
+  </div>
+
+  <div class="file-card">
+    <div class="file-info">
+      <div class="file-name">AOS.DICTIONARIES.md</div>
+      <div class="file-desc">Six AOS Dictionaries. One language. Six disciplines. All inherit from AOS.MINIMAL.</div>
+    </div>
+    <div class="btn-group">
+      <a class="btn btn-view" href="https://github.com/alissali/Learn/blob/main/AOS.DICTIONARIES.md" target="_blank">VIEW</a>
+      <a class="btn btn-dl" href="https://raw.githubusercontent.com/alissali/Learn/main/AOS.DICTIONARIES.md" download="AOS.DICTIONARIES.md">DOWNLOAD</a>
+    </div>
+  </div>
+
+  <div class="file-card">
+    <div class="file-info">
+      <div class="file-name">AOS.CONTEXT.md</div>
+      <div class="file-desc">AOS 1 — Multi-Discipline Interpreter. Same Expression → different Dictionary → different Operation.</div>
+    </div>
+    <div class="btn-group">
+      <a class="btn btn-view" href="https://github.com/alissali/Learn/blob/main/AOS.CONTEXT.md" target="_blank">VIEW</a>
+      <a class="btn btn-dl" href="https://raw.githubusercontent.com/alissali/Learn/main/AOS.CONTEXT.md" download="AOS.CONTEXT.md">DOWNLOAD</a>
+    </div>
+  </div>
+
+  <!-- AOS.ARABIC -->
+  <div class="section-label">AOS.ARABIC</div>
+
+  <div class="file-card">
+    <div class="file-info">
+      <div class="file-name">AOS.ARABIC.ENGINE.html</div>
+      <div class="file-desc">Interactive Arabic derivation engine. Type any root → 10 verb forms + 8 noun patterns. Self-contained.</div>
+    </div>
+    <div class="btn-group">
+      <a class="btn btn-view" href="https://raw.githack.com/alissali/Learn/main/AOS.ARABIC.ENGINE.html" target="_blank">VIEW</a>
+      <a class="btn btn-dl" href="https://raw.githubusercontent.com/alissali/Learn/main/AOS.ARABIC.ENGINE.html" download="AOS.ARABIC.ENGINE.html">DOWNLOAD</a>
+    </div>
+  </div>
+
+  <div class="file-card">
+    <div class="file-info">
+      <div class="file-name">AOS.ARABIC.DICTIONARY.html</div>
+      <div class="file-desc">Seven roots. Full derivation tables. ROOT → NAME / PATTERN → FACT / DERIVATIVE → TARGET.</div>
+    </div>
+    <div class="btn-group">
+      <a class="btn btn-view" href="https://raw.githack.com/alissali/Learn/main/AOS.ARABIC.DICTIONARY.html" target="_blank">VIEW</a>
+      <a class="btn btn-dl" href="https://raw.githubusercontent.com/alissali/Learn/main/AOS.ARABIC.DICTIONARY.html" download="AOS.ARABIC.DICTIONARY.html">DOWNLOAD</a>
+    </div>
+  </div>
+
+  <!-- MNMNM -->
+  <div class="section-label">MNMNM — The Shell</div>
+
+  <div class="file-card">
+    <div class="file-info">
+      <div class="file-name">MNMNM.html</div>
+      <div class="file-desc">The protocol. OPAL-rounded. Where Diamond meets human hand. Three panels: AOS.ARABIC / AOS.PUBLISHER / AOS.MINIMAL.</div>
+    </div>
+    <div class="btn-group">
+      <a class="btn btn-view" href="https://raw.githack.com/alissali/Learn/main/MNMNM.html" target="_blank">VIEW</a>
+      <a class="btn btn-dl" href="https://raw.githubusercontent.com/alissali/Learn/main/MNMNM.html" download="MNMNM.html">DOWNLOAD</a>
+    </div>
+  </div>
+
+  <!-- JuX.ARTIFACT -->
+  <div class="section-label">JuX.ARTIFACT</div>
+
+  <div class="file-card">
+    <div class="file-info">
+      <div class="file-name">JuX.ARTIFACT.html</div>
+      <div class="file-desc">Every discipline produces Artifacts. AOS names them directly. Java / UML / DocBook — the pipeline exposed. CB-002 · CB-003 · CB-004.</div>
+    </div>
+    <div class="btn-group">
+      <a class="btn btn-view" href="https://raw.githack.com/alissali/Learn/main/JuX.ARTIFACT.html" target="_blank">VIEW</a>
+      <a class="btn btn-dl" href="https://raw.githubusercontent.com/alissali/Learn/main/JuX.ARTIFACT.html" download="JuX.ARTIFACT.html">DOWNLOAD</a>
+    </div>
+  </div>
+
+  <!-- BUG-MIB -->
+  <div class="section-label">AOS.BUG-MIB</div>
+
+  <div class="file-card">
+    <div class="file-info">
+      <div class="file-name">AOS.BUG-MIB.md</div>
+      <div class="file-desc">Bug registry. COMPLEXITY-BUG category. Immutable once closed. Queryable by status.</div>
+    </div>
+    <div class="btn-group">
+      <a class="btn btn-view" href="https://github.com/alissali/Learn/blob/main/AOS.BUG-MIB.md" target="_blank">VIEW</a>
+      <a class="btn btn-dl" href="https://raw.githubusercontent.com/alissali/Learn/main/AOS.BUG-MIB.md" download="AOS.BUG-MIB.md">DOWNLOAD</a>
+    </div>
+  </div>
+
+  <!-- LICENSE -->
+  <div class="section-label">License</div>
+
+  <div class="file-card">
+    <div class="file-info">
+      <div class="file-name">LICENSE.md</div>
+      <div class="file-desc">MIT. Open. Free. Forever.</div>
+    </div>
+    <div class="btn-group">
+      <a class="btn btn-view" href="https://github.com/alissali/Learn/blob/main/LICENSE.md" target="_blank">VIEW</a>
+      <a class="btn btn-dl" href="https://raw.githubusercontent.com/alissali/Learn/main/LICENSE.md" download="LICENSE.md">DOWNLOAD</a>
+    </div>
+  </div>
+
+  <!-- PAYMENT SECTION — Financial Spiral -->
+  <div style="margin: 3rem 0 1rem; border-top: 1px solid rgba(46,196,182,0.15); padding-top: 2.5rem;">
+
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:0.65rem; letter-spacing:0.18em; color:var(--opal-teal); text-transform:uppercase; margin-bottom:0.6rem;">Versions — Financial Spiral 🌀</div>
+    <div style="font-size:0.85rem; color:var(--opal-smoke); margin-bottom:1.8rem;">The spiral goes UP. The cost goes DOWN. Loyal clients are rewarded. Always.</div>
+
+    <div style="background:var(--opal-deep); border:1px solid rgba(46,196,182,0.12); border-left:3px solid var(--opal-teal); border-radius:6px; padding:1.6rem 2rem; font-family:'IBM Plex Mono',monospace; font-size:0.9rem; line-height:2; margin-bottom:1.8rem;">
+      <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:0.2rem 1rem; color:var(--opal-smoke); font-size:0.7rem; letter-spacing:0.12em; margin-bottom:0.6rem;">
+        <span>VERSION</span><span>PRICE</span><span>TOTAL</span>
+      </div>
+      <div style="border-top:1px solid rgba(46,196,182,0.15); margin-bottom:0.8rem;"></div>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:0.4rem 1rem; align-items:center;">
+        <span style="color:var(--opal-teal); font-weight:600;">AOS FREE!</span>
+        <span style="color:var(--opal-gold);">$0</span>
+        <span style="color:var(--opal-smoke);">$0 &nbsp;— <em style="color:var(--opal-frost); font-style:normal;">Try Me You'll Love Me!</em></span>
+
+        <span style="color:var(--opal-frost);">AOS 1</span>
+        <span style="color:var(--opal-gold);">$20</span>
+        <span style="color:var(--opal-smoke);">$20 &nbsp;— <em style="color:var(--opal-frost); font-style:normal;">AOS MNMNM Base</em></span>
+
+        <span style="color:var(--opal-frost);">AOS 2</span>
+        <span style="color:var(--opal-amber);">+$17</span>
+        <span style="color:var(--opal-smoke);">$37 &nbsp;— <em style="color:var(--opal-frost); font-style:normal;">MNMNM Shell</em></span>
+
+        <span style="color:var(--opal-frost);">AOS 3</span>
+        <span style="color:var(--opal-amber);">+$11</span>
+        <span style="color:var(--opal-smoke);">$48 &nbsp;— <em style="color:var(--opal-frost); font-style:normal;">MNMNM ↔ Audio/Video</em></span>
+
+        <span style="color:var(--opal-frost);">AOS 4</span>
+        <span style="color:var(--opal-amber);">+$3</span>
+        <span style="color:var(--opal-smoke);">$51 &nbsp;— <em style="color:var(--opal-frost); font-style:normal;">MNMNM → Dynamic Web</em></span>
+
+        <span style="color:var(--opal-violet);">AOS 5+</span>
+        <span style="color:var(--opal-violet);">Open</span>
+        <span style="color:var(--opal-violet);">MNMNM Universal Interface</span>
+      </div>
+
+      <div style="border-top:1px solid rgba(46,196,182,0.15); margin-top:0.8rem; padding-top:0.8rem; font-size:0.75rem; color:var(--opal-smoke);">
+        Upgrade cost: &nbsp;20 → 17 → 11 → 3 → …
+      </div>
+    </div>
+
+    <div style="font-family:'Noto Naskh Arabic', serif; font-size:1.05rem; color:var(--opal-frost); text-align:right; direction:rtl; margin-bottom:1.6rem; line-height:1.8;">
+      أهلاً وسهلاً — في بلاد الشام، الضيف ملك.
+    </div>
+
+    <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
+      <a href="https://www.mollie.com" target="_blank"
+         style="display:inline-block; background:var(--opal-teal); color:#010206; font-family:'IBM Plex Mono',monospace; font-size:0.75rem; font-weight:600; letter-spacing:0.12em; padding:0.8rem 2rem; border-radius:4px; text-decoration:none; text-transform:uppercase;">
+        PAY VIA MOLLIE →
+      </a>
+      <span style="font-size:0.75rem; color:var(--opal-smoke);">iDEAL · Visa · Mastercard · PayPal · Bancontact · SEPA · Apple Pay</span>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    AOS — Adequate Operating System &nbsp;·&nbsp; MIT License &nbsp;·&nbsp;
+    <a href="https://github.com/alissali/Learn" target="_blank">github.com/alissali/Learn</a>
+    &nbsp;·&nbsp; juxitt.com
+  </div>
+
+</div>
+</body>
+</html>

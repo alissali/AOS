@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D3C1C4G509"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-D3C1C4G509');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Open Graph -->
+    <meta property="og:title" content="MONOPOLY Damascus — Freedom Fighters">
+    <meta property="og:description" content="9x9 board. 23 streets. Damascus at position 31. FIGHT for territory. FORTIFY your empire. Players are Freedom Fighters.">
+    <meta property="og:url" content="https://raw.githack.com/alissali/Learn/main/MONOPOLY.html">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="MONOPOLY Damascus — Freedom Fighters">
+    <meta name="twitter:description" content="9x9 board. 23 streets. Damascus at position 31. FIGHT for territory. FORTIFY your empire. Players are Freedom Fighters.">
+    <meta name="description" content="9x9 board. 23 streets. Damascus at position 31. FIGHT for territory. FORTIFY your empire. Players are Freedom Fighters.">
+<title>🏠 JuX MONOPOLY — The World Is Yours</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=IBM+Plex+Mono:wght@400;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a12;color:#e8d5c0;font-family:'IBM Plex Mono',monospace;min-height:100vh;overflow-x:hidden}
+h1{font-family:'Cinzel Decorative',serif;font-size:1.8em;color:#e8a045;text-shadow:0 0 30px rgba(232,160,69,0.4);letter-spacing:4px;text-align:center;margin:10px 0 3px}
+.subtitle{text-align:center;font-size:0.75em;color:rgba(232,213,192,0.4);letter-spacing:6px;margin-bottom:8px}
+.game-wrap{max-width:960px;margin:0 auto;padding:0 10px}
+
+/* BOARD — proper square */
+.board-container{position:relative;width:100%;max-width:720px;margin:0 auto 12px}
+.board-grid{display:grid;grid-template-columns:repeat(9,1fr);grid-template-rows:repeat(9,1fr);gap:2px;aspect-ratio:1/1}
+.sq{background:rgba(232,160,69,0.05);border:1px solid rgba(232,160,69,0.15);padding:2px;text-align:center;font-size:0.42em;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;transition:all 0.3s;cursor:default;overflow:hidden;min-height:0}
+.sq:hover{border-color:rgba(232,160,69,0.5);background:rgba(232,160,69,0.12)}
+.sq .sname{font-weight:600;line-height:1.1;word-break:break-word}
+.sq .sprice{color:#e8a045;font-size:0.85em;margin-top:1px}
+.sq .splayers{position:absolute;top:1px;right:2px;font-size:1.4em}
+.sq .owner-dot{position:absolute;bottom:1px;left:2px;width:6px;height:6px;border-radius:50%}
+.sq.corner{background:rgba(232,160,69,0.1);border-color:rgba(232,160,69,0.3);font-size:0.5em}
+.sq.special{background:rgba(46,196,182,0.06);border-color:rgba(46,196,182,0.15)}
+.sq.active{box-shadow:0 0 12px rgba(232,160,69,0.5);border-color:#e8a045;z-index:2}
+.color-bar{width:100%;height:4px;border-radius:1px;margin-bottom:1px;flex-shrink:0}
+
+/* Center */
+.board-center{grid-column:2/9;grid-row:2/9;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(232,160,69,0.03);border:1px solid rgba(232,160,69,0.08);border-radius:8px;padding:10px}
+.board-center h2{font-family:'Cinzel Decorative',serif;color:#e8a045;font-size:1.4em;text-shadow:0 0 20px rgba(232,160,69,0.3);letter-spacing:3px}
+.board-center .dice-area{display:flex;gap:10px;margin:10px 0}
+.board-center .die{width:45px;height:45px;background:rgba(232,160,69,0.1);border:2px solid rgba(232,160,69,0.4);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.6em;font-family:'Cinzel Decorative',serif;color:#e8a045;transition:all 0.3s}
+.die.rolling{animation:diceRoll 0.4s ease}
+@keyframes diceRoll{0%{transform:rotate(0)}25%{transform:rotate(15deg)}50%{transform:rotate(-15deg)}75%{transform:rotate(8deg)}100%{transform:rotate(0)}}
+
+/* Players */
+.players-panel{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;margin-bottom:8px}
+.p-card{border:2px solid rgba(232,213,192,0.12);border-radius:6px;padding:8px;background:rgba(255,255,255,0.02)}
+.p-card.active-player{border-color:#e8a045;box-shadow:0 0 12px rgba(232,160,69,0.2)}
+.p-card .p-name{font-family:'Cinzel Decorative',serif;font-size:0.9em;margin-bottom:3px}
+.p-card .p-cash{color:#2ec4b6;font-size:1em}
+.p-card .p-props{font-size:0.65em;color:rgba(232,213,192,0.5);margin-top:3px}
+.p-card .p-inv{margin-top:4px;max-height:0;overflow:hidden;transition:max-height 0.4s ease}
+.p-card.open .p-inv{max-height:300px;overflow-y:auto}
+.p-card .inv-toggle{cursor:pointer;font-size:0.7em;color:#e8a045;margin-top:3px;text-decoration:underline}
+.p-card .inv-item{display:flex;align-items:center;gap:4px;font-size:0.65em;padding:2px 0;border-bottom:1px solid rgba(232,213,192,0.05)}
+.p-card .inv-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.p-card .inv-name{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.p-card .inv-val{color:#2ec4b6;font-size:0.9em}
+.p-card .inv-summary{font-size:0.65em;color:rgba(232,213,192,0.4);margin-top:3px;border-top:1px solid rgba(232,160,69,0.15);padding-top:3px}
+
+/* Controls */
+.controls{text-align:center;margin:8px 0}
+.btn{background:rgba(232,160,69,0.15);border:1px solid rgba(232,160,69,0.4);color:#e8a045;font-family:'Cinzel Decorative',serif;font-size:0.9em;padding:8px 22px;cursor:pointer;letter-spacing:2px;transition:all 0.3s;border-radius:4px;margin:0 4px}
+.btn:hover{background:rgba(232,160,69,0.3);box-shadow:0 0 12px rgba(232,160,69,0.3)}
+.btn:disabled{opacity:0.3;cursor:not-allowed}
+.btn.buy{border-color:rgba(46,196,182,0.5);color:#2ec4b6;background:rgba(46,196,182,0.1)}
+.btn.buy:hover{background:rgba(46,196,182,0.25)}
+
+/* Log */
+.log{max-height:120px;overflow-y:auto;background:rgba(0,0,0,0.3);border:1px solid rgba(232,213,192,0.1);border-radius:6px;padding:8px;font-size:0.7em;line-height:1.5;margin-bottom:8px}
+.log .entry{border-bottom:1px solid rgba(232,213,192,0.05);padding:1px 0}
+
+/* Card popup */
+.card-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#1a1a28;border:2px solid #e8a045;border-radius:12px;padding:25px;text-align:center;z-index:100;max-width:320px;box-shadow:0 0 40px rgba(232,160,69,0.3);display:none}
+.card-popup h3{font-family:'Cinzel Decorative',serif;color:#e8a045;margin-bottom:10px}
+.card-popup p{line-height:1.5;margin-bottom:12px;font-size:0.9em}
+.overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:99;display:none}
+
+/* Setup */
+#setupScreen{text-align:center;padding:30px 20px}
+#setupScreen h2{font-family:'Cinzel Decorative',serif;color:#e8a045;font-size:1.6em;margin-bottom:20px}
+.setup-opt{margin:8px 0}
+.setup-opt label{display:block;margin-bottom:4px;color:rgba(232,213,192,0.6);font-size:0.8em}
+.setup-opt input{background:rgba(255,255,255,0.05);border:1px solid rgba(232,160,69,0.3);color:#e8d5c0;padding:7px 12px;border-radius:4px;font-family:'IBM Plex Mono',monospace;text-align:center;width:180px}
+.player-colors{display:flex;gap:12px;justify-content:center;margin:12px 0;flex-wrap:wrap}
+.p-token{font-size:1.8em;opacity:0.4;cursor:pointer;transition:all 0.3s}
+.p-token.selected{opacity:1;transform:scale(1.3)}
+
+/* Prizes */
+.prizes{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:4px;margin:8px 0}
+.prize{background:rgba(232,160,69,0.04);border:1px solid rgba(232,160,69,0.1);border-radius:4px;padding:4px;text-align:center;font-size:0.6em;color:rgba(232,213,192,0.3)}
+.prize.won{border-color:#e8a045;color:#e8a045;background:rgba(232,160,69,0.08)}
+.prize .icon{font-size:1.3em;display:block}
+
+.toast{position:fixed;top:15px;left:50%;transform:translateX(-50%);background:rgba(232,160,69,0.95);color:#0a0a12;padding:10px 24px;border-radius:8px;font-family:'Cinzel Decorative',serif;z-index:200;opacity:0;transition:opacity 0.5s;pointer-events:none}
+.toast.show{opacity:1}
+
+footer{text-align:center;padding:12px;font-size:0.65em;color:rgba(232,213,192,0.25);letter-spacing:2px}
+footer a{color:#e8a045;text-decoration:none}
+
+@media(max-width:600px){
+  .board-grid{font-size:0.85em}
+  .sq{font-size:0.35em}
+  .board-center h2{font-size:0.9em}
+  .board-center .die{width:35px;height:35px;font-size:1.2em}
+}
+a:focus,button:focus{outline:2px solid #ff6600;outline-offset:2px}
+</style>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzBhMGEwZiIvPgogIDxwb2x5Z29uIHBvaW50cz0iMTYsMiAzMCwxNiAxNiwzMCAyLDE2IiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZykiIHN0cm9rZS13aWR0aD0iMiIvPgogIDx0ZXh0IHg9IjE2IiB5PSIyMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmNjYwMCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTIiPko8L3RleHQ+CiAgPGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmNjYwMCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFhMWFmZiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPgo8L3N2Zz4=">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "JuX ITT",
+  "url": "https://juxaos.com",
+  "email": "jux@juxitt.com",
+  "description": "Software architecture, games, stories, and spice."
+}
+</script>
+<meta name="theme-color" content="#0a0a0f">
+<link rel="canonical" href="https://raw.githack.com/alissali/Learn/main/MONOPOLY.html">
+</head>
+<body>
+<a href="#main" class="skip-link" style="position:absolute;top:-40px;left:0;background:#ff6600;color:#0a0a0f;padding:8px;z-index:9999;font-family:monospace;text-decoration:none;transition:top .3s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">Skip to content</a>
+
+<h1>🏠 JuX MONOPOLY</h1>
+<div class="subtitle">F R E E D O M &nbsp; F I G H T E R S</div>
+
+<div class="game-wrap">
+
+<div id="setupScreen">
+  <h2>🎲 How Many Freedom Fighters?</h2>
+  <div class="player-colors">
+    <span class="p-token" data-n="2" onclick="selectPlayers(2)">👥 2</span>
+    <span class="p-token" data-n="3" onclick="selectPlayers(3)">👥 3</span>
+    <span class="p-token" data-n="4" onclick="selectPlayers(4)">👥 4</span>
+  </div>
+  <div id="nameInputs"></div>
+  <button class="btn" onclick="initGame()" style="margin-top:15px">🎲 ROLL THE WORLD</button>
+</div>
+
+<div id="gameScreen" style="display:none">
+  <div class="players-panel" id="playersPanel"></div>
+  <div class="controls" id="controls">
+    <button class="btn" id="rollBtn" onclick="rollDice()">🎲 ROLL</button>
+    <button class="btn buy" id="buyBtn" onclick="buyProperty()" style="display:none">🏠 BUY</button>
+    <button class="btn" id="fightBtn" onclick="startFight()" style="display:none;border-color:#e74c3c;color:#e74c3c;background:rgba(231,76,60,0.1)">⚔️ FIGHT</button>
+    <button class="btn" id="payBtn" onclick="payRent()" style="display:none;border-color:#f39c12;color:#f39c12">💰 PAY</button>
+    <button class="btn" id="fortifyBtn" onclick="fortifyProperty()" style="display:none;border-color:#9b59b6;color:#9b59b6;background:rgba(155,89,182,0.1)">🛡️ FORTIFY</button>
+    <button class="btn" id="endBtn" onclick="endTurn()" style="display:none">⏭ END</button>
+  </div>
+  <div class="board-container">
+    <div class="board-grid" id="board"></div>
+  </div>
+  <div class="log" id="log"></div>
+  <div class="prizes" id="prizesGrid"></div>
+</div>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeCard()"></div>
+<div class="card-popup" id="cardPopup"><h3 id="cardTitle"></h3><p id="cardText"></p><button class="btn" onclick="closeCard()">OK</button></div>
+<div id="toast" class="toast"></div>
+
+<footer><a href="https://raw.githack.com/alissali/Learn/main/ARCADE.html" style="color:#e8a045;text-decoration:none;font-size:1.2em">🎰 ARCADE</a><br>JuX MONOPOLY — born 12 June 2026 · Mamoun's World<br><a href="https://juxitt.com">juxitt.com</a> · MIT License</footer>
+
+<script>
+const TOKENS=['🔴','🔵','🟡','🟢'];
+const PCOLORS=['#e74c3c','#3498db','#f1c40f','#2ecc71'];
+const DICE_FACE=['⚀','⚁','⚂','⚃','⚄','⚅'];
+const audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+
+// === MAMOUN'S 23 INTERNATIONAL STREETS ===
+const STREETS=[
+  {name:'rue Royale',price:60,rent:4,color:'#8B4513'},
+  {name:'Strong St.\nLas Vegas',price:60,rent:4,color:'#8B4513'},
+  {name:'St Kilda Rd\nMelbourne',price:80,rent:6,color:'#8B4513'},
+  {name:'rue des\nCinquante Otages',price:100,rent:8,color:'#1E90FF'},
+  {name:'Erling Skakkes\ngate',price:100,rent:8,color:'#1E90FF'},
+  {name:'Strong St.\nSan Rafael',price:120,rent:10,color:'#1E90FF'},
+  {name:'ul. Filtrowa\nWarszawa',price:140,rent:14,color:'#FF69B4'},
+  {name:'Lyonerstr.\nFrankfurt',price:140,rent:14,color:'#FF69B4'},
+  {name:'N. Pendale St.\nS.F.',price:160,rent:16,color:'#FF69B4'},
+  {name:'Long Airport\nAve NYC',price:180,rent:18,color:'#FF6347'},
+  {name:'C/ Moralzarzal\n86',price:180,rent:18,color:'#FF6347'},
+  {name:'Berguvsvägen\nLuleå',price:200,rent:20,color:'#FF6347'},
+  {name:'Vinbæltet\nKøbenhavn',price:220,rent:22,color:'#FFD700'},
+  {name:'rue du\nCommerce',price:220,rent:22,color:'#FFD700'},
+  {name:'Bronz Sok.\nSingapore',price:240,rent:24,color:'#FFD700'},
+  {name:'Furth Circle\nNYC',price:260,rent:26,color:'#32CD32'},
+  {name:'Pompton St.\nAllentown',price:260,rent:26,color:'#32CD32'},
+  {name:'Furth Cir.\nBurlingame',price:280,rent:28,color:'#32CD32'},
+  {name:'Linden Rd\nSingapore',price:300,rent:30,color:'#9370DB'},
+  {name:'Brehmen St.\nBergen',price:300,rent:30,color:'#9370DB'},
+  {name:'Spinnaker Dr.\nN.Haven',price:320,rent:35,color:'#9370DB'},
+  {name:'Estrada da\nsaúde Lisboa',price:350,rent:40,color:'#e8a045'},
+  {name:'Mazzeh Villat\nDamascus',price:400,rent:50,color:'#e8a045'}
+];
+
+// === BUILD 32-SQUARE BOARD ===
+// 4 corners + 5 specials + 23 streets = 32
+// Perimeter of 9×9 grid
+const BOARD=[];
+let si=0;
+function S(){if(si<STREETS.length){BOARD.push({type:'property',...STREETS[si]});si++}else{BOARD.push({type:'empty',name:'★'})}}
+
+// Bottom row R→L: GO,3s,CC,3s,JAIL
+BOARD.push({type:'go',name:'GO',icon:'🏁'});        //0
+S();S();S();                                          //1,2,3
+BOARD.push({type:'cc',name:'Community\nChest',icon:'📦'}); //4
+S();S();S();                                          //5,6,7
+BOARD.push({type:'jail',name:'JAIL',icon:'🔒'});     //8 corner
+
+// Left col B→T: 3s,CHANCE,3s,FREE PARKING
+S();S();S();                                          //9,10,11
+BOARD.push({type:'chance',name:'Chance',icon:'❓'});  //12
+S();S();S();                                          //13,14,15
+BOARD.push({type:'parking',name:'FREE\nPARKING',icon:'🅿️'}); //16 corner
+
+// Top row L→R: 3s,CC,3s,GO TO JAIL
+S();S();S();                                          //17,18,19
+BOARD.push({type:'cc',name:'Community\nChest',icon:'📦'}); //20
+S();S();S();                                          //21,22,23
+BOARD.push({type:'gotojail',name:'GO TO\nJAIL',icon:'🚔'}); //24 corner
+
+// Right col T→B: 2s,CHANCE,TAX,2s,Mazzeh
+S();S();                                              //25,26
+BOARD.push({type:'chance',name:'Chance',icon:'❓'});  //27
+BOARD.push({type:'tax',name:'TAX\n$200',icon:'💰'});  //28
+S();S();S();                                          //29,30,31 — Spinnaker, Lisboa, DAMASCUS!
+
+const SQ_COUNT=BOARD.length; // 32
+
+// === GRID POSITION MAP ===
+// Maps board index → {row, col} on 9×9 grid
+const POS=[];
+// Bottom row: sq 0→(9,9), sq 1→(9,8), ..., sq 8→(9,1)
+for(let i=0;i<=8;i++) POS.push({r:9,c:9-i});
+// Left col: sq 9→(8,1), ..., sq 15→(2,1)
+for(let i=0;i<7;i++) POS.push({r:8-i,c:1});
+// Top row: sq 16→(1,1), sq 17→(1,2), ..., sq 24→(1,9)
+for(let i=0;i<=8;i++) POS.push({r:1,c:1+i});
+// Wait, 16 is already at POS index 16 which maps to (2,1)? Let me recalculate.
+
+// Actually let me redo. After bottom 9 squares (0-8) and left 7 (9-15), sq 16 starts:
+// sq 16 = FREE PARKING at (1,1). Then top row: sq 17→(1,2)...sq 24→(1,9)
+// Then right col: sq 25→(2,9)...sq 31→(8,9)
+
+// But wait, POS already has 16 entries (indices 0-15). sq 16 = index 16:
+// The 16th position (index 16) should be row 1, col 1. Let me verify:
+// Bottom: 9 entries (index 0-8)
+// Left: 7 entries (index 9-15)
+// So index 16 starts top row.
+
+// Right col: sq 25→(2,9), sq 26→(3,9), ..., sq 31→(8,9) = 7 entries
+
+// OK the POS array was started above. Let me clear and redo properly in a cleaner way below.
+POS.length=0;
+
+// Bottom row (right to left): indices 0-8, row 9
+for(let i=0;i<=8;i++) POS[i]={r:9,c:9-i};
+// Left column (bottom to top): indices 9-15, col 1
+for(let i=9;i<=15;i++) POS[i]={r:9-(i-8),c:1};
+// Top row (left to right): indices 16-24, row 1
+for(let i=16;i<=24;i++) POS[i]={r:1,c:i-15};
+// Right column (top to bottom): indices 25-31, col 9
+for(let i=25;i<=31;i++) POS[i]={r:i-23,c:9};
+
+const CC_CARDS=[
+  {text:'Advance to Go! Collect $200',action:'goto',val:0,amount:200},
+  {text:'Bank error in your favor. Collect $200',action:'gain',val:200},
+  {text:"Doctor's fee. Pay $50",action:'lose',val:50},
+  {text:'From sale of stock you get $50',action:'gain',val:50},
+  {text:'Get Out of Jail Free!',action:'jail_free',val:0},
+  {text:'Go to Jail!',action:'jail',val:0},
+  {text:'Holiday fund matures. Receive $100',action:'gain',val:100},
+  {text:'Income tax refund. Collect $20',action:'gain',val:20},
+  {text:'It is your birthday! Collect $10 from every player',action:'birthday',val:10},
+  {text:'Life insurance matures. Collect $100',action:'gain',val:100},
+  {text:'Pay hospital fees of $100',action:'lose',val:100},
+  {text:'Pay school fees of $50',action:'lose',val:50},
+  {text:'Receive $25 consultancy fee',action:'gain',val:25},
+  {text:'You won second prize in a beauty contest! Collect $10',action:'gain',val:10},
+  {text:'You inherit $100',action:'gain',val:100}
+];
+const CHANCE_CARDS=[
+  {text:'Advance to Mazzeh Villat Damascus!',action:'goto',val:31},
+  {text:'Advance to Go! Collect $200',action:'goto',val:0,amount:200},
+  {text:'Advance to rue des Cinquante Otages',action:'goto',val:5},
+  {text:'Advance to Vinbæltet København',action:'goto',val:17},
+  {text:'Bank pays you dividend of $50',action:'gain',val:50},
+  {text:'Get Out of Jail Free!',action:'jail_free',val:0},
+  {text:'Go Back 3 Spaces',action:'back',val:3},
+  {text:'Go to Jail!',action:'jail',val:0},
+  {text:'Speeding fine $15',action:'lose',val:15},
+  {text:'Your building loan matures. Collect $150',action:'gain',val:150},
+  {text:'Elected Chairman. Pay each player $50',action:'chairman',val:50}
+];
+
+// Game state
+let players=[],currentPlayer=0,numPlayers=2,gameActive=false,canBuy=false,currentSquare=null,pendingRent=0,pendingOwner=null,fightsWon=parseInt(localStorage.getItem('mono_fights_won')||'0'),fightsLost=0;
+
+// Prizes
+const PRIZES=[
+  {id:'first_roll',name:'First Roll',icon:'🎲',desc:'Roll the dice'},
+  {id:'first_buy',name:'Landlord',icon:'🏠',desc:'Buy first property'},
+  {id:'five_props',name:'Mogul',icon:'🏢',desc:'Own 5 properties'},
+  {id:'millionaire',name:'Millionaire',icon:'💎',desc:'Have $2000+'},
+  {id:'jailbird',name:'Jailbird',icon:'🔒',desc:'Go to jail'},
+  {id:'taxman',name:'Taxman',icon:'💰',desc:'Pay taxes'},
+  {id:'globetrotter',name:'Globetrotter',icon:'🌍',desc:'Go around the board'},
+  {id:'lucky',name:'Lucky Card',icon:'🃏',desc:'Draw 5 cards'},
+  {id:'damascus',name:'Mazzeh Villat',icon:'🕌',desc:'Own Damascus'},
+  {id:'first_blood',name:'First Blood',icon:'⚔️',desc:'Win your first fight'},
+  {id:'liberator',name:'Liberator',icon:'✊',desc:'Win 3 fights'},
+  {id:'fortress',name:'Fortress',icon:'🛡️',desc:'Fortify a property'}
+];
+let wonPrizes=new Set(JSON.parse(localStorage.getItem('mono_prizes')||'[]'));
+let cardsDrawn=parseInt(localStorage.getItem('mono_cards')||'0');
+function savePrizes(){localStorage.setItem('mono_prizes',JSON.stringify([...wonPrizes]))}
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
+function checkPrize(id){if(!wonPrizes.has(id)){wonPrizes.add(id);savePrizes();showToast('🏆 '+PRIZES.find(p=>p.id===id).name+'!');playSound(800,0.15);renderPrizes()}}
+function renderPrizes(){document.getElementById('prizesGrid').innerHTML=PRIZES.map(p=>`<div class="prize ${wonPrizes.has(p.id)?'won':''}" title="${p.desc}"><span class="icon">${p.icon}</span>${p.name}</div>`).join('')}
+function playSound(f,d,t='square'){const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=t;o.frequency.value=f;g.gain.setValueAtTime(0.1,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+d);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+d)}
+
+function selectPlayers(n){
+  numPlayers=n;
+  document.querySelectorAll('.p-token').forEach(t=>{t.classList.toggle('selected',parseInt(t.dataset.n)===n)});
+  let h='';
+  const FIGHTER_NAMES=['Fighter 1','Fighter 2','Fighter 3','Fighter 4'];
+  for(let i=0;i<n;i++)h+=`<div class="setup-opt"><label>${TOKENS[i]} Freedom Fighter ${i+1}</label><input id="pname${i}" value="${FIGHTER_NAMES[i]}" maxlength="12"></div>`;
+  document.getElementById('nameInputs').innerHTML=h;
+}
+selectPlayers(2);
+
+function initGame(){
+  players=[];
+  for(let i=0;i<numPlayers;i++){
+    const el=document.getElementById('pname'+i);
+    players.push({name:el?el.value:'Fighter '+(i+1),token:TOKENS[i],color:PCOLORS[i],pos:0,cash:1500,properties:[],inJail:false,jailTurns:0,jailFree:false,laps:0,bankrupt:false});
+  }
+  currentPlayer=0;gameActive=true;canBuy=false;
+  document.getElementById('setupScreen').style.display='none';
+  document.getElementById('gameScreen').style.display='block';
+  renderBoard();renderPlayers();renderPrizes();
+  log(players[0].token+' '+players[0].name+' goes first!');
+  if(audioCtx.state==='suspended')audioCtx.resume();
+}
+
+function renderBoard(){
+  const el=document.getElementById('board');
+  let cells=[];
+  // Create all 81 cells (9×9)
+  for(let r=1;r<=9;r++){
+    for(let c=1;c<=9;c++){
+      // Find if a board square occupies this cell
+      let sqIdx=-1;
+      for(let i=0;i<SQ_COUNT;i++){
+        if(POS[i].r===r&&POS[i].c===c){sqIdx=i;break}
+      }
+      if(sqIdx>=0){
+        const sq=BOARD[sqIdx];
+        const isCorner=[0,8,16,24].includes(sqIdx);
+        const isSpecial=sq.type!=='property';
+        const ph=players.filter(p=>p.pos===sqIdx&&!p.bankrupt).map(p=>p.token).join('');
+        const ownerDot=sq.owner!==undefined?`<div class="owner-dot" style="background:${PCOLORS[sq.owner]}"></div>`:'';
+        const colorBar=sq.color?`<div class="color-bar" style="background:${sq.color}"></div>`:'';
+        const act=players[currentPlayer]&&players[currentPlayer].pos===sqIdx?' active':'';
+        const cls=isCorner?' corner':isSpecial?' special':'';
+        const nm=sq.name.replace(/\n/g,'<br>');
+        if(isSpecial){
+          cells.push(`<div class="sq${cls}${act}" style="grid-row:${r};grid-column:${c}" data-i="${sqIdx}"><div class="splayers">${ph}</div><div style="font-size:1.6em">${sq.icon||''}</div><div class="sname">${nm}</div></div>`);
+        }else{
+          cells.push(`<div class="sq${act}" style="grid-row:${r};grid-column:${c}" data-i="${sqIdx}">${colorBar}<div class="splayers">${ph}</div><div class="sname">${nm}</div><div class="sprice">$${sq.price}</div>${ownerDot}</div>`);
+        }
+      }else if(r>=2&&r<=8&&c>=2&&c<=8){
+        // Center area — skip, handled by center div
+      }
+    }
+  }
+  // Add center
+  cells.push(`<div class="board-center"><h2>MONOPOLY</h2><div class="subtitle" style="font-size:0.6em;letter-spacing:3px">THE WORLD IS YOURS</div><div class="dice-area"><div class="die" id="die1">⚀</div><div class="die" id="die2">⚀</div></div><div style="font-size:0.7em;color:rgba(232,213,192,0.3)">🌍 24 Cities · 5 Continents</div></div>`);
+  el.innerHTML=cells.join('');
+}
+
+function renderPlayers(){
+  document.getElementById('playersPanel').innerHTML=players.map((p,i)=>{
+    const act=i===currentPlayer&&!p.bankrupt?' active-player':'';
+    const st=p.bankrupt?' 💀':p.inJail?' 🔒':'';
+    // Build inventory
+    const owned=BOARD.filter(sq=>sq.owner===i&&sq.type==='property');
+    const totalVal=owned.reduce((s,sq)=>s+sq.price,0);
+    const totalRent=owned.reduce((s,sq)=>s+sq.rent,0);
+    const netWorth=p.cash+totalVal;
+    const invItems=owned.map(sq=>`<div class="inv-item"><div class="inv-dot" style="background:${sq.color}"></div><div class="inv-name">${sq.name.replace(/\n/g,' ')}</div><div class="inv-val">$${sq.rent}/r</div></div>`).join('');
+    const invSummary=owned.length>0?`<div class="inv-summary">📊 Value: $${totalVal} · Rent: $${totalRent}/turn · Net: $${netWorth}</div>`:'';
+    const toggle=owned.length>0?`<div class="inv-toggle" onclick="this.closest('.p-card').classList.toggle('open')">📋 ${owned.length} properties ▾</div>`:`<div class="p-props">No properties</div>`;
+    return `<div class="p-card${act}"><div class="p-name" style="color:${p.color}">${p.token} ${p.name}${st}</div><div class="p-cash">$${p.cash}</div>${toggle}<div class="p-inv">${invItems}${invSummary}</div></div>`;
+  }).join('');
+}
+
+function log(m){const el=document.getElementById('log');el.innerHTML=`<div class="entry">${m}</div>`+el.innerHTML;if(el.children.length>50)el.removeChild(el.lastChild)}
+
+function rollDice(){
+  if(!gameActive)return;
+  const p=players[currentPlayer];
+  if(p.bankrupt){nextPlayer();return}
+  const d1=Math.floor(Math.random()*6)+1,d2=Math.floor(Math.random()*6)+1,total=d1+d2;
+  document.getElementById('die1').textContent=DICE_FACE[d1-1];
+  document.getElementById('die2').textContent=DICE_FACE[d2-1];
+  document.getElementById('die1').classList.add('rolling');
+  document.getElementById('die2').classList.add('rolling');
+  setTimeout(()=>{document.getElementById('die1').classList.remove('rolling');document.getElementById('die2').classList.remove('rolling')},400);
+  playSound(300,0.1);
+  checkPrize('first_roll');
+
+  if(p.inJail){
+    if(d1===d2){p.inJail=false;p.jailTurns=0;log(p.token+' DOUBLES! Out of jail!')}
+    else if(p.jailFree){p.inJail=false;p.jailTurns=0;p.jailFree=false;log(p.token+' uses Jail Free card!')}
+    else{p.jailTurns++;if(p.jailTurns>=3){p.inJail=false;p.jailTurns=0;p.cash-=50;log(p.token+' pays $50 bail')}else{log(p.token+' stuck in jail ('+p.jailTurns+'/3)');document.getElementById('rollBtn').style.display='none';document.getElementById('endBtn').style.display='inline-block';renderPlayers();return}}
+  }
+
+  const oldPos=p.pos;
+  p.pos=(p.pos+total)%SQ_COUNT;
+  if(p.pos<oldPos){p.cash+=200;p.laps++;log(p.token+' passed GO! +$200');if(p.laps>=1)checkPrize('globetrotter')}
+
+  const sq=BOARD[p.pos];
+  log(p.token+' rolled '+d1+'+'+d2+'='+total+' → '+(sq.name.replace(/\n/g,' ')));
+  document.getElementById('rollBtn').style.display='none';
+  handleSquare(p,sq);
+  renderBoard();renderPlayers();
+}
+
+function handleSquare(p,sq){
+  canBuy=false;
+  document.getElementById('buyBtn').style.display='none';
+  if(sq.type==='property'){
+    if(sq.owner===undefined){
+      if(p.cash>=sq.price){canBuy=true;currentSquare=sq;document.getElementById('buyBtn').style.display='inline-block';log('💡 '+(sq.name.replace(/\n/g,' '))+' — $'+sq.price)}
+    }else if(sq.owner!==currentPlayer){
+      const ow=players[sq.owner];
+      if(!ow.bankrupt){
+        currentSquare=sq;pendingRent=sq.rent;pendingOwner=sq.owner;
+        log('⚔️ '+(sq.name.replace(/\n/g,' '))+' belongs to '+ow.token+' — FIGHT or PAY $'+sq.rent+'?');
+        document.getElementById('fightBtn').style.display='inline-block';
+        document.getElementById('payBtn').style.display='inline-block';
+        document.getElementById('endBtn').style.display='none';
+        return;
+      }
+    }else{
+      log(p.token+' is home at '+(sq.name.replace(/\n/g,' ')));
+      const fortCost=Math.floor(sq.price*0.5);
+      if(p.cash>=fortCost&&!sq.fortified){
+        currentSquare=sq;
+        document.getElementById('fortifyBtn').style.display='inline-block';
+        log('🛡️ FORTIFY for $'+fortCost+'? (rent ×2)');
+      }
+    }
+  }
+  else if(sq.type==='cc'){drawCard(p,CC_CARDS,'Community Chest','📦')}
+  else if(sq.type==='chance'){drawCard(p,CHANCE_CARDS,'Chance','❓')}
+  else if(sq.type==='tax'){p.cash-=200;log(p.token+' pays $200 tax');checkPrize('taxman');if(p.cash<=0)goBankrupt(p)}
+  else if(sq.type==='gotojail'){sendToJail(p)}
+  document.getElementById('endBtn').style.display='inline-block';
+  renderPlayers();
+}
+
+function startFight(){
+  const p=players[currentPlayer];
+  const ow=players[pendingOwner];
+  const sq=currentSquare;
+  const sn=sq.name.replace(/\n/g,' ');
+  document.getElementById('fightBtn').style.display='none';
+  document.getElementById('payBtn').style.display='none';
+  // Attacker rolls
+  const a1=Math.ceil(Math.random()*6),a2=Math.ceil(Math.random()*6);
+  const atk=a1+a2;
+  // Defender rolls
+  const d1=Math.ceil(Math.random()*6),d2=Math.ceil(Math.random()*6);
+  const def=d1+d2;
+  playSound(150,0.2,'sawtooth');
+  log('⚔️ BATTLE for '+sn+'!');
+  log(p.token+' attacks: '+a1+'+'+a2+'='+atk);
+  log(ow.token+' defends: '+d1+'+'+d2+'='+def);
+  if(atk>def){
+    // ATTACKER WINS — LIBERATE
+    sq.owner=currentPlayer;
+    p.properties.push(sq);
+    ow.properties=ow.properties.filter(s=>s!==sq);
+    fightsWon++;localStorage.setItem('mono_fights_won',fightsWon);
+    log('✊ '+p.token+' LIBERATES '+sn+'! Property seized!');
+    playSound(500,0.15);
+    showCard('⚔️ LIBERATION!',p.token+' defeats '+ow.token+' and takes '+sn+'!');
+    if(fightsWon>=3)checkPrize('liberator');
+    if(fightsWon>=1)checkPrize('first_blood');
+  }else if(atk<def){
+    // DEFENDER WINS — DOUBLE RENT
+    const dbl=pendingRent*2;
+    p.cash-=dbl;ow.cash+=dbl;
+    fightsLost++;
+    log('💀 '+p.token+' defeated! Pays DOUBLE rent $'+dbl+' to '+ow.token);
+    playSound(100,0.2,'sawtooth');
+    showCard('💀 DEFEATED!',p.token+' lost the battle.\nPays $'+dbl+' to '+ow.token);
+    if(p.cash<=0)goBankrupt(p);
+  }else{
+    // TIE — normal rent
+    p.cash-=pendingRent;ow.cash+=pendingRent;
+    log('🤝 Standoff! '+p.token+' pays normal rent $'+pendingRent);
+    showCard('🤝 STANDOFF','Equal strength. Normal rent $'+pendingRent);
+  }
+  document.getElementById('endBtn').style.display='inline-block';
+  renderBoard();renderPlayers();
+}
+
+function payRent(){
+  const p=players[currentPlayer];
+  const ow=players[pendingOwner];
+  document.getElementById('fightBtn').style.display='none';
+  document.getElementById('payBtn').style.display='none';
+  p.cash-=pendingRent;ow.cash+=pendingRent;
+  log(p.token+' pays $'+pendingRent+' rent to '+ow.token);
+  playSound(200,0.15,'sawtooth');
+  if(p.cash<=0)goBankrupt(p);
+  document.getElementById('endBtn').style.display='inline-block';
+  renderPlayers();
+}
+
+function fortifyProperty(){
+  const p=players[currentPlayer];
+  const sq=currentSquare;
+  const cost=Math.floor(sq.price*0.5);
+  document.getElementById('fortifyBtn').style.display='none';
+  p.cash-=cost;
+  sq.rent=sq.rent*2;
+  sq.fortified=true;
+  log('🛡️ '+p.token+' FORTIFIES '+(sq.name.replace(/\n/g,' '))+' for $'+cost+' — rent now $'+sq.rent);
+  playSound(400,0.12);
+  showCard('🛡️ FORTIFIED!',(sq.name.replace(/\n/g,' '))+'\nRent doubled to $'+sq.rent);
+  checkPrize('fortress');
+  renderPlayers();
+}
+
+function drawCard(p,deck,title,icon){
+  cardsDrawn++;localStorage.setItem('mono_cards',cardsDrawn);
+  if(cardsDrawn>=5)checkPrize('lucky');
+  const card=deck[Math.floor(Math.random()*deck.length)];
+  showCard(icon+' '+title,card.text);
+  if(card.action==='gain'){p.cash+=card.val;log(p.token+' +$'+card.val)}
+  else if(card.action==='lose'){p.cash-=card.val;log(p.token+' -$'+card.val);if(p.cash<=0)goBankrupt(p)}
+  else if(card.action==='goto'){const old=p.pos;p.pos=card.val;if(card.amount)p.cash+=card.amount;if(p.pos<old){p.cash+=200;p.laps++}log(p.token+' → '+(BOARD[p.pos].name.replace(/\n/g,' ')));renderBoard()}
+  else if(card.action==='jail'){sendToJail(p)}
+  else if(card.action==='jail_free'){p.jailFree=true;log(p.token+' gets Jail Free!')}
+  else if(card.action==='back'){p.pos=(p.pos-card.val+SQ_COUNT)%SQ_COUNT;log(p.token+' back to '+(BOARD[p.pos].name.replace(/\n/g,' ')));handleSquare(p,BOARD[p.pos]);renderBoard()}
+  else if(card.action==='birthday'){const a=card.val*(players.filter(x=>!x.bankrupt).length-1);p.cash+=a;players.forEach((x,i)=>{if(i!==currentPlayer&&!x.bankrupt)x.cash-=card.val});log(p.token+' birthday! +$'+a)}
+  else if(card.action==='chairman'){const a=card.val*(players.filter(x=>!x.bankrupt).length-1);p.cash-=a;players.forEach((x,i)=>{if(i!==currentPlayer&&!x.bankrupt)x.cash+=card.val});log(p.token+' chairman -$'+a)}
+  renderPlayers();
+}
+
+function showCard(t,tx){document.getElementById('cardTitle').textContent=t;document.getElementById('cardText').textContent=tx;document.getElementById('cardPopup').style.display='block';document.getElementById('overlay').style.display='block'}
+function closeCard(){document.getElementById('cardPopup').style.display='none';document.getElementById('overlay').style.display='none'}
+
+function sendToJail(p){p.inJail=true;p.jailTurns=0;p.pos=8;log(p.token+' → JAIL! 🔒');checkPrize('jailbird');playSound(150,0.3,'sawtooth');renderBoard()}
+
+function buyProperty(){
+  if(!canBuy||!currentSquare)return;
+  const p=players[currentPlayer];
+  p.cash-=currentSquare.price;
+  currentSquare.owner=currentPlayer;
+  p.properties.push(currentSquare.name.replace(/\n/g,' '));
+  log(p.token+' buys '+(currentSquare.name.replace(/\n/g,' '))+' $'+currentSquare.price);
+  playSound(600,0.15,'sine');
+  checkPrize('first_buy');
+  if(p.properties.length>=5)checkPrize('five_props');
+  if(p.cash>=2000)checkPrize('millionaire');
+  if(currentSquare.name.includes('Mazzeh'))checkPrize('damascus');
+  canBuy=false;
+  document.getElementById('buyBtn').style.display='none';
+  renderBoard();renderPlayers();
+}
+
+function goBankrupt(p){
+  p.bankrupt=true;p.cash=0;
+  log('💀 '+p.token+' '+p.name+' BANKRUPT!');
+  playSound(100,0.5,'sawtooth');
+  BOARD.forEach(sq=>{if(sq.owner===players.indexOf(p))sq.owner=undefined});
+  p.properties=[];
+  const alive=players.filter(x=>!x.bankrupt);
+  if(alive.length===1){
+    log('🏆 '+alive[0].token+' '+alive[0].name+' WINS! THE WORLD IS THEIRS!');
+    gameActive=false;showToast('🏆 '+alive[0].name+' WINS!');
+  }
+  renderBoard();renderPlayers();
+}
+
+function endTurn(){
+  if(!gameActive)return;
+  do{currentPlayer=(currentPlayer+1)%numPlayers}while(players[currentPlayer].bankrupt&&players.filter(x=>!x.bankrupt).length>1);
+  canBuy=false;
+  document.getElementById('rollBtn').style.display='inline-block';
+  document.getElementById('buyBtn').style.display='none';
+  document.getElementById('endBtn').style.display='none';
+  const p=players[currentPlayer];
+  if(p.cash>=2000)checkPrize('millionaire');
+  log('— '+p.token+' '+p.name+"'s turn —");
+  renderBoard();renderPlayers();
+}
+</script>
+<div style="text-align:center;padding:8px;font-family:monospace;font-size:.7em;border-top:1px solid #222;margin-top:10px">
+<a href="https://juxaos.com/privacy.html" style="color:#666;text-decoration:none">Privacy</a> ·
+<a href="https://juxaos.com/terms.html" style="color:#666;text-decoration:none">Terms</a> ·
+© JuX ITT</div>
+</body>
+</html>

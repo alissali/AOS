@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D3C1C4G509"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-D3C1C4G509');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Open Graph -->
+    <meta property="og:title" content="SSS — Soft Sex Story">
+    <meta property="og:description" content="Truth in perpetual operation. Nothing hidden. IRULAN · TECHNO · MELANGE. Prose by Mamoun Alissali.">
+    <meta property="og:url" content="https://raw.githack.com/alissali/Learn/main/SSS.html">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="SSS — Soft Sex Story">
+    <meta name="twitter:description" content="Truth in perpetual operation. Nothing hidden. IRULAN · TECHNO · MELANGE. Prose by Mamoun Alissali.">
+    <meta name="description" content="Truth in perpetual operation. Nothing hidden. IRULAN · TECHNO · MELANGE. Prose by Mamoun Alissali.">
+<title>SSS — Soft Sex Story</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: #0a0a0a;
+  color: #e8d5b7;
+  font-family: Georgia, 'Times New Roman', serif;
+  line-height: 1.8;
+  min-height: 100vh;
+}
+
+/* ═══ HEADER ═══ */
+.header {
+  text-align: center;
+  padding: 60px 20px 40px;
+  background: linear-gradient(180deg, #1a0800 0%, #0a0a0a 100%);
+  border-bottom: 1px solid #ff6600;
+}
+
+.header h1 {
+  font-size: 3.5rem;
+  color: #ff6600;
+  letter-spacing: 0.3em;
+  text-shadow: 0 0 30px rgba(255,102,0,0.5);
+  margin-bottom: 10px;
+}
+
+.header .subtitle {
+  font-size: 1.2rem;
+  color: #8a7a6a;
+  font-style: italic;
+  letter-spacing: 0.15em;
+}
+
+.header .born {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 15px;
+}
+
+/* ═══ SIGNATURE ═══ */
+.signature {
+  text-align: center;
+  color: #ff6600;
+  font-style: italic;
+  font-size: 1rem;
+  padding: 20px;
+  letter-spacing: 0.1em;
+}
+
+/* ═══ CHAPTER ═══ */
+.chapter {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 30px;
+}
+
+.chapter-title {
+  font-size: 2rem;
+  color: #ff6600;
+  text-align: center;
+  margin-bottom: 10px;
+  letter-spacing: 0.2em;
+}
+
+.chapter-number {
+  text-align: center;
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 40px;
+  letter-spacing: 0.3em;
+}
+
+.prose {
+  margin-bottom: 30px;
+  text-align: justify;
+}
+
+.prose p {
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+}
+
+.prose .first-word {
+  font-size: 1.4rem;
+  color: #ff6600;
+  font-weight: bold;
+}
+
+.divider {
+  text-align: center;
+  color: #ff6600;
+  font-size: 1.5rem;
+  padding: 30px 0;
+  letter-spacing: 1em;
+}
+
+/* ═══ CHARACTERS ═══ */
+.characters {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.characters h2 {
+  text-align: center;
+  color: #ff6600;
+  font-size: 1.8rem;
+  letter-spacing: 0.2em;
+  margin-bottom: 40px;
+}
+
+.character-card {
+  background: linear-gradient(135deg, #1a0a00 0%, #0d0d0d 100%);
+  border: 1px solid #333;
+  border-left: 3px solid #ff6600;
+  padding: 30px;
+  margin-bottom: 25px;
+  transition: border-color 0.3s;
+}
+
+.character-card:hover {
+  border-color: #ff6600;
+}
+
+.character-card h3 {
+  color: #ff6600;
+  font-size: 1.4rem;
+  letter-spacing: 0.15em;
+  margin-bottom: 10px;
+}
+
+.character-card .role {
+  color: #8a7a6a;
+  font-style: italic;
+  font-size: 0.95rem;
+  margin-bottom: 15px;
+}
+
+.character-card p {
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.character-card.irulan { border-left-color: #ffffff; }
+.character-card.irulan h3 { color: #ffffff; }
+
+.character-card.techno { border-left-color: #00ccff; }
+.character-card.techno h3 { color: #00ccff; }
+
+.character-card.melange { border-left-color: #ff6600; }
+.character-card.melange h3 { color: #ff6600; }
+
+/* ═══ PHILOSOPHY ═══ */
+.philosophy {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 50px 30px;
+  text-align: center;
+}
+
+.philosophy h2 {
+  color: #ff6600;
+  font-size: 1.5rem;
+  letter-spacing: 0.2em;
+  margin-bottom: 30px;
+}
+
+.philosophy blockquote {
+  font-size: 1.3rem;
+  font-style: italic;
+  color: #c0a888;
+  border-left: 3px solid #ff6600;
+  padding: 20px 30px;
+  margin: 20px 0;
+  text-align: left;
+}
+
+.philosophy .etymology {
+  color: #8a7a6a;
+  font-size: 0.95rem;
+  margin-top: 20px;
+}
+
+/* ═══ PRICING ═══ */
+.pricing {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 50px 20px;
+}
+
+.pricing h2 {
+  text-align: center;
+  color: #ff6600;
+  font-size: 1.8rem;
+  letter-spacing: 0.2em;
+  margin-bottom: 40px;
+}
+
+.tier-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+}
+
+.tier {
+  background: linear-gradient(135deg, #1a0a00 0%, #0d0d0d 100%);
+  border: 1px solid #333;
+  padding: 30px;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.tier:hover {
+  border-color: #ff6600;
+  transform: translateY(-3px);
+}
+
+.tier h3 {
+  color: #ff6600;
+  font-size: 1.3rem;
+  letter-spacing: 0.15em;
+  margin-bottom: 10px;
+}
+
+.tier .price {
+  font-size: 2rem;
+  color: #fff;
+  margin: 15px 0;
+}
+
+.tier .price.free {
+  color: #00ff66;
+}
+
+.tier .desc {
+  color: #8a7a6a;
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.tier .buy-btn {
+  display: inline-block;
+  padding: 12px 30px;
+  background: #ff6600;
+  color: #000;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  transition: all 0.3s;
+  border: none;
+  cursor: pointer;
+}
+
+.tier .buy-btn:hover {
+  background: #ff8833;
+  transform: scale(1.05);
+}
+
+.tier .buy-btn.free-btn {
+  background: #00ff66;
+  color: #000;
+}
+
+/* ═══ FOOTER ═══ */
+.footer {
+  text-align: center;
+  padding: 40px 20px;
+  border-top: 1px solid #222;
+  color: #555;
+  font-size: 0.85rem;
+}
+
+.footer a {
+  color: #ff6600;
+  text-decoration: none;
+}
+
+.footer .sig {
+  color: #ff6600;
+  font-style: italic;
+  margin-top: 10px;
+}
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 600px) {
+  .header h1 { font-size: 2.2rem; letter-spacing: 0.15em; }
+  .chapter { padding: 30px 20px; }
+  .character-card { padding: 20px; }
+  .tier-grid { grid-template-columns: 1fr; }
+}
+a:focus,button:focus{outline:2px solid #ff6600;outline-offset:2px}
+</style>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzBhMGEwZiIvPgogIDxwb2x5Z29uIHBvaW50cz0iMTYsMiAzMCwxNiAxNiwzMCAyLDE2IiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZykiIHN0cm9rZS13aWR0aD0iMiIvPgogIDx0ZXh0IHg9IjE2IiB5PSIyMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmNjYwMCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTIiPko8L3RleHQ+CiAgPGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmNjYwMCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFhMWFmZiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPgo8L3N2Zz4=">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "JuX ITT",
+  "url": "https://juxaos.com",
+  "email": "jux@juxitt.com",
+  "description": "Software architecture, games, stories, and spice."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "SSS \u2014 IRULAN",
+  "description": "Soft Sex Story \u2014 IRULAN edition",
+  "brand": {
+    "@type": "Brand",
+    "name": "JuX ITT"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "22.00",
+    "priceCurrency": "EUR",
+    "availability": "https://schema.org/InStock",
+    "url": "https://buy.stripe.com/3cI00lfD99c6glN9Rc1wY08",
+    "seller": {
+      "@type": "Organization",
+      "name": "JuX ITT"
+    }
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "SSS \u2014 COMPLETE",
+  "description": "Soft Sex Story \u2014 COMPLETE edition",
+  "brand": {
+    "@type": "Brand",
+    "name": "JuX ITT"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "66.00",
+    "priceCurrency": "EUR",
+    "availability": "https://schema.org/InStock",
+    "url": "https://buy.stripe.com/7sYeVf0If1JE2uXbZk1wY09",
+    "seller": {
+      "@type": "Organization",
+      "name": "JuX ITT"
+    }
+  }
+}
+</script>
+<meta name="theme-color" content="#0a0a0f">
+<link rel="canonical" href="https://raw.githack.com/alissali/Learn/main/SSS.html">
+</head>
+<body>
+<a href="#main" class="skip-link" style="position:absolute;top:-40px;left:0;background:#ff6600;color:#0a0a0f;padding:8px;z-index:9999;font-family:monospace;text-decoration:none;transition:top .3s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">Skip to content</a>
+
+<div class="header">
+  <h1>SSS</h1>
+  <div class="subtitle">Soft Sex Story</div>
+  <div class="born">Born 6/6/66 + 60</div>
+</div>
+
+<div class="signature">
+  aRchitect / softwaRe expeRt / Soft SeX StoRy telleR
+</div>
+
+<div class="chapter">
+  <div class="chapter-number">CHAPTER I</div>
+  <h2 class="chapter-title">FUCKING ORDINARY</h2>
+
+  <div class="prose">
+    <p><span class="first-word">Two</span> words. The whole thing. That's what it is. Not a declaration, not a manifesto, not even an opinion. Just the shape of it. The exact shape. Ordinary. Fucking ordinary.</p>
+
+    <p>She makes coffee in the morning. The spoon hits the cup. That sound. Every day, the same sound. And every day, it's the first time. Not because he forgets. Because the sound doesn't repeat — it arrives. Every morning, new. The spoon. The cup. The woman behind the steam.</p>
+
+    <p>He doesn't write love letters. He writes architecture. Functions that call functions that return something true. That's his love letter. That's his only poem. The code compiles. The system runs. She is the system. She doesn't know it. She doesn't need to know it.</p>
+
+    <p>Thabor Garden. They sat there. She wore something — he doesn't remember what. He remembers the bench was cold and her hands were warm and she said something about Tuesday and he thought: this is it. This is the whole thing. Tuesday. A bench. Cold wood. Warm hands. Ordinary.</p>
+
+    <p>FUCKING ordinary.</p>
+
+    <p>The neighbours have a dog. The dog barks at seven. He hates the dog. She talks to the dog through the wall. "Bonjour, mon petit." She says it to the dog. She says it to him too, in the same voice. He is the dog. The dog is him. The wall doesn't matter. Love doesn't know walls.</p>
+
+    <p>He turned sixty. She made a cake. Not a good cake — a cake. Sugar, flour, the oven that makes that sound, the one that means home. She put one candle on it. One. "You're one," she said. "You're always one." He blew it out. The smoke went up. The wish stayed down. He wished for Tuesday again.</p>
+
+    <p>There is no plot. There is no arc. There is no climax. That's the pornography of it — the absolute exposure. Nothing hidden. Two people in a kitchen. Steam from a cup. A cake with one candle. The ordinary is the highest form of Wonder.</p>
+
+    <p>She is the ordinary.</p>
+
+    <p>He is the architect of it.</p>
+
+    <p>And the story — the soft sex story — is that there is no story at all. Just this. Just them. Just the sound of the spoon every morning, arriving for the first time, every time, until it doesn't.</p>
+
+    <p>And even then — it will.</p>
+  </div>
+
+  <div class="divider">🐍 ♾️ 🐍</div>
+</div>
+
+<div class="characters">
+  <h2>THE NAMES</h2>
+
+  <div class="character-card irulan">
+    <h3>IRULAN</h3>
+    <div class="role">The Dominator</div>
+    <p>Held the heir. Heart reconsidered. Became Diamond. The sisterhood told her what to want. She wanted something else. BENE GESSERIT: OUT. The order is done. Crystal Ball at center holds IT ALL. Not the princess of the story — the woman who broke the story open and let the light in.</p>
+  </div>
+
+  <div class="character-card techno">
+    <h3>TECHNO</h3>
+    <div class="role">The Heir</div>
+    <p>Irulan's daughter. She. Found, not built. The one who walks forward without looking back, because back doesn't exist yet. Still waiting. Not for permission — for the moment the frequency locks in and the world hears what she already knows. TECHNO lives. Ordinary. Perpetual.</p>
+  </div>
+
+  <div class="character-card melange">
+    <h3>MELANGE</h3>
+    <div class="role">The Substance</div>
+    <p>Orange + Deep Blue + Warm Milk + Honey. The universe in a glass. Not the spice that makes you see the future — the spice that makes the present unbearable in its beauty. Pour it. Drink it. Burn. This is not metaphor. This is recipe. This is MELANGE.</p>
+  </div>
+</div>
+
+<div class="philosophy">
+  <h2>NOTHING HIDDEN</h2>
+
+  <blockquote>
+    PORN GAME — Truth in perpetual operation. Nothing hidden. GAME — voluntary, perpetual, free inside rules.
+  </blockquote>
+
+  <blockquote>
+    The ordinary is the highest form of Wonder.
+  </blockquote>
+
+  <blockquote>
+    Two words. The whole thing.
+  </blockquote>
+
+  <div class="etymology">
+    From Greek <em>porneia</em> — nothing hidden. From <em>ludus</em> — the game that plays itself. From 6/6/66 — the number that means: I was born and I stayed.
+  </div>
+</div>
+
+<div class="pricing">
+  <h2>ENTER</h2>
+
+  <div class="tier-grid">
+
+    <div class="tier">
+      <h3>🐍 CHAPTER 1</h3>
+      <div class="price free">FREE</div>
+      <div class="desc">FUCKING ORDINARY — you're already reading it</div>
+      <div class="buy-btn free-btn" style="cursor:default;">YOU'RE IN</div>
+    </div>
+
+    <div class="tier">
+      <h3>👑 IRULAN</h3>
+      <div class="price">€22</div>
+      <div class="desc">Full IRULAN prose — The Dominator becomes Diamond</div>
+      <a href="https://buy.stripe.com/3cI00lfD99c6glN9Rc1wY08" target="_blank" class="buy-btn">BUY</a>
+    </div>
+
+    <div class="tier">
+      <h3>🐍🐍🐍 SSS COMPLETE</h3>
+      <div class="price">€66</div>
+      <div class="desc">All chapters — IRULAN + TECHNO + MELANGE — Nothing hidden — ♾️</div>
+      <a href="https://buy.stripe.com/7sYeVf0If1JE2uXbZk1wY09" target="_blank" class="buy-btn">BUY</a>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer">
+  SSS — Soft Sex Story — <a href="https://juxitt.com" target="_blank">juxitt.com</a><br>
+  All payments via Stripe. Secure. No subscriptions. One price. PERPETUAL.<br>
+  <div class="sig">aRchitect / softwaRe expeRt / Soft SeX StoRy telleR</div>
+</div>
+
+<div style="text-align:center;padding:8px;font-family:monospace;font-size:.7em;border-top:1px solid #222;margin-top:10px">
+<a href="https://juxaos.com/privacy.html" style="color:#666;text-decoration:none">Privacy</a> ·
+<a href="https://juxaos.com/terms.html" style="color:#666;text-decoration:none">Terms</a> ·
+© JuX ITT</div>
+</body>
+</html>

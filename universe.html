@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D3C1C4G509"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-D3C1C4G509');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JuX — UNIVERSE MAP</title>
+<meta property="og:title" content="JuX UNIVERSE MAP">
+<meta property="og:description" content="The entire JuX ecosystem — every page, every connection, one constellation.">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23e8a045' x='25' y='25' width='50' height='50' rx='4' transform='rotate(45 50 50)'/></svg>">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a12;overflow:hidden;font-family:monospace}
+canvas{display:block}
+#tooltip{position:fixed;background:rgba(10,10,18,.95);border:1px solid #e8a045;color:#e8d5c0;padding:8px 14px;border-radius:6px;font-size:.8em;pointer-events:none;display:none;z-index:99;max-width:250px}
+#legend{position:fixed;bottom:15px;left:15px;background:rgba(10,10,18,.9);border:1px solid #1a1a2e;border-radius:8px;padding:10px;font-size:.7em;color:#888;z-index:9}
+#legend div{padding:2px 0}
+#legend span{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
+#title{position:fixed;top:15px;left:50%;transform:translateX(-50%);font-family:'Cinzel Decorative',serif;color:#e8a045;font-size:1.3em;letter-spacing:5px;text-shadow:0 0 20px rgba(232,160,69,.3);z-index:9}
+#back{position:fixed;top:15px;left:15px;color:#e8a045;text-decoration:none;font-size:.85em;z-index:9;border:1px solid #1a1a2e;padding:5px 12px;border-radius:6px}
+#back:hover{border-color:#e8a045}
+#info{position:fixed;top:15px;right:15px;color:#444;font-size:.7em;z-index:9}
+</style>
+</head>
+<body>
+<div id="title">JuX UNIVERSE</div>
+<a id="back" href="https://juxaos.com">← HOME</a>
+<div id="info">Click a star to visit · Drag to pan · Scroll to zoom</div>
+<canvas id="c"></canvas>
+<div id="tooltip"></div>
+<div id="legend">
+<div><span style="background:#e8a045"></span>ARCADE Games</div>
+<div><span style="background:#ff6b9d"></span>Stories & Cards</div>
+<div><span style="background:#4fc3f7"></span>AOS / Tech</div>
+<div><span style="background:#81c784"></span>Business</div>
+<div><span style="background:#ce93d8"></span>Infrastructure</div>
+</div>
+<script>
+const C=document.getElementById('c'),X=C.getContext('2d'),T=document.getElementById('tooltip');
+let W,H,ox=0,oy=0,zoom=1,drag=false,dx,dy,hover=-1;
+function resize(){W=C.width=innerWidth;H=C.height=innerHeight}
+resize();addEventListener('resize',resize);
+
+const cats={arcade:'#e8a045',story:'#ff6b9d',tech:'#4fc3f7',biz:'#81c784',infra:'#ce93d8'};
+const nodes=[
+// ARCADE cluster
+{x:0,y:0,r:22,c:'arcade',n:'ARCADE Hub',u:'https://raw.githack.com/alissali/Learn/main/ARCADE.html'},
+{x:-120,y:-80,r:14,c:'arcade',n:'SNAKE',u:'https://raw.githack.com/alissali/Learn/main/SNAKE.html'},
+{x:120,y:-80,r:14,c:'arcade',n:'MONOPOLY',u:'https://raw.githack.com/alissali/Learn/main/MONOPOLY.html'},
+{x:-120,y:80,r:14,c:'arcade',n:'JuXYams',u:'https://raw.githack.com/alissali/Learn/main/JuXYams.html'},
+{x:120,y:80,r:14,c:'arcade',n:"Hold'em",u:'https://raw.githack.com/alissali/Learn/main/HOLDEM.TRAINING.html'},
+{x:0,y:-130,r:16,c:'arcade',n:'DUNE TAROT',u:'https://raw.githack.com/alissali/Learn/main/DUNE.TAROT.PORN.html'},
+{x:0,y:130,r:10,c:'arcade',n:'Tournament',u:'https://raw.githack.com/alissali/Learn/main/ARCADE.TOURNAMENT.html'},
+{x:-60,y:-160,r:8,c:'arcade',n:'TAROT Game',u:'https://raw.githack.com/alissali/Learn/main/DUNE.TAROT.GAME.html'},
+{x:60,y:-160,r:8,c:'arcade',n:'TAROT Reader',u:'https://raw.githack.com/alissali/Learn/main/DUNE.TAROT.html'},
+{x:-180,y:0,r:8,c:'arcade',n:'Hall of Fame',u:'https://raw.githack.com/alissali/Learn/main/ARCADE.HALL.html'},
+{x:180,y:0,r:8,c:'arcade',n:'Stats',u:'https://raw.githack.com/alissali/Learn/main/ARCADE.STATS.html'},
+{x:-180,y:60,r:7,c:'arcade',n:'Trailer',u:'https://raw.githack.com/alissali/Learn/main/ARCADE.TRAILER.html'},
+{x:180,y:60,r:7,c:'arcade',n:'Star Map',u:'https://raw.githack.com/alissali/Learn/main/ARCADE.MAP.html'},
+{x:-180,y:-60,r:7,c:'arcade',n:'Guide',u:'https://raw.githack.com/alissali/Learn/main/ARCADE.GUIDE.html'},
+{x:180,y:-60,r:7,c:'arcade',n:'Challenge',u:'https://raw.githack.com/alissali/Learn/main/ARCADE.CHALLENGE.html'},
+// STORIES cluster
+{x:-350,y:-180,r:16,c:'story',n:'SSS',u:'https://raw.githack.com/alissali/Learn/main/SSS.html'},
+{x:-400,y:-260,r:10,c:'story',n:'IRULAN',u:'https://raw.githack.com/alissali/Learn/main/IRULAN.SS.html'},
+{x:-300,y:-260,r:10,c:'story',n:'OCB Verses',u:'https://raw.githack.com/alissali/Learn/main/OCB.VERSES.html'},
+// TECH cluster
+{x:350,y:-200,r:18,c:'tech',n:'AOS',u:'https://raw.githack.com/alissali/AOS/main/AOS.html'},
+{x:300,y:-280,r:9,c:'tech',n:'AOS Spec',u:'https://raw.githack.com/alissali/AOS/main/AOS.SPEC.html'},
+{x:400,y:-280,r:9,c:'tech',n:'AOS Download',u:'https://raw.githack.com/alissali/AOS/main/AOS.DOWNLOAD.html'},
+{x:450,y:-200,r:9,c:'tech',n:'AOS Pricing',u:'https://raw.githack.com/alissali/AOS/main/AOS.PRICING.html'},
+{x:300,y:-130,r:9,c:'tech',n:'42 Demo',u:'https://raw.githack.com/alissali/AOS/main/AOS.42.DEMO.html'},
+{x:420,y:-130,r:9,c:'tech',n:'Arabic Dict',u:'https://raw.githack.com/alissali/AOS/main/AOS.ARABIC.DICTIONARY.html'},
+{x:350,y:-100,r:8,c:'tech',n:'Arabic Engine',u:'https://raw.githack.com/alissali/AOS/main/AOS.ARABIC.ENGINE.html'},
+// BIZ cluster
+{x:-300,y:200,r:18,c:'biz',n:'CAVERN',u:'https://raw.githack.com/alissali/JuXITT-Core/main/cavern/CAVERN.html'},
+{x:-380,y:260,r:8,c:'biz',n:'Cavern Menu',u:'https://raw.githack.com/alissali/Learn/main/CAVERN.MENU.html'},
+{x:-220,y:260,r:8,c:'biz',n:'The Shop',u:'https://juxaos.com/shop.html'},
+{x:300,y:200,r:14,c:'biz',n:'juxaos.com',u:'https://juxaos.com'},
+{x:380,y:260,r:8,c:'biz',n:'Card',u:'https://juxaos.com/card.html'},
+{x:220,y:260,r:8,c:'biz',n:'Links',u:'https://juxaos.com/links.html'},
+// INFRA cluster
+{x:0,y:300,r:12,c:'infra',n:'Manifesto',u:'https://juxaos.com/about.html'},
+{x:-100,y:340,r:7,c:'infra',n:'Privacy',u:'https://juxaos.com/privacy.html'},
+{x:100,y:340,r:7,c:'infra',n:'Terms',u:'https://juxaos.com/terms.html'},
+{x:0,y:370,r:7,c:'infra',n:'Status',u:'https://juxaos.com/status.html'},
+{x:-60,y:400,r:6,c:'infra',n:'Sitemap',u:'https://juxaos.com/sitemap.html'},
+{x:60,y:400,r:6,c:'infra',n:'RSS Feed',u:'https://juxaos.com/feed.xml'},
+];
+// Edges — connections between nodes
+const edges=[[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,9],[0,10],[0,11],[0,12],[0,13],[0,14],[5,7],[5,8],[15,16],[15,17],[18,19],[18,20],[18,21],[18,22],[18,23],[18,24],[25,26],[25,27],[28,29],[28,30],[31,32],[31,33],[31,34],[31,35],[0,15],[0,25],[0,28],[18,28],[15,5]];
+let stars=[];for(let i=0;i<200;i++)stars.push({x:(Math.random()-.5)*2000,y:(Math.random()-.5)*1500,s:Math.random()*1.5+.5,b:Math.random()});
+let t=0;
+function draw(){
+t+=.01;X.fillStyle='#0a0a12';X.fillRect(0,0,W,H);
+X.save();X.translate(W/2+ox,H/2+oy);X.scale(zoom,zoom);
+// Stars
+stars.forEach(s=>{let b=.3+.3*Math.sin(t*2+s.b*10);X.fillStyle=`rgba(255,255,255,${b})`;X.fillRect(s.x,s.y,s.s,s.s)});
+// Edges
+edges.forEach(([a,b])=>{
+let na=nodes[a],nb=nodes[b];
+X.strokeStyle=`rgba(232,160,69,.12)`;X.lineWidth=1;
+X.beginPath();X.moveTo(na.x,na.y);X.lineTo(nb.x,nb.y);X.stroke();
+// Traveling particle
+let p=(t*(.3+a*.02))%1;
+let px=na.x+(nb.x-na.x)*p,py=na.y+(nb.y-na.y)*p;
+X.fillStyle='rgba(232,160,69,.4)';X.beginPath();X.arc(px,py,1.5,0,Math.PI*2);X.fill();
+});
+// Nodes
+nodes.forEach((n,i)=>{
+let glow=i===hover?.4:.15;
+let c=cats[n.c];
+X.shadowColor=c;X.shadowBlur=n.r*2*glow*5;
+X.fillStyle=c;X.globalAlpha=.15+glow;
+X.beginPath();X.arc(n.x,n.y,n.r+4,0,Math.PI*2);X.fill();
+X.globalAlpha=1;X.shadowBlur=0;
+X.fillStyle=c;X.beginPath();X.arc(n.x,n.y,n.r,0,Math.PI*2);X.fill();
+X.fillStyle='#0a0a12';X.font=`bold ${Math.max(7,n.r*.6)}px monospace`;X.textAlign='center';X.textBaseline='middle';
+let name=n.n.length>10?n.n.slice(0,9)+'…':n.n;
+X.fillText(name,n.x,n.y);
+});
+X.restore();
+requestAnimationFrame(draw);
+}
+draw();
+// Interaction
+C.addEventListener('mousemove',e=>{
+let mx=(e.clientX-W/2-ox)/zoom,my=(e.clientY-H/2-oy)/zoom;
+hover=-1;
+for(let i=0;i<nodes.length;i++){
+let n=nodes[i],d=Math.hypot(mx-n.x,my-n.y);
+if(d<n.r+5){hover=i;break}
+}
+if(hover>=0){T.style.display='block';T.style.left=e.clientX+15+'px';T.style.top=e.clientY-10+'px';T.innerHTML=`<b style="color:#e8a045">${nodes[hover].n}</b><br><span style="color:#666;font-size:.8em">${nodes[hover].u}</span>`;C.style.cursor='pointer'}
+else{T.style.display='none';C.style.cursor='grab'}
+});
+C.addEventListener('click',e=>{if(hover>=0)window.open(nodes[hover].u,'_blank')});
+C.addEventListener('mousedown',e=>{if(hover<0){drag=true;dx=e.clientX-ox;dy=e.clientY-oy;C.style.cursor='grabbing'}});
+addEventListener('mousemove',e=>{if(drag){ox=e.clientX-dx;oy=e.clientY-dy}});
+addEventListener('mouseup',()=>{drag=false});
+C.addEventListener('wheel',e=>{e.preventDefault();zoom*=e.deltaY>0?.92:1.08;zoom=Math.max(.3,Math.min(3,zoom))},{passive:false});
+// Touch
+let lt=0;
+C.addEventListener('touchstart',e=>{if(e.touches.length===1){let t=e.touches[0];drag=true;dx=t.clientX-ox;dy=t.clientY-oy}});
+C.addEventListener('touchmove',e=>{e.preventDefault();if(drag&&e.touches.length===1){let t=e.touches[0];ox=t.clientX-dx;oy=t.clientY-dy}},{passive:false});
+C.addEventListener('touchend',()=>{drag=false});
+</script>
+</body>
+</html>
