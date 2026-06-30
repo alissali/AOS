@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0EK0X213R9"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-0EK0X213R9');
+</script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AOS — Soft Story: Laser → Diamond → Big Bang → Universe</title>
+<style>
+  :root {
+    --opal-void:    #05070f;
+    --opal-teal:    #2ec4b6;
+    --opal-amber:   #e8a045;
+    --opal-violet:  #7b4fa6;
+    --opal-gold:    #f5c842;
+    --aos-prism:    #e8f4f8;
+    --aos-ice:      #b8dff0;
+    --aos-spectrum: #ffffff;
+    --minimal:      #2ec4b6;
+    --bug:          #e05252;
+    --medical:      #52c07a;
+    --engineering:  #5b9cf6;
+    --legal:        #c47be0;
+    --synthesis:    #f5c842;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--opal-void);
+    color: var(--aos-prism);
+    font-family: 'Courier New', monospace;
+    overflow-x: hidden;
+  }
+
+  /* STARFIELD */
+  #stars {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* LASER BEAM */
+  #laser-stage {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  #laser-canvas {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+  }
+
+  .hero-title {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+
+  .hero-title h1 {
+    font-size: clamp(1.4rem, 4vw, 2.8rem);
+    font-weight: 300;
+    letter-spacing: 0.3em;
+    color: var(--aos-spectrum);
+    text-shadow: 0 0 40px var(--opal-teal), 0 0 80px var(--opal-violet);
+    animation: breathe 4s ease-in-out infinite;
+  }
+
+  .hero-title .subtitle {
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.5em;
+    color: var(--opal-teal);
+    opacity: 0.7;
+  }
+
+  .hero-title .scroll-hint {
+    margin-top: 3rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    color: var(--opal-amber);
+    opacity: 0.5;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes breathe {
+    0%,100% { text-shadow: 0 0 40px var(--opal-teal), 0 0 80px var(--opal-violet); }
+    50% { text-shadow: 0 0 80px var(--opal-gold), 0 0 160px var(--opal-amber); }
+  }
+
+  @keyframes pulse {
+    0%,100% { opacity: 0.3; }
+    50% { opacity: 0.8; }
+  }
+
+  /* STORY SECTIONS */
+  .story-wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 2rem 8rem;
+  }
+
+  .chapter {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+    margin-bottom: 6rem;
+    border-left: 2px solid;
+    padding-left: 2rem;
+  }
+
+  .chapter.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .chapter.minimal    { border-color: var(--minimal); }
+  .chapter.bug        { border-color: var(--bug); }
+  .chapter.medical    { border-color: var(--medical); }
+  .chapter.engineering{ border-color: var(--engineering); }
+  .chapter.legal      { border-color: var(--legal); }
+  .chapter.synthesis  { border-color: var(--synthesis); border-left: none; text-align: center; padding-left: 0; }
+
+  .dic-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+    opacity: 0.6;
+  }
+
+  .chapter.minimal     .dic-label { color: var(--minimal); }
+  .chapter.bug         .dic-label { color: var(--bug); }
+  .chapter.medical     .dic-label { color: var(--medical); }
+  .chapter.engineering .dic-label { color: var(--engineering); }
+  .chapter.legal       .dic-label { color: var(--legal); }
+  .chapter.synthesis   .dic-label { color: var(--synthesis); }
+
+  .nft-row {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 0.3rem 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.78rem;
+  }
+
+  .nft-key {
+    opacity: 0.45;
+    letter-spacing: 0.15em;
+    padding-top: 2px;
+  }
+
+  .nft-val {
+    color: var(--aos-prism);
+    line-height: 1.6;
+  }
+
+  .story-text {
+    margin-top: 1.5rem;
+    font-size: 1.05rem;
+    line-height: 1.9;
+    color: var(--aos-ice);
+    font-style: italic;
+  }
+
+  .story-text em {
+    font-style: normal;
+    font-weight: bold;
+  }
+
+  /* SYNTHESIS */
+  .synthesis-glow {
+    font-size: clamp(1.1rem, 3vw, 1.8rem);
+    line-height: 2;
+    color: var(--opal-gold);
+    text-shadow: 0 0 30px var(--opal-amber);
+    letter-spacing: 0.05em;
+    margin-top: 1rem;
+  }
+
+  /* TRANSITION ARROWS */
+  .arrow {
+    text-align: center;
+    font-size: 1.5rem;
+    color: var(--opal-violet);
+    opacity: 0.4;
+    margin: -3rem 0 3rem;
+    letter-spacing: 0.5em;
+  }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 3rem 2rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: var(--opal-teal);
+    opacity: 0.4;
+    border-top: 1px solid rgba(46,196,182,0.1);
+  }
+
+  /* AUDIO */
+  #audio-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 100;
+    background: rgba(5,7,15,0.85);
+    border: 1px solid var(--opal-violet);
+    color: var(--opal-teal);
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    padding: 0.6rem 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  #audio-btn:hover {
+    background: var(--opal-violet);
+    color: var(--aos-spectrum);
+  }
+
+  /* DIVIDER */
+  .divider {
+    width: 40px;
+    height: 1px;
+    background: var(--opal-gold);
+    margin: 2rem auto;
+    opacity: 0.3;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+
+<!-- LASER STAGE -->
+<div id="laser-stage">
+  <canvas id="laser-canvas"></canvas>
+  <div class="hero-title">
+    <h1>LASER &rarr; DIAMOND &rarr; BIG BANG &rarr; UNIVERSE</h1>
+    <div class="subtitle">A SOFT STORY — FIVE AOS DICTIONARIES</div>
+    <div class="scroll-hint">&#8595; &nbsp; scroll &nbsp; &#8595;</div>
+  </div>
+</div>
+
+<!-- STORY -->
+<div class="story-wrap">
+
+  <!-- MINIMAL -->
+  <div class="chapter minimal">
+    <div class="dic-label">Dictionary I — AOS.MINIMAL</div>
+    <div class="nft-row">
+      <span class="nft-key">NAME</span>
+      <span class="nft-val">Laser</span>
+    </div>
+    <div class="nft-row">
+      <span class="nft-key">FACT</span>
+      <span class="nft-val">Coherent light. Single frequency. Maximum focus.</span>
+    </div>
+    <div class="nft-row">
+      <span class="nft-key">TARGET</span>
+      <span class="nft-val">Diamond. The hardest point in the known world.</span>
+    </div>
+    <div class="story-text">
+      A laser does not ask permission.<br>
+      It does not negotiate with the diamond.<br>
+      It <em>is</em> the question — and the diamond is the answer.
+    </div>
+  </div>
+
+  <div class="arrow">&#8595; &nbsp; &#8595; &nbsp; &#8595;</div>
+
+  <!-- BUG-MIB -->
+  <div class="chapter bug">
+    <div class="dic-label">Dictionary II — AOS.BUG-MIB</div>
+    <div class="nft-row">
+      <span class="nft-key">NAME</span>
+      <span class="nft-val">B∞ — The First Fracture</span>
+    </div>
+    <div class="nft-row">
+      <span class="nft-key">FACT</span>
+      <span class="nft-val">The diamond cracks. Not destroyed — opened. The bug is the gate.</span>
+    </div>
+    <div class="nft-row">
+      <span class="nft-key">TARGET</span>
+      <span class="nft-val">Name it. Own it. Date it. — Then let the light through.</span>
+    </div>
+    <div class="story-text">
+      The crack was not a failure.<br>
+      It was the first <em>honest expression</em> of the system.<br>
+      Named: B∞. &nbsp; Owned: Diamond. &nbsp; Date: before time.
+    </div>
+  </div>
+
+  <div class="arrow">&#8595; &nbsp; &#8595; &nbsp; &#8595;</div>
+
+  <!-- MEDICAL -->
+  <div class="chapter medical">
+    <div class="dic-label">Dictionary III — AOS.MEDICAL</div>
+    <div class="nft-row">
+      <span class="nft-key">NAME</span>
+      <span class="nft-val">Compression Syndrome — Stage Infinity</span>
+    </div>
+    <div class="nft-row">
+      <span class="nft-key">FACT</span>
+      <span class="nft-val">All energy compressed into a single point. Pressure beyond containment.</span>
+    </div>
+    <div class="nft-row">
+      <span class="nft-key">TARGET</span>
+      <span class="nft-val">Release. The only treatment is expansion.</span>
+    </div>
+    <div class="story-text">
+      The universe was <em>diagnosed</em> before it was born.<br>
+      Symptom: infinite density. Prognosis: inevitable release.<br>
+      Treatment prescribed: <em>Big Bang</em>.
+    </div>
+  </div>
+
+  <div class="arrow">&#8595; &nbsp; &#8595; &nbsp; &#8595;</div>
+
+  <!-- ENGINEERING -->
+  <div class="chapter engineering">
+    <div class="dic-label">Dictionary IV — AOS.ENGINEERING</div>
+    <div class="nft-row">
+      <span class="nft-key">NAME</span>
+      <span class="nft-val">Expansion Engine v0.0</span>
+    </div>
+    <div class="nft-row">
+      <span class="nft-key">FACT</span>
+      <span class="nft-val">Requirement: contain all matter. Defect: containment impossible. Threshold: exceeded.</span>
+    </div>
+    <div class="nft-row">
+      <span class="nft-key">TARGET</span>
+      <span class="nft-val">Deploy. At scale. Immediately. Forever.</span>
+    </div>
+    <div class="story-text">
+      The engineer did not panic at the defect.<br>
+      He read the requirement: <em>everything must exist</em>.<br>
+      Validation: <em>passed</em>. Output: Universe.
+    </div>
+  </div>
+
+  <div class="arrow">&#8595; &nbsp; &#8595; &nbsp; &#8595;</div>
+
+  <!-- LEGAL -->
+  <div class="chapter legal">
+    <div class="dic-label">Dictionary V — AOS.LEGAL</div>
+    <div class="nft-row">
+      <span class="nft-key">NAME</span>
+      <span class="nft-val">Claim No. 1 — Origin</span>
+    </div>
+    <div class="nft-row">
+      <span class="nft-key">FACT</span>
+      <span class="nft-val">The laser fired first. The diamond held the moment. The Bang produced everything that followed.</span>
+    </div>
+    <div class="nft-row">
+      <span class="nft-key">TARGET</span>
+      <span class="nft-val">Verdict: all that exists is downstream of the fracture.</span>
+    </div>
+    <div class="story-text">
+      The court has only one exhibit:<br>
+      <em>the light that entered the diamond.</em><br>
+      Verdict — unanimous, eternal:<br>
+      <em>everything belongs to that moment.</em>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SYNTHESIS -->
+  <div class="chapter synthesis visible">
+    <div class="dic-label">Synthesis — AOS Applied</div>
+    <div class="synthesis-glow">
+      The laser did not destroy the diamond.<br>
+      It freed what was inside.<br><br>
+      <span style="color:var(--opal-teal)">NAME:</span> Universe<br>
+      <span style="color:var(--opal-amber)">FACT:</span> Born from a fracture in the hardest thing that ever existed.<br>
+      <span style="color:var(--opal-violet)">TARGET:</span> Expand. Forever. Name everything you find.
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  AOS — ADEQUATE OPERATING SYSTEM &nbsp;|&nbsp; MIT LICENSE &nbsp;|&nbsp; jux@juxitt.com &nbsp;|&nbsp; © MAMOUN ALISSALI
+</div>
+
+<button id="audio-btn" onclick="toggleAudio()">♪ PLAY</button>
+
+<script>
+// STARFIELD
+const starCanvas = document.getElementById('stars');
+const sCtx = starCanvas.getContext('2d');
+let stars = [];
+
+function resizeStars() {
+  starCanvas.width = window.innerWidth;
+  starCanvas.height = window.innerHeight;
+}
+
+function initStars() {
+  stars = [];
+  for (let i = 0; i < 320; i++) {
+    stars.push({
+      x: Math.random() * starCanvas.width,
+      y: Math.random() * starCanvas.height,
+      r: Math.random() * 1.2 + 0.2,
+      phase: Math.random() * Math.PI * 2,
+      speed: Math.random() * 0.005 + 0.002,
+      color: ['#2ec4b6','#e8a045','#7b4fa6','#f5c842','#b8dff0'][Math.floor(Math.random()*5)]
+    });
+  }
+}
+
+function drawStars(t) {
+  sCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
+  stars.forEach(s => {
+    const alpha = 0.3 + 0.5 * Math.sin(s.phase + t * s.speed);
+    sCtx.beginPath();
+    sCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    sCtx.fillStyle = s.color;
+    sCtx.globalAlpha = alpha;
+    sCtx.fill();
+  });
+  sCtx.globalAlpha = 1;
+}
+
+// LASER ANIMATION
+const lCanvas = document.getElementById('laser-canvas');
+const lCtx = lCanvas.getContext('2d');
+
+function resizeLaser() {
+  lCanvas.width = window.innerWidth;
+  lCanvas.height = window.innerHeight;
+}
+
+let laserPhase = 0;
+let bangTriggered = false;
+let bangAlpha = 0;
+let bangRadius = 0;
+
+function drawLaser(t) {
+  lCtx.clearRect(0, 0, lCanvas.width, lCanvas.height);
+  const cx = lCanvas.width / 2;
+  const cy = lCanvas.height / 2;
+
+  // Pulsing laser beam from left
+  const beamY = cy;
+  const beamStart = 0;
+  const beamEnd = cx - 30;
+
+  lCtx.save();
+  const beamPulse = 0.6 + 0.4 * Math.sin(t * 0.003);
+  // Outer glow
+  lCtx.beginPath();
+  lCtx.moveTo(beamStart, beamY);
+  lCtx.lineTo(beamEnd, beamY);
+  lCtx.strokeStyle = `rgba(46,196,182,${0.15 * beamPulse})`;
+  lCtx.lineWidth = 12;
+  lCtx.stroke();
+  // Core
+  lCtx.beginPath();
+  lCtx.moveTo(beamStart, beamY);
+  lCtx.lineTo(beamEnd, beamY);
+  lCtx.strokeStyle = `rgba(180,240,255,${0.8 * beamPulse})`;
+  lCtx.lineWidth = 2;
+  lCtx.stroke();
+  lCtx.restore();
+
+  // Diamond
+  lCtx.save();
+  const dSize = 28;
+  lCtx.translate(cx, cy);
+  lCtx.rotate(t * 0.0008);
+  lCtx.beginPath();
+  lCtx.moveTo(0, -dSize);
+  lCtx.lineTo(dSize * 0.6, 0);
+  lCtx.lineTo(0, dSize);
+  lCtx.lineTo(-dSize * 0.6, 0);
+  lCtx.closePath();
+  const dGrad = lCtx.createLinearGradient(-dSize, -dSize, dSize, dSize);
+  dGrad.addColorStop(0, 'rgba(245,200,66,0.9)');
+  dGrad.addColorStop(0.4, 'rgba(255,255,255,0.95)');
+  dGrad.addColorStop(1, 'rgba(123,79,166,0.8)');
+  lCtx.fillStyle = dGrad;
+  lCtx.fill();
+  lCtx.strokeStyle = 'rgba(255,255,255,0.6)';
+  lCtx.lineWidth = 1;
+  lCtx.stroke();
+  lCtx.restore();
+
+  // Spectrum rays from diamond
+  const colors = ['#e05252','#e8a045','#f5c842','#52c07a','#5b9cf6','#c47be0','#2ec4b6'];
+  const angles = [-0.35, -0.22, -0.08, 0, 0.08, 0.22, 0.35];
+  const rayLen = Math.min(lCanvas.width, lCanvas.height) * 0.45;
+
+  lCtx.save();
+  lCtx.translate(cx, cy);
+  colors.forEach((color, i) => {
+    const angle = angles[i];
+    const pulse = 0.5 + 0.5 * Math.sin(t * 0.002 + i * 0.4);
+    lCtx.beginPath();
+    lCtx.moveTo(30, 0);
+    lCtx.lineTo(30 + rayLen * Math.cos(angle), rayLen * Math.sin(angle));
+    lCtx.strokeStyle = color;
+    lCtx.globalAlpha = 0.55 * pulse;
+    lCtx.lineWidth = 2.5;
+    lCtx.stroke();
+  });
+  lCtx.restore();
+  lCtx.globalAlpha = 1;
+}
+
+// MAIN LOOP
+function loop(t) {
+  drawStars(t);
+  drawLaser(t);
+  requestAnimationFrame(loop);
+}
+
+window.addEventListener('resize', () => { resizeStars(); resizeLaser(); initStars(); });
+resizeStars(); resizeLaser(); initStars();
+requestAnimationFrame(loop);
+
+// SCROLL REVEAL
+const chapters = document.querySelectorAll('.chapter:not(.synthesis)');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.15 });
+chapters.forEach(c => observer.observe(c));
+
+// AUDIO
+let audioCtx = null;
+let playing = false;
+let nodes = [];
+
+function toggleAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (playing) {
+    nodes.forEach(n => { try { n.stop(); } catch(e){} });
+    nodes = [];
+    playing = false;
+    document.getElementById('audio-btn').textContent = '♪ PLAY';
+    return;
+  }
+  playing = true;
+  document.getElementById('audio-btn').textContent = '■ STOP';
+
+  // Dark Side drone — D minor harmonics
+  const freqs = [73.42, 110.00, 146.83, 220.00, 293.66, 369.99];
+  const gains = [0.18, 0.12, 0.09, 0.07, 0.05, 0.03];
+
+  freqs.forEach((freq, i) => {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    const lfo = audioCtx.createOscillator();
+    const lfoGain = audioCtx.createGain();
+
+    osc.type = i % 2 === 0 ? 'sine' : 'triangle';
+    osc.frequency.value = freq;
+
+    lfo.frequency.value = 0.08 + i * 0.03;
+    lfoGain.gain.value = freq * 0.012;
+    lfo.connect(lfoGain);
+    lfoGain.connect(osc.frequency);
+
+    gain.gain.setValueAtTime(0, audioCtx.currentTime);
+    gain.gain.linearRampToValueAtTime(gains[i], audioCtx.currentTime + 3);
+
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    osc.start();
+    lfo.start();
+    nodes.push(osc, lfo);
+  });
+}
+</script>
+</body>
+</html>

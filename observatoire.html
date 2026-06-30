@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0EK0X213R9"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-0EK0X213R9');
+</script>
+    <meta charset="UTF-8">
+    <title>UNIVERSE: THE PRIZE - L'OBSERVATOIRE SILENCIEUX</title>
+    <style>
+        html, body {
+            background-color: #000000;
+            margin: 0; padding: 0;
+            width: 100vw; height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: monospace;
+            overflow: hidden;
+            color: #00ff00;
+        }
+
+        /* 📡 Le Cadre de l'Écran de Contrôle */
+        .observatory-screen {
+            border: 2px solid #005500;
+            padding: 30px;
+            width: 85%;
+            max-width: 700px;
+            background-color: #020202;
+            box-shadow: 0 0 30px rgba(0, 85, 0, 0.4);
+            text-align: center;
+        }
+
+        /* 🪐 Fenêtre Graphique : Planet Prime en Rotation Quantique */
+        .space-window {
+            height: 220px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 500px;
+            margin: 20px 0;
+        }
+
+        .core-container {
+            position: relative;
+            width: 120px; height: 120px;
+            transform-style: preserve-3d;
+            animation: spinMatrix 25s linear infinite;
+        }
+
+        .matrix-plane {
+            position: absolute;
+            width: 120px; height: 120px;
+            border: 1px solid #00ff00;
+            background: rgba(0, 255, 0, 0.02);
+            border-radius: 50%; /* Transforme le cube en sphère filaire */
+            box-shadow: 0 0 8px rgba(0, 255, 0, 0.2);
+        }
+
+        /* Croisement des axes pour créer la sphère 3D */
+        .p1 { transform: rotateY(0deg); }
+        .p2 { transform: rotateY(45deg); }
+        .p3 { transform: rotateY(90deg); }
+        .p4 { transform: rotateY(135deg); }
+        .p5 { transform: rotateX(90deg); }
+
+        /* 📜 Terminal de Chronologie Automatique */
+        .timeline-monitor {
+            border-top: 1px dashed #005500;
+            padding-top: 20px;
+            min-height: 120px;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #a0ffa0;
+            text-align: left;
+        }
+
+        .status-bar {
+            font-size: 13px;
+            color: #008800;
+            margin-top: 20px;
+            letter-spacing: 1px;
+        }
+
+        /* Animation de rotation fluide de la structure */
+        @keyframes spinMatrix {
+            0% { transform: rotateX(15deg) rotateY(0deg); }
+            100% { transform: rotateX(15deg) rotateY(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="observatory-screen">
+        <div style="font-size: 20px; letter-spacing: 3px; font-weight: bold;">
+            📡 OBSERVATOIRE SILENCIEUX
+        </div>
+        <div style="font-size: 12px; color: #008800;">
+            MATRICE RECONFIGURÉE • ZERO INTERACTION PROTOCAL
+        </div>
+
+        <!-- Visualisation de Planet Prime -->
+        <div class="space-window">
+            <div class="core-container">
+                <div class="matrix-plane p1"></div>
+                <div class="matrix-plane p2"></div>
+                <div class="matrix-plane p3"></div>
+                <div class="matrix-plane p4"></div>
+                <div class="matrix-plane p5"></div>
+            </div>
+        </div>
+
+        <!-- Moniteur d'Évolution Temporelle Chronologique -->
+        <div class="timeline-monitor" id="monitor-text">
+            > Initialisation du flux temporel stable...
+        </div>
+
+        <div class="status-bar" id="live-clock">
+            Simulation active depuis : 0s | Statut : Paix Absolue
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        const logSteps = [
+            "<b>[An 100]</b> : Le bouclier magnétique dévie les vents solaires. Des aurores émeraude permanentes stabilisent la haute atmosphère.",
+            "<b>[An 5 000]</b> : Les microbes d'origine saturent les océans. L'eau vire au turquoise. Production massive d'oxygène natif.",
+            "<b>[An 25 000]</b> : Une mousse végétale bioluminescente recouvre la roche noire. La planète génère sa propre lumière.",
+            "<b>[An 100 000]</b> : Résonance globale détectée. Les continents pulsent en synchronie. Le cosmos respire sans effort.",
+            "<b>[Éternité]</b> : Structure équilibrée. Aucun correctif requis. Aucun code à modifier. Le système s'auto-exécute dans la perfection."
+        ];
+
+        let currentStep = 0;
+        const monitor = document.getElementById('monitor-text');
+        
+        // Fait défiler les événements de manière purement temporelle et automatique
+        const evolutionInterval = setInterval(() => {
+            if (currentStep < logSteps.length) {
+                monitor.innerHTML += `<br>> ${logSteps[currentStep]}`;
+                currentStep++;
+            } else {
+                clearInterval(evolutionInterval);
+            }
+        }, 5000); // Un nouvel événement se produit toutes les 5 secondes
+
+        // Horloge d'exécution en temps réel
+        let seconds = 0;
+        setInterval(() => {
+            seconds++;
+            document.getElementById('live-clock').innerText = `Simulation active depuis : ${seconds}s | Statut : Paix Absolue`;
+        }, 1000);
+    </script>
+</body>
+</html>

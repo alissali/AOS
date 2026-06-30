@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0EK0X213R9"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-0EK0X213R9');
+</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AOS — Adequate Operating System</title>
+  <style>
+    /* jux.css — OPAL + AOS palette */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --opal-void:      #05070f;
+      --opal-deep:      #0a0f1e;
+      --opal-mid:       #111827;
+      --opal-blue:      #1a6b8a;
+      --opal-teal:      #2ec4b6;
+      --opal-amber:     #e8a045;
+      --opal-violet:    #7b4fa6;
+      --opal-lavender:  #b07fc4;
+      --opal-gold:      #f5c842;
+      --opal-ice:       #c8f0f5;
+
+      --aos-white:  #f8f9ff;
+      --aos-cut:    #dde8ff;
+      --aos-prism:  #a8d8ea;
+      --aos-red:    #ff4455;
+      --aos-orange: #ff8844;
+      --aos-yellow: #ffe055;
+      --aos-green:  #44ffaa;
+      --aos-blue:   #4488ff;
+      --aos-indigo: #6655ff;
+      --aos-violet: #cc44ff;
+
+      --aos-name:   var(--aos-red);
+      --aos-fact:   var(--aos-green);
+      --aos-target: var(--aos-blue);
+
+      --aos-l1: var(--aos-red);
+      --aos-l2: var(--aos-orange);
+      --aos-l3: var(--aos-yellow);
+      --aos-l4: var(--aos-green);
+      --aos-l5: var(--aos-violet);
+
+      --font-main:   'Courier New', Courier, monospace;
+      --space-xs:    0.25rem;
+      --space-sm:    0.5rem;
+      --space-md:    1rem;
+      --space-lg:    2rem;
+      --space-xl:    4rem;
+      --border-thin: 1px solid rgba(255,255,255,0.08);
+      --border-opal: 1px solid var(--opal-teal);
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      background:
+        radial-gradient(ellipse at 20% 30%, rgba(46,196,182,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 70%, rgba(123,79,166,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse at 50% 50%, rgba(232,160,69,0.03) 0%, transparent 70%),
+        var(--opal-void);
+      color: var(--opal-ice);
+      font-family: var(--font-main);
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* PRISM BAR */
+    .jux-prism-bar {
+      height: 4px;
+      background: linear-gradient(to right,
+        var(--aos-red), var(--aos-orange), var(--aos-yellow),
+        var(--aos-green), var(--aos-blue), var(--aos-indigo), var(--aos-violet));
+    }
+
+    /* LAYOUT */
+    .jux-container { max-width: 900px; margin: 0 auto; padding: var(--space-xl) var(--space-lg); }
+    .jux-header    { text-align: center; padding: var(--space-xl) 0 var(--space-lg); }
+    .jux-section   { margin: var(--space-xl) 0; }
+
+    /* TYPOGRAPHY */
+    .jux-title {
+      font-size: 2.5rem; font-weight: bold;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--opal-ice);
+    }
+    .jux-subtitle {
+      font-size: 0.95rem; color: var(--opal-teal);
+      letter-spacing: 0.2em; text-transform: uppercase; margin-top: var(--space-sm);
+    }
+    .jux-label {
+      font-size: 0.75rem; letter-spacing: 0.25em;
+      text-transform: uppercase; color: rgba(255,255,255,0.4);
+    }
+    .jux-quote {
+      font-style: italic; color: var(--opal-amber);
+      border-left: 3px solid var(--opal-amber);
+      padding-left: var(--space-md); margin: var(--space-lg) 0;
+    }
+
+    /* OBJECT COLORS */
+    .name   { color: var(--aos-name);   }
+    .fact   { color: var(--aos-fact);   }
+    .target { color: var(--aos-target); }
+    .l1 { color: var(--aos-l1); }
+    .l2 { color: var(--aos-l2); }
+    .l3 { color: var(--aos-l3); }
+    .l4 { color: var(--aos-l4); }
+    .l5 { color: var(--aos-l5); }
+    .opal-teal   { color: var(--opal-teal);   }
+    .opal-amber  { color: var(--opal-amber);  }
+    .opal-violet { color: var(--opal-violet); }
+    .opal-gold   { color: var(--opal-gold);   }
+
+    /* BLOCKS */
+    .jux-block {
+      background: var(--opal-mid);
+      border: var(--border-thin);
+      border-radius: 2px;
+      padding: var(--space-lg); margin: var(--space-md) 0;
+    }
+    .jux-block-name   { border-left: 3px solid var(--aos-name);   }
+    .jux-block-fact   { border-left: 3px solid var(--aos-fact);   }
+    .jux-block-target { border-left: 3px solid var(--aos-target); }
+    .jux-block-opal   { border-left: 3px solid var(--opal-teal);  }
+    .jux-block-amber  { border-left: 3px solid var(--opal-amber); }
+    .jux-block-violet { border-left: 3px solid var(--opal-violet);}
+
+    /* TABLE */
+    .jux-table { width: 100%; border-collapse: collapse; margin: var(--space-md) 0; }
+    .jux-table th {
+      color: var(--opal-teal); text-align: left;
+      padding: var(--space-sm) var(--space-md);
+      border-bottom: 1px solid var(--opal-teal);
+      font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase;
+    }
+    .jux-table td {
+      padding: var(--space-sm) var(--space-md);
+      border-bottom: var(--border-thin);
+      font-size: 0.9rem; vertical-align: top;
+    }
+    .jux-table tr:hover td { background: rgba(46,196,182,0.04); }
+
+    /* SENTENCE */
+    .jux-sentence {
+      font-family: var(--font-main); color: var(--aos-yellow);
+      background: rgba(255,224,85,0.04);
+      border-left: 2px solid var(--aos-yellow);
+      padding: var(--space-sm) var(--space-md); margin: var(--space-sm) 0;
+    }
+
+    /* BADGES */
+    .jux-badge {
+      display: inline-block; font-size: 0.7rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      padding: 0.2rem 0.6rem; border-radius: 2px; margin: 0 0.2rem;
+    }
+    .jux-badge-mit  { border: 1px solid var(--opal-gold);    color: var(--opal-gold);    }
+    .jux-badge-live { border: 1px solid var(--aos-fact);     color: var(--aos-fact);     }
+    .jux-badge-open { border: 1px solid var(--aos-name);     color: var(--aos-name);     }
+
+    /* BUTTONS */
+    .jux-btn {
+      display: inline-block; padding: 0.6rem 1.5rem;
+      border: 1px solid var(--opal-teal); color: var(--opal-teal);
+      background: transparent; font-family: var(--font-main);
+      font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;
+      cursor: pointer; transition: all 0.2s; text-decoration: none;
+      margin: 0.3rem;
+    }
+    .jux-btn:hover { background: var(--opal-teal); color: var(--opal-void); }
+    .jux-btn-amber { border-color: var(--opal-amber); color: var(--opal-amber); }
+    .jux-btn-amber:hover { background: var(--opal-amber); color: var(--opal-void); }
+
+    /* LINKS */
+    a { color: var(--opal-teal); text-decoration: none; transition: color 0.2s; }
+    a:hover { color: var(--opal-gold); }
+
+    /* DIVIDER */
+    .jux-divider { border: none; border-top: var(--border-thin); margin: var(--space-xl) 0; }
+    .jux-divider-opal { border-top: 1px solid rgba(46,196,182,0.3); }
+
+    /* LEVEL ROW */
+    .level-row {
+      display: flex; align-items: flex-start; gap: var(--space-md);
+      padding: var(--space-md) 0; border-bottom: var(--border-thin);
+    }
+    .level-num {
+      font-size: 1.8rem; font-weight: bold; min-width: 2.5rem;
+      opacity: 0.9;
+    }
+    .level-body { flex: 1; }
+    .level-name { font-weight: bold; font-size: 1.05rem; letter-spacing: 0.08em; }
+    .level-desc { font-size: 0.9rem; color: rgba(255,255,255,0.5); margin-top: 0.2rem; }
+
+    /* DICT GRID */
+    .dict-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-md); margin-top: var(--space-md);
+    }
+    .dict-card {
+      background: var(--opal-mid); border: var(--border-thin);
+      border-radius: 2px; padding: var(--space-md);
+      transition: border-color 0.2s;
+    }
+    .dict-card:hover { border-color: var(--opal-teal); }
+    .dict-card-title { font-size: 0.9rem; font-weight: bold; letter-spacing: 0.1em; margin-bottom: 0.3rem; }
+    .dict-card-desc  { font-size: 0.78rem; color: rgba(255,255,255,0.4); }
+
+    /* FOOTER */
+    .jux-footer {
+      text-align: center; padding: var(--space-xl) var(--space-md) var(--space-lg);
+      color: rgba(255,255,255,0.2); font-size: 0.8rem;
+      letter-spacing: 0.1em; border-top: var(--border-thin);
+      margin-top: var(--space-xl);
+    }
+
+    /* OPAL GLOW PULSE */
+    @keyframes opalPulse {
+      0%, 100% { opacity: 0.6; }
+      50%       { opacity: 1;   }
+    }
+    .opal-pulse { animation: opalPulse 4s ease-in-out infinite; }
+  </style>
+</head>
+<body>
+
+<!-- PRISM BAR -->
+<div class="jux-prism-bar"></div>
+
+<div class="jux-container">
+
+  <!-- HEADER -->
+  <header class="jux-header">
+    <div class="jux-label" style="margin-bottom:var(--space-sm);">JuXITT · Open Architecture</div>
+    <h1 class="jux-title opal-pulse">AOS</h1>
+    <p class="jux-subtitle">Adequate Operating System</p>
+    <p style="margin-top:var(--space-md); color:rgba(255,255,255,0.4); font-size:0.85rem; max-width:600px; margin-left:auto; margin-right:auto;">
+      A formal language architecture. Five levels. Three objects. One rule.
+    </p>
+    <div style="margin-top:var(--space-md);">
+      <span class="jux-badge jux-badge-mit">MIT</span>
+      <span class="jux-badge jux-badge-live">LIVE</span>
+      <span class="jux-badge jux-badge-open">OPEN</span>
+    </div>
+  </header>
+
+  <hr class="jux-divider-opal jux-divider">
+
+  <!-- THREE OBJECTS -->
+  <section class="jux-section">
+    <div class="jux-label" style="margin-bottom:var(--space-md);">Foundation — The Three Objects</div>
+
+    <div class="jux-block jux-block-name">
+      <div class="jux-label name" style="margin-bottom:var(--space-xs);">Object 01</div>
+      <div style="font-size:1.4rem; font-weight:bold;" class="name">NAME</div>
+      <div style="color:rgba(255,255,255,0.5); font-size:0.9rem; margin-top:0.3rem;">Identity. The atomic carrier of reference. What a thing is called.</div>
+    </div>
+
+    <div class="jux-block jux-block-fact">
+      <div class="jux-label fact" style="margin-bottom:var(--space-xs);">Object 02</div>
+      <div style="font-size:1.4rem; font-weight:bold;" class="fact">FACT</div>
+      <div style="color:rgba(255,255,255,0.5); font-size:0.9rem; margin-top:0.3rem;">Reality. What is true about the NAME. No opinion. No decoration.</div>
+    </div>
+
+    <div class="jux-block jux-block-target">
+      <div class="jux-label target" style="margin-bottom:var(--space-xs);">Object 03</div>
+      <div style="font-size:1.4rem; font-weight:bold;" class="target">TARGET</div>
+      <div style="color:rgba(255,255,255,0.5); font-size:0.9rem; margin-top:0.3rem;">Direction. Dynamic. Operational. How the NAME moves. Second level.</div>
+    </div>
+  </section>
+
+  <hr class="jux-divider">
+
+  <!-- FIVE LEVELS -->
+  <section class="jux-section">
+    <div class="jux-label" style="margin-bottom:var(--space-md);">Architecture — Five Levels</div>
+
+    <div class="level-row">
+      <div class="level-num l1">1</div>
+      <div class="level-body">
+        <div class="level-name l1">Objects</div>
+        <div style="color:rgba(255,255,255,0.7); font-size:0.9rem; margin-top:0.2rem;">
+          <span class="name">NAME</span> &nbsp;/&nbsp; <span class="fact">FACT</span> &nbsp;/&nbsp; <span class="target">TARGET</span>
+        </div>
+        <div class="level-desc">Atomic carriers of Semantics. The irreducible minimum.</div>
+      </div>
+    </div>
+
+    <div class="level-row">
+      <div class="level-num l2">2</div>
+      <div class="level-body">
+        <div class="level-name l2">Expressions</div>
+        <div class="level-desc">Composed of three Objects. One coherent unit of meaning.</div>
+      </div>
+    </div>
+
+    <div class="level-row">
+      <div class="level-num l3">3</div>
+      <div class="level-body">
+        <div class="level-name l3">Sentences</div>
+        <div class="level-desc">Expressions invoking Operations. Executable meaning.</div>
+        <div class="jux-sentence" style="margin-top:var(--space-sm);">buy(asset) &nbsp;·&nbsp; mortgage(property) &nbsp;·&nbsp; fix(B11)</div>
+      </div>
+    </div>
+
+    <div class="level-row">
+      <div class="level-num l4">4</div>
+      <div class="level-body">
+        <div class="level-name l4">Dictionaries</div>
+        <div class="level-desc">One per User Discipline. The domain vocabulary, organized.</div>
+      </div>
+    </div>
+
+    <div class="level-row" style="border-bottom:none;">
+      <div class="level-num l5">5</div>
+      <div class="level-body">
+        <div class="level-name l5">Services</div>
+        <div class="level-desc">What Users demand. Realized by Operations. The living edge of AOS.</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="jux-divider">
+
+  <!-- DICTIONARIES -->
+  <section class="jux-section">
+    <div class="jux-label" style="margin-bottom:var(--space-md);">Dictionaries — Five Disciplines</div>
+
+    <div class="dict-grid">
+      <div class="dict-card" style="border-left: 3px solid var(--aos-name);">
+        <div class="dict-card-title name">AOS.MINIMAL</div>
+        <div class="dict-card-desc">Foundation. All others inherit.</div>
+      </div>
+      <div class="dict-card" style="border-left: 3px solid var(--opal-amber);">
+        <div class="dict-card-title opal-amber">AOS.BUG-MIB</div>
+        <div class="dict-card-desc">Bug management. Name / Own / Date.</div>
+      </div>
+      <div class="dict-card" style="border-left: 3px solid var(--opal-teal);">
+        <div class="dict-card-title opal-teal">AOS.MEDICAL</div>
+        <div class="dict-card-desc">Symptom → Diagnosis → Outcome.</div>
+      </div>
+      <div class="dict-card" style="border-left: 3px solid var(--aos-target);">
+        <div class="dict-card-title target">AOS.ENGINEERING</div>
+        <div class="dict-card-desc">Requirement → System → Validation.</div>
+      </div>
+      <div class="dict-card" style="border-left: 3px solid var(--opal-violet);">
+        <div class="dict-card-title opal-violet">AOS.LEGAL</div>
+        <div class="dict-card-desc">Claim → Evidence → Verdict.</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="jux-divider">
+
+  <!-- CONVERGENCE -->
+  <section class="jux-section">
+    <div class="jux-label" style="margin-bottom:var(--space-md);">Convergence</div>
+    <div class="jux-block jux-block-opal">
+      <p class="jux-quote" style="margin:0;">AOS doesn't describe a system. AOS describes a language that runs systems.</p>
+    </div>
+    <div style="margin-top:var(--space-md); color:rgba(255,255,255,0.5); font-size:0.9rem;">
+      JuX IS the first Dictionary. Software discipline.<br>
+      Sentences already written: <span class="opal-teal">buy · mortgage · roll · pay</span>.<br>
+      Operations already running on Ubuntu.
+    </div>
+  </section>
+
+  <hr class="jux-divider">
+
+  <!-- AOS.BUG-MIB -->
+  <section class="jux-section">
+    <div class="jux-label" style="margin-bottom:var(--space-md);">AOS.BugChannel — Three Operations</div>
+    <div style="display:flex; gap:var(--space-md); flex-wrap:wrap;">
+      <div class="jux-block" style="flex:1; min-width:180px; border-left:3px solid var(--aos-name);">
+        <div class="name" style="font-weight:bold; margin-bottom:0.3rem;">CAPTURE</div>
+        <div style="font-size:0.85rem; color:rgba(255,255,255,0.5);">Jr writes NAME / FACT / TARGET. Expression is formal.</div>
+      </div>
+      <div class="jux-block" style="flex:1; min-width:180px; border-left:3px solid var(--aos-l3);">
+        <div class="l3" style="font-weight:bold; margin-bottom:0.3rem;">TRANSMIT</div>
+        <div style="font-size:0.85rem; color:rgba(255,255,255,0.5);">Sentence sent Window → Ubuntu. Brother receives.</div>
+      </div>
+      <div class="jux-block" style="flex:1; min-width:180px; border-left:3px solid var(--aos-fact);">
+        <div class="fact" style="font-weight:bold; margin-bottom:0.3rem;">CLOSE</div>
+        <div style="font-size:0.85rem; color:rgba(255,255,255,0.5);">Ubuntu fixes. Reports NAME / DONE / DATE. Dictionary updated.</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="jux-divider">
+
+  <!-- SUPPORT & DOWNLOAD -->
+  <section class="jux-section">
+    <div class="jux-label" style="margin-bottom:var(--space-md);">Support &amp; Download</div>
+    <div style="display:flex; gap:var(--space-md); flex-wrap:wrap; margin-bottom:var(--space-lg);">
+      <a class="jux-btn" href="https://raw.githubusercontent.com/alissali/Learn/main/AOS.md" target="_blank">↓ AOS.md</a>
+      <a class="jux-btn" href="https://raw.githubusercontent.com/alissali/Learn/main/AOS.DICTIONARIES.md" target="_blank">↓ Dictionaries</a>
+      <a class="jux-btn" href="https://raw.githubusercontent.com/alissali/Learn/main/jux.css" target="_blank">↓ jux.css</a>
+      <a class="jux-btn" href="https://raw.githubusercontent.com/alissali/Learn/main/LICENSE.md" target="_blank">↓ MIT License</a>
+      <a class="jux-btn jux-btn-amber" href="mailto:jux@juxitt.com">✉ jux@juxitt.com</a>
+    </div>
+    <div class="jux-block" style="font-size:0.85rem; color:rgba(255,255,255,0.4);">
+      <span class="opal-gold">MIT License</span> — Copyright © 2026 Mamoun Alissali — JuXITT<br>
+      Free to use, study, modify, distribute. Credit the source.
+    </div>
+  </section>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="jux-footer">
+  AOS · Adequate Operating System · MIT License<br>
+  <a href="https://juxitt.com" style="color:var(--opal-teal);">juxitt.com</a>
+  &nbsp;·&nbsp; jux@juxitt.com
+  &nbsp;·&nbsp; <span style="color:var(--opal-violet);">CAQ</span>
+</footer>
+
+</body>
+</html>

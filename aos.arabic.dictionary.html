@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0EK0X213R9"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-0EK0X213R9');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AOS.ARABIC.DICTIONARY — قاموس نظام التشغيل الموائم</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;600&family=IBM+Plex+Sans:wght@300;400;600&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --opal-void:    #010206;
+    --opal-deep:    #03050c;
+    --opal-teal:    #2ec4b6;
+    --opal-amber:   #e8a045;
+    --opal-violet:  #7b4fa6;
+    --opal-gold:    #f5c842;
+    --opal-smoke:   #667788;
+    --opal-frost:   #b8c8d4;
+    --aos-diamond:  #a0c4e0;
+  }
+
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--opal-void);
+    color: var(--opal-frost);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 20px;
+    line-height: 1.7;
+  }
+
+  /* ── HEADER ── */
+  header {
+    text-align: center;
+    padding: 4rem 2rem 2rem;
+    border-bottom: 1px solid rgba(46,196,182,0.12);
+  }
+
+  .title-ar {
+    font-family: 'Noto Naskh Arabic', serif;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    font-weight: 700;
+    color: var(--opal-teal);
+    letter-spacing: 0;
+    margin: 0 0 0.4rem;
+    direction: rtl;
+  }
+
+  .title-en {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    font-weight: 300;
+    color: var(--aos-diamond);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    direction: ltr;
+    margin: 0 0 1rem;
+  }
+
+  .subtitle {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.9rem;
+    color: var(--opal-smoke);
+    direction: ltr;
+  }
+
+  /* ── SCHEMA BOX ── */
+  .schema-box {
+    max-width: 900px;
+    margin: 3rem auto;
+    padding: 2rem;
+    background: var(--opal-deep);
+    border: 1px solid rgba(46,196,182,0.15);
+    border-radius: 4px;
+    direction: ltr;
+  }
+
+  .schema-box h2 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--opal-teal);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin: 0 0 1.5rem;
+  }
+
+  .schema-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .schema-item {
+    text-align: center;
+    padding: 1.2rem;
+    border: 1px solid rgba(160,196,224,0.1);
+    border-radius: 4px;
+  }
+
+  .schema-ar {
+    font-family: 'Noto Naskh Arabic', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--opal-gold);
+    display: block;
+    direction: rtl;
+  }
+
+  .schema-en {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--opal-teal);
+    letter-spacing: 0.1em;
+    display: block;
+    margin-top: 0.3rem;
+  }
+
+  .schema-desc {
+    font-size: 0.85rem;
+    color: var(--opal-smoke);
+    margin-top: 0.4rem;
+  }
+
+  /* ── OPERATIONS TABLE ── */
+  .ops-section {
+    max-width: 900px;
+    margin: 0 auto 3rem;
+    padding: 0 2rem;
+    direction: ltr;
+  }
+
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--opal-teal);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+
+  th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--opal-teal);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-align: left;
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid rgba(46,196,182,0.2);
+  }
+
+  td {
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: var(--opal-frost);
+    vertical-align: middle;
+  }
+
+  td.ar {
+    font-family: 'Noto Naskh Arabic', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--opal-amber);
+    direction: rtl;
+    text-align: right;
+  }
+
+  td.op {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--opal-teal);
+  }
+
+  td.form {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--opal-violet);
+  }
+
+  tr:hover td { background: rgba(46,196,182,0.04); }
+
+  /* ── ROOT CARDS ── */
+  .roots-section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+  }
+
+  .root-card {
+    background: var(--opal-deep);
+    border: 1px solid rgba(46,196,182,0.12);
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .root-card.active {
+    border-color: rgba(46,196,182,0.4);
+  }
+
+  .root-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 2rem;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .root-header:hover { background: rgba(46,196,182,0.04); }
+
+  .root-left {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    direction: ltr;
+  }
+
+  .root-id {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--opal-smoke);
+    letter-spacing: 0.15em;
+    min-width: 6rem;
+  }
+
+  .root-letters {
+    font-family: 'Noto Naskh Arabic', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--opal-gold);
+    direction: rtl;
+    min-width: 5rem;
+    text-align: center;
+  }
+
+  .root-info {
+    direction: ltr;
+  }
+
+  .root-nucleus {
+    font-size: 0.95rem;
+    color: var(--opal-frost);
+    font-weight: 400;
+  }
+
+  .root-domain {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--opal-teal);
+    letter-spacing: 0.1em;
+    margin-top: 0.2rem;
+  }
+
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1rem;
+    color: var(--opal-teal);
+    transition: transform 0.2s;
+  }
+
+
+  .root-body {
+    display: none;
+    padding: 0 2rem 2rem;
+    border-top: 1px solid rgba(46,196,182,0.08);
+  }
+
+  details.root-card .root-body { display: block; }
+
+  .sub-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--opal-smoke);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin: 1.5rem 0 0.8rem;
+  }
+
+  .note-box {
+    background: rgba(123,79,166,0.12);
+    border-left: 3px solid var(--opal-violet);
+    padding: 1rem 1.2rem;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--opal-frost);
+    direction: ltr;
+  }
+
+  .note-box strong {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--opal-violet);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+
+  td.noun-ar {
+    font-family: 'Noto Naskh Arabic', serif;
+    font-size: 1.3rem;
+    color: var(--opal-gold);
+    direction: rtl;
+    text-align: right;
+  }
+
+  td.pattern {
+    font-family: 'Noto Naskh Arabic', serif;
+    font-size: 1.1rem;
+    color: var(--opal-violet);
+    direction: rtl;
+    text-align: right;
+  }
+
+  /* ── PROOF BLOCK ── */
+  .proof-block {
+    max-width: 900px;
+    margin: 0 auto 2rem;
+    padding: 2.5rem 2rem;
+    background: var(--opal-deep);
+    border: 1px solid rgba(160,196,224,0.15);
+    border-radius: 4px;
+    direction: ltr;
+  }
+
+  .proof-block h2 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--aos-diamond);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin: 0 0 1.5rem;
+  }
+
+  .proof-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .proof-item {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--opal-smoke);
+    padding: 0.6rem;
+    border-left: 2px solid rgba(46,196,182,0.3);
+    padding-left: 1rem;
+  }
+
+  .proof-item span {
+    color: var(--opal-teal);
+  }
+
+  .proof-final {
+    font-family: 'Noto Naskh Arabic', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--opal-gold);
+    text-align: center;
+    direction: rtl;
+    margin-bottom: 0.5rem;
+  }
+
+  .proof-final-en {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--opal-frost);
+    text-align: center;
+    direction: ltr;
+  }
+
+  /* ── SUMMARY TABLE ── */
+  .summary-section {
+    max-width: 900px;
+    margin: 0 auto 2rem;
+    padding: 0 2rem;
+    direction: ltr;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid rgba(46,196,182,0.08);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--opal-smoke);
+    direction: ltr;
+  }
+
+  /* ── SPEECH BUTTON ── */
+  .speak-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    background: none;
+    border: 1px solid rgba(46,196,182,0.3);
+    color: var(--opal-teal);
+    padding: 0.2rem 0.6rem;
+    border-radius: 3px;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    transition: background 0.2s;
+    margin-left: 1rem;
+  }
+  .speak-btn:hover { background: rgba(46,196,182,0.1); }
+
+  summary.root-header {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  summary.root-header::-webkit-details-marker { display: none; }
+  summary.root-header::marker { display: none; }
+  details.root-card summary.root-header::after {
+    content: '▼';
+    color: var(--opal-smoke);
+    font-size: 0.9rem;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  details.root-card[open] summary.root-header::after {
+    transform: rotate(180deg);
+  }
+
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="title-ar">قاموس نظام التشغيل الموائم</div>
+  <div class="title-en">AOS.ARABIC.DICTIONARY — Sample v0.01</div>
+  <div class="subtitle">NAME / FACT / TARGET &nbsp;·&nbsp; ROOT / PATTERN / DERIVATIVE &nbsp;·&nbsp; MIT</div>
+</header>
+
+<!-- SCHEMA -->
+<div class="schema-box">
+  <h2>Schema — Three Objects</h2>
+  <div class="schema-grid">
+    <div class="schema-item">
+      <span class="schema-ar">اسم</span>
+      <span class="schema-en">NAME = ROOT (جذر)</span>
+      <div class="schema-desc">Atomic semantic nucleus<br>Three consonants. Immutable.</div>
+    </div>
+    <div class="schema-item">
+      <span class="schema-ar">حقيقة</span>
+      <span class="schema-en">FACT = PATTERN (وزن)</span>
+      <div class="schema-desc">Structural law<br>Morphological template.</div>
+    </div>
+    <div class="schema-item">
+      <span class="schema-ar">هدف</span>
+      <span class="schema-en">TARGET = DERIVATIVE (مشتق)</span>
+      <div class="schema-desc">Realized operational form<br>The word produced.</div>
+    </div>
+  </div>
+</div>
+
+<!-- OPERATIONS -->
+<div class="ops-section">
+  <div class="section-label">Ten Universal Operations — all roots</div>
+  <table>
+    <thead>
+      <tr>
+        <th>Form</th>
+        <th style="text-align:right">Pattern (وزن)</th>
+        <th>AOS Operation</th>
+        <th>Meaning</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="form">I</td><td class="ar">فَعَلَ</td><td class="op">do()</td><td>Base action</td></tr>
+      <tr><td class="form">II</td><td class="ar">فَعَّلَ</td><td class="op">amplify()</td><td>Intensify / causative</td></tr>
+      <tr><td class="form">III</td><td class="ar">فَاعَلَ</td><td class="op">interact()</td><td>Mutual / reciprocal</td></tr>
+      <tr><td class="form">IV</td><td class="ar">أَفْعَلَ</td><td class="op">trigger()</td><td>Cause to happen</td></tr>
+      <tr><td class="form">V</td><td class="ar">تَفَعَّلَ</td><td class="op">self_transform()</td><td>Reflexive of II</td></tr>
+      <tr><td class="form">VI</td><td class="ar">تَفَاعَلَ</td><td class="op">sync()</td><td>Mutual reflexive</td></tr>
+      <tr><td class="form">VII</td><td class="ar">اِنْفَعَلَ</td><td class="op">receive()</td><td>Passive reception</td></tr>
+      <tr><td class="form">VIII</td><td class="ar">اِفْتَعَلَ</td><td class="op">absorb()</td><td>Internalize</td></tr>
+      <tr><td class="form">X</td><td class="ar">اِسْتَفْعَلَ</td><td class="op">request()</td><td>Seek / demand</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ROOT CARDS -->
+<div class="roots-section">
+  <div class="section-label">Registry — Seven Roots</div>
+
+  <!-- ROOT 001 — ك-ت-ب -->
+  <details class="root-card" open>
+    <summary class="root-header">
+      <div class="root-left">
+        <div class="root-id">ROOT-001</div>
+        <div class="root-letters">ك-ت-ب</div>
+        <div class="root-info">
+          <div class="root-nucleus">inscription · recording · fixing meaning in form</div>
+          <div class="root-domain">Knowledge Management</div>
+        </div>
+      </div>
+    </div>
+    <div class="root-body">
+      <div class="sub-label">Verb Forms → Operations</div>
+      <table>
+        <thead><tr><th>Form</th><th style="text-align:right">Derivative</th><th>AOS Operation</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td class="form">I</td><td class="ar">كَتَبَ</td><td class="op">do()</td><td>he wrote</td></tr>
+          <tr><td class="form">II</td><td class="ar">كَتَّبَ</td><td class="op">amplify()</td><td>he made many write</td></tr>
+          <tr><td class="form">III</td><td class="ar">كَاتَبَ</td><td class="op">interact()</td><td>he corresponded with</td></tr>
+          <tr><td class="form">IV</td><td class="ar">أَكْتَبَ</td><td class="op">trigger()</td><td>he dictated</td></tr>
+          <tr><td class="form">V</td><td class="ar">تَكَتَّبَ</td><td class="op">self_transform()</td><td>to be enrolled / organized</td></tr>
+          <tr><td class="form">VI</td><td class="ar">تَكَاتَبَ</td><td class="op">sync()</td><td>they wrote to each other</td></tr>
+          <tr><td class="form">VII</td><td class="ar">اِنْكَتَبَ</td><td class="op">receive()</td><td>it was written / enrolled</td></tr>
+          <tr><td class="form">VIII</td><td class="ar">اِكْتَتَبَ</td><td class="op">absorb()</td><td>he subscribed / copied</td></tr>
+          <tr><td class="form">X</td><td class="ar">اِسْتَكْتَبَ</td><td class="op">request()</td><td>he asked to write</td></tr>
+        </tbody>
+      </table>
+      <div class="sub-label">Key Noun Derivatives (TARGET forms)</div>
+      <table>
+        <thead><tr><th>Pattern</th><th style="text-align:right">Form</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td class="form">فَاعِل</td><td class="noun-ar">كَاتِب</td><td>writer (agent)</td></tr>
+          <tr><td class="form">مَفْعُول</td><td class="noun-ar">مَكْتُوب</td><td>written (letter)</td></tr>
+          <tr><td class="form">فِعَال</td><td class="noun-ar">كِتَاب</td><td>book</td></tr>
+          <tr><td class="form">مَفْعَل</td><td class="noun-ar">مَكْتَب</td><td>desk / office</td></tr>
+          <tr><td class="form">فُعَّال</td><td class="noun-ar">كُتَّاب</td><td>scribes / school</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <!-- ROOT 002 — ع-ل-م -->
+  <details class="root-card">
+    <summary class="root-header">
+      <div class="root-left">
+        <div class="root-id">ROOT-002</div>
+        <div class="root-letters">ع-ل-م</div>
+        <div class="root-info">
+          <div class="root-nucleus">knowledge · sign · mark · the knowable</div>
+          <div class="root-domain">Epistemology</div>
+        </div>
+      </div>
+    </div>
+    <div class="root-body">
+      <div class="sub-label">Verb Forms → Operations</div>
+      <table>
+        <thead><tr><th>Form</th><th style="text-align:right">Derivative</th><th>AOS Operation</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td class="form">I</td><td class="ar">عَلِمَ</td><td class="op">do()</td><td>he knew</td></tr>
+          <tr><td class="form">II</td><td class="ar">عَلَّمَ</td><td class="op">amplify()</td><td>he taught</td></tr>
+          <tr><td class="form">III</td><td class="ar">عَالَمَ</td><td class="op">interact()</td><td>he informed / treated as known</td></tr>
+          <tr><td class="form">IV</td><td class="ar">أَعْلَمَ</td><td class="op">trigger()</td><td>he notified</td></tr>
+          <tr><td class="form">V</td><td class="ar">تَعَلَّمَ</td><td class="op">self_transform()</td><td>he learned</td></tr>
+          <tr><td class="form">VI</td><td class="ar">تَعَالَمَ</td><td class="op">sync()</td><td>they exchanged knowledge</td></tr>
+          <tr><td class="form">VIII</td><td class="ar">اِعْتَلَمَ</td><td class="op">absorb()</td><td>he acquired knowledge</td></tr>
+          <tr><td class="form">X</td><td class="ar">اِسْتَعْلَمَ</td><td class="op">request()</td><td>he inquired / sought info</td></tr>
+        </tbody>
+      </table>
+      <div class="sub-label">Key Noun Derivatives</div>
+      <table>
+        <thead><tr><th>Pattern</th><th style="text-align:right">Form</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td class="form">فَاعِل</td><td class="noun-ar">عَالِم</td><td>scholar / scientist</td></tr>
+          <tr><td class="form">فِعَال</td><td class="noun-ar">عِلْم</td><td>science / knowledge</td></tr>
+          <tr><td class="form">مَفْعَل</td><td class="noun-ar">مَعْلَم</td><td>landmark / marker</td></tr>
+          <tr><td class="form">فَعْل</td><td class="noun-ar">عَالَم</td><td>world (the known)</td></tr>
+          <tr><td class="form">فَعِيل</td><td class="noun-ar">عَلِيم</td><td>all-knowing</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <!-- ROOT 003 — ف-ع-ل -->
+  <details class="root-card">
+    <summary class="root-header">
+      <div class="root-left">
+        <div class="root-id">ROOT-003</div>
+        <div class="root-letters">ف-ع-ل</div>
+        <div class="root-info">
+          <div class="root-nucleus">action itself — the meta-root of AOS</div>
+          <div class="root-domain">Operations (universal)</div>
+        </div>
+      </div>
+    </div>
+    <div class="root-body">
+      <div class="sub-label">Verb Forms → Operations</div>
+      <table>
+        <thead><tr><th>Form</th><th style="text-align:right">Derivative</th><th>AOS Operation</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td class="form">I</td><td class="ar">فَعَلَ</td><td class="op">do()</td><td>he acted</td></tr>
+          <tr><td class="form">II</td><td class="ar">فَعَّلَ</td><td class="op">amplify()</td><td>he activated / intensified</td></tr>
+          <tr><td class="form">III</td><td class="ar">فَاعَلَ</td><td class="op">interact()</td><td>he interacted</td></tr>
+          <tr><td class="form">IV</td><td class="ar">أَفْعَلَ</td><td class="op">trigger()</td><td>he caused action</td></tr>
+          <tr><td class="form">V</td><td class="ar">تَفَعَّلَ</td><td class="op">self_transform()</td><td>he was transformed by action</td></tr>
+          <tr><td class="form">VI</td><td class="ar">تَفَاعَلَ</td><td class="op">sync()</td><td>they interacted mutually</td></tr>
+          <tr><td class="form">VII</td><td class="ar">اِنْفَعَلَ</td><td class="op">receive()</td><td>he was acted upon</td></tr>
+          <tr><td class="form">VIII</td><td class="ar">اِفْتَعَلَ</td><td class="op">absorb()</td><td>he internalized action</td></tr>
+          <tr><td class="form">X</td><td class="ar">اِسْتَفْعَلَ</td><td class="op">request()</td><td>he sought to act</td></tr>
+        </tbody>
+      </table>
+      <div class="sub-label">Key Noun Derivatives</div>
+      <table>
+        <thead><tr><th>Pattern</th><th style="text-align:right">Form</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td class="form">فِعْل</td><td class="noun-ar">فِعْل</td><td>action / verb</td></tr>
+          <tr><td class="form">فَاعِل</td><td class="noun-ar">فَاعِل</td><td>actor / subject → NAME</td></tr>
+          <tr><td class="form">مَفْعُول</td><td class="noun-ar">مَفْعُول</td><td>object / acted-upon → TARGET</td></tr>
+          <tr><td class="form">فَعَّال</td><td class="noun-ar">فَعَّال</td><td>highly active</td></tr>
+        </tbody>
+      </table>
+      <div class="note-box">
+        <strong>AOS Note</strong>
+        فَاعِل = NAME &nbsp;·&nbsp; فِعْل = FACT &nbsp;·&nbsp; مَفْعُول = TARGET<br>
+        Arabic grammar IS AOS grammar. The meta-root carries the full architecture.
+      </div>
+    </div>
+  </details>
+
+  <!-- ROOT 004 — ب-ن-ى -->
+  <details class="root-card">
+    <summary class="root-header">
+      <div class="root-left">
+        <div class="root-id">ROOT-004</div>
+        <div class="root-letters">ب-ن-ى</div>
+        <div class="root-info">
+          <div class="root-nucleus">construction · architecture · structure</div>
+          <div class="root-domain">Engineering / Architecture</div>
+        </div>
+      </div>
+    </div>
+    <div class="root-body">
+      <div class="sub-label">Verb Forms → Operations</div>
+      <table>
+        <thead><tr><th>Form</th><th style="text-align:right">Derivative</th><th>AOS Operation</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td class="form">I</td><td class="ar">بَنَى</td><td class="op">do()</td><td>he built</td></tr>
+          <tr><td class="form">II</td><td class="ar">بَنَّى</td><td class="op">amplify()</td><td>he built extensively</td></tr>
+          <tr><td class="form">III</td><td class="ar">بَانَى</td><td class="op">interact()</td><td>he built alongside</td></tr>
+          <tr><td class="form">IV</td><td class="ar">أَبْنَى</td><td class="op">trigger()</td><td>he commissioned building</td></tr>
+          <tr><td class="form">V</td><td class="ar">تَبَنَّى</td><td class="op">self_transform()</td><td>he adopted / internalized</td></tr>
+          <tr><td class="form">VI</td><td class="ar">تَبَانَى</td><td class="op">sync()</td><td>they built together</td></tr>
+          <tr><td class="form">VIII</td><td class="ar">اِبْتَنَى</td><td class="op">absorb()</td><td>he constructed for himself</td></tr>
+          <tr><td class="form">X</td><td class="ar">اِسْتَبْنَى</td><td class="op">request()</td><td>he requested construction</td></tr>
+        </tbody>
+      </table>
+      <div class="sub-label">Key Noun Derivatives</div>
+      <table>
+        <thead><tr><th>Pattern</th><th style="text-align:right">Form</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td class="form">فِعَال</td><td class="noun-ar">بِنَاء</td><td>building / construction</td></tr>
+          <tr><td class="form">فَاعِل</td><td class="noun-ar">بَانٍ</td><td>builder / architect</td></tr>
+          <tr><td class="form">مَفْعُول</td><td class="noun-ar">مَبْنِيّ</td><td>built / constructed</td></tr>
+          <tr><td class="form">فَعْل</td><td class="noun-ar">بُنْيَة</td><td>structure</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <!-- ROOT 005 — ح-س-ب -->
+  <details class="root-card">
+    <summary class="root-header">
+      <div class="root-left">
+        <div class="root-id">ROOT-005</div>
+        <div class="root-letters">ح-س-ب</div>
+        <div class="root-info">
+          <div class="root-nucleus">counting · computing · accountability</div>
+          <div class="root-domain">Computation / Finance</div>
+        </div>
+      </div>
+    </div>
+    <div class="root-body">
+      <div class="sub-label">Verb Forms → Operations</div>
+      <table>
+        <thead><tr><th>Form</th><th style="text-align:right">Derivative</th><th>AOS Operation</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td class="form">I</td><td class="ar">حَسَبَ</td><td class="op">do()</td><td>he counted</td></tr>
+          <tr><td class="form">II</td><td class="ar">حَسَّبَ</td><td class="op">amplify()</td><td>he made account of</td></tr>
+          <tr><td class="form">III</td><td class="ar">حَاسَبَ</td><td class="op">interact()</td><td>he called to account</td></tr>
+          <tr><td class="form">IV</td><td class="ar">أَحْسَبَ</td><td class="op">trigger()</td><td>he satisfied / deemed sufficient</td></tr>
+          <tr><td class="form">V</td><td class="ar">تَحَسَّبَ</td><td class="op">self_transform()</td><td>he anticipated / prepared</td></tr>
+          <tr><td class="form">VI</td><td class="ar">تَحَاسَبَ</td><td class="op">sync()</td><td>they settled accounts</td></tr>
+          <tr><td class="form">VIII</td><td class="ar">اِحْتَسَبَ</td><td class="op">absorb()</td><td>he reckoned / accepted</td></tr>
+          <tr><td class="form">X</td><td class="ar">اِسْتَحْسَبَ</td><td class="op">request()</td><td>he sought an account</td></tr>
+        </tbody>
+      </table>
+      <div class="sub-label">Key Noun Derivatives</div>
+      <table>
+        <thead><tr><th>Pattern</th><th style="text-align:right">Form</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td class="form">فِعَال</td><td class="noun-ar">حِسَاب</td><td>account / computation</td></tr>
+          <tr><td class="form">فَاعِل</td><td class="noun-ar">حَاسِب</td><td>accountant / computer</td></tr>
+          <tr><td class="form">فَاعُول</td><td class="noun-ar">حَاسُوب</td><td>computer (modern)</td></tr>
+          <tr><td class="form">فَعِيل</td><td class="noun-ar">حَسِيب</td><td>noble / of good account</td></tr>
+        </tbody>
+      </table>
+      <div class="note-box">
+        <strong>AOS Note</strong>
+        حِسَاب = computation &nbsp;·&nbsp; حَاسُوب = computer (modern derivative)<br>
+        Same root. PATTERN changed. FACT transformed. AOS.ARABIC engine at work.
+      </div>
+    </div>
+  </details>
+
+  <!-- ROOT 006 — ق-ر-أ -->
+  <details class="root-card">
+    <summary class="root-header">
+      <div class="root-left">
+        <div class="root-id">ROOT-006</div>
+        <div class="root-letters">ق-ر-أ</div>
+        <div class="root-info">
+          <div class="root-nucleus">reading · recitation · calling forth meaning</div>
+          <div class="root-domain">Interpretation / AOS.CONTEXT</div>
+        </div>
+      </div>
+    </div>
+    <div class="root-body">
+      <div class="sub-label">Verb Forms → Operations</div>
+      <table>
+        <thead><tr><th>Form</th><th style="text-align:right">Derivative</th><th>AOS Operation</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td class="form">I</td><td class="ar">قَرَأَ</td><td class="op">do()</td><td>he read</td></tr>
+          <tr><td class="form">II</td><td class="ar">قَرَّأَ</td><td class="op">amplify()</td><td>he taught to read</td></tr>
+          <tr><td class="form">III</td><td class="ar">قَارَأَ</td><td class="op">interact()</td><td>he read with / recited to</td></tr>
+          <tr><td class="form">IV</td><td class="ar">أَقْرَأَ</td><td class="op">trigger()</td><td>he made read / recite</td></tr>
+          <tr><td class="form">V</td><td class="ar">تَقَرَّأَ</td><td class="op">self_transform()</td><td>he became learned</td></tr>
+          <tr><td class="form">VI</td><td class="ar">تَقَارَأَ</td><td class="op">sync()</td><td>they read together</td></tr>
+          <tr><td class="form">VII</td><td class="ar">اِنْقَرَأَ</td><td class="op">receive()</td><td>it was read / deciphered</td></tr>
+          <tr><td class="form">VIII</td><td class="ar">اِقْتَرَأَ</td><td class="op">absorb()</td><td>he read carefully</td></tr>
+          <tr><td class="form">X</td><td class="ar">اِسْتَقْرَأَ</td><td class="op">request()</td><td>he induced / inferred</td></tr>
+        </tbody>
+      </table>
+      <div class="sub-label">Key Noun Derivatives</div>
+      <table>
+        <thead><tr><th>Pattern</th><th style="text-align:right">Form</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td class="form">فِعَال</td><td class="noun-ar">قِرَاءَة</td><td>reading / recitation</td></tr>
+          <tr><td class="form">فَاعِل</td><td class="noun-ar">قَارِئ</td><td>reader</td></tr>
+          <tr><td class="form">فُعْل</td><td class="noun-ar">قُرْآن</td><td>The Recitation</td></tr>
+          <tr><td class="form">اِسْتِفْعَال</td><td class="noun-ar">اِسْتِقْرَاء</td><td>induction / inference</td></tr>
+        </tbody>
+      </table>
+      <div class="note-box">
+        <strong>AOS Note</strong>
+        اِسْتِقْرَاء = induction = request() applied to meaning-extraction.<br>
+        This IS AOS.CONTEXT: reading an Expression IN a Dictionary → Operation fired.<br>
+        <em>interpret(Expression, Dictionary) → Operation</em>
+      </div>
+    </div>
+  </details>
+
+  <!-- ROOT 007 — ن-ظ-م -->
+  <details class="root-card">
+    <summary class="root-header">
+      <div class="root-left">
+        <div class="root-id">ROOT-007</div>
+        <div class="root-letters">ن-ظ-م</div>
+        <div class="root-info">
+          <div class="root-nucleus">organization · system · ordering</div>
+          <div class="root-domain">AOS Architecture — the root IS AOS</div>
+        </div>
+      </div>
+    </div>
+    <div class="root-body">
+      <div class="sub-label">Verb Forms → Operations</div>
+      <table>
+        <thead><tr><th>Form</th><th style="text-align:right">Derivative</th><th>AOS Operation</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td class="form">I</td><td class="ar">نَظَمَ</td><td class="op">do()</td><td>he organized / strung</td></tr>
+          <tr><td class="form">II</td><td class="ar">نَظَّمَ</td><td class="op">amplify()</td><td>he systematized</td></tr>
+          <tr><td class="form">III</td><td class="ar">نَاظَمَ</td><td class="op">interact()</td><td>he coordinated with</td></tr>
+          <tr><td class="form">IV</td><td class="ar">أَنْظَمَ</td><td class="op">trigger()</td><td>he enrolled / integrated</td></tr>
+          <tr><td class="form">V</td><td class="ar">تَنَظَّمَ</td><td class="op">self_transform()</td><td>he became organized</td></tr>
+          <tr><td class="form">VI</td><td class="ar">تَنَاظَمَ</td><td class="op">sync()</td><td>they coordinated</td></tr>
+          <tr><td class="form">VII</td><td class="ar">اِنْتَظَمَ</td><td class="op">receive()</td><td>it fell into order</td></tr>
+          <tr><td class="form">VIII</td><td class="ar">اِنْتَظَمَ</td><td class="op">absorb()</td><td>he joined the system</td></tr>
+          <tr><td class="form">X</td><td class="ar">اِسْتَنْظَمَ</td><td class="op">request()</td><td>he sought organization</td></tr>
+        </tbody>
+      </table>
+      <div class="sub-label">Key Noun Derivatives</div>
+      <table>
+        <thead><tr><th>Pattern</th><th style="text-align:right">Form</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td class="form">فِعَال</td><td class="noun-ar">نِظَام</td><td>system / order</td></tr>
+          <tr><td class="form">فَاعِل</td><td class="noun-ar">نَاظِم</td><td>organizer</td></tr>
+          <tr><td class="form">مَفْعُول</td><td class="noun-ar">مَنْظُوم</td><td>organized / poetry</td></tr>
+          <tr><td class="form">تَفْعِيل</td><td class="noun-ar">تَنْظِيم</td><td>organization</td></tr>
+        </tbody>
+      </table>
+      <div class="note-box">
+        <strong>AOS Note — The Name IS The Architecture</strong>
+        نِظَام التشغيل الموائم = Adequate Operating System.<br>
+        نِظَام = system &nbsp;·&nbsp; root ن-ظ-م = to organize.<br>
+        نَظَّمَ = amplify(do()) = systematic amplification of order.<br>
+        <strong>AOS named itself with its own root.</strong>
+      </div>
+    </div>
+  </details>
+
+</div>
+
+<!-- SUMMARY TABLE -->
+<div class="summary-section">
+  <div class="section-label">Summary — Seven Roots · Seven Domains · One Architecture</div>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th style="text-align:right">Root</th>
+        <th>Domain</th>
+        <th>Key AOS Sentence</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="form">ROOT-001</td><td class="ar" style="font-size:1.1rem">ك-ت-ب</td><td>Knowledge Management</td><td class="op">write(record)</td></tr>
+      <tr><td class="form">ROOT-002</td><td class="ar" style="font-size:1.1rem">ع-ل-م</td><td>Epistemology</td><td class="op">teach(amplify(know))</td></tr>
+      <tr><td class="form">ROOT-003</td><td class="ar" style="font-size:1.1rem">ف-ع-ل</td><td>Operations (meta)</td><td class="op">do() — universal template</td></tr>
+      <tr><td class="form">ROOT-004</td><td class="ar" style="font-size:1.1rem">ب-ن-ى</td><td>Architecture</td><td class="op">build(structure)</td></tr>
+      <tr><td class="form">ROOT-005</td><td class="ar" style="font-size:1.1rem">ح-س-ب</td><td>Computation / Finance</td><td class="op">compute(account)</td></tr>
+      <tr><td class="form">ROOT-006</td><td class="ar" style="font-size:1.1rem">ق-ر-أ</td><td>Interpretation</td><td class="op">interpret(Expression, Dictionary)</td></tr>
+      <tr><td class="form">ROOT-007</td><td class="ar" style="font-size:1.1rem">ن-ظ-م</td><td>AOS itself</td><td class="op">organize(system)</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PROOF BLOCK -->
+<div class="proof-block">
+  <h2>The Proof</h2>
+  <div class="proof-grid">
+    <div class="proof-item">Arabic ROOT (جذر) = <span>NAME</span> — atomic carrier of semantics</div>
+    <div class="proof-item">Arabic PATTERN (وزن) = <span>FACT</span> — structural law</div>
+    <div class="proof-item">Arabic DERIVATIVE (مشتق) = <span>TARGET</span> — realized operational form</div>
+    <div class="proof-item">Arabic VERB FORM = <span>AOS OPERATION</span> — executable meaning</div>
+  </div>
+  <div class="proof-final">لم تحتج العربية إلى اختراع — بل إلى اعتراف</div>
+  <div class="proof-final-en">Arabic did not need to be invented. It needed to be recognized.</div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  AOS.ARABIC.DICTIONARY · v0.01 · Thu 7 May 2026 · MIT License · One language. Seven domains. Zero invention.
+</footer>
+
+
+</body>
+</html>

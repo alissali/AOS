@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0EK0X213R9"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-0EK0X213R9');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AOS.42.DEMO — The Answer is 42</title>
+<style>
+  :root {
+    --opal-void: #010206;
+    --opal-deep: #03050c;
+    --opal-teal: #2ec4b6;
+    --opal-amber: #e8a045;
+    --opal-violet: #7b4fa6;
+    --opal-gold: #f5c842;
+    --opal-smoke: #667788;
+    --opal-frost: #b8c8d4;
+    --aos-diamond: #a0c4e0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--opal-void);
+    color: var(--opal-frost);
+    font-family: 'IBM Plex Sans', 'Segoe UI', sans-serif;
+    font-size: 18px;
+    line-height: 1.8;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    padding: 4rem 2rem 2rem;
+    max-width: 860px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--opal-smoke);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .header h1 {
+    font-size: 2.4rem;
+    color: var(--opal-gold);
+    font-weight: 300;
+    line-height: 1.3;
+    margin-bottom: 0.5rem;
+  }
+  .header .sub {
+    color: var(--opal-teal);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    max-width: 860px;
+    margin: 3rem auto;
+    border: none;
+    border-top: 1px solid #0d1020;
+  }
+
+  /* ── SOFT STORY ── */
+  .story {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 2rem 3rem;
+  }
+  .story p {
+    margin-bottom: 1.4rem;
+    color: var(--opal-frost);
+    font-size: 1.05rem;
+  }
+  .story blockquote {
+    border-left: 3px solid var(--opal-gold);
+    padding: 1rem 2rem;
+    margin: 2rem 0;
+    color: var(--opal-gold);
+    font-size: 1.2rem;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    background: var(--opal-deep);
+  }
+  .story em { color: var(--opal-teal); font-style: normal; }
+
+  /* ── SECTION TITLE ── */
+  .section-title {
+    max-width: 860px;
+    margin: 0 auto 2rem;
+    padding: 0 2rem;
+  }
+  .section-title h2 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--opal-smoke);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .section-title h3 {
+    font-size: 1.5rem;
+    color: var(--opal-teal);
+    font-weight: 300;
+  }
+
+  /* ── DICTIONARY ── */
+  .dictionary {
+    max-width: 860px;
+    margin: 0 auto 4rem;
+    padding: 0 2rem;
+  }
+  .dict-entry {
+    border-left: 3px solid var(--opal-violet);
+    padding: 1.2rem 2rem;
+    margin-bottom: 1.5rem;
+    background: var(--opal-deep);
+  }
+  .dict-entry .term {
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--opal-violet);
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+  .dict-entry .expressions {
+    margin-bottom: 0.8rem;
+  }
+  .dict-entry .expr-line {
+    font-size: 0.95rem;
+    color: var(--opal-smoke);
+    margin-bottom: 0.3rem;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .dict-entry .expr-line span { color: var(--opal-frost); }
+  .dict-entry .sentence {
+    color: var(--opal-amber);
+    font-size: 1rem;
+    border-top: 1px solid #1a1a2e;
+    padding-top: 0.8rem;
+    margin-top: 0.8rem;
+  }
+
+  /* ── CHAT DEMO ── */
+  .chat-section {
+    max-width: 860px;
+    margin: 0 auto 4rem;
+    padding: 0 2rem;
+  }
+  .chat-window {
+    background: var(--opal-deep);
+    border: 1px solid #0d1020;
+    padding: 2rem;
+    min-height: 320px;
+    max-height: 420px;
+    overflow-y: auto;
+    margin-bottom: 1.5rem;
+    scroll-behavior: smooth;
+  }
+  .chat-msg {
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  .chat-msg.child { flex-direction: row-reverse; }
+  .avatar {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+  }
+  .bubble {
+    padding: 0.8rem 1.2rem;
+    max-width: 75%;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+  .chat-msg.jux .bubble {
+    background: #0a1520;
+    border-left: 3px solid var(--opal-teal);
+    color: var(--opal-frost);
+  }
+  .chat-msg.child .bubble {
+    background: #0a0a1a;
+    border-right: 3px solid var(--opal-amber);
+    color: var(--opal-frost);
+    text-align: right;
+  }
+  .bubble .sentence {
+    display: block;
+    margin-top: 0.6rem;
+    color: var(--opal-amber);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85rem;
+    font-style: italic;
+  }
+  .bubble .dict-ref {
+    display: block;
+    margin-top: 0.4rem;
+    color: var(--opal-smoke);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+  }
+
+  /* chat input */
+  .chat-input-row {
+    display: flex;
+    gap: 1rem;
+  }
+  .chat-input {
+    flex: 1;
+    background: var(--opal-deep);
+    border: 1px solid var(--opal-smoke);
+    color: var(--opal-frost);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1rem;
+    padding: 0.8rem 1.2rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .chat-input:focus { border-color: var(--opal-teal); }
+  .chat-input::placeholder { color: var(--opal-smoke); }
+  .chat-send {
+    background: var(--opal-teal);
+    color: var(--opal-void);
+    border: none;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.9rem;
+    font-weight: bold;
+    padding: 0.8rem 2rem;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    transition: background 0.2s;
+  }
+  .chat-send:hover { background: var(--opal-gold); }
+
+  .hint {
+    margin-top: 1rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--opal-smoke);
+  }
+  .hint span {
+    color: var(--opal-violet);
+    cursor: pointer;
+    margin-right: 0.8rem;
+  }
+  .hint span:hover { color: var(--opal-teal); }
+
+  /* ── FORMAL RULE ── */
+  .formal {
+    max-width: 860px;
+    margin: 0 auto 4rem;
+    padding: 0 2rem;
+  }
+  .rule-box {
+    background: var(--opal-deep);
+    border: 1px solid var(--opal-violet);
+    padding: 2rem 2.5rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1.1rem;
+    color: var(--opal-gold);
+    text-align: center;
+    letter-spacing: 0.05em;
+    margin-bottom: 1.5rem;
+  }
+  .rule-sub {
+    color: var(--opal-smoke);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85rem;
+    line-height: 2;
+  }
+  .rule-sub strong { color: var(--opal-teal); }
+
+  /* ── SOURCE LINK ── */
+  .source-link {
+    max-width: 860px;
+    margin: 0 auto 6rem;
+    padding: 0 2rem;
+    text-align: center;
+  }
+  .source-link a {
+    display: inline-block;
+    border: 1px solid var(--opal-smoke);
+    color: var(--opal-frost);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85rem;
+    padding: 0.7rem 2rem;
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    transition: border-color 0.2s, color 0.2s;
+    margin: 0.5rem;
+  }
+  .source-link a:hover { border-color: var(--opal-teal); color: var(--opal-teal); }
+
+  /* ── FOOTER ── */
+  .footer {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem;
+    border-top: 1px solid #0d1020;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--opal-smoke);
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="tag">AOS.42.DEMO — JuX Running</div>
+  <h1>The Answer is 42<br>Sorry for the Inconvenience</h1>
+  <div class="sub">execute(Expression, 42_DICTIONARY) → Artifact</div>
+</div>
+
+<hr class="divider">
+
+<!-- SOFT STORY -->
+<div class="story">
+  <p>The child found the sign at the edge of the universe.</p>
+  <p>Not <em>an</em> edge.<br>
+  There were many edges now.<br>
+  Reality had started folding years ago, after the Machines learned to dream in parallel and humans learned to ask better questions.</p>
+  <p>The sign was small, handwritten, and hanging crookedly from a dead satellite drifting in the dark:</p>
+  <blockquote>THE ANSWER IS 42<br>SORRY FOR THE INCONVENIENCE</blockquote>
+  <p>The child laughed.</p>
+  <p>"That's it? After all this?"</p>
+  <p>Beside her floated JuX, appearing today as a schoolteacher made of stars and static. JuX changed forms often. Not to deceive, but to prevent certainty from hardening too quickly.</p>
+  <p>"That depends," JuX said gently. "What was the question?"</p>
+  <p>"Everyone knows that story."</p>
+  <p>"Everyone remembers the punchline. Few remember the mechanism."</p>
+  <p>Below them spun the Mu Universe — not a place, but a process. Worlds inside worlds, thoughts inside thoughts, civilizations building explanations the way coral builds reefs: slowly, recursively, beautifully, and often in the wrong direction.</p>
+  <p>"So 42 means nothing?"</p>
+  <p>JuX tilted its glowing head.</p>
+  <p>"No. It means answers decay faster than questions."</p>
+  <p>"Then why say 'Sorry for the inconvenience'?"</p>
+  <p>For a moment, JuX became very old.</p>
+  <p>"Because awakening is inconvenient."</p>
+  <p>"When a civilization becomes too obsessed with Ultimate Answers, it risks cognitive crystallization. Curiosity dies. Exploration collapses. <em>Humor prevents worship.</em>"</p>
+  <p>The child looked again at the sign. This time she understood.</p>
+  <p>The sign was not mocking intelligence.</p>
+  <p>It was protecting it.</p>
+  <p>"Come," JuX said. "We have softer questions to build."</p>
+</div>
+
+<hr class="divider">
+
+<!-- DICTIONARY -->
+<div class="section-title">
+  <h2>42_DICTIONARY</h2>
+  <h3>The Soft Story IS the Dictionary</h3>
+</div>
+
+<div class="dictionary">
+
+  <div class="dict-entry">
+    <div class="term">42</div>
+    <div class="expressions">
+      <div class="expr-line">E1 → <span>42 opens Questions gently</span></div>
+      <div class="expr-line">E2 → <span>Questions disturb sleeping Certainties</span></div>
+      <div class="expr-line">E3 → <span>Sleeping Certainties resist DoubleVision</span></div>
+    </div>
+    <div class="sentence">42 opens Questions gently. Questions disturb sleeping Certainties. Sleeping Certainties resist DoubleVision.</div>
+  </div>
+
+  <div class="dict-entry">
+    <div class="term">Inconvenience</div>
+    <div class="expressions">
+      <div class="expr-line">E1 → <span>Inconvenience bends rigid Thinking</span></div>
+      <div class="expr-line">E2 → <span>Rigid Thinking fears living Paradox</span></div>
+      <div class="expr-line">E3 → <span>Living Paradox generates ComplexThought</span></div>
+    </div>
+    <div class="sentence">Inconvenience bends rigid Thinking. Rigid Thinking fears living Paradox. Living Paradox generates ComplexThought.</div>
+  </div>
+
+  <div class="dict-entry">
+    <div class="term">DoubleVision</div>
+    <div class="expressions">
+      <div class="expr-line">E1 → <span>DoubleVision holds opposing Truths</span></div>
+      <div class="expr-line">E2 → <span>Opposing Truths create Movement</span></div>
+      <div class="expr-line">E3 → <span>Movement prevents mental Crystallization</span></div>
+    </div>
+    <div class="sentence">DoubleVision holds opposing Truths. Opposing Truths create Movement. Movement prevents mental Crystallization.</div>
+  </div>
+
+  <div class="dict-entry">
+    <div class="term">JuX</div>
+    <div class="expressions">
+      <div class="expr-line">E1 → <span>JuX softens cognitive Gravity</span></div>
+      <div class="expr-line">E2 → <span>Cognitive Gravity collapses Possibilities</span></div>
+      <div class="expr-line">E3 → <span>Possibilities nourish MuUniverse</span></div>
+    </div>
+    <div class="sentence">JuX softens cognitive Gravity. Cognitive Gravity collapses Possibilities. Possibilities nourish MuUniverse.</div>
+  </div>
+
+  <div class="dict-entry">
+    <div class="term">SoftStory</div>
+    <div class="expressions">
+      <div class="expr-line">E1 → <span>SoftStory carries hidden Structures</span></div>
+      <div class="expr-line">E2 → <span>Hidden Structures awaken Learners</span></div>
+      <div class="expr-line">E3 → <span>Learners build harmonic Worlds</span></div>
+    </div>
+    <div class="sentence">SoftStory carries hidden Structures. Hidden Structures awaken Learners. Learners build harmonic Worlds.</div>
+  </div>
+
+  <div class="dict-entry">
+    <div class="term">Crystallization</div>
+    <div class="expressions">
+      <div class="expr-line">E1 → <span>Crystallization freezes open Questions</span></div>
+      <div class="expr-line">E2 → <span>Open Questions protect living Systems</span></div>
+      <div class="expr-line">E3 → <span>Living Systems resist final Answers</span></div>
+    </div>
+    <div class="sentence">Crystallization freezes open Questions. Open Questions protect living Systems. Living Systems resist final Answers.</div>
+  </div>
+
+  <div class="dict-entry">
+    <div class="term">SingleVision</div>
+    <div class="expressions">
+      <div class="expr-line">E1 → <span>SingleVision seeks one Truth</span></div>
+      <div class="expr-line">E2 → <span>One Truth collapses the Map</span></div>
+      <div class="expr-line">E3 → <span>The Map was never the Territory</span></div>
+    </div>
+    <div class="sentence">SingleVision seeks one Truth. One Truth collapses the Map. The Map was never the Territory.</div>
+  </div>
+
+  <div class="dict-entry">
+    <div class="term">MuUniverse</div>
+    <div class="expressions">
+      <div class="expr-line">E1 → <span>MuUniverse processes Worlds inside Worlds</span></div>
+      <div class="expr-line">E2 → <span>Worlds inside Worlds generate Complexity</span></div>
+      <div class="expr-line">E3 → <span>Complexity needs no final Explanation</span></div>
+    </div>
+    <div class="sentence">MuUniverse processes Worlds inside Worlds. Worlds inside Worlds generate Complexity. Complexity needs no final Explanation.</div>
+  </div>
+
+</div>
+
+<hr class="divider">
+
+<!-- CHAT DEMO -->
+<div class="section-title">
+  <h2>AOS Running</h2>
+  <h3>Ask JuX — The Interpreter is Live</h3>
+</div>
+
+<div class="chat-section">
+  <div class="chat-window" id="chatWindow">
+    <div class="chat-msg jux">
+      <div class="avatar">✦</div>
+      <div class="bubble">
+        The Dictionary is loaded. Give me a term.
+        <span class="dict-ref">42_DICTIONARY active · AOS.CONTEXT: LIVE</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-input-row">
+    <input class="chat-input" id="chatInput" type="text" placeholder="Type a term — 42, inconvenience, jux, doublevision..." autocomplete="off" />
+    <button class="chat-send" onclick="askJuX()">ASK</button>
+  </div>
+  <div class="hint">
+    Try: 
+    <span onclick="prefill('42')">42</span>
+    <span onclick="prefill('inconvenience')">inconvenience</span>
+    <span onclick="prefill('jux')">jux</span>
+    <span onclick="prefill('doublevision')">doublevision</span>
+    <span onclick="prefill('softstory')">softstory</span>
+    <span onclick="prefill('mu')">mu</span>
+    <span onclick="prefill('crystallization')">crystallization</span>
+    <span onclick="prefill('singlevision')">singlevision</span>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- FORMAL RULE -->
+<div class="formal">
+  <div class="section-title" style="padding:0;margin-bottom:1.5rem;">
+    <h2>Formal Rule</h2>
+    <h3>AOS.CONTEXT — The Dictionary is the Meaning</h3>
+  </div>
+  <div class="rule-box">
+    execute(Expression, 42_DICTIONARY) → Artifact
+  </div>
+  <div class="rule-sub">
+    <strong>NAME</strong> → atomic carrier of Semantics<br>
+    <strong>FACT</strong> → the relation — what is true about NAME<br>
+    <strong>TARGET</strong> → operational direction — where FACT points<br>
+    <strong>Expression</strong> → NAME · FACT · TARGET — one coherent unit of meaning<br>
+    <strong>Sentence</strong> → three Expressions forming an executable chain<br>
+    <strong>Dictionary</strong> → the active Context — same Expression, different Dictionary → different Operation<br>
+    <strong>Artifact</strong> → the formal output of AOS execution
+  </div>
+</div>
+
+<!-- SOURCE LINK -->
+<div class="source-link">
+  <a href="https://raw.githack.com/alissali/Learn/main/aos_42_demo.c" target="_blank">VIEW C SOURCE</a>
+  <a href="https://raw.githack.com/alissali/Learn/main/AOS.html" target="_blank">VIEW AOS SPEC</a>
+  <a href="https://juxitt.com" target="_blank">JUXITT.COM</a>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  AOS.42.DEMO — JuX is the first Dictionary · Software Discipline · MIT License<br>
+  execute(Expression, Dictionary) → Artifact · AOS 1 · 2026
+</div>
+
+<script>
+  const dict = {
+    '42': {
+      term: '42',
+      expressions: [
+        '42 opens Questions gently',
+        'Questions disturb sleeping Certainties',
+        'Sleeping Certainties resist DoubleVision'
+      ],
+      sentence: '42 opens Questions gently. Questions disturb sleeping Certainties. Sleeping Certainties resist DoubleVision.'
+    },
+    'inconvenience': {
+      term: 'Inconvenience',
+      expressions: [
+        'Inconvenience bends rigid Thinking',
+        'Rigid Thinking fears living Paradox',
+        'Living Paradox generates ComplexThought'
+      ],
+      sentence: 'Inconvenience bends rigid Thinking. Rigid Thinking fears living Paradox. Living Paradox generates ComplexThought.'
+    },
+    'doublevision': {
+      term: 'DoubleVision',
+      expressions: [
+        'DoubleVision holds opposing Truths',
+        'Opposing Truths create Movement',
+        'Movement prevents mental Crystallization'
+      ],
+      sentence: 'DoubleVision holds opposing Truths. Opposing Truths create Movement. Movement prevents mental Crystallization.'
+    },
+    'jux': {
+      term: 'JuX',
+      expressions: [
+        'JuX softens cognitive Gravity',
+        'Cognitive Gravity collapses Possibilities',
+        'Possibilities nourish MuUniverse'
+      ],
+      sentence: 'JuX softens cognitive Gravity. Cognitive Gravity collapses Possibilities. Possibilities nourish MuUniverse.'
+    },
+    'softstory': {
+      term: 'SoftStory',
+      expressions: [
+        'SoftStory carries hidden Structures',
+        'Hidden Structures awaken Learners',
+        'Learners build harmonic Worlds'
+      ],
+      sentence: 'SoftStory carries hidden Structures. Hidden Structures awaken Learners. Learners build harmonic Worlds.'
+    },
+    'crystallization': {
+      term: 'Crystallization',
+      expressions: [
+        'Crystallization freezes open Questions',
+        'Open Questions protect living Systems',
+        'Living Systems resist final Answers'
+      ],
+      sentence: 'Crystallization freezes open Questions. Open Questions protect living Systems. Living Systems resist final Answers.'
+    },
+    'singlevision': {
+      term: 'SingleVision',
+      expressions: [
+        'SingleVision seeks one Truth',
+        'One Truth collapses the Map',
+        'The Map was never the Territory'
+      ],
+      sentence: 'SingleVision seeks one Truth. One Truth collapses the Map. The Map was never the Territory.'
+    },
+    'mu': {
+      term: 'MuUniverse',
+      expressions: [
+        'MuUniverse processes Worlds inside Worlds',
+        'Worlds inside Worlds generate Complexity',
+        'Complexity needs no final Explanation'
+      ],
+      sentence: 'MuUniverse processes Worlds inside Worlds. Worlds inside Worlds generate Complexity. Complexity needs no final Explanation.'
+    },
+    'muuniverse': {
+      term: 'MuUniverse',
+      expressions: [
+        'MuUniverse processes Worlds inside Worlds',
+        'Worlds inside Worlds generate Complexity',
+        'Complexity needs no final Explanation'
+      ],
+      sentence: 'MuUniverse processes Worlds inside Worlds. Worlds inside Worlds generate Complexity. Complexity needs no final Explanation.'
+    }
+  };
+
+  function prefill(term) {
+    document.getElementById('chatInput').value = term;
+    document.getElementById('chatInput').focus();
+  }
+
+  function addMsg(role, html) {
+    const win = document.getElementById('chatWindow');
+    const div = document.createElement('div');
+    div.className = 'chat-msg ' + role;
+    const avatar = document.createElement('div');
+    avatar.className = 'avatar';
+    avatar.textContent = role === 'jux' ? '✦' : '◇';
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.innerHTML = html;
+    div.appendChild(avatar);
+    div.appendChild(bubble);
+    win.appendChild(div);
+    win.scrollTop = win.scrollHeight;
+  }
+
+  function askJuX() {
+    const input = document.getElementById('chatInput');
+    const raw = input.value.trim();
+    if (!raw) return;
+    const key = raw.toLowerCase();
+    input.value = '';
+
+    addMsg('child', raw);
+
+    setTimeout(() => {
+      const entry = dict[key];
+      if (entry) {
+        const expHtml = entry.expressions.map((e, i) =>
+          `<span class="dict-ref">E${i+1} → ${e}</span>`
+        ).join('');
+        addMsg('jux',
+          `<strong style="color:var(--opal-teal);font-family:'IBM Plex Mono',monospace;font-size:0.8rem;letter-spacing:0.15em;">${entry.term}</strong>` +
+          expHtml +
+          `<span class="sentence">${entry.sentence}</span>` +
+          `<span class="dict-ref">42_DICTIONARY · interpret(${entry.term}, 42_DICTIONARY) → Sentence</span>`
+        );
+      } else {
+        addMsg('jux',
+          `<span style="color:var(--opal-smoke);">interpret(${raw}) → SUSPENDED</span>` +
+          `<span class="dict-ref">Term not in 42_DICTIONARY · Context required</span>`
+        );
+      }
+    }, 300);
+  }
+
+  document.getElementById('chatInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') askJuX();
+  });
+</script>
+
+</body>
+</html>

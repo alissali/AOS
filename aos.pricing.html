@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0EK0X213R9"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-0EK0X213R9');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Open Graph -->
+    <meta property="og:title" content="AOS Pricing — Services and Tiers">
+    <meta property="og:description" content="AOS pricing tiers. Same soul, same prices. Choose your level.">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="AOS Pricing — Services and Tiers">
+    <meta name="twitter:description" content="AOS pricing tiers. Same soul, same prices. Choose your level.">
+    <meta name="description" content="AOS pricing tiers. Same soul, same prices. Choose your level.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzBhMGEwZiIvPgogIDxwb2x5Z29uIHBvaW50cz0iMTYsMiAzMCwxNiAxNiwzMCAyLDE2IiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZykiIHN0cm9rZS13aWR0aD0iMiIvPgogIDx0ZXh0IHg9IjE2IiB5PSIyMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmNjYwMCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTIiPko8L3RleHQ+CiAgPGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmNjYwMCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFhMWFmZiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPgo8L3N2Zz4=">
+<title>AOS — Financial Spiral</title>
+<style>
+:root {
+  --opal-void: #010206;
+  --opal-deep: #03050c;
+  --opal-teal: #2ec4b6;
+  --opal-amber: #e8a045;
+  --opal-violet: #7b4fa6;
+  --opal-gold: #f5c842;
+  --opal-smoke: #667788;
+  --opal-frost: #b8c8d4;
+  --aos-diamond: #a0c4e0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--opal-void);
+  color: var(--opal-frost);
+  font-family: 'IBM Plex Mono', monospace;
+  padding: 2rem 1rem;
+  font-size: 16px;
+}
+.spiral-container {
+  max-width: 680px;
+  margin: 0 auto;
+}
+.spiral-title {
+  text-align: center;
+  color: var(--opal-gold);
+  font-size: 1.4rem;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.4rem;
+}
+.spiral-tagline {
+  text-align: center;
+  color: var(--opal-smoke);
+  font-size: 0.9rem;
+  margin-bottom: 2rem;
+  font-style: italic;
+}
+.spiral-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  padding: 1rem 1.4rem;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  border-left: 4px solid transparent;
+  transition: border-color 0.2s;
+  gap: 1rem;
+}
+.spiral-row:hover { border-left-color: var(--opal-teal); }
+
+.row-free   { background: #0a1a0a; border-left-color: var(--opal-teal) !important; }
+.row-aos1   { background: #0d0d1a; }
+.row-aos2   { background: #0f0a1a; }
+.row-aos3   { background: #1a100a; }
+.row-aos4   { background: #1a1a0a; }
+.row-aos5   { background: #0a1a1a; }
+
+.row-name { font-size: 1rem; color: var(--opal-frost); font-weight: 600; }
+.row-desc { font-size: 0.78rem; color: var(--opal-smoke); margin-top: 0.2rem; font-style: italic; }
+.row-price {
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-align: right;
+  white-space: nowrap;
+}
+.row-total {
+  font-size: 0.75rem;
+  color: var(--opal-smoke);
+  text-align: right;
+  white-space: nowrap;
+}
+.price-free  { color: var(--opal-teal); }
+.price-aos1  { color: var(--opal-gold); }
+.price-aos2  { color: var(--opal-amber); }
+.price-aos3  { color: var(--opal-violet); }
+.price-aos4  { color: var(--aos-diamond); }
+.price-aos5  { color: var(--opal-teal); }
+
+.spiral-rule {
+  text-align: center;
+  margin: 1.8rem 0 1.2rem;
+  color: var(--opal-smoke);
+  font-size: 0.85rem;
+}
+.spiral-rule strong { color: var(--opal-gold); }
+
+.arrow-down {
+  text-align: center;
+  color: var(--opal-teal);
+  font-size: 1.4rem;
+  margin: 0.2rem 0;
+}
+
+.tornado-line {
+  text-align: center;
+  color: var(--opal-amber);
+  font-size: 0.95rem;
+  font-style: italic;
+  margin: 1.2rem 0;
+  padding: 0.8rem;
+  border: 1px solid #2a1a00;
+  border-radius: 6px;
+  background: #140e00;
+}
+
+.pay-block {
+  margin-top: 2rem;
+  text-align: center;
+  padding: 1.4rem;
+  border: 1px solid var(--opal-teal);
+  border-radius: 10px;
+  background: #030d0c;
+}
+.pay-label {
+  color: var(--opal-smoke);
+  font-size: 0.8rem;
+  margin-bottom: 0.8rem;
+  letter-spacing: 0.1em;
+}
+.pay-btn {
+  display: inline-block;
+  background: var(--opal-teal);
+  color: var(--opal-void);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0.8rem 2.2rem;
+  border-radius: 6px;
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  transition: background 0.2s;
+}
+.pay-btn:hover { background: var(--opal-gold); }
+.pay-methods {
+  margin-top: 0.8rem;
+  color: var(--opal-smoke);
+  font-size: 0.75rem;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+</style>
+</head>
+<body>
+<div class="spiral-container">
+
+  <div class="spiral-title">Versions — Financial Spiral 🌀</div>
+  <div class="spiral-tagline">The spiral goes UP — the cost goes DOWN. That's a TORNADO. 🌪️</div>
+
+  <div class="spiral-row row-free">
+    <div>
+      <div class="row-name">AOS FREE!</div>
+      <div class="row-desc">Try Me You'll Love Me!</div>
+    </div>
+    <div class="row-price price-free">$0</div>
+    <div class="row-total">Total: $0</div>
+  </div>
+
+  <div class="arrow-down">↓</div>
+
+  <div class="spiral-row row-aos1">
+    <div>
+      <div class="row-name">AOS 1</div>
+      <div class="row-desc">AOS MNMNM Base</div>
+    </div>
+    <div class="row-price price-aos1">$20</div>
+    <div class="row-total">Total: $20</div>
+  </div>
+
+  <div class="arrow-down">↓</div>
+
+  <div class="spiral-row row-aos2">
+    <div>
+      <div class="row-name">AOS 2</div>
+      <div class="row-desc">MNMNM Shell</div>
+    </div>
+    <div class="row-price price-aos2">+$17</div>
+    <div class="row-total">Total: $37</div>
+  </div>
+
+  <div class="arrow-down">↓</div>
+
+  <div class="spiral-row row-aos3">
+    <div>
+      <div class="row-name">AOS 3</div>
+      <div class="row-desc">MNMNM ↔ Audio/Video</div>
+    </div>
+    <div class="row-price price-aos3">+$11</div>
+    <div class="row-total">Total: $48</div>
+  </div>
+
+  <div class="arrow-down">↓</div>
+
+  <div class="spiral-row row-aos4">
+    <div>
+      <div class="row-name">AOS 4</div>
+      <div class="row-desc">MNMNM → Dynamic Web</div>
+    </div>
+    <div class="row-price price-aos4">+$3</div>
+    <div class="row-total">Total: $51</div>
+  </div>
+
+  <div class="arrow-down">↓</div>
+
+  <div class="spiral-row row-aos5">
+    <div>
+      <div class="row-name">AOS 5+</div>
+      <div class="row-desc">MNMNM Universal Interface</div>
+    </div>
+    <div class="row-price price-aos5">Open</div>
+    <div class="row-total">∞</div>
+  </div>
+
+  <div class="tornado-line">
+    "The spiral goes UP — the cost goes DOWN. Loyal clients are rewarded. <strong>Always.</strong>"
+  </div>
+
+  <div class="spiral-rule">
+    Upgrade cost: <strong>20 → 17 → 11 → 3 → …</strong><br>
+    Loyal clients pay less — or the same. <strong>Always.</strong>
+  </div>
+
+  <div class="pay-block">
+    <div class="pay-label">SECURE PAYMENT VIA MOLLIE</div>
+    <a class="pay-btn" href="https://www.mollie.com/" target="_blank">PAY VIA MOLLIE →</a>
+    <div class="pay-methods">iDEAL · Visa · Mastercard · PayPal · Bancontact · SEPA · Apple Pay · Google Pay · Klarna</div>
+  </div>
+
+</div>
+</body>
+</html>

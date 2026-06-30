@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0EK0X213R9"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-0EK0X213R9');
+</script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AOS — The Ceiling</title>
+<style>
+  :root {
+    --opal-void:    #05070f;
+    --opal-teal:    #2ec4b6;
+    --opal-amber:   #e8a045;
+    --opal-violet:  #7b4fa6;
+    --opal-gold:    #f5c842;
+    --aos-ice:      #c8e6f0;
+    --aos-prism:    #a8d8ea;
+    --minimal:      #2ec4b6;
+    --bug:          #e05c5c;
+    --medical:      #4fc3a1;
+    --engineering:  #e8a045;
+    --legal:        #7b4fa6;
+    --synthesis:    #f5c842;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--opal-void);
+    color: #ddd8ce;
+    font-family: 'Georgia', serif;
+    font-size: 18px;
+    line-height: 1.85;
+    overflow-x: hidden;
+  }
+
+  /* ── CANVAS ── */
+  #canvas { position: fixed; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+
+  /* ── HERO ── */
+  #hero {
+    position: relative;
+    z-index: 1;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+  }
+
+  #hero-eyebrow {
+    font-family: 'Courier New', monospace;
+    font-size: 0.7em;
+    letter-spacing: 0.3em;
+    color: var(--opal-teal);
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.5s forwards;
+  }
+
+  #hero-title {
+    font-size: clamp(2.2em, 6vw, 4.5em);
+    font-weight: 400;
+    color: #f0ede6;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+    opacity: 0;
+    animation: fadeUp 1.2s ease 1s forwards;
+  }
+
+  #hero-title em {
+    color: var(--opal-amber);
+    font-style: italic;
+  }
+
+  #hero-sub {
+    margin-top: 30px;
+    font-size: 1em;
+    color: #8a9aaa;
+    max-width: 520px;
+    opacity: 0;
+    animation: fadeUp 1s ease 1.8s forwards;
+  }
+
+  #scroll-hint {
+    position: absolute;
+    bottom: 40px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.65em;
+    letter-spacing: 0.25em;
+    color: #556;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 1s ease 3s forwards;
+  }
+
+  /* ── MAIN CONTENT ── */
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 40px 120px;
+  }
+
+  /* ── CHAPTER ── */
+  .chapter {
+    padding: 80px 0 60px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .chapter:first-child { border-top: none; }
+
+  .dict-tag {
+    display: inline-block;
+    font-family: 'Courier New', monospace;
+    font-size: 0.62em;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 2px;
+    margin-bottom: 36px;
+    font-weight: bold;
+  }
+
+  .tag-minimal    { background: rgba(46,196,182,0.12); color: var(--minimal);    border: 1px solid rgba(46,196,182,0.3); }
+  .tag-bug        { background: rgba(224,92,92,0.12);  color: var(--bug);        border: 1px solid rgba(224,92,92,0.3); }
+  .tag-medical    { background: rgba(79,195,161,0.12); color: var(--medical);    border: 1px solid rgba(79,195,161,0.3); }
+  .tag-engineering{ background: rgba(232,160,69,0.12); color: var(--engineering);border: 1px solid rgba(232,160,69,0.3); }
+  .tag-legal      { background: rgba(123,79,166,0.12); color: var(--legal);      border: 1px solid rgba(123,79,166,0.3); }
+  .tag-synthesis  { background: rgba(245,200,66,0.12); color: var(--synthesis);  border: 1px solid rgba(245,200,66,0.3); }
+
+  .chapter-title {
+    font-size: clamp(1.5em, 3.5vw, 2.2em);
+    font-weight: 400;
+    color: #f0ede6;
+    line-height: 1.25;
+    margin-bottom: 36px;
+  }
+
+  .chapter-title em { font-style: italic; color: var(--opal-amber); }
+
+  /* ── PROSE ── */
+  .prose {
+    color: #cec9bf;
+    font-size: 1.05em;
+    line-height: 1.9;
+    margin-bottom: 36px;
+  }
+
+  .prose em {
+    color: var(--aos-ice);
+    font-style: italic;
+  }
+
+  .prose strong {
+    color: #f0ede6;
+    font-weight: 400;
+  }
+
+  /* ── AOS FOOTNOTE — small, precise, secondary ── */
+  .aos-footnote {
+    margin-top: 32px;
+    padding: 18px 22px;
+    border-left: 2px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.02);
+    font-family: 'Courier New', monospace;
+    font-size: 0.72em;
+    color: #556677;
+    line-height: 1.7;
+  }
+
+  .aos-footnote .fn-label {
+    color: #3a5a6a;
+    margin-right: 8px;
+  }
+
+  .aos-footnote .fn-val {
+    color: #7a9aaa;
+  }
+
+  .aos-footnote .fn-verdict {
+    color: var(--opal-amber);
+    margin-top: 6px;
+    display: block;
+  }
+
+  /* ── SYNTHESIS ── */
+  #synthesis {
+    padding: 100px 0 80px;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .synth-line {
+    font-size: clamp(1.4em, 3vw, 2em);
+    color: #f0ede6;
+    line-height: 1.6;
+    margin-bottom: 50px;
+    font-weight: 400;
+  }
+
+  .synth-line em { color: var(--opal-gold); font-style: italic; }
+
+  .nft-final {
+    display: inline-grid;
+    grid-template-columns: auto auto;
+    gap: 6px 24px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.75em;
+    text-align: left;
+    margin-top: 20px;
+    padding: 22px 32px;
+    border: 1px solid rgba(245,200,66,0.2);
+    background: rgba(245,200,66,0.04);
+  }
+
+  .nft-k { color: #5a6a4a; letter-spacing: 0.1em; }
+  .nft-v { color: var(--opal-gold); }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 40px;
+    border-top: 1px solid rgba(255,255,255,0.04);
+    font-family: 'Courier New', monospace;
+    font-size: 0.68em;
+    color: #334;
+    letter-spacing: 0.15em;
+  }
+
+  footer a { color: #446; text-decoration: none; }
+  footer a:hover { color: var(--opal-teal); }
+
+  /* ── AUDIO ── */
+  #audio-btn {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 100;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(46,196,182,0.1);
+    border: 1px solid rgba(46,196,182,0.3);
+    color: var(--opal-teal);
+    font-size: 1.1em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+  }
+  #audio-btn:hover { background: rgba(46,196,182,0.2); }
+
+  /* ── KEYFRAMES ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+
+<!-- HERO -->
+<section id="hero">
+  <div id="hero-eyebrow">AOS Soft Story — Five Dictionaries, One Event</div>
+  <h1 id="hero-title">The Ceiling<br><em>came down</em></h1>
+  <p id="hero-sub">A was standing in apartment 7.<br>B owned the building.<br>Neither one was ready for Tuesday.</p>
+  <div id="scroll-hint">↓ read the story</div>
+</section>
+
+<!-- MAIN STORY -->
+<main>
+
+  <!-- ── CHAPTER 1 — MINIMAL ── -->
+  <article class="chapter">
+    <span class="dict-tag tag-minimal">AOS.MINIMAL</span>
+    <h2 class="chapter-title">Tuesday.<br>8h14.<br>Apartment 7.</h2>
+    <div class="prose">
+      <p>
+        A was pouring coffee. The kind of morning that doesn't announce itself — grey light through the window,
+        the smell of bread from somewhere below, the ordinary weight of a Tuesday.
+      </p>
+      <p style="margin-top:22px;">
+        Then the sound. Not a crack. Not a crash. Something older — a <em>release</em>,
+        as if the building had been holding its breath for eleven years
+        and finally, quietly, gave up.
+      </p>
+      <p style="margin-top:22px;">
+        The ceiling came down. A went with it.
+        <strong>The coffee cup stayed on the counter, untouched.</strong>
+      </p>
+    </div>
+    <div class="aos-footnote">
+      <div><span class="fn-label">NAME</span><span class="fn-val">CeilingCollapse · A · 8h14 · Tuesday</span></div>
+      <div><span class="fn-label">FACT</span><span class="fn-val">Structural element failed. Human beneath. Contact.</span></div>
+      <span class="fn-verdict">TARGET → Survive. Account. Justice.</span>
+    </div>
+  </article>
+
+  <!-- ── CHAPTER 2 — BUG-MIB ── -->
+  <article class="chapter">
+    <span class="dict-tag tag-bug">AOS.BUG-MIB</span>
+    <h2 class="chapter-title">The bug<br>was already there<br><em>in 2015.</em></h2>
+    <div class="prose">
+      <p>
+        Bugs don't appear. They <em>accumulate</em>.
+        A hairline fracture at the anchor bolt — barely visible,
+        then invisible under paint. Humidity moved in. Winters expanded it.
+        Summers contracted it. Eleven of each.
+      </p>
+      <p style="margin-top:22px;">
+        The law requires inspection every five years.
+        B received no reminder. Sent no engineer. Filed no report.
+        Not in 2016. Not in 2021. Not ever.
+      </p>
+      <p style="margin-top:22px;">
+        <strong>The system had a bug. The bug had an owner.</strong>
+        The owner had a name: B.
+        And bugs — real bugs, structural bugs, the kind that fall on people —
+        do not close themselves.
+      </p>
+    </div>
+    <div class="aos-footnote">
+      <div><span class="fn-label">ID</span><span class="fn-val">BUG-0042 · StructuralIntegrity · Unit7</span></div>
+      <div><span class="fn-label">STATUS</span><span class="fn-val">OPEN → TRANSMITTED → PENDING CLOSE</span></div>
+      <span class="fn-verdict">OWNER → B. Fix required. Liability: established.</span>
+    </div>
+  </article>
+
+  <!-- ── CHAPTER 3 — MEDICAL ── -->
+  <article class="chapter">
+    <span class="dict-tag tag-medical">AOS.MEDICAL</span>
+    <h2 class="chapter-title">The hospital<br>does not ask <em>why.</em><br>It asks: where.</h2>
+    <div class="prose">
+      <p>
+        A arrived by ambulance. Unconscious. Left side of the face already bruising
+        into something no longer recognisable as Tuesday morning.
+        The intake form asked for a name. The body answered with a fracture.
+      </p>
+      <p style="margin-top:22px;">
+        T4. Fourth thoracic vertebra. The surgeons were calm — calm the way
+        people are calm when they have seen this before and know exactly
+        what the next six weeks will look like.
+        Pins. Immobilisation. Then the long, slow negotiation with pain.
+      </p>
+      <p style="margin-top:22px;">
+        <em>Full motor recovery projected.</em>
+        That is the medical version of hope —
+        not warm, not gentle, but precise.
+        <strong>Precise was enough.</strong>
+      </p>
+    </div>
+    <div class="aos-footnote">
+      <div><span class="fn-label">SYMPTOM</span><span class="fn-val">Blunt trauma · T4 fracture · contusions</span></div>
+      <div><span class="fn-label">TREATMENT</span><span class="fn-val">Surgical stabilisation · 6 weeks · 4 months PT</span></div>
+      <span class="fn-verdict">OUTCOME → Full motor recovery. Chronic pain: possible.</span>
+    </div>
+  </article>
+
+  <!-- ── CHAPTER 4 — ENGINEERING ── -->
+  <article class="chapter">
+    <span class="dict-tag tag-engineering">AOS.ENGINEERING</span>
+    <h2 class="chapter-title">Engineering<br>does not speculate.<br><em>It validates.</em></h2>
+    <div class="prose">
+      <p>
+        Three weeks after the collapse, an engineer entered apartment 7
+        with a torch, a caliper, and a protocol sheet.
+        He did not need to look long.
+      </p>
+      <p style="margin-top:22px;">
+        The NEN 6702 standard is not complicated: inspect every five years,
+        document corrosion, replace load-bearing anchors at first sign of fatigue.
+        The anchor bolt in unit 7 had not been replaced since installation.
+        The installation date: 2003.
+      </p>
+      <p style="margin-top:22px;">
+        The report was four pages long.
+        The conclusion was one sentence:
+        <em>"Failure was predictable, preventable, and owner-attributable."</em>
+        <strong>Four pages to get to one truth.</strong>
+        Architecture always does.
+      </p>
+    </div>
+    <div class="aos-footnote">
+      <div><span class="fn-label">STANDARD</span><span class="fn-val">NEN 6702 §4.2 · 5-year cycle · 180 kg/m²</span></div>
+      <div><span class="fn-label">ROOT CAUSE</span><span class="fn-val">Zero inspections in 11 years · humidity ingress</span></div>
+      <span class="fn-verdict">VALIDATED → Negligence. Preventable. Owner-attributable.</span>
+    </div>
+  </article>
+
+  <!-- ── CHAPTER 5 — LEGAL ── -->
+  <article class="chapter">
+    <span class="dict-tag tag-legal">AOS.LEGAL</span>
+    <h2 class="chapter-title">B went in<br>asking for <em>fees.</em><br>The law had other plans.</h2>
+    <div class="prose">
+      <p>
+        B hired a lawyer on a Thursday, three months after the ceiling.
+        The goal was simple: recover legal costs, close the matter, move on.
+        The lawyer listened. Nodded. Then asked B to read the engineering report.
+      </p>
+      <p style="margin-top:22px;">
+        B read it standing up, in the office, and did not sit down again.
+      </p>
+      <p style="margin-top:22px;">
+        The courtroom did not need drama. It had documentation.
+        BUG-0042. The medical report. Four pages of engineering certainty.
+        The judge read the same sentence the engineer had written —
+        <em>"predictable, preventable, owner-attributable"</em> —
+        and the verdict followed the architecture of the facts.
+      </p>
+      <p style="margin-top:22px;">
+        <strong>B did not recover fees. B paid them.</strong>
+        And A, walking again by then — slowly, with a cane —
+        received something the law calls damages
+        and the body calls: the cost of a Tuesday.
+      </p>
+    </div>
+    <div class="aos-footnote">
+      <div><span class="fn-label">CLAIM</span><span class="fn-val">B seeks fee recovery · legal + remediation</span></div>
+      <div><span class="fn-label">EVIDENCE</span><span class="fn-val">Engineering audit · Medical report · BUG-0042</span></div>
+      <span class="fn-verdict">VERDICT → B: liable. Damages to A awarded. B bears all costs.</span>
+    </div>
+  </article>
+
+  <!-- ── SYNTHESIS ── -->
+  <section id="synthesis">
+    <span class="dict-tag tag-synthesis">AOS.SYNTHESIS</span>
+    <div class="synth-line" style="margin-top:30px;">
+      The ceiling was a bug.<br>
+      The bug had an owner.<br>
+      <em>The law read the dictionary.</em>
+    </div>
+    <div class="prose" style="max-width:580px; margin:0 auto 40px; text-align:left; font-size:0.95em;">
+      Five languages. One event. The same Tuesday morning —
+      seen through the eyes of logic, of failure, of flesh, of steel, of justice.
+      AOS does not add meaning to the world.
+      It reveals <em>the meaning that was already there</em>,
+      waiting to be named.
+    </div>
+    <div class="nft-final">
+      <span class="nft-k">NAME</span>  <span class="nft-v">CeilingCollapse.A.Tuesday.2026</span>
+      <span class="nft-k">FACT</span>  <span class="nft-v">Negligence · Validated · Judged</span>
+      <span class="nft-k">TARGET</span><span class="nft-v">Justice. Recovery. Architecture.</span>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <p>AOS — Adequate Operating System · MIT License · <a href="https://juxitt.com">juxitt.com</a></p>
+  <p style="margin-top:6px; color:#223;">One language. All disciplines. Forever open.</p>
+</footer>
+
+<!-- AUDIO BUTTON -->
+<button id="audio-btn" title="Toggle ambient sound">♪</button>
+
+<!-- STARS CANVAS -->
+<script>
+(function(){
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, stars = [];
+
+  function resize(){
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  const palette = ['#2ec4b6','#e8a045','#7b4fa6','#f5c842','#c8e6f0','#ffffff'];
+
+  function makeStars(n){
+    stars = [];
+    for(let i=0;i<n;i++){
+      stars.push({
+        x: Math.random()*W,
+        y: Math.random()*H,
+        r: Math.random()*1.2+0.2,
+        c: palette[Math.floor(Math.random()*palette.length)],
+        a: Math.random(),
+        da: (Math.random()-0.5)*0.004,
+        speed: Math.random()*0.06+0.01
+      });
+    }
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    stars.forEach(s=>{
+      s.a += s.da;
+      if(s.a<=0||s.a>=1) s.da=-s.da;
+      s.y += s.speed;
+      if(s.y>H){ s.y=0; s.x=Math.random()*W; }
+      ctx.globalAlpha = s.a * 0.45;
+      ctx.fillStyle = s.c;
+      ctx.beginPath();
+      ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fill();
+    });
+    ctx.globalAlpha=1;
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize',()=>{ resize(); makeStars(260); });
+  resize(); makeStars(260); draw();
+})();
+</script>
+
+<!-- AUDIO -->
+<script>
+(function(){
+  let ctx, playing = false;
+  const btn = document.getElementById('audio-btn');
+
+  function start(){
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const master = ctx.createGain();
+    master.gain.value = 0.06;
+    master.connect(ctx.destination);
+
+    // Am chord — sombre, minor, grounded
+    [[220,0],[261.63,0.3],[329.63,0.6],[440,0.9]].forEach(([freq, delay])=>{
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      g.gain.value = 0;
+      g.gain.linearRampToValueAtTime(1, ctx.currentTime + delay + 2);
+      // Slow LFO tremolo
+      const lfo = ctx.createOscillator();
+      const lfoG = ctx.createGain();
+      lfo.frequency.value = 0.08 + Math.random()*0.04;
+      lfoG.gain.value = 0.3;
+      lfo.connect(lfoG);
+      lfoG.connect(g.gain);
+      lfo.start();
+      osc.connect(g);
+      g.connect(master);
+      osc.start(ctx.currentTime + delay);
+    });
+  }
+
+  btn.addEventListener('click', ()=>{
+    if(!playing){
+      start();
+      btn.textContent = '■';
+      btn.style.color = '#e05c5c';
+    } else {
+      if(ctx) ctx.close();
+      btn.textContent = '♪';
+      btn.style.color = '#2ec4b6';
+    }
+    playing = !playing;
+  });
+})();
+</script>
+
+</body>
+</html>

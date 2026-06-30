@@ -1,586 +1,463 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-0EK0X213R9"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-0EK0X213R9');
-</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Silver Ship — Captain's Quarters VR</title>
+<title>X COCKPIT — Captain's Quarters</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0EK0X213R9"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-0EK0X213R9');</script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{overflow:hidden;background:#000;font-family:'Courier New',monospace}
-canvas{display:block}
-#hud{position:fixed;top:12px;left:50%;transform:translateX(-50%);color:#88ccff;font-size:14px;letter-spacing:3px;text-shadow:0 0 10px #0088ff;z-index:10;pointer-events:none;text-align:center}
-#hud h1{font-size:22px;margin-bottom:4px}
-#hud p{font-size:11px;color:#66aadd;letter-spacing:1px}
-#chapters{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:center;gap:6px;padding:10px;z-index:10}
-.ch-btn{background:rgba(0,40,60,0.85);border:1px solid #44aadd;color:#88ddff;padding:5px 10px;font-size:10px;font-family:'Courier New',monospace;cursor:pointer;border-radius:4px;transition:all .3s}
-.ch-btn:hover{background:rgba(0,100,160,0.9);border-color:#88eeff;color:#fff;box-shadow:0 0 12px #0088ff}
-#controls-hint{position:fixed;bottom:55px;left:50%;transform:translateX(-50%);color:#4488aa;font-size:11px;z-index:10;pointer-events:none;opacity:0.7}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#0a0f0f;color:#c8d8d8;font-family:'Courier New',monospace;overflow-x:hidden;height:100vh;display:flex;flex-direction:column;}
+
+/* === TOP BAR === */
+.top-bar{background:#060b0b;border-bottom:1px solid #1a3333;padding:8px 20px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;}
+.top-bar h1{font-size:14px;letter-spacing:3px;color:#30d5c8;font-weight:bold;}
+.gate-display{display:flex;align-items:center;gap:12px;}
+.gate-label{font-size:11px;color:#5a8a8a;letter-spacing:2px;}
+.gate-name{font-size:13px;font-weight:bold;letter-spacing:1px;padding:4px 12px;border:1px solid;border-radius:3px;}
+.gate-nav{background:#0d1a1a;border:1px solid #1a3333;color:#30d5c8;padding:4px 10px;font-family:inherit;font-size:11px;cursor:pointer;border-radius:3px;}
+.gate-nav:hover{background:#1a3333;color:#fff;}
+.audio-status{font-size:11px;font-weight:bold;padding:5px 12px;border:1px solid #1a3333;border-radius:3px;background:#0d1a1a;cursor:pointer;}
+
+/* === UTILITY DECK === */
+.utility-deck{background:#060b0b;border-bottom:1px solid #1a3333;padding:6px 20px;display:flex;align-items:center;gap:12px;flex-shrink:0;flex-wrap:wrap;}
+.deck-label{color:#3a6a6a;font-size:10px;font-weight:bold;letter-spacing:1px;}
+.deck-btn{background:#0d1a1a;border:1px solid #1a3333;color:#30d5c8;padding:3px 10px;font-family:inherit;font-size:10px;cursor:pointer;border-radius:3px;white-space:nowrap;}
+.deck-btn:hover{background:#1a3333;color:#fff;}
+.deck-btn.fav{color:#ffcc00;border-color:#3a5a00;}
+
+/* === MAIN GRID === */
+.main-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px 12px;flex:1;min-height:0;}
+
+/* Screen Panels */
+.screen-panel{background:#060b0b;border:1px solid #1a3333;border-radius:4px;display:flex;flex-direction:column;overflow:hidden;}
+.screen-header{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;border-bottom:1px solid #1a3333;}
+.screen-title{color:#3a6a6a;font-size:10px;font-weight:bold;letter-spacing:2px;}
+.screen-body{flex:1;position:relative;min-height:0;}
+.screen-body iframe,.screen-body canvas{width:100%;height:100%;border:none;display:block;}
+.screen-body .cam-canvas{position:absolute;top:0;left:0;}
+
+/* Telemetry Row */
+.telemetry-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;padding:0 12px 6px;flex-shrink:0;}
+.tele-panel{background:#060b0b;border:1px solid #1a3333;border-radius:4px;padding:8px;position:relative;height:120px;}
+.tele-label{color:#3a6a6a;font-size:9px;font-weight:bold;letter-spacing:1px;margin-bottom:4px;}
+.tele-panel canvas{width:100%;height:calc(100% - 16px);display:block;}
+
+/* Readouts */
+.readout-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;padding:0 12px 6px;flex-shrink:0;}
+.readout{background:#060b0b;border:1px solid #1a3333;border-radius:3px;padding:6px 8px;text-align:center;}
+.readout .label{font-size:8px;color:#3a6a6a;letter-spacing:1px;margin-bottom:2px;}
+.readout .value{font-size:16px;font-weight:bold;color:#30d5c8;}
+.readout .unit{font-size:8px;color:#5a8a8a;}
+
+/* Console */
+.console-area{background:#060b0b;border:1px solid #1a3333;border-radius:4px;margin:0 12px 8px;display:flex;flex-direction:column;flex-shrink:0;}
+.console-log{background:#040808;height:80px;overflow-y:auto;padding:6px 10px;color:#30d5c8;font-size:11px;border-bottom:1px solid #1a3333;}
+.console-log .sys{color:#5a8a8a;} .console-log .cmd{color:#ffcc00;} .console-log .ok{color:#34c759;} .console-log .err{color:#ff3b5c;}
+.entry-row{display:flex;align-items:center;padding:6px 10px;gap:8px;}
+.entry-row .prompt{color:#ffcc00;font-weight:bold;font-size:12px;white-space:nowrap;}
+.entry-row input{flex:1;background:#040808;border:1px solid #1a3333;color:#fff;font-family:inherit;font-size:12px;padding:6px 8px;outline:none;border-radius:3px;}
+.entry-row input:focus{border-color:#30d5c8;}
+
+/* Hidden audio */
+.hidden-audio{position:absolute;width:1px;height:1px;opacity:0;left:-9999px;}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-track{background:#040808;} ::-webkit-scrollbar-thumb{background:#1a3333;border-radius:2px;}
+
+/* Gate color classes */
+.gate-1{color:#ff3b30;border-color:#ff3b30;} .gate-2{color:#30d5c8;border-color:#30d5c8;}
+.gate-3{color:#34c759;border-color:#34c759;} .gate-4{color:#ffcc00;border-color:#ffcc00;}
+.gate-5{color:#af52de;border-color:#af52de;} .gate-6{color:#ffffff;border-color:#ffffff;}
+.gate-7{color:#e5e7e9;border-color:#e5e7e9;text-shadow:0 0 10px #30d5c8;}
 </style>
 </head>
 <body>
 
-<div id="hud">
-  <h1>⚜ CAPTAIN'S QUARTERS ⚜</h1>
-  <p>SILVER SHIP — DEEP SPACE</p>
+<div class="hidden-audio">
+<iframe id="ytAudio" src="https://www.youtube.com/embed/RsDfGbr8Ihg?enablejsapi=1&autoplay=1&mute=1&loop=1&playlist=RsDfGbr8Ihg" allow="autoplay"></iframe>
 </div>
 
-<div id="controls-hint">🖱️ Drag to look around · Scroll to zoom · Right-drag to pan</div>
-
-<div id="chapters">
-  <button class="ch-btn">I · Birth</button>
-  <button class="ch-btn">II · Desert</button>
-  <button class="ch-btn">III · Spice</button>
-  <button class="ch-btn">IV · Storm</button>
-  <button class="ch-btn">V · Ship</button>
-  <button class="ch-btn">VI · Stars</button>
-  <button class="ch-btn">VII · War</button>
-  <button class="ch-btn">VIII · Peace</button>
-  <button class="ch-btn">IX · Home</button>
+<!-- TOP BAR -->
+<div class="top-bar">
+<h1>🚀 X COCKPIT — CAPTAIN'S QUARTERS</h1>
+<div class="gate-display">
+<button class="gate-nav" onclick="changeGate(-1)">◀</button>
+<span class="gate-label">GATE</span>
+<span id="gateName" class="gate-name gate-1">1 — THE NOISE</span>
+<button class="gate-nav" onclick="changeGate(1)">▶</button>
+</div>
+<div id="audioStatus" class="audio-status" style="color:#ff3b5c;" onclick="toggleAudio()">♪ STANDBY</div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<!-- UTILITY DECK -->
+<div class="utility-deck">
+<span class="deck-label">⭐ BOOKMARKS:</span>
+<button class="deck-btn" onclick="navTo(1,'https://www.satflare.com/track.php?q=iss')">ISS Tracker</button>
+<button class="deck-btn" onclick="navTo(1,'https://en.wikipedia.org/wiki/Arrakis')">Arrakis Wiki</button>
+<button class="deck-btn" onclick="navTo(2,'https://juxaos.com')">juxaos.com</button>
+<button class="deck-btn fav" onclick="addBookmark()">+ Add</button>
+<span id="customBookmarks"></span>
+<span style="flex:1"></span>
+<span class="deck-label">STEPS: <span id="stepCount" style="color:#30d5c8">0</span></span>
+<span class="deck-label" style="margin-left:8px;">BREATHS: <span id="breathCount" style="color:#34c759">0</span></span>
+<button class="deck-btn" onclick="showHistory()">📜 History</button>
+</div>
+
+<!-- MAIN GRID: 2 SCREENS -->
+<div class="main-grid">
+<!-- SCREEN ALPHA: Wireframe Cam + iframe overlay -->
+<div class="screen-panel" id="panelA">
+<div class="screen-header">
+<div class="screen-title">📺 ALPHA — VIRTUAL WIREFRAME CAM</div>
+<div style="display:flex;gap:6px;">
+<button class="deck-btn" onclick="toggleCam()">CAM/WEB</button>
+<button class="deck-btn" onclick="goFull('panelA')">⛶</button>
+</div>
+</div>
+<div class="screen-body">
+<canvas id="camCanvas" class="cam-canvas"></canvas>
+<iframe id="frameA" src="about:blank" style="display:none;"></iframe>
+</div>
+</div>
+
+<!-- SCREEN BETA: Web browser -->
+<div class="screen-panel" id="panelB">
+<div class="screen-header">
+<div class="screen-title">📺 BETA — INJECTION ARRAY</div>
+<button class="deck-btn" onclick="goFull('panelB')">⛶</button>
+</div>
+<div class="screen-body">
+<iframe id="frameB" src="https://en.wikipedia.org/wiki/Outer_space"></iframe>
+</div>
+</div>
+</div>
+
+<!-- TELEMETRY ROW -->
+<div class="telemetry-row">
+<div class="tele-panel">
+<div class="tele-label">RADAR SWEEP</div>
+<canvas id="radarCanvas"></canvas>
+</div>
+<div class="tele-panel">
+<div class="tele-label">WAVEFORM MONITOR</div>
+<canvas id="waveCanvas"></canvas>
+</div>
+<div class="tele-panel">
+<div class="tele-label">VECTORSCOPE</div>
+<canvas id="vecCanvas"></canvas>
+</div>
+<div class="tele-panel">
+<div class="tele-label">GATE ORBIT</div>
+<canvas id="orbitCanvas"></canvas>
+</div>
+</div>
+
+<!-- READOUTS -->
+<div class="readout-strip">
+<div class="readout"><div class="label">SHIELDS</div><div class="value" id="rShield">100</div><div class="unit">%</div></div>
+<div class="readout"><div class="label">NAV LOCK</div><div class="value" id="rNav" style="color:#34c759;">ON</div><div class="unit">ACTIVE</div></div>
+<div class="readout"><div class="label">SPICE FLOW</div><div class="value" id="rSpice">0.00</div><div class="unit">mg/s</div></div>
+<div class="readout"><div class="label">HULL TEMP</div><div class="value" id="rHull">22.4</div><div class="unit">°C</div></div>
+<div class="readout"><div class="label">COMMS</div><div class="value" id="rComms" style="color:#30d5c8;">OPEN</div><div class="unit">CH-7</div></div>
+<div class="readout"><div class="label">GATE</div><div class="value" id="rGate">1</div><div class="unit">/ 7</div></div>
+<div class="readout"><div class="label">FRAME</div><div class="value" id="rFrame">0</div><div class="unit">cyc</div></div>
+</div>
+
+<!-- CONSOLE -->
+<div class="console-area">
+<div id="consoleLog" class="console-log"></div>
+<div class="entry-row">
+<span class="prompt">PILGRIM▶</span>
+<input type="text" id="cmdInput" placeholder="url1 [link] · url2 [link] · cam · next · back · breathe · music on/off" autocomplete="off">
+</div>
+</div>
+
 <script>
-// ═══════════════════════════════════════
-// CAPTAIN'S QUARTERS — FULLY POPULATED
-// ═══════════════════════════════════════
+// === STATE ===
+const GATES = ['','THE NOISE','THE DICTIONARY','THE FACT','THE SENTENCE','THE STORY','THE UNIVERSE','THE TAKEOFF'];
+const GATE_COLORS = ['','#ff3b30','#30d5c8','#34c759','#ffcc00','#af52de','#ffffff','#e5e7e9'];
+let gate = 1, steps = 0, breaths = 0, frame = 0, camMode = true, audioOn = false;
+let history = JSON.parse(localStorage.getItem('x_hist')||'[]');
+let bookmarks = JSON.parse(localStorage.getItem('x_bmarks')||'[]');
 
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x050510);
-scene.fog = new THREE.FogExp2(0x050510, 0.012);
+// === DOM ===
+const $ = id => document.getElementById(id);
+const log = (msg, cls='sys') => { const d=$('consoleLog'); d.innerHTML+=`<div class="${cls}">[${new Date().toLocaleTimeString()}] ${msg}</div>`; d.scrollTop=d.scrollHeight; };
 
-const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 1000);
-camera.position.set(0, 3, 7);
-
-const renderer = new THREE.WebGLRenderer({antialias:true});
-renderer.setSize(innerWidth, innerHeight);
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.2;
-document.body.appendChild(renderer.domElement);
-
-const controls = new THREE.OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
-controls.dampingFactor = 0.08;
-controls.target.set(0, 1.5, 0);
-controls.maxPolarAngle = Math.PI * 0.85;
-controls.minDistance = 1.5;
-controls.maxDistance = 14;
-
-// ═══ HELPER ═══
-function box(w,h,d,m,x,y,z,rx,ry,rz){
-  const g = new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);
-  g.position.set(x,y,z);
-  if(rx) g.rotation.x=rx; if(ry) g.rotation.y=ry; if(rz) g.rotation.z=rz;
-  scene.add(g); return g;
-}
-function cyl(rt,rb,h,m,x,y,z,seg){
-  const g = new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,seg||12),m);
-  g.position.set(x,y,z); scene.add(g); return g;
-}
-function sphere(r,m,x,y,z,seg){
-  const g = new THREE.Mesh(new THREE.SphereGeometry(r,seg||16,seg||12),m);
-  g.position.set(x,y,z); scene.add(g); return g;
+// === GATE ===
+function changeGate(d) {
+    gate = Math.max(1, Math.min(7, gate + d));
+    const el = $('gateName');
+    el.textContent = `${gate} — ${GATES[gate]}`;
+    el.className = 'gate-name gate-'+gate;
+    $('rGate').textContent = gate;
+    log(`Gate shifted → ${gate}: ${GATES[gate]}`, 'ok');
+    if(gate===7) log('✦ THE TAKEOFF — All systems nominal. Ready for departure.','cmd');
 }
 
-// ═══ MATERIALS ═══
-const M = {
-  hull: new THREE.MeshStandardMaterial({color:0x1a2a3a, roughness:0.3, metalness:0.8}),
-  hullDk: new THREE.MeshStandardMaterial({color:0x0d1520, roughness:0.4, metalness:0.7}),
-  floor: new THREE.MeshStandardMaterial({color:0x2a1a0a, roughness:0.7, metalness:0.1}),
-  wood: new THREE.MeshStandardMaterial({color:0x8B5A2B, roughness:0.6, metalness:0.05}),
-  woodDk: new THREE.MeshStandardMaterial({color:0x5C3A1A, roughness:0.7, metalness:0.05}),
-  leather: new THREE.MeshStandardMaterial({color:0x8B0000, roughness:0.5, metalness:0.05}),
-  leatherDk: new THREE.MeshStandardMaterial({color:0x4a1010, roughness:0.6, metalness:0.05}),
-  gold: new THREE.MeshStandardMaterial({color:0xFFD700, roughness:0.2, metalness:0.9, emissive:0x332200, emissiveIntensity:0.3}),
-  silver: new THREE.MeshStandardMaterial({color:0xccccdd, roughness:0.2, metalness:0.9}),
-  rug: new THREE.MeshStandardMaterial({color:0x8B1A1A, roughness:0.9}),
-  rugBdr: new THREE.MeshStandardMaterial({color:0xCC9933, roughness:0.8, metalness:0.1}),
-  stone: new THREE.MeshStandardMaterial({color:0x3a2a2a, roughness:0.8, metalness:0.1}),
-  fire: new THREE.MeshStandardMaterial({color:0xFF4400, emissive:0xFF2200, emissiveIntensity:2, transparent:true, opacity:0.9}),
-  fireCore: new THREE.MeshStandardMaterial({color:0xFFCC00, emissive:0xFFAA00, emissiveIntensity:3, transparent:true, opacity:0.85}),
-  glass: new THREE.MeshStandardMaterial({color:0x88ccff, roughness:0.05, metalness:0.3, transparent:true, opacity:0.3}),
-  screen: new THREE.MeshStandardMaterial({color:0x003322, emissive:0x00ff88, emissiveIntensity:0.5, roughness:0.1}),
-  holo: new THREE.MeshStandardMaterial({color:0x0044ff, emissive:0x0088ff, emissiveIntensity:1, transparent:true, opacity:0.6}),
-  cushion: new THREE.MeshStandardMaterial({color:0xCC8844, roughness:0.7}),
-  cushionB: new THREE.MeshStandardMaterial({color:0x224466, roughness:0.7}),
-  plant: new THREE.MeshStandardMaterial({color:0x228B22, roughness:0.8}),
-  plantDk: new THREE.MeshStandardMaterial({color:0x1a6b1a, roughness:0.8}),
-  pot: new THREE.MeshStandardMaterial({color:0xB87333, roughness:0.6, metalness:0.2}),
-  cat: new THREE.MeshStandardMaterial({color:0xDEB887, roughness:0.9}),
-  catEye: new THREE.MeshStandardMaterial({color:0x00ff44, emissive:0x00ff44, emissiveIntensity:1}),
-  bk1: new THREE.MeshStandardMaterial({color:0xCC2222, roughness:0.7}),
-  bk2: new THREE.MeshStandardMaterial({color:0x2244CC, roughness:0.7}),
-  bk3: new THREE.MeshStandardMaterial({color:0x22AA44, roughness:0.7}),
-  bk4: new THREE.MeshStandardMaterial({color:0xCC8800, roughness:0.7}),
-  bk5: new THREE.MeshStandardMaterial({color:0x8822CC, roughness:0.7}),
-  bk6: new THREE.MeshStandardMaterial({color:0x22CCCC, roughness:0.7}),
-  bk7: new THREE.MeshStandardMaterial({color:0xCC2288, roughness:0.7}),
-  crystal: new THREE.MeshStandardMaterial({color:0x88ddff, emissive:0x44aaff, emissiveIntensity:0.5, transparent:true, opacity:0.7, roughness:0.05, metalness:0.5}),
-  slipper: new THREE.MeshStandardMaterial({color:0x882222, roughness:0.8}),
-  brass: new THREE.MeshStandardMaterial({color:0xBB8833, roughness:0.3, metalness:0.8}),
-  paper: new THREE.MeshStandardMaterial({color:0xeeddcc, roughness:0.9}),
-  ink: new THREE.MeshStandardMaterial({color:0x111122, roughness:0.3, metalness:0.5}),
-  fabric: new THREE.MeshStandardMaterial({color:0x334455, roughness:0.8}),
-  mirror: new THREE.MeshStandardMaterial({color:0xaabbcc, roughness:0.05, metalness:1.0}),
-  steel: new THREE.MeshStandardMaterial({color:0x888899, roughness:0.2, metalness:0.9}),
-  ceramic: new THREE.MeshStandardMaterial({color:0xddccbb, roughness:0.6}),
-  wine: new THREE.MeshStandardMaterial({color:0x660022, transparent:true, opacity:0.7, roughness:0.05}),
-  chessW: new THREE.MeshStandardMaterial({color:0xeeeedd, roughness:0.4, metalness:0.1}),
-  chessB: new THREE.MeshStandardMaterial({color:0x222222, roughness:0.4, metalness:0.1}),
-  map: new THREE.MeshStandardMaterial({color:0xddcc99, emissive:0x332200, emissiveIntensity:0.1, roughness:0.9}),
-  cloak: new THREE.MeshStandardMaterial({color:0x1a1a2a, roughness:0.8}),
-  scope: new THREE.MeshStandardMaterial({color:0x554433, roughness:0.3, metalness:0.6}),
-};
-
-// ═══ ROOM SHELL ═══
-const fl = box(12,0.2,12, M.floor, 0,-0.1,0); fl.receiveShadow=true;
-// Floor planks
-for(let i=-5;i<=5;i++){
-  box(12,0.01,0.02, M.woodDk, 0,0.01,i);
-  box(0.02,0.01,12, M.woodDk, i,0.01,0);
-}
-box(12,7,0.2, M.hull, 0,3.5,-6);      // back
-box(0.2,7,12, M.hullDk, -6,3.5,0);    // left
-box(0.2,7,12, M.hullDk, 6,3.5,0);     // right
-box(12,0.2,12, M.hull, 0,7,0);         // ceiling
-box(12,7,0.2, M.hullDk, 0,3.5,6);     // front wall (behind camera)
-
-// Hull panels (back wall)
-for(let i=0;i<5;i++){
-  box(1.8,3.5,0.05, M.hullDk, -4.5+i*2.2, 2.8, -5.85);
-  box(1.9,0.05,0.06, M.gold, -4.5+i*2.2, 4.6, -5.84);
-  box(1.9,0.05,0.06, M.gold, -4.5+i*2.2, 1.0, -5.84);
+// === NAVIGATION ===
+function navTo(screen, url) {
+    const fr = screen===1 ? $('frameA') : $('frameB');
+    fr.src = url;
+    if(screen===1 && camMode){ camMode=false; $('camCanvas').style.display='none'; $('frameA').style.display='block'; }
+    history.unshift({url,time:new Date().toLocaleTimeString(),screen});
+    if(history.length>20) history.pop();
+    localStorage.setItem('x_hist',JSON.stringify(history));
+    steps++; $('stepCount').textContent=steps;
+    log(`Screen ${screen===1?'ALPHA':'BETA'} → ${url}`,'ok');
 }
 
-// Hull panels (side walls)
-for(let z=-3;z<=3;z+=3){
-  box(0.05,3,1.5, M.hull, -5.85,2.5,z);
-  box(0.05,3,1.5, M.hull, 5.85,2.5,z);
+function toggleCam() {
+    camMode = !camMode;
+    $('camCanvas').style.display = camMode ? 'block' : 'none';
+    $('frameA').style.display = camMode ? 'none' : 'block';
+    log(camMode ? 'ALPHA: Wireframe cam engaged' : 'ALPHA: Web mode','sys');
 }
 
-// ═══ VIEWPORT (back wall, larger) ═══
-box(4.5,3,0.15, M.gold, 0,4,-5.88);       // frame
-box(4,2.5,0.1, M.glass, 0,4,-5.85);       // glass
-const vpBg = new THREE.Mesh(new THREE.PlaneGeometry(4,2.5),
-  new THREE.MeshBasicMaterial({color:0x030318}));
-vpBg.position.set(0,4,-5.95); scene.add(vpBg);
-
-// Stars
-const starGeo = new THREE.BufferGeometry();
-const starP = [];
-for(let i=0;i<300;i++) starP.push((Math.random()-0.5)*4, 2.8+Math.random()*2.5, -6.5-Math.random()*6);
-starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starP,3));
-const stars = new THREE.Points(starGeo, new THREE.PointsMaterial({color:0xffffff,size:0.03}));
-scene.add(stars);
-
-// Planet with ring
-const planet = sphere(0.5, new THREE.MeshStandardMaterial({color:0xdd8844,emissive:0x553311,emissiveIntensity:0.3,roughness:0.8}), 1,4.2,-7, 32);
-const ring = new THREE.Mesh(new THREE.RingGeometry(0.65,0.85,32),
-  new THREE.MeshStandardMaterial({color:0xaa8866,transparent:true,opacity:0.4,side:THREE.DoubleSide}));
-ring.position.set(1,4.2,-7); ring.rotation.x=1.2; scene.add(ring);
-
-// Moon
-sphere(0.12, new THREE.MeshStandardMaterial({color:0x889999,roughness:0.9}), -0.8,4.5,-7.5);
-
-// ═══ FIREPLACE (left wall) ═══
-box(0.3,2.5,2.2, M.stone, -5.7,1.25,0);  // back
-box(0.5,2.5,0.25, M.stone, -5.55,1.25,-1.1); // left pillar
-box(0.5,2.5,0.25, M.stone, -5.55,1.25,1.1);  // right pillar
-box(0.5,0.15,2.5, M.stone, -5.55,2.55,0);     // mantle
-box(0.6,0.1,2.6, M.stone, -5.5,0.05,0);       // hearth
-
-// Mantle decorations
-cyl(0.04,0.04,0.2, M.gold, -5.45,2.72,-0.6);   // candlestick 1
-cyl(0.04,0.04,0.2, M.gold, -5.45,2.72,0.6);    // candlestick 2
-sphere(0.03, M.fireCore, -5.45,2.85,-0.6);       // candle flame 1
-sphere(0.03, M.fireCore, -5.45,2.85,0.6);        // candle flame 2
-sphere(0.06, M.crystal, -5.45,2.7,0);            // crystal on mantle
-box(0.08,0.12,0.06, M.gold, -5.45,2.68,0.3);    // gold box
-
-// Flames
-const flames = [];
-for(let i=0;i<7;i++){
-  const h=0.3+Math.random()*0.5;
-  const fm = new THREE.Mesh(new THREE.ConeGeometry(0.08+Math.random()*0.08,h,8), i<3?M.fireCore:M.fire);
-  fm.position.set(-5.55, 0.3+h/2, -0.6+(i*0.2));
-  fm.userData={baseY:0.3+h/2,baseH:h,speed:2+Math.random()*3,phase:Math.random()*Math.PI*2};
-  scene.add(fm); flames.push(fm);
-}
-// Logs
-for(let i=0;i<4;i++){
-  const log=cyl(0.05,0.06,0.7, M.woodDk, -5.55,0.12,-0.4+i*0.25, 8);
-  log.rotation.z=(i-1.5)*0.2; log.rotation.x=Math.random()*0.3;
+function goFull(id) {
+    const el = $(id);
+    if(!document.fullscreenElement) el.requestFullscreen().catch(()=>{});
+    else document.exitFullscreen();
 }
 
-// ═══ DESK (right side, against wall) ═══
-const dkTop = box(2.5,0.1,1.2, M.wood, 4,1.2,-2);
-dkTop.castShadow=true;
-// Legs with detail
-for(let x of [-1,1]) for(let z of [-0.4,0.4]){
-  box(0.12,1.15,0.12, M.woodDk, 4+x,0.575,-2+z);
-  box(0.15,0.04,0.15, M.gold, 4+x,0.02,-2+z); // foot caps
+// === BOOKMARKS ===
+function addBookmark() {
+    const url = prompt('Bookmark URL:');
+    if(url){ bookmarks.push(url); localStorage.setItem('x_bmarks',JSON.stringify(bookmarks)); renderBookmarks(); }
 }
-box(2,0.6,0.05, M.woodDk, 4,0.55,-2.55); // back panel
-// Drawers
-for(let x of [-0.5,0.5]){
-  box(0.8,0.28,0.05, M.wood, 4+x,0.7,-1.45);
-  box(0.18,0.04,0.04, M.gold, 4+x,0.7,-1.42);
+function renderBookmarks() {
+    const c=$('customBookmarks'); c.innerHTML='';
+    bookmarks.forEach((b,i)=>{
+        const name=b.replace(/https?:\/\//,'').split('/')[0].substring(0,12);
+        c.innerHTML+=`<button class="deck-btn" onclick="navTo(2,'${b}')" title="${b}">⭐${name}</button>`;
+    });
 }
 
-// Desk items
-box(0.45,0.03,0.35, M.screen, 3.5,1.27,-2.1);      // datapad
-// Papers scattered
-box(0.3,0.005,0.4, M.paper, 4.2,1.26,-1.7, 0,0.2);
-box(0.25,0.005,0.35, M.paper, 4.4,1.265,-1.8, 0,-0.15);
-box(0.2,0.005,0.3, M.paper, 4.1,1.268,-1.65, 0,0.4);
-// Ink well
-cyl(0.04,0.04,0.06, M.ink, 4.6,1.28,-2.2);
-// Pen
-box(0.01,0.01,0.2, M.gold, 4.5,1.265,-2.15, 0,0.3);
-// Quill feather
-box(0.04,0.005,0.15, M.paper, 4.52,1.27,-2.05, 0,0.3);
-
-// Holodisplay
-cyl(0.18,0.22,0.05, M.hull, 3.3,1.28,-2.3);
-const holoScr = new THREE.Mesh(new THREE.PlaneGeometry(0.7,0.5), M.holo);
-holoScr.position.set(3.3,1.6,-2.3); scene.add(holoScr);
-
-// Desk lamp
-cyl(0.08,0.1,0.03, M.brass, 4.8,1.27,-2.4);
-cyl(0.02,0.02,0.3, M.brass, 4.8,1.42,-2.4);
-cyl(0.08,0.02,0.08, M.brass, 4.8,1.58,-2.4); // shade
-const deskLamp = new THREE.PointLight(0xffdd88,0.4,2);
-deskLamp.position.set(4.8,1.55,-2.4); scene.add(deskLamp);
-
-// ═══ THRONE ═══
-box(1.1,0.12,1, M.leather, 4,0.75,-0.3);     // seat
-box(1.1,1.8,0.12, M.leatherDk, 4,1.7,-0.8);  // back
-box(1.2,0.15,0.15, M.gold, 4,2.65,-0.8);      // crown
-// Fleur-de-lis on crown
-sphere(0.05, M.gold, 4,2.75,-0.74);
-sphere(0.04, M.gold, 3.88,2.7,-0.74);
-sphere(0.04, M.gold, 4.12,2.7,-0.74);
-// Armrests
-for(let x of [-0.55,0.55]){
-  box(0.12,0.55,0.9, M.woodDk, 4+x,1.02,-0.35);
-  box(0.16,0.06,0.95, M.gold, 4+x,1.32,-0.35);
-}
-box(0.9,0.08,0.8, M.cushion, 4,0.85,-0.3); // cushion
-
-// ═══ SOFA ═══
-box(3,0.35,1, M.leather, 0,0.42,3.5);     // seat
-box(3,1.2,0.2, M.leatherDk, 0,1.1,4);     // back
-for(let x of [-1.5,1.5]){
-  box(0.18,0.8,1, M.leatherDk, x,0.65,3.5); // arms
-}
-// Cushions (3 back + 2 accent)
-for(let x of [-0.7,0,0.7]){
-  box(0.55,0.4,0.15, M.cushion, x,0.9,3.9, -0.2);
-}
-box(0.4,0.3,0.3, M.cushionB, -1.2,0.75,3.5, 0,0,-0.3); // accent left
-box(0.4,0.3,0.3, M.cushionB, 1.2,0.75,3.5, 0,0,0.3);   // accent right
-
-// Throw blanket draped on sofa arm
-box(0.5,0.03,0.8, M.fabric, -1.5,1.1,3.5, 0.4,0,0.3);
-
-// ═══ COFFEE TABLE (in front of sofa) ═══
-box(1.8,0.08,0.8, M.wood, 0,0.55,2);     // top
-box(1.6,0.06,0.6, M.woodDk, 0,0.25,2);   // lower shelf
-for(let x of [-0.7,0.7]) for(let z of [-0.3,0.3]){
-  box(0.08,0.5,0.08, M.woodDk, x,0.27,2+z);
+function showHistory() {
+    if(!history.length){ alert('No navigation history yet.'); return; }
+    let t='🚀 COCKPIT TELEMETRY LOG:\n\n';
+    history.forEach(h=>{ t+=`[${h.time}] Screen ${h.screen} → ${h.url}\n`; });
+    alert(t);
 }
 
-// Items on coffee table
-// Tea set
-cyl(0.06,0.05,0.1, M.ceramic, -0.3,0.65,2);  // teapot body
-sphere(0.03, M.ceramic, -0.3,0.72,2);          // lid
-cyl(0.03,0.03,0.06, M.ceramic, -0.15,0.63,2.1); // cup 1
-cyl(0.03,0.03,0.06, M.ceramic, -0.45,0.63,1.9); // cup 2
-// Open book on table
-box(0.25,0.02,0.2, M.bk2, 0.3,0.6,2, 0,0.1);
-box(0.25,0.02,0.2, M.paper, 0.3,0.62,2.02, -0.05,0.1);
-
-// ═══ CHESS SET (on coffee table) ═══
-box(0.35,0.02,0.35, M.woodDk, 0.6,0.6,2); // board
-for(let r=0;r<3;r++) for(let c=0;c<3;c++){
-  const isW=(r+c)%2===0;
-  box(0.04,0.06,0.04, isW?M.chessW:M.chessB, 0.48+c*0.07,0.65,1.88+r*0.07);
+// === AUDIO ===
+function toggleAudio() {
+    const yt = $('ytAudio');
+    audioOn = !audioOn;
+    try {
+        yt.contentWindow.postMessage(JSON.stringify({event:'command',func:audioOn?'unMute':'mute',args:''}),'*');
+        yt.contentWindow.postMessage(JSON.stringify({event:'command',func:audioOn?'playVideo':'pauseVideo',args:''}),'*');
+    } catch(e){}
+    const s=$('audioStatus');
+    s.textContent = audioOn ? '♪ COSMIC ACTIVE' : '♪ STANDBY';
+    s.style.color = audioOn ? '#34c759' : '#ff3b5c';
 }
-// A few taller pieces
-cyl(0.02,0.02,0.08, M.chessW, 0.52,0.67,2.1);
-cyl(0.02,0.02,0.1, M.chessB, 0.65,0.68,1.92);
+document.body.addEventListener('click',()=>{ if(!audioOn) toggleAudio(); },{once:true});
 
-// ═══ RUG ═══
-box(4,0.02,3, M.rug, 0,0.01,2);
-box(3.4,0.025,2.4, M.rugBdr, 0,0.02,2);
-box(2.6,0.03,1.6, M.rug, 0,0.025,2);
-// Medallion center
-cyl(0.4,0.4,0.005, M.gold, 0,0.035,2, 32);
-
-// ═══ BOOKSHELF (left wall, near fireplace) ═══
-box(0.1,4,2.5, M.woodDk, -5.75,2.5,-3.5);  // back
-for(let x of [-1.2,1.2]) box(0.3,4,0.06, M.woodDk, -5.6,2.5,-3.5+x); // sides
-for(let y of [0.8,1.6,2.4,3.2,4.0]) box(0.3,0.06,2.5, M.wood, -5.6,y,-3.5); // shelves
-
-// Books (lots!)
-const bkMats = [M.bk1,M.bk2,M.bk3,M.bk4,M.bk5,M.bk6,M.bk7];
-for(let row=0;row<4;row++){
-  const count = 6+Math.floor(Math.random()*3);
-  for(let i=0;i<count;i++){
-    const bh=0.2+Math.random()*0.25;
-    const bk = box(0.18,bh,0.1+Math.random()*0.05, bkMats[(row*7+i)%7],
-      -5.55, 0.85+row*0.8+bh/2, -4.5+i*0.3);
-    if(Math.random()>0.85) bk.rotation.z=0.15; // tilted book
-  }
-}
-// Crystal orb on shelf
-sphere(0.1, M.crystal, -5.5,1.0,-3.2,16);
-// Ship model on top shelf
-box(0.2,0.08,0.06, M.wood, -5.5,4.15,-3.5);      // hull
-box(0.01,0.12,0.01, M.woodDk, -5.5,4.22,-3.5);   // mast
-box(0.1,0.01,0.06, M.paper, -5.5,4.28,-3.5);      // sail
-
-// ═══ SECOND BOOKSHELF (right wall) ═══
-box(0.1,3.5,1.8, M.woodDk, 5.75,2.25,2);
-for(let x of [-0.85,0.85]) box(0.3,3.5,0.06, M.woodDk, 5.6,2.25,2+x);
-for(let y of [0.8,1.6,2.4,3.2]) box(0.3,0.06,1.8, M.wood, 5.6,y,2);
-for(let row=0;row<3;row++){
-  for(let i=0;i<5;i++){
-    const bh=0.18+Math.random()*0.2;
-    box(0.18,bh,0.1, bkMats[(row*3+i+2)%7], 5.52, 0.85+row*0.8+bh/2, 1.3+i*0.3);
-  }
-}
-
-// ═══ WEAPON RACK (back wall, left of viewport) ═══
-box(0.8,0.08,0.12, M.woodDk, -3.5,3,-5.82);  // rack bar
-box(0.8,0.08,0.12, M.woodDk, -3.5,2,-5.82);  // lower rack bar
-// Swords
-for(let i=0;i<3;i++){
-  box(0.03,1.2,0.02, M.steel, -3.8+i*0.3,2.5,-5.78); // blade
-  box(0.1,0.04,0.06, M.gold, -3.8+i*0.3,1.92,-5.76);  // crossguard
-  cyl(0.02,0.02,0.15, M.leatherDk, -3.8+i*0.3,1.82,-5.76); // grip
-}
-
-// ═══ TROPHY SHELF (back wall, right of viewport) ═══
-box(1.2,0.08,0.3, M.wood, 3.5,3,-5.82); // shelf
-// Trophies
-cyl(0.05,0.08,0.2, M.gold, 3.2,3.14,-5.7);
-sphere(0.04, M.gold, 3.2,3.28,-5.7);
-cyl(0.05,0.08,0.15, M.silver, 3.5,3.12,-5.7);
-sphere(0.035, M.silver, 3.5,3.23,-5.7);
-cyl(0.04,0.06,0.12, M.brass, 3.8,3.1,-5.7);
-// Medal on wall
-cyl(0.06,0.06,0.01, M.gold, 3.5,3.8,-5.88);
-box(0.01,0.15,0.01, M.bk1, 3.5,3.65,-5.86); // ribbon
-
-// ═══ STAR MAP (back wall) ═══
-box(1.5,1,0.02, M.map, -3.5,4.5,-5.86);
-// Map pins
-for(let i=0;i<6;i++){
-  sphere(0.02, M.bk1, -4.1+i*0.25, 4.2+Math.random()*0.5, -5.84);
-}
-
-// ═══ TELESCOPE (near viewport) ═══
-cyl(0.06,0.04,0.8, M.scope, 2,3.5,-5, 12);
-const telesc = scene.children[scene.children.length-1];
-telesc.rotation.x=0.4; telesc.rotation.z=0.2;
-// Tripod legs
-for(let a=0;a<3;a++){
-  const leg = cyl(0.015,0.015,1.2, M.brass, 2+Math.cos(a*2.1)*0.15, 2.9, -5+Math.sin(a*2.1)*0.15);
-  leg.rotation.x=(a===0?0.15:-0.1); leg.rotation.z=(a-1)*0.15;
-}
-
-// ═══ MIRROR (left wall) ═══
-box(0.05,1.5,0.8, M.gold, -5.85,3.5,3);    // frame
-box(0.02,1.3,0.6, M.mirror, -5.83,3.5,3);  // mirror surface
-
-// ═══ WALL CLOCK (right wall) ═══
-cyl(0.2,0.2,0.05, M.woodDk, 5.85,4,0);
-const clockFace = scene.children[scene.children.length-1];
-clockFace.rotation.z=Math.PI/2;
-cyl(0.18,0.18,0.02, M.paper, 5.84,4,0);
-scene.children[scene.children.length-1].rotation.z=Math.PI/2;
-// Clock hands
-box(0.1,0.01,0.01, M.chessB, 5.83,4.05,0, 0,0,0.5);
-box(0.07,0.01,0.01, M.chessB, 5.83,4,-0.02, 0,0,-0.3);
-
-// ═══ CLOAK ON HOOK (near door) ═══
-sphere(0.04, M.brass, 4.5,3.5,5.8);  // hook
-box(0.6,1.5,0.1, M.cloak, 4.5,2.5,5.75, 0,0,0.05); // hanging cloak
-
-// ═══ WINE RACK (right wall, near bookshelf) ═══
-box(0.25,1,0.8, M.woodDk, 5.7,0.5,0);
-for(let r=0;r<3;r++) for(let c=0;c<2;c++){
-  cyl(0.04,0.04,0.25, M.wine, 5.68, 0.2+r*0.3, -0.15+c*0.3);
-  scene.children[scene.children.length-1].rotation.z=Math.PI/2;
-}
-
-// ═══ SIDE TABLE (next to sofa) ═══
-box(0.6,0.06,0.6, M.wood, -2.5,0.7,3);
-cyl(0.06,0.08,0.7, M.woodDk, -2.5,0.35,3);
-// Lamp on side table
-cyl(0.06,0.08,0.03, M.brass, -2.5,0.75,3);
-cyl(0.015,0.015,0.25, M.brass, -2.5,0.88,3);
-cyl(0.1,0.04,0.1, M.cushion, -2.5,1.03,3);
-const sideL = new THREE.PointLight(0xffcc77,0.3,3);
-sideL.position.set(-2.5,1.1,3); scene.add(sideL);
-
-// Coaster + glass on side table
-cyl(0.06,0.06,0.005, M.woodDk, -2.3,0.735,3.15);
-cyl(0.03,0.025,0.08, new THREE.MeshStandardMaterial({color:0xffaa44,transparent:true,opacity:0.5,roughness:0.05}), -2.3,0.78,3.15);
-
-// ═══ TIFFANY 🐱 ═══
-const catB = sphere(0.22, M.cat, 1,0.62,3.5);
-catB.scale.set(1,0.7,1.3);
-const catH = sphere(0.13, M.cat, 1,0.82,3.25);
-for(let x of [-0.04,0.04]) sphere(0.025, M.catEye, 1+x,0.85,3.14);
-// Ears
-box(0.04,0.06,0.02, M.cat, 0.96,0.92,3.22, 0,0,0.2);
-box(0.04,0.06,0.02, M.cat, 1.04,0.92,3.22, 0,0,-0.2);
-// Nose
-sphere(0.012, new THREE.MeshStandardMaterial({color:0xffaaaa}), 1,0.82,3.12);
-// Tail
-const tail = cyl(0.02,0.01,0.45, M.cat, 1,0.55,3.9);
-tail.rotation.x=0.8;
-
-// ═══ PLANTS (4 total) ═══
-const plantSpots = [[4.5,0,4.5],[-4.5,0,-4],[-4.5,0,4.5],[4.5,0,-4.5]];
-plantSpots.forEach(([px,_,pz],idx)=>{
-  const h = 0.3+idx*0.1;
-  cyl(0.15+idx*0.02, 0.12, h, M.pot, px,h/2,pz);
-  const leafCount = 5+idx*2;
-  for(let j=0;j<leafCount;j++){
-    sphere(0.1+Math.random()*0.05, idx%2?M.plant:M.plantDk,
-      px+(Math.random()-0.5)*0.25, h+0.1+Math.random()*0.35, pz+(Math.random()-0.5)*0.25);
-  }
+// === COMMAND INPUT ===
+$('cmdInput').addEventListener('keydown', e=>{
+    if(e.key!=='Enter') return;
+    const raw = e.target.value.trim(); e.target.value='';
+    if(!raw) return;
+    steps++; $('stepCount').textContent=steps;
+    log(`PILGRIM▶ ${raw}`,'cmd');
+    const parts=raw.split(/\s+/), cmd=parts[0].toLowerCase(), arg=parts.slice(1).join(' ');
+    if(cmd==='url1'&&arg) navTo(1,arg);
+    else if(cmd==='url2'&&arg) navTo(2,arg);
+    else if(cmd==='cam') toggleCam();
+    else if(cmd==='next') changeGate(1);
+    else if(cmd==='back') changeGate(-1);
+    else if(cmd==='breathe'){ breaths++; $('breathCount').textContent=breaths; log('☸️ Breath taken. The substrate hums.','ok'); }
+    else if(cmd==='music'){ toggleAudio(); }
+    else log(`Unknown command: ${cmd}`,'err');
 });
 
-// ═══ SLIPPERS ═══
-for(let x of [0.8,1.05]){
-  box(0.12,0.05,0.28, M.slipper, x,0.025,2.5, 0,x===0.8?0.15:-0.15);
+// === RENDER LOOP ===
+function setupCanvas(id) {
+    const c=$(id), r=c.parentElement.getBoundingClientRect();
+    c.width=r.width-16; c.height=r.height-24;
+    return c;
 }
 
-// ═══ DRINKS TRAY ON DESK ═══
-box(0.4,0.02,0.25, M.gold, 4.6,1.27,-2.6);
-cyl(0.05,0.06,0.2, M.crystal, 4.55,1.37,-2.6);
-cyl(0.03,0.025,0.1, new THREE.MeshStandardMaterial({color:0xffaa44,transparent:true,opacity:0.5,roughness:0.05}), 4.7,1.32,-2.55);
-cyl(0.03,0.025,0.1, new THREE.MeshStandardMaterial({color:0xffaa44,transparent:true,opacity:0.5,roughness:0.05}), 4.7,1.32,-2.68);
+// Starfield for cam
+let stars=[];for(let i=0;i<80;i++) stars.push({x:Math.random(),y:Math.random(),s:Math.random()*2+0.5,v:Math.random()*0.003+0.001});
 
-// ═══ CEILING LIGHTS ═══
-for(let x of [-2.5,0,2.5]){
-  box(0.15,0.05,10, new THREE.MeshStandardMaterial({color:0x88ccff,emissive:0x4488ff,emissiveIntensity:2}), x,6.95,0);
+function render() {
+    frame++;
+    const gc = GATE_COLORS[gate];
+
+    // --- CAM CANVAS (wireframe + targeting) ---
+    if(camMode) {
+        const c=$('camCanvas'), p=c.parentElement;
+        if(c.width!==p.clientWidth||c.height!==p.clientHeight){c.width=p.clientWidth;c.height=p.clientHeight;}
+        const ctx=c.getContext('2d'), w=c.width, h=c.height, cx=w/2, cy=h/2;
+        ctx.clearRect(0,0,w,h);
+        // Starfield
+        ctx.fillStyle='#c8d8d8';
+        stars.forEach(s=>{s.x-=s.v;if(s.x<0)s.x=1;ctx.fillRect(s.x*w,s.y*h,s.s,s.s);});
+        // Grid
+        ctx.strokeStyle='#0a2a2a';ctx.lineWidth=0.5;
+        for(let i=-8;i<9;i++){
+            const off=i*30+(frame*0.5)%30;
+            ctx.beginPath();ctx.moveTo(0,cy+off);ctx.lineTo(w,cy+off);ctx.stroke();
+            ctx.beginPath();ctx.moveTo(cx+off*2,0);ctx.lineTo(cx+off,h);ctx.stroke();
+        }
+        // Targeting reticle
+        ctx.strokeStyle=gc;ctx.lineWidth=2;
+        ctx.beginPath();ctx.arc(cx,cy,30,0,Math.PI*2);ctx.stroke();
+        ctx.beginPath();ctx.arc(cx,cy,60,0,Math.PI*2);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(cx-80,cy);ctx.lineTo(cx-35,cy);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(cx+35,cy);ctx.lineTo(cx+80,cy);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(cx,cy-80);ctx.lineTo(cx,cy-35);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(cx,cy+35);ctx.lineTo(cx,cy+80);ctx.stroke();
+        // HUD text
+        ctx.fillStyle=gc;ctx.font='bold 11px Courier New';
+        ctx.fillText('📡 V-CAM MATRIX',12,20);
+        ctx.fillText(`GATE ${gate}: ${GATES[gate]}`,12,36);
+        ctx.fillStyle='#5a8a8a';ctx.font='10px Courier New';
+        ctx.fillText(`FRAME ${frame}`,w-100,20);
+        ctx.fillText(`${new Date().toLocaleTimeString()}`,w-100,34);
+    }
+
+    // --- RADAR SWEEP ---
+    {
+        const c=$('radarCanvas'),p=c.parentElement;
+        if(c.width!==p.clientWidth-16) {c.width=p.clientWidth-16;c.height=p.clientHeight-24;}
+        const ctx=c.getContext('2d'),w=c.width,h=c.height,cx=w/2,cy=h/2,r=Math.min(cx,cy)-4;
+        ctx.clearRect(0,0,w,h);
+        // Rings
+        ctx.strokeStyle='#1a3333';ctx.lineWidth=0.5;
+        [0.33,0.66,1].forEach(s=>{ctx.beginPath();ctx.arc(cx,cy,r*s,0,Math.PI*2);ctx.stroke();});
+        ctx.beginPath();ctx.moveTo(0,cy);ctx.lineTo(w,cy);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(cx,0);ctx.lineTo(cx,h);ctx.stroke();
+        // Sweep
+        const a=(frame*2)*(Math.PI/180);
+        const grad=ctx.createLinearGradient(cx,cy,cx+Math.cos(a)*r,cy+Math.sin(a)*r);
+        grad.addColorStop(0,'transparent');grad.addColorStop(1,gc);
+        ctx.strokeStyle=grad;ctx.lineWidth=2;
+        ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r);ctx.stroke();
+        // Blips
+        const seed=42;let rng=seed;
+        const nxt=()=>{rng=(rng*16807+0)%2147483647;return rng/2147483647;};
+        for(let i=0;i<5;i++){
+            const bx=cx+(nxt()-0.5)*r*1.6, by=cy+(nxt()-0.5)*r*1.6;
+            const dist=Math.sqrt((bx-cx)**2+(by-cy)**2);
+            if(dist<r){
+                const blink=Math.sin(frame*0.1+i*2)>0;
+                if(blink){ctx.fillStyle=gc;ctx.beginPath();ctx.arc(bx,by,3,0,Math.PI*2);ctx.fill();}
+            }
+        }
+    }
+
+    // --- WAVEFORM ---
+    {
+        const c=$('waveCanvas'),p=c.parentElement;
+        if(c.width!==p.clientWidth-16){c.width=p.clientWidth-16;c.height=p.clientHeight-24;}
+        const ctx=c.getContext('2d'),w=c.width,h=c.height,mid=h/2;
+        ctx.clearRect(0,0,w,h);
+        // Grid lines
+        ctx.strokeStyle='#0a1a1a';ctx.lineWidth=0.5;
+        for(let y=0;y<h;y+=h/6){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
+        // Wave
+        ctx.strokeStyle=gc;ctx.lineWidth=1.5;ctx.beginPath();
+        for(let x=0;x<w;x++){
+            const amp=Math.sin(frame*0.03)*20+15;
+            const y=mid+Math.sin(x*0.04+frame*0.08)*amp+Math.cos(x*0.02+frame*0.03)*amp*0.5;
+            x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+        }
+        ctx.stroke();
+        // Second wave (dimmer)
+        ctx.strokeStyle=gc+'55';ctx.lineWidth=1;ctx.beginPath();
+        for(let x=0;x<w;x++){
+            const y=mid+Math.cos(x*0.06+frame*0.05)*12+Math.sin(x*0.03-frame*0.04)*8;
+            x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+        }
+        ctx.stroke();
+    }
+
+    // --- VECTORSCOPE ---
+    {
+        const c=$('vecCanvas'),p=c.parentElement;
+        if(c.width!==p.clientWidth-16){c.width=p.clientWidth-16;c.height=p.clientHeight-24;}
+        const ctx=c.getContext('2d'),w=c.width,h=c.height,cx=w/2,cy=h/2,r=Math.min(cx,cy)-6;
+        ctx.clearRect(0,0,w,h);
+        // Outer ring
+        ctx.strokeStyle='#1a3333';ctx.lineWidth=1;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.stroke();
+        ctx.beginPath();ctx.arc(cx,cy,r*0.5,0,Math.PI*2);ctx.stroke();
+        // Cross
+        ctx.strokeStyle='#0a1a1a';
+        ctx.beginPath();ctx.moveTo(cx-r,cy);ctx.lineTo(cx+r,cy);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(cx,cy-r);ctx.lineTo(cx,cy+r);ctx.stroke();
+        // Color targets
+        const targets=['R','YL','G','CY','B','MG'];
+        targets.forEach((t,i)=>{
+            const a=i*(Math.PI/3)-Math.PI/2;
+            ctx.fillStyle='#3a6a6a';ctx.font='8px Courier New';
+            ctx.fillText(t,cx+Math.cos(a)*(r+8)-4,cy+Math.sin(a)*(r+8)+3);
+            ctx.fillStyle='#1a3333';ctx.beginPath();ctx.arc(cx+Math.cos(a)*r*0.75,cy+Math.sin(a)*r*0.75,2,0,Math.PI*2);ctx.fill();
+        });
+        // Trace cloud
+        for(let i=0;i<30;i++){
+            const a=frame*0.02+i*0.21;
+            const d=r*0.3+Math.sin(frame*0.05+i)*r*0.2;
+            const px=cx+Math.cos(a)*d*Math.cos(i+frame*0.01);
+            const py=cy+Math.sin(a)*d*Math.sin(i+frame*0.01);
+            ctx.fillStyle=gc+'88';ctx.fillRect(px,py,2,2);
+        }
+    }
+
+    // --- GATE ORBIT ---
+    {
+        const c=$('orbitCanvas'),p=c.parentElement;
+        if(c.width!==p.clientWidth-16){c.width=p.clientWidth-16;c.height=p.clientHeight-24;}
+        const ctx=c.getContext('2d'),w=c.width,h=c.height,cx=w/2,cy=h/2;
+        ctx.clearRect(0,0,w,h);
+        // Rotating polygon (sides = gate number + 3)
+        const sides=gate+3, rot=(frame*0.8)*(Math.PI/180), r2=Math.min(cx,cy)-10;
+        ctx.strokeStyle=gc;ctx.lineWidth=2;ctx.beginPath();
+        for(let i=0;i<=sides;i++){
+            const a=rot+i*(Math.PI*2/sides);
+            const px=cx+Math.cos(a)*r2, py=cy+Math.sin(a)*r2;
+            i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
+        }
+        ctx.stroke();
+        // Inner ring
+        ctx.strokeStyle=gc+'44';ctx.lineWidth=1;ctx.beginPath();
+        for(let i=0;i<=sides;i++){
+            const a=-rot+i*(Math.PI*2/sides);
+            const px=cx+Math.cos(a)*r2*0.5, py=cy+Math.sin(a)*r2*0.5;
+            i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
+        }
+        ctx.stroke();
+        // Particles
+        for(let i=0;i<gate*5;i++){
+            const a=frame*0.03+i*(Math.PI*2/(gate*5));
+            const d=r2*0.7+Math.sin(frame*0.05+i*3)*r2*0.2;
+            ctx.fillStyle=gc;ctx.beginPath();ctx.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,1.5,0,Math.PI*2);ctx.fill();
+        }
+        // Center gate number
+        ctx.fillStyle=gc;ctx.font='bold 18px Courier New';ctx.textAlign='center';
+        ctx.fillText(gate,cx,cy+6);ctx.textAlign='start';
+    }
+
+    // --- READOUT UPDATES ---
+    $('rShield').textContent = Math.round(100 - Math.sin(frame*0.01)*3);
+    $('rSpice').textContent = (Math.sin(frame*0.02)*0.5+0.5).toFixed(2);
+    $('rHull').textContent = (22.4 + Math.sin(frame*0.005)*2).toFixed(1);
+    $('rFrame').textContent = frame;
+
+    requestAnimationFrame(render);
 }
 
-// ═══ WALL SCONCES (8 total) ═══
-for(let z of [-3,-1,1,3]){
-  for(let side of [-1,1]){
-    sphere(0.06, new THREE.MeshStandardMaterial({color:0xffddaa,emissive:0xffaa44,emissiveIntensity:2}), side*5.85,3.5,z);
-    const sc = new THREE.PointLight(0xffaa44,0.3,4);
-    sc.position.set(side*5.7,3.5,z); scene.add(sc);
-  }
-}
-
-// ═══ DOOR (front wall, right) ═══
-box(1.2,2.8,0.15, M.woodDk, 3,1.4,5.85);
-box(1.3,0.08,0.18, M.gold, 3,2.82,5.84);  // door header
-box(0.08,2.8,0.18, M.gold, 2.4,1.4,5.84); // left frame
-box(0.08,2.8,0.18, M.gold, 3.6,1.4,5.84); // right frame
-sphere(0.05, M.gold, 2.7,1.4,5.78);        // door handle
-// Panel details
-box(0.8,0.8,0.02, M.wood, 3,2.2,5.77);
-box(0.8,0.8,0.02, M.wood, 3,0.9,5.77);
-
-// ═══ LIGHTING ═══
-scene.add(new THREE.AmbientLight(0x334466, 0.35));
-
-const ceilLt = new THREE.PointLight(0x88bbff,0.8,15);
-ceilLt.position.set(0,6.5,0); ceilLt.castShadow=true; scene.add(ceilLt);
-
-const fireLt = new THREE.PointLight(0xff6622,1.5,10);
-fireLt.position.set(-5.2,1.5,0); fireLt.castShadow=true; scene.add(fireLt);
-
-const vpLt = new THREE.PointLight(0x4488ff,0.5,8);
-vpLt.position.set(0,4,-5); scene.add(vpLt);
-
-const holoLt = new THREE.PointLight(0x0088ff,0.4,3);
-holoLt.position.set(3.3,1.6,-2.3); scene.add(holoLt);
-
-// ═══ DUST MOTES ═══
-const dustGeo = new THREE.BufferGeometry();
-const dustP = [];
-for(let i=0;i<150;i++) dustP.push((Math.random()-0.5)*10, Math.random()*6, (Math.random()-0.5)*10);
-dustGeo.setAttribute('position', new THREE.Float32BufferAttribute(dustP,3));
-const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({color:0xffddaa,size:0.02,transparent:true,opacity:0.4}));
-scene.add(dust);
-
-// ═══ ANIMATION ═══
-const clock = new THREE.Clock();
-function animate(){
-  requestAnimationFrame(animate);
-  const t = clock.getElapsedTime();
-
-  // Flames
-  flames.forEach(f=>{
-    const d=f.userData;
-    f.scale.y=0.7+0.5*Math.sin(t*d.speed+d.phase);
-    f.scale.x=0.8+0.3*Math.sin(t*d.speed*1.3+d.phase);
-    f.position.y=d.baseY+0.05*Math.sin(t*d.speed*0.7);
-  });
-
-  // Fire light flicker
-  fireLt.intensity=1.2+0.5*Math.sin(t*3)+0.3*Math.sin(t*7);
-
-  // Holo pulse
-  holoScr.material.opacity=0.4+0.2*Math.sin(t*2);
-  holoScr.rotation.y=Math.sin(t*0.5)*0.1;
-
-  // Dust
-  const dp=dust.geometry.attributes.position.array;
-  for(let i=1;i<dp.length;i+=3){
-    dp[i]+=Math.sin(t*0.3+i)*0.001;
-    if(dp[i]>6)dp[i]=0;
-  }
-  dust.geometry.attributes.position.needsUpdate=true;
-
-  // Stars twinkle
-  stars.material.size=0.025+0.01*Math.sin(t*2);
-
-  // Cat breathing
-  catB.scale.y=0.7+0.03*Math.sin(t*1.5);
-
-  // Planet rotation
-  planet.rotation.y+=0.002;
-  ring.rotation.z+=0.001;
-
-  // Crystal orb glow
-  M.crystal.emissiveIntensity=0.3+0.3*Math.sin(t*1.5);
-
-  // Clock hand (minute)
-  // Desk lamp slight flicker
-  deskLamp.intensity=0.35+0.05*Math.sin(t*4);
-
-  controls.update();
-  renderer.render(scene,camera);
-}
-animate();
-
-// ═══ RESIZE ═══
-window.addEventListener('resize',()=>{
-  camera.aspect=innerWidth/innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(innerWidth,innerHeight);
-});
+// === INIT ===
+log('SYSTEM: X Cockpit OS initialized.','sys');
+log('FEATURES: 7 Gates · Dual screens · Bookmarks · Radar · Waveform · Vectorscope','sys');
+log(`GATE 1: ${GATES[1]} — Type "next" to advance.`,'sys');
+renderBookmarks();
+render();
 </script>
 </body>
 </html>

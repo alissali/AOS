@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0EK0X213R9"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-0EK0X213R9');
+</script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SpiceBus — Commercial License</title>
+<style>
+:root {
+  --opal-void: #010206;
+  --opal-deep: #03050c;
+  --opal-teal: #2ec4b6;
+  --opal-amber: #e8a045;
+  --opal-violet: #7b4fa6;
+  --opal-gold: #f5c842;
+  --opal-smoke: #667788;
+  --opal-frost: #b8c8d4;
+  --aos-diamond: #a0c4e0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--opal-void);
+  color: var(--opal-frost);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 16px;
+  line-height: 1.8;
+  padding: 60px 20px;
+}
+.container {
+  max-width: 860px;
+  margin: 0 auto;
+}
+.header {
+  border-bottom: 1px solid var(--opal-teal);
+  padding-bottom: 32px;
+  margin-bottom: 48px;
+}
+.header h1 {
+  font-size: 2rem;
+  color: var(--opal-teal);
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+.header .sub {
+  color: var(--opal-smoke);
+  font-size: 0.85rem;
+}
+.header .tag {
+  display: inline-block;
+  margin-top: 12px;
+  background: var(--opal-violet);
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 3px 12px;
+  letter-spacing: 0.12em;
+}
+section {
+  margin-bottom: 40px;
+}
+section h2 {
+  color: var(--opal-amber);
+  font-size: 0.9rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  border-left: 3px solid var(--opal-amber);
+  padding-left: 12px;
+}
+p {
+  color: var(--opal-frost);
+  margin-bottom: 12px;
+}
+ul {
+  margin: 0 0 12px 20px;
+}
+ul li {
+  margin-bottom: 6px;
+  color: var(--opal-frost);
+}
+.highlight {
+  color: var(--opal-teal);
+  font-weight: bold;
+}
+.tier-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+}
+.tier-table th {
+  background: var(--opal-deep);
+  color: var(--opal-amber);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--opal-smoke);
+}
+.tier-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #111;
+  font-size: 0.88rem;
+}
+.tier-table tr:hover td {
+  background: var(--opal-deep);
+}
+.price {
+  color: var(--opal-gold);
+  font-weight: bold;
+}
+.footer {
+  margin-top: 60px;
+  border-top: 1px solid var(--opal-smoke);
+  padding-top: 24px;
+  color: var(--opal-smoke);
+  font-size: 0.8rem;
+}
+.diamond {
+  color: var(--aos-diamond);
+}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;600&display=swap" rel="stylesheet"/>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>SpiceBus <span class="diamond">◆</span> Commercial License</h1>
+    <div class="sub">AOS.com — Entrepreneur Indépendant — France</div>
+    <div class="sub">Effective: 13 May 2026 — Version 1.0</div>
+    <span class="tag">SAAS TERMS</span>
+  </div>
+
+  <!-- 1. DEFINITIONS -->
+  <section>
+    <h2>1. Definitions</h2>
+    <ul>
+      <li><span class="highlight">Service</span> — SpiceBus: a communication dispatch service. Four operations: DISPATCH / BUG / DONE / ALERT.</li>
+      <li><span class="highlight">Provider</span> — AOS.com, operated by Mamoun Alissali, Entrepreneur Indépendant, France.</li>
+      <li><span class="highlight">Client</span> — Any natural person or legal entity subscribing to SpiceBus under this License.</li>
+      <li><span class="highlight">Notify Protocol</span> — <code>Notify(Event, Priority) → Channel + Email(ConcernedActors)</code></li>
+      <li><span class="highlight">Artifact</span> — Any output produced by a SpiceBus Operation.</li>
+    </ul>
+  </section>
+
+  <!-- 2. SERVICE -->
+  <section>
+    <h2>2. Service Description</h2>
+    <p>SpiceBus delivers structured event notifications across two channels: <span class="highlight">Slack</span> and <span class="highlight">Email</span>.</p>
+    <p>Three priority levels:</p>
+    <ul>
+      <li><span class="highlight">P1 — CRITICAL</span>: All Actors. Immediate.</li>
+      <li><span class="highlight">P2 — BUG</span>: Owner notified. Tracked.</li>
+      <li><span class="highlight">P3 — DISPATCH</span>: Assigned Actor notified.</li>
+    </ul>
+    <p>SpiceBus operates on the AOS formal language architecture. Each notification is an Expression. Each Expression carries: <span class="highlight">NAME / FACT / TARGET</span>.</p>
+  </section>
+
+  <!-- 3. LICENSE GRANT -->
+  <section>
+    <h2>3. License Grant</h2>
+    <p>Provider grants Client a non-exclusive, non-transferable, revocable license to access and use SpiceBus solely for Client's internal business operations during the Subscription Period.</p>
+    <p>Client may not sublicense, resell, or redistribute SpiceBus or any Artifact to third parties without written consent from Provider.</p>
+  </section>
+
+  <!-- 4. SUBSCRIPTIONS -->
+  <section>
+    <h2>4. Subscription Tiers</h2>
+    <table class="tier-table">
+      <tr>
+        <th>Tier</th>
+        <th>Operations / Month</th>
+        <th>Channels</th>
+        <th>Price</th>
+      </tr>
+      <tr>
+        <td>FREE</td>
+        <td>100</td>
+        <td>Email only</td>
+        <td class="price">€0</td>
+      </tr>
+      <tr>
+        <td>STARTER</td>
+        <td>1,000</td>
+        <td>Email + Slack</td>
+        <td class="price">€20 / mo</td>
+      </tr>
+      <tr>
+        <td>PRO</td>
+        <td>10,000</td>
+        <td>Email + Slack + API</td>
+        <td class="price">€49 / mo</td>
+      </tr>
+      <tr>
+        <td>ENTERPRISE</td>
+        <td>Unlimited</td>
+        <td>All + Custom</td>
+        <td class="price">On request</td>
+      </tr>
+    </table>
+    <p>Payment via <span class="highlight">Mollie</span>. Monthly. Invoiced under French micro-entrepreneur fiscal regime.</p>
+  </section>
+
+  <!-- 5. IP -->
+  <section>
+    <h2>5. Intellectual Property</h2>
+    <p>SpiceBus, AOS, and all associated architecture remain the exclusive property of <span class="highlight">AOS.com / Mamoun Alissali</span>.</p>
+    <p>AOS core language is licensed <span class="highlight">MIT</span>. SpiceBus commercial service is <span class="highlight">proprietary</span>. These are distinct.</p>
+    <p>Client retains ownership of all data and Artifacts produced from Client's own Expressions.</p>
+  </section>
+
+  <!-- 6. RESTRICTIONS -->
+  <section>
+    <h2>6. Restrictions</h2>
+    <ul>
+      <li>No reverse engineering of SpiceBus operations.</li>
+      <li>No use for illegal, harmful, or abusive notification campaigns.</li>
+      <li>No impersonation of Provider or AOS.com in dispatched messages.</li>
+      <li>No circumvention of rate limits or tier quotas.</li>
+    </ul>
+  </section>
+
+  <!-- 7. LIABILITY -->
+  <section>
+    <h2>7. Limitation of Liability</h2>
+    <p>Provider is not liable for indirect, incidental, or consequential damages arising from use of the Service.</p>
+    <p>Provider's total liability shall not exceed the amount paid by Client in the three (3) months preceding the claim.</p>
+    <p>Service is provided <span class="highlight">"as is"</span> during beta phase. SLA commitments begin at STARTER tier post-launch.</p>
+  </section>
+
+  <!-- 8. TERMINATION -->
+  <section>
+    <h2>8. Termination</h2>
+    <p>Either party may terminate this License with <span class="highlight">30 days written notice</span>.</p>
+    <p>Provider may terminate immediately upon breach of Section 6 (Restrictions).</p>
+    <p>Upon termination, Client's access ceases. Artifacts already produced remain Client's property.</p>
+  </section>
+
+  <!-- 9. GOVERNING LAW -->
+  <section>
+    <h2>9. Governing Law</h2>
+    <p>This License is governed by the laws of <span class="highlight">France</span>.</p>
+    <p>Any dispute shall be submitted to the competent courts of France.</p>
+    <p>Provider: Mamoun Alissali — Entrepreneur Indépendant — SIRET: <span class="highlight">[to be registered]</span></p>
+  </section>
+
+  <div class="footer">
+    <p>AOS.com — SpiceBus Commercial License v1.0 — 13 May 2026</p>
+    <p>NAME / FACT / TARGET — <span class="diamond">◆</span> — AOS MIT Core. SpiceBus Proprietary.</p>
+  </div>
+
+</div>
+</body>
+</html>

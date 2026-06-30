@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0EK0X213R9"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-0EK0X213R9');
+</script>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AOS — Dark Side of the Architecture</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --void:    #000005;
+      --l1:      #ff4455; /* Objects   — red    */
+      --l2:      #ff8844; /* Expr      — orange */
+      --l3:      #ffe055; /* Sentences — yellow */
+      --l4:      #44ffaa; /* Dict      — green  */
+      --l5:      #cc44ff; /* Services  — violet */
+      --name:    #ff4455;
+      --fact:    #44ffaa;
+      --target:  #4488ff;
+      --opal-teal:   #2ec4b6;
+      --opal-amber:  #e8a045;
+      --opal-ice:    #c8f0f5;
+    }
+
+    html, body {
+      width: 100%; min-height: 100vh;
+      background: var(--void);
+      color: var(--opal-ice);
+      font-family: 'Courier New', Courier, monospace;
+      overflow-x: hidden;
+    }
+
+    /* ── STARFIELD ── */
+    #starfield {
+      position: fixed; inset: 0; z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ── PRISM SECTION ── */
+    #prism-stage {
+      position: relative; z-index: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    #prism-svg {
+      width: min(700px, 95vw);
+      margin: 0 auto;
+      filter: drop-shadow(0 0 30px rgba(200,240,245,0.15));
+    }
+
+    /* ── BEAM ANIMATIONS ── */
+    @keyframes beam-in {
+      from { stroke-dashoffset: 600; opacity: 0; }
+      to   { stroke-dashoffset: 0;   opacity: 1; }
+    }
+    @keyframes ray-appear {
+      from { opacity: 0; stroke-dashoffset: 300; }
+      to   { opacity: 1; stroke-dashoffset: 0; }
+    }
+    @keyframes prism-glow {
+      0%, 100% { filter: drop-shadow(0 0 8px rgba(200,240,245,0.3)); }
+      50%       { filter: drop-shadow(0 0 24px rgba(200,240,245,0.7)); }
+    }
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 0.7; }
+      50%       { opacity: 1; }
+    }
+
+    .beam-in {
+      stroke-dasharray: 600;
+      animation: beam-in 2s ease-out forwards;
+    }
+    .ray { stroke-dasharray: 300; }
+    .ray-1 { animation: ray-appear 1s ease-out 2.2s forwards; opacity: 0; }
+    .ray-2 { animation: ray-appear 1s ease-out 2.5s forwards; opacity: 0; }
+    .ray-3 { animation: ray-appear 1s ease-out 2.8s forwards; opacity: 0; }
+    .ray-4 { animation: ray-appear 1s ease-out 3.1s forwards; opacity: 0; }
+    .ray-5 { animation: ray-appear 1s ease-out 3.4s forwards; opacity: 0; }
+
+    #prism-shape {
+      animation: prism-glow 4s ease-in-out infinite;
+    }
+
+    /* ── LABELS ── */
+    .ray-label {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 13px; letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: pulse-glow 3s ease-in-out infinite;
+    }
+    .rl-1 { animation-delay: 3.0s; fill: var(--l1); }
+    .rl-2 { animation-delay: 3.3s; fill: var(--l2); }
+    .rl-3 { animation-delay: 3.6s; fill: var(--l3); }
+    .rl-4 { animation-delay: 3.9s; fill: var(--l4); }
+    .rl-5 { animation-delay: 4.2s; fill: var(--l5); }
+
+    /* ── WHITE LABEL (NAME/FACT/TARGET) ── */
+    .beam-label {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 11px; letter-spacing: 0.2em;
+      fill: rgba(200,240,245,0.8);
+    }
+
+    /* ── CONTENT SECTIONS ── */
+    .section {
+      position: relative; z-index: 1;
+      max-width: 860px; margin: 0 auto;
+      padding: 4rem 2rem;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 1s ease, transform 1s ease;
+    }
+    .section.visible {
+      opacity: 1; transform: translateY(0);
+    }
+
+    .section-title {
+      font-size: 0.7rem; letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding-bottom: 0.5rem;
+    }
+
+    /* ── THREE OBJECTS ── */
+    .objects-row {
+      display: flex; gap: 1.5rem; flex-wrap: wrap;
+      justify-content: center; margin: 2rem 0;
+    }
+    .obj-card {
+      flex: 1; min-width: 200px;
+      padding: 2rem 1.5rem; text-align: center;
+      border: 1px solid rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.02);
+      position: relative; overflow: hidden;
+    }
+    .obj-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    }
+    .obj-name::before  { background: var(--name);   }
+    .obj-fact::before  { background: var(--fact);   }
+    .obj-target::before{ background: var(--target); }
+
+    .obj-word {
+      font-size: 1.8rem; font-weight: bold;
+      letter-spacing: 0.2em; margin-bottom: 0.8rem;
+    }
+    .obj-name   .obj-word { color: var(--name);   text-shadow: 0 0 20px var(--name);   }
+    .obj-fact   .obj-word { color: var(--fact);   text-shadow: 0 0 20px var(--fact);   }
+    .obj-target .obj-word { color: var(--target); text-shadow: 0 0 20px var(--target); }
+
+    .obj-desc {
+      font-size: 0.8rem; color: rgba(200,240,245,0.5);
+      letter-spacing: 0.05em; line-height: 1.6;
+    }
+
+    /* ── FIVE LEVELS ── */
+    .level-row {
+      display: flex; align-items: stretch;
+      margin: 0.6rem 0; gap: 1rem;
+    }
+    .level-bar {
+      width: 3px; flex-shrink: 0;
+      border-radius: 2px;
+    }
+    .level-body { flex: 1; padding: 1.2rem 1.5rem; background: rgba(255,255,255,0.02); }
+    .level-num {
+      font-size: 0.65rem; letter-spacing: 0.3em;
+      color: rgba(255,255,255,0.25); margin-bottom: 0.3rem;
+    }
+    .level-name {
+      font-size: 1rem; font-weight: bold;
+      letter-spacing: 0.15em; text-transform: uppercase;
+    }
+    .level-fact {
+      font-size: 0.8rem; color: rgba(200,240,245,0.5);
+      margin-top: 0.3rem; line-height: 1.5;
+    }
+
+    /* ── SENTENCES ── */
+    .sentence-block {
+      font-family: 'Courier New', Courier, monospace;
+      padding: 0.8rem 1.2rem; margin: 0.5rem 0;
+      background: rgba(255,224,85,0.03);
+      border-left: 2px solid var(--l3);
+      color: var(--l3);
+      font-size: 0.95rem; letter-spacing: 0.05em;
+    }
+
+    /* ── QUOTE ── */
+    .pf-quote {
+      text-align: center; padding: 4rem 2rem;
+      font-size: 1.1rem; font-style: italic;
+      color: var(--opal-amber);
+      letter-spacing: 0.05em; line-height: 1.9;
+      position: relative; z-index: 1;
+    }
+    .pf-quote::before, .pf-quote::after {
+      content: ''; display: block;
+      height: 1px; width: 60px; margin: 1.5rem auto;
+      background: linear-gradient(to right, transparent, var(--opal-amber), transparent);
+    }
+
+    /* ── DICTIONARIES ── */
+    .dict-grid {
+      display: flex; flex-wrap: wrap; gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .dict-tag {
+      padding: 0.5rem 1rem;
+      border: 1px solid rgba(255,255,255,0.12);
+      font-size: 0.75rem; letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(200,240,245,0.6);
+      transition: all 0.3s;
+      cursor: default;
+    }
+    .dict-tag:hover {
+      border-color: var(--opal-teal);
+      color: var(--opal-teal);
+      background: rgba(46,196,182,0.05);
+    }
+
+    /* ── MIT / LICENSE ── */
+    .mit-row {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      align-items: center; margin: 1.5rem 0;
+    }
+    .badge {
+      display: inline-block; font-size: 0.65rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      padding: 0.25rem 0.7rem;
+      border: 1px solid;
+    }
+    .badge-mit    { border-color: var(--opal-amber); color: var(--opal-amber); }
+    .badge-live   { border-color: var(--fact);       color: var(--fact);       }
+    .badge-open   { border-color: var(--opal-teal);  color: var(--opal-teal);  }
+
+    /* ── SUPPORT / DOWNLOAD ── */
+    .support-grid {
+      display: flex; gap: 1rem; flex-wrap: wrap; margin: 1.5rem 0;
+    }
+    .sup-link {
+      flex: 1; min-width: 180px; padding: 1.2rem 1.5rem;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.02);
+      text-decoration: none; color: var(--opal-ice);
+      letter-spacing: 0.08em; font-size: 0.85rem;
+      transition: all 0.3s; display: block;
+      text-align: center;
+    }
+    .sup-link:hover {
+      border-color: var(--opal-teal);
+      background: rgba(46,196,182,0.05);
+      color: var(--opal-teal);
+    }
+    .sup-link span { display: block; font-size: 1.3rem; margin-bottom: 0.4rem; }
+
+    /* ── AUDIO BUTTON ── */
+    #audio-btn {
+      position: fixed; bottom: 2rem; right: 2rem; z-index: 100;
+      width: 52px; height: 52px; border-radius: 50%;
+      border: 1px solid rgba(200,240,245,0.3);
+      background: rgba(0,0,5,0.8);
+      color: var(--opal-ice); font-size: 1.2rem;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all 0.3s;
+      backdrop-filter: blur(4px);
+    }
+    #audio-btn:hover {
+      border-color: var(--opal-teal);
+      box-shadow: 0 0 20px rgba(46,196,182,0.3);
+    }
+    #audio-btn.playing {
+      border-color: var(--l5);
+      box-shadow: 0 0 20px rgba(204,68,255,0.4);
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 1;
+      text-align: center; padding: 3rem 2rem;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.2);
+      font-size: 0.7rem; letter-spacing: 0.2em;
+    }
+
+    /* ── PRISM TOP BAR ── */
+    .spectrum-bar {
+      height: 3px;
+      background: linear-gradient(to right,
+        var(--l1), var(--l2), var(--l3), var(--l4), var(--target), var(--l5));
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    }
+  </style>
+</head>
+<body>
+
+<!-- SPECTRUM BAR -->
+<div class="spectrum-bar"></div>
+
+<!-- STARFIELD -->
+<canvas id="starfield"></canvas>
+
+<!-- AUDIO BUTTON -->
+<button id="audio-btn" title="Toggle sound">♪</button>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PRISM STAGE                               -->
+<!-- ══════════════════════════════════════════ -->
+<section id="prism-stage">
+  <svg id="prism-svg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <filter id="glow">
+        <feGaussianBlur stdDeviation="3" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="glow-strong">
+        <feGaussianBlur stdDeviation="6" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+
+    <!-- incoming white beam -->
+    <line x1="20" y1="170" x2="230" y2="170"
+          stroke="rgba(200,240,245,0.9)" stroke-width="2"
+          filter="url(#glow)" class="beam-in"/>
+
+    <!-- NAME / FACT / TARGET labels on beam -->
+    <text x="30" y="158" class="beam-label">NAME</text>
+    <text x="95" y="158" class="beam-label">FACT</text>
+    <text x="160" y="158" class="beam-label">TARGET</text>
+
+    <!-- PRISM -->
+    <polygon id="prism-shape"
+      points="230,100 230,240 390,170"
+      fill="rgba(200,240,245,0.04)"
+      stroke="rgba(200,240,245,0.6)"
+      stroke-width="1.5"
+      filter="url(#glow)"/>
+
+    <!-- 5 spectral rays -->
+    <!-- Objects L1 -->
+    <line x1="390" y1="170" x2="640" y2="90"
+          stroke="#ff4455" stroke-width="2.5" class="ray ray-1"
+          filter="url(#glow-strong)"/>
+    <!-- Expressions L2 -->
+    <line x1="390" y1="170" x2="640" y2="130"
+          stroke="#ff8844" stroke-width="2.5" class="ray ray-2"
+          filter="url(#glow-strong)"/>
+    <!-- Sentences L3 -->
+    <line x1="390" y1="170" x2="640" y2="170"
+          stroke="#ffe055" stroke-width="2.5" class="ray ray-3"
+          filter="url(#glow-strong)"/>
+    <!-- Dictionaries L4 -->
+    <line x1="390" y1="170" x2="640" y2="210"
+          stroke="#44ffaa" stroke-width="2.5" class="ray ray-4"
+          filter="url(#glow-strong)"/>
+    <!-- Services L5 -->
+    <line x1="390" y1="170" x2="640" y2="255"
+          stroke="#cc44ff" stroke-width="2.5" class="ray ray-5"
+          filter="url(#glow-strong)"/>
+
+    <!-- Ray labels -->
+    <text x="650" y="94"  class="ray-label rl-1">I. Objects</text>
+    <text x="650" y="134" class="ray-label rl-2">II. Expressions</text>
+    <text x="650" y="174" class="ray-label rl-3">III. Sentences</text>
+    <text x="650" y="214" class="ray-label rl-4">IV. Dictionaries</text>
+    <text x="650" y="259" class="ray-label rl-5">V. Services</text>
+
+    <!-- AOS title inside prism zone -->
+    <text x="270" y="175" fill="rgba(200,240,245,0.25)"
+          font-family="Courier New" font-size="11" letter-spacing="6">AOS</text>
+  </svg>
+
+  <div style="text-align:center; margin-top: 2rem; opacity:0; animation: ray-appear 1.5s ease-out 4.5s forwards;">
+    <div style="font-size:0.65rem; letter-spacing:0.4em; color:rgba(255,255,255,0.2); text-transform:uppercase;">
+      Adequate Operating System
+    </div>
+    <div style="font-size:0.75rem; letter-spacing:0.2em; color:rgba(200,240,245,0.35); margin-top:0.5rem; font-style:italic;">
+      The language that runs systems.
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PF QUOTE                                  -->
+<!-- ══════════════════════════════════════════ -->
+<div class="pf-quote section" data-reveal>
+  "There is no dark side of the architecture, really.<br/>
+  Matter of fact — it's all light.<br/>
+  NAME. FACT. TARGET."
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- THREE OBJECTS                             -->
+<!-- ══════════════════════════════════════════ -->
+<section class="section" data-reveal>
+  <div class="section-title">The Three Objects — atomic carriers of Semantics</div>
+  <div class="objects-row">
+    <div class="obj-card obj-name">
+      <div class="obj-word">NAME</div>
+      <div class="obj-desc">Identity.<br/>Unambiguous.<br/>Immutable once declared.</div>
+    </div>
+    <div class="obj-card obj-fact">
+      <div class="obj-word">FACT</div>
+      <div class="obj-desc">State of the world.<br/>Verifiable.<br/>No opinion.</div>
+    </div>
+    <div class="obj-card obj-target">
+      <div class="obj-word">TARGET</div>
+      <div class="obj-desc">Direction.<br/>Operational.<br/>Second-level Dynamic.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- FIVE LEVELS                               -->
+<!-- ══════════════════════════════════════════ -->
+<section class="section" data-reveal>
+  <div class="section-title">Five Levels — strict hierarchy</div>
+
+  <div class="level-row">
+    <div class="level-bar" style="background:var(--l1);"></div>
+    <div class="level-body">
+      <div class="level-num">Level I</div>
+      <div class="level-name" style="color:var(--l1);">Objects</div>
+      <div class="level-fact">NAME / FACT / TARGET — the three atomic carriers. Nothing smaller exists in AOS.</div>
+    </div>
+  </div>
+
+  <div class="level-row">
+    <div class="level-bar" style="background:var(--l2);"></div>
+    <div class="level-body">
+      <div class="level-num">Level II</div>
+      <div class="level-name" style="color:var(--l2);">Expressions</div>
+      <div class="level-fact">Three Objects composed into one coherent unit of meaning.</div>
+    </div>
+  </div>
+
+  <div class="level-row">
+    <div class="level-bar" style="background:var(--l3);"></div>
+    <div class="level-body">
+      <div class="level-num">Level III</div>
+      <div class="level-name" style="color:var(--l3);">Sentences</div>
+      <div class="level-fact">Expressions invoking Operations — executable meaning. Live in production.</div>
+      <div style="margin-top:1rem;">
+        <div class="sentence-block">buy(property, player)</div>
+        <div class="sentence-block">mortgage(property)</div>
+        <div class="sentence-block">fix(B11)</div>
+        <div class="sentence-block">transmit(BugChannel, Jr→Brother)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="level-row">
+    <div class="level-bar" style="background:var(--l4);"></div>
+    <div class="level-body">
+      <div class="level-num">Level IV</div>
+      <div class="level-name" style="color:var(--l4);">Dictionaries</div>
+      <div class="level-fact">One per User Discipline. Domain vocabulary, organized. JuX is the first.</div>
+      <div class="dict-grid" style="margin-top:1rem;">
+        <div class="dict-tag">AOS.MINIMAL</div>
+        <div class="dict-tag">AOS.BUG-MIB</div>
+        <div class="dict-tag">AOS.MEDICAL</div>
+        <div class="dict-tag">AOS.ENGINEERING</div>
+        <div class="dict-tag">AOS.LEGAL</div>
+        <div class="dict-tag">JuX ← first</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="level-row">
+    <div class="level-bar" style="background:var(--l5);"></div>
+    <div class="level-body">
+      <div class="level-num">Level V</div>
+      <div class="level-name" style="color:var(--l5);">Services</div>
+      <div class="level-fact">What Users demand — realized by Operations. The surface AOS produces.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- LICENSE & DOWNLOAD                        -->
+<!-- ══════════════════════════════════════════ -->
+<section class="section" data-reveal>
+  <div class="section-title">License &amp; Distribution</div>
+  <div class="mit-row">
+    <span class="badge badge-mit">MIT License</span>
+    <span class="badge badge-live">Open Source</span>
+    <span class="badge badge-open">Free Forever</span>
+  </div>
+  <p style="font-size:0.8rem; color:rgba(200,240,245,0.4); line-height:1.8; margin: 1rem 0;">
+    AOS is released under the MIT License.<br/>
+    Copyright © 2026 Mamoun Alissali — JuXITT.<br/>
+    Use it. Build with it. Name what you find.
+  </p>
+  <div class="support-grid">
+    <a class="sup-link" href="https://raw.githubusercontent.com/alissali/Learn/main/AOS.md" target="_blank">
+      <span>📄</span>AOS Specification
+    </a>
+    <a class="sup-link" href="https://raw.githubusercontent.com/alissali/Learn/main/AOS.DICTIONARIES.md" target="_blank">
+      <span>📚</span>Five Dictionaries
+    </a>
+    <a class="sup-link" href="https://raw.githubusercontent.com/alissali/Learn/main/LICENSE.md" target="_blank">
+      <span>⚖️</span>MIT License
+    </a>
+    <a class="sup-link" href="https://raw.githubusercontent.com/alissali/Learn/main/jux.css" target="_blank">
+      <span>🎨</span>jux.css
+    </a>
+    <a class="sup-link" href="mailto:jux@juxitt.com">
+      <span>✉️</span>jux@juxitt.com
+    </a>
+    <a class="sup-link" href="https://juxitt.com" target="_blank">
+      <span>🌐</span>JuXITT.com
+    </a>
+  </div>
+</section>
+
+<footer>
+  AOS — Adequate Operating System &nbsp;|&nbsp; MIT 2026 &nbsp;|&nbsp; Mamoun Alissali &nbsp;|&nbsp; JuXITT
+</footer>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SCRIPTS                                   -->
+<!-- ══════════════════════════════════════════ -->
+<script>
+// ── STARFIELD ──────────────────────────────────────────────
+(function() {
+  const canvas = document.getElementById('starfield');
+  const ctx = canvas.getContext('2d');
+  let W, H, stars = [];
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = document.body.scrollHeight;
+  }
+
+  function mkStar() {
+    return {
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 1.2 + 0.2,
+      a: Math.random(),
+      da: (Math.random() - 0.5) * 0.005,
+      color: ['#c8f0f5','#2ec4b6','#7b4fa6','#e8a045','#ffffff'][Math.floor(Math.random()*5)]
+    };
+  }
+
+  function init() {
+    resize();
+    stars = Array.from({length: 280}, mkStar);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    stars.forEach(s => {
+      s.a += s.da;
+      if (s.a < 0) s.da = Math.abs(s.da);
+      if (s.a > 1) s.da = -Math.abs(s.da);
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      ctx.fillStyle = s.color;
+      ctx.globalAlpha = s.a * 0.7;
+      ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', () => { resize(); stars = Array.from({length:280}, mkStar); });
+  init(); draw();
+})();
+
+// ── SCROLL REVEAL ──────────────────────────────────────────
+(function() {
+  const sections = document.querySelectorAll('[data-reveal]');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.12 });
+  sections.forEach(s => io.observe(s));
+})();
+
+// ── WEB AUDIO DRONE ────────────────────────────────────────
+(function() {
+  let ctx, playing = false, nodes = [];
+  const btn = document.getElementById('audio-btn');
+
+  function startDrone() {
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const master = ctx.createGain();
+    master.gain.setValueAtTime(0, ctx.currentTime);
+    master.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 3);
+    master.connect(ctx.destination);
+
+    // Root drone — D2
+    const freqs = [73.42, 110.00, 146.83, 220.00, 293.66];
+    freqs.forEach((f, i) => {
+      const osc = ctx.createOscillator();
+      const g   = ctx.createGain();
+      osc.type = i === 0 ? 'sine' : (i % 2 === 0 ? 'triangle' : 'sine');
+      osc.frequency.value = f;
+      g.gain.value = i === 0 ? 1 : (0.5 / (i + 1));
+      osc.connect(g); g.connect(master);
+      osc.start();
+      nodes.push(osc, g);
+    });
+
+    // Slow LFO on master gain
+    const lfo = ctx.createOscillator();
+    const lfoGain = ctx.createGain();
+    lfo.frequency.value = 0.07;
+    lfoGain.gain.value = 0.02;
+    lfo.connect(lfoGain); lfoGain.connect(master.gain);
+    lfo.start();
+    nodes.push(lfo, lfoGain, master);
+    return master;
+  }
+
+  function stopDrone() {
+    if (!ctx) return;
+    const master = nodes[nodes.length - 1];
+    if (master && master.gain) {
+      master.gain.linearRampToValueAtTime(0, ctx.currentTime + 2);
+    }
+    setTimeout(() => {
+      nodes.forEach(n => { try { n.stop && n.stop(); n.disconnect && n.disconnect(); } catch(e){} });
+      nodes = [];
+      ctx.close(); ctx = null;
+    }, 2200);
+  }
+
+  btn.addEventListener('click', () => {
+    if (!playing) { startDrone(); playing = true; btn.classList.add('playing'); btn.textContent = '♬'; }
+    else          { stopDrone();  playing = false; btn.classList.remove('playing'); btn.textContent = '♪'; }
+  });
+})();
+</script>
+</body>
+</html>

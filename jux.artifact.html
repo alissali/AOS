@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0EK0X213R9"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-0EK0X213R9');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JuX.ARTIFACT — AOS</title>
+<style>
+  :root {
+    --opal-void: #010206;
+    --opal-deep: #03050c;
+    --opal-teal: #2ec4b6;
+    --opal-amber: #e8a045;
+    --opal-violet: #7b4fa6;
+    --opal-gold: #f5c842;
+    --opal-smoke: #667788;
+    --opal-frost: #b8c8d4;
+    --aos-diamond: #a0c4e0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--opal-void);
+    color: var(--opal-frost);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 18px;
+    line-height: 1.7;
+    padding: 3rem 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 2.6rem;
+    color: var(--opal-teal);
+    letter-spacing: 0.08em;
+    margin-bottom: 0.3rem;
+  }
+
+  .subtitle {
+    color: var(--opal-smoke);
+    font-size: 1rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+  }
+
+  .label {
+    color: var(--opal-amber);
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .fact {
+    color: var(--opal-frost);
+    font-size: 1.1rem;
+    margin-bottom: 2.5rem;
+    padding-left: 1rem;
+    border-left: 2px solid var(--opal-teal);
+  }
+
+  .definition {
+    background: var(--opal-deep);
+    border: 1px solid #1a2233;
+    border-left: 3px solid var(--opal-gold);
+    padding: 1.5rem 2rem;
+    margin-bottom: 3rem;
+    font-size: 1.05rem;
+  }
+
+  .definition strong {
+    color: var(--opal-gold);
+  }
+
+  /* Comparison table */
+  .comparison {
+    margin-bottom: 3rem;
+  }
+
+  .comparison h2 {
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: var(--opal-teal);
+    font-size: 1.1rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+
+  thead th {
+    color: var(--opal-amber);
+    text-align: left;
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid #1a2233;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid #0d1220;
+    transition: background 0.2s;
+  }
+
+  tbody tr:hover {
+    background: var(--opal-deep);
+  }
+
+  tbody td {
+    padding: 0.8rem 1rem;
+    vertical-align: top;
+  }
+
+  tbody td:first-child { color: var(--opal-teal); }
+  tbody td:nth-child(2) { color: var(--opal-smoke); }
+  tbody td:nth-child(3) { color: var(--opal-frost); }
+  tbody td:last-child { color: #cc4444; font-size: 0.88rem; }
+
+  tbody tr.aos-row td:first-child { color: var(--opal-gold); font-weight: bold; }
+  tbody tr.aos-row td:nth-child(2) { color: var(--opal-gold); }
+  tbody tr.aos-row td:nth-child(3) { color: var(--opal-gold); font-weight: bold; }
+  tbody tr.aos-row td:last-child { color: var(--opal-teal); font-weight: bold; }
+
+  /* Bug registry */
+  .bugs {
+    margin-bottom: 3rem;
+  }
+
+  .bugs h2 {
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: var(--opal-teal);
+    font-size: 1.1rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+  }
+
+  details {
+    border: 1px solid #1a2233;
+    border-left: 3px solid #cc4444;
+    margin-bottom: 0.8rem;
+    background: var(--opal-deep);
+  }
+
+  summary {
+    padding: 0.9rem 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    list-style: none;
+    user-select: none;
+  }
+
+  summary::-webkit-details-marker { display: none; }
+
+  summary:hover { background: #0a0f1a; }
+
+  .bug-id {
+    color: #cc4444;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    min-width: 5rem;
+  }
+
+  .bug-name {
+    color: var(--opal-frost);
+    flex: 1;
+  }
+
+  .bug-status {
+    color: var(--opal-smoke);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+  }
+
+  .bug-body {
+    padding: 1rem 1.5rem 1.2rem;
+    border-top: 1px solid #1a2233;
+    font-size: 0.9rem;
+    color: var(--opal-smoke);
+    line-height: 1.8;
+  }
+
+  .bug-body strong {
+    color: var(--opal-amber);
+  }
+
+  .bug-body .diagnosis {
+    margin-top: 0.8rem;
+    padding: 0.8rem 1rem;
+    border-left: 2px solid var(--opal-violet);
+    color: var(--opal-frost);
+    font-style: italic;
+  }
+
+  /* Formal rule */
+  .formal {
+    background: var(--opal-deep);
+    border: 1px solid #1a2233;
+    border-left: 3px solid var(--opal-violet);
+    padding: 1.5rem 2rem;
+    margin-bottom: 3rem;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .formal .line {
+    color: var(--opal-teal);
+    margin-bottom: 0.4rem;
+    font-size: 1rem;
+  }
+
+  .formal .comment {
+    color: var(--opal-smoke);
+    font-size: 0.85rem;
+    margin-top: 0.8rem;
+  }
+
+  /* Pattern verdict */
+  .verdict {
+    text-align: center;
+    padding: 2.5rem;
+    background: var(--opal-deep);
+    border: 1px solid #1a2233;
+    margin-bottom: 3rem;
+  }
+
+  .verdict .line1 {
+    color: var(--opal-smoke);
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .verdict .line2 {
+    color: var(--opal-gold);
+    font-size: 1.4rem;
+    font-family: 'IBM Plex Sans', sans-serif;
+    margin-bottom: 1rem;
+  }
+
+  .verdict .line3 {
+    color: var(--opal-teal);
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* Footer */
+  footer {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #1a2233;
+    color: var(--opal-smoke);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  footer a {
+    color: var(--opal-teal);
+    text-decoration: none;
+  }
+
+  footer a:hover { text-decoration: underline; }
+
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;700&display=swap');
+</style>
+</head>
+<body>
+
+<h1>JuX.ARTIFACT</h1>
+<div class="subtitle">AOS — Adequate Operating System · Formal Concept</div>
+
+<div class="label">NAME / FACT / TARGET</div>
+<div class="definition">
+  <strong>NAME:</strong> JuX.ARTIFACT<br>
+  <strong>FACT:</strong> The formal packaged output of an AOS Operation. Every discipline produces Artifacts. AOS names them directly. No pipeline required.<br>
+  <strong>TARGET:</strong> Artifact delivered. One Sentence. One move.
+</div>
+
+<div class="comparison">
+  <h2>The Pattern — Every Discipline, Same Problem</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Discipline</th>
+        <th>Tool</th>
+        <th>Artifact</th>
+        <th>Pipeline Cost</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Software</td>
+        <td>Java</td>
+        <td>JAR / WAR / EAR</td>
+        <td>Maven + Gradle + pom.xml + lifecycle</td>
+      </tr>
+      <tr>
+        <td>Modeling</td>
+        <td>UML</td>
+        <td>Diagram set / Model</td>
+        <td>Umbrello + 47 types + export config</td>
+      </tr>
+      <tr>
+        <td>Documentation</td>
+        <td>DocBook</td>
+        <td>Rendered document</td>
+        <td>XML + DTD + XSLT + stylesheet</td>
+      </tr>
+      <tr class="aos-row">
+        <td>AOS</td>
+        <td>MNMNM</td>
+        <td>Operation output</td>
+        <td>NAME / FACT / TARGET</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="formal">
+  <div class="line">execute(Expression, Dictionary) → Artifact</div>
+  <div class="line">compile(project) → .jar</div>
+  <div class="line">draw(class_diagram) → .model</div>
+  <div class="line">render(document) → .pdf</div>
+  <div class="comment">// One Sentence per Artifact. No pipeline. No pom.xml. No DTD. No XSLT.</div>
+</div>
+
+<div class="bugs">
+  <h2>COMPLEXITY-BUG Registry — Artifact Pipeline Bugs</h2>
+
+  <details>
+    <summary>
+      <span class="bug-id">CB-002</span>
+      <span class="bug-name">UMBRELLO/COMPLEXITY-BUG</span>
+      <span class="bug-status">OPEN</span>
+    </summary>
+    <div class="bug-body">
+      UML diagram tool. 47 diagram types. 200+ toolbar buttons. Nested menus 4 levels deep. Models complexity instead of reducing it.
+      <div class="diagnosis">"A Dictionary that requires its own Dictionary is not a Dictionary — it is a maze."</div>
+    </div>
+  </details>
+
+  <details>
+    <summary>
+      <span class="bug-id">CB-003</span>
+      <span class="bug-name">DOCBOOK/COMPLEXITY-BUG</span>
+      <span class="bug-status">OPEN</span>
+    </summary>
+    <div class="bug-body">
+      XML semantic markup for technical documentation. DTD + XSLT + namespace prefixes before a single word of content.
+      <div class="diagnosis">"A language that requires a compiler to be readable is not a language — it is a pipeline."</div>
+    </div>
+  </details>
+
+  <details>
+    <summary>
+      <span class="bug-id">CB-004</span>
+      <span class="bug-name">JAVA.MAVEN/COMPLEXITY-BUG</span>
+      <span class="bug-status">OPEN</span>
+    </summary>
+    <div class="bug-body">
+      Java build system. Write <code>pom.xml</code> — XML, dependencies, lifecycle phases — before a single line of logic. The Artifact buried under the pipeline.
+      <div class="diagnosis">"The user writes the Dictionary instead of using it."</div>
+    </div>
+  </details>
+</div>
+
+<div class="verdict">
+  <div class="line1">The universal pattern</div>
+  <div class="line2">Every discipline has Artifacts.<br>Every discipline buried them under a pipeline.</div>
+  <div class="line3">AOS exposes the Artifact directly.</div>
+</div>
+
+<footer>
+  <span>JuX.ARTIFACT · AOS · MIT · © 2026 Mamoun Alissali · JuXITT</span>
+  <a href="https://juxitt.com">juxitt.com</a>
+</footer>
+
+</body>
+</html>

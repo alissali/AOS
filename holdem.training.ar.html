@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0EK0X213R9"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-0EK0X213R9');
+</script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- Open Graph -->
+    <meta property="og:title" content="HOLD'EM عربي — تدريب تكساس هولدم">
+    <meta property="og:description" content="تعلم بوكر تكساس هولدم بالعربي. 9 جوائز. تصنيفات الأيدي والمراهنات والاستراتيجيات.">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="HOLD'EM عربي — تدريب تكساس هولدم">
+    <meta name="twitter:description" content="تعلم بوكر تكساس هولدم بالعربي. 9 جوائز. تصنيفات الأيدي والمراهنات والاستراتيجيات.">
+    <meta name="description" content="تعلم بوكر تكساس هولدم بالعربي. 9 جوائز. تصنيفات الأيدي والمراهنات والاستراتيجيات.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzBhMGEwZiIvPgogIDxwb2x5Z29uIHBvaW50cz0iMTYsMiAzMCwxNiAxNiwzMCAyLDE2IiBmaWxsPSJub25lIiBzdHJva2U9InVybCgjZykiIHN0cm9rZS13aWR0aD0iMiIvPgogIDx0ZXh0IHg9IjE2IiB5PSIyMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmNjYwMCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc2l6ZT0iMTIiPko8L3RleHQ+CiAgPGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmNjYwMCIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzFhMWFmZiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPgo8L3N2Zz4=">
+<title>HOLDEM.TRAINING — مشروع تدريبي</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --opal-void:   #010206;
+  --opal-deep:   #03050c;
+  --opal-teal:   #2ec4b6;
+  --opal-amber:  #e8a045;
+  --opal-violet: #7b4fa6;
+  --opal-gold:   #f5c842;
+  --opal-smoke:  #667788;
+  --opal-frost:  #b8c8d4;
+  --aos-diamond: #a0c4e0;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--opal-void);
+  color: var(--opal-frost);
+  font-family: 'Noto Naskh Arabic', serif;
+  font-size: 22px;
+  line-height: 1.8;
+  direction: rtl;
+}
+
+header {
+  background: var(--opal-deep);
+  border-bottom: 2px solid var(--opal-teal);
+  padding: 2.5rem 3rem;
+  text-align: center;
+}
+
+header .label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--opal-smoke);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+}
+
+header h1 {
+  font-size: 2rem;
+  color: var(--opal-gold);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+header .sub {
+  font-size: 1rem;
+  color: var(--opal-teal);
+  margin-top: 0.4rem;
+}
+
+main {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+}
+
+/* ── Section headers ── */
+.section-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--opal-smoke);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border-bottom: 1px solid #1a2233;
+  padding-bottom: 0.4rem;
+  margin-bottom: 1.5rem;
+  margin-top: 3rem;
+}
+
+/* ── NFT rows ── */
+.nft {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 0 1.5rem;
+  margin-bottom: 1.2rem;
+  align-items: baseline;
+}
+
+.nft .key {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--opal-amber);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: left;
+  direction: ltr;
+  padding-top: 0.1rem;
+}
+
+.nft .val {
+  color: var(--opal-frost);
+}
+
+/* ── Sentence blocks ── */
+.sentence {
+  background: var(--opal-deep);
+  border-right: 3px solid var(--opal-teal);
+  border-left: none;
+  padding: 0.9rem 1.2rem 0.9rem 1rem;
+  margin-bottom: 1rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--opal-teal);
+  direction: ltr;
+  text-align: left;
+}
+
+.sentence .comment {
+  color: var(--opal-smoke);
+  font-size: 0.75rem;
+  margin-top: 0.3rem;
+  direction: rtl;
+  text-align: right;
+  font-family: 'Noto Naskh Arabic', serif;
+}
+
+/* ── Milestone cards ── */
+.milestones {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.milestone {
+  background: var(--opal-deep);
+  border: 1px solid #1a2233;
+  border-radius: 6px;
+  padding: 1.2rem 1.5rem;
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 0 1.2rem;
+  align-items: start;
+}
+
+.milestone .num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 1.4rem;
+  color: var(--opal-violet);
+  font-weight: 600;
+  text-align: center;
+  direction: ltr;
+  padding-top: 0.1rem;
+}
+
+.milestone .name {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--opal-amber);
+  letter-spacing: 0.1em;
+  direction: ltr;
+  margin-bottom: 0.3rem;
+}
+
+.milestone .desc {
+  color: var(--opal-frost);
+  font-size: 0.95rem;
+}
+
+.milestone .clip {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--opal-smoke);
+  margin-top: 0.4rem;
+  direction: ltr;
+}
+
+/* ── Model reference table ── */
+.model-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+}
+
+.model-table th {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--opal-smoke);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: right;
+  padding: 0.5rem 0.8rem;
+  border-bottom: 1px solid #1a2233;
+}
+
+.model-table td {
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid #0d1220;
+  vertical-align: top;
+}
+
+.model-table td:first-child {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--opal-teal);
+  direction: ltr;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.model-table tr:hover td {
+  background: var(--opal-deep);
+}
+
+/* ── The Rule ── */
+.rule-block {
+  background: var(--opal-deep);
+  border: 1px solid var(--opal-gold);
+  border-radius: 6px;
+  padding: 2rem;
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.rule-block .rule-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--opal-smoke);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.rule-block .rule-text {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 1.1rem;
+  color: var(--opal-gold);
+  direction: ltr;
+}
+
+.rule-block .rule-arabic {
+  font-size: 1.1rem;
+  color: var(--opal-frost);
+  margin-top: 0.8rem;
+}
+
+/* ── Footer ── */
+footer {
+  text-align: center;
+  padding: 2.5rem;
+  color: var(--opal-smoke);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  border-top: 1px solid #0d1220;
+  margin-top: 4rem;
+}
+
+.teal  { color: var(--opal-teal); }
+.amber { color: var(--opal-amber); }
+.gold  { color: var(--opal-gold); }
+.violet{ color: var(--opal-violet); }
+.prizes-ar{position:fixed;bottom:0;left:0;right:0;background:rgba(0,0,0,0.9);border-top:1px solid rgba(232,160,69,0.2);padding:8px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center;z-index:100;direction:ltr}
+.pa{padding:4px 10px;border-radius:12px;font-size:0.7em;background:rgba(232,160,69,0.1);border:1px solid rgba(232,160,69,0.2);color:rgba(232,213,192,0.4);font-family:'IBM Plex Mono',monospace}
+.pa.won{background:rgba(232,160,69,0.25);border-color:#e8a045;color:#e8d5c0;box-shadow:0 0 8px rgba(232,160,69,0.3)}
+.stripe-bar-ar{text-align:center;padding:16px 10px;border-top:1px solid rgba(232,160,69,0.15);margin-top:3rem}
+.stripe-bar-ar a{display:inline-block;margin:0 8px;padding:8px 20px;border:1px solid rgba(232,160,69,0.3);border-radius:4px;color:#e8a045;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:0.8em;letter-spacing:1px}
+.stripe-bar-ar a:hover{background:rgba(232,160,69,0.1)}
+a:focus,button:focus{outline:2px solid #ff6600;outline-offset:2px}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "JuX ITT",
+  "url": "https://juxaos.com",
+  "email": "jux@juxitt.com",
+  "description": "Software architecture, games, stories, and spice."
+}
+</script>
+<meta name="theme-color" content="#0a0a0f">
+<link rel="canonical" href="https://raw.githack.com/alissali/Learn/main/HOLDEM.TRAINING.AR.html">
+</head>
+<body>
+<a href="#main" class="skip-link" style="position:absolute;top:-40px;left:0;background:#ff6600;color:#0a0a0f;padding:8px;z-index:9999;font-family:monospace;text-decoration:none;transition:top .3s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">Skip to content</a>
+
+<header>
+  <div class="label">AOS · قاموس التدريب</div>
+  <h1>HOLDEM.TRAINING</h1>
+  <div class="sub">من النموذج إلى المشروع — ابنِ لعبة Texas Hold'em</div>
+</header>
+
+<main>
+
+  <div class="section-title">السياق</div>
+
+  <div class="nft">
+    <span class="key">الاسم</span>
+    <span class="val">HOLDEM.TRAINING</span>
+  </div>
+  <div class="nft">
+    <span class="key">الحقيقة</span>
+    <span class="val">مشروع تدريبي. النموذج موجود — <span class="teal">5-Card Draw</span>. المهمة: بناء Texas Hold'em بنفس البنية، بإضافة ورق المجتمع وجولات المراهنة.</span>
+  </div>
+  <div class="nft">
+    <span class="key">الهدف</span>
+    <span class="val">مطوّر يقرأ النموذج، يفهم النمط، ينفّذ اللعبة الثانية بشكل مستقل.</span>
+  </div>
+
+  <div class="section-title">النموذج — 5-Card Draw</div>
+
+  <table class="model-table">
+    <thead>
+      <tr>
+        <th>العنصر</th>
+        <th>في Draw</th>
+        <th>في Hold'em</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>evaluateHand()</td>
+        <td>نفس الدالة ✅</td>
+        <td>تُستخدم على 5 من 7 أوراق</td>
+      </tr>
+      <tr>
+        <td>renderCard()</td>
+        <td>نفس المكوّن ✅</td>
+        <td>يُعيد استخدامه كما هو</td>
+      </tr>
+      <tr>
+        <td>نظام الرقائق</td>
+        <td>100 لكل لاعب، رهان 10 ✅</td>
+        <td>نفس المنطق + جولات</td>
+      </tr>
+      <tr>
+        <td>ورق المجتمع</td>
+        <td>غير موجود</td>
+        <td><span class="amber">الإضافة الجديدة</span> — Flop / Turn / River</td>
+      </tr>
+      <tr>
+        <td>جولات المراهنة</td>
+        <td>غير موجودة</td>
+        <td><span class="amber">الإضافة الجديدة</span> — Check / Call / Raise / Fold</td>
+      </tr>
+      <tr>
+        <td>الفائز</td>
+        <td>مقارنة مباشرة</td>
+        <td>أفضل يد من 5 بين 7 أوراق</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="section-title">الجمل الرسمية</div>
+
+  <div class="sentence">
+    reuse(evaluateHand, renderCard, chipSystem)
+    <div class="comment">ما بُني في Draw يُعاد استخدامه — لا تُعيد الكتابة</div>
+  </div>
+
+  <div class="sentence">
+    add(communityCards[5], dealPhase[Flop, Turn, River])
+    <div class="comment">الـ Flop: 3 أوراق — الـ Turn: 1 — الـ River: 1</div>
+  </div>
+
+  <div class="sentence">
+    implement(bettingRound[Check, Call, Raise, Fold])
+    <div class="comment">جولة واحدة على الأقل بعد كل مرحلة</div>
+  </div>
+
+  <div class="sentence">
+    evaluate(bestHand(playerCards[2] + communityCards[5]))
+    <div class="comment">أفضل 5 من 7 — نفس evaluateHand()</div>
+  </div>
+
+  <div class="sentence">
+    render(showdown → winner → chipUpdate)
+    <div class="comment">الفائز يأخذ الـ pot — نفس منطق Draw</div>
+  </div>
+
+  <div class="section-title">مراحل التنفيذ</div>
+
+  <div class="milestones">
+
+    <div class="milestone">
+      <div class="num">١</div>
+      <div>
+        <div class="name">COMMUNITY.CARDS</div>
+        <div class="desc">أضف صف ورق المجتمع. اكشف 3 (Flop)، ثم 1 (Turn)، ثم 1 (River). استخدم <span class="teal">renderCard()</span> كما هو.</div>
+        <div class="clip">→ clip point A: dealCommunity(phase)</div>
+      </div>
+    </div>
+
+    <div class="milestone">
+      <div class="num">٢</div>
+      <div>
+        <div class="name">BETTING.ROUND</div>
+        <div class="desc">أضف أزرار Check / Call / Raise / Fold بعد كل مرحلة. حدّث الـ pot والرقائق في كل خطوة.</div>
+        <div class="clip">→ clip point B: playerAction(type, amount)</div>
+      </div>
+    </div>
+
+    <div class="milestone">
+      <div class="num">٣</div>
+      <div>
+        <div class="name">BEST.HAND</div>
+        <div class="desc">أنشئ دالة <span class="teal">bestOf7(hand, community)</span> تجرب كل تركيبات الـ 5 من 7 وتعيد أعلى تقييم.</div>
+        <div class="clip">→ reuse: evaluateHand() — لا تعديل مطلوب</div>
+      </div>
+    </div>
+
+    <div class="milestone">
+      <div class="num">٤</div>
+      <div>
+        <div class="name">SHOWDOWN</div>
+        <div class="desc">في نهاية الـ River: اكشف الأوراق، أظهر أفضل يد لكل لاعب، حدد الفائز، حوّل الـ pot.</div>
+        <div class="clip">→ reuse: chipUpdate() من Draw</div>
+      </div>
+    </div>
+
+    <div class="milestone">
+      <div class="num">٥</div>
+      <div>
+        <div class="name">OPAL.RENDER</div>
+        <div class="desc">نفس الألوان. نفس حجم الخط. نفس المنطق البصري. OPAL ليس جماليًا فقط — هو <span class="gold">لغة</span>.</div>
+        <div class="clip">→ --opal-teal / --opal-amber / --opal-violet / --opal-gold</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-title">قاموس المطوّر</div>
+
+  <div class="nft">
+    <span class="key">الاسم</span>
+    <span class="val">HOLDEM.DICTIONARY</span>
+  </div>
+  <div class="nft">
+    <span class="key">الحقيقة</span>
+    <span class="val">8 تعبيرات. كل تعبير = اسم / حقيقة / هدف. القاموس هو الـ Context. بدونه — الجملة معلّقة.</span>
+  </div>
+
+  <br/>
+
+  <table class="model-table">
+    <thead>
+      <tr>
+        <th>الاسم</th>
+        <th>الحقيقة</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>community</td><td>ورق مشترك — يبني عليها الجميع</td></tr>
+      <tr><td>flop</td><td>أول 3 أوراق مجتمع — تُكشف دفعة واحدة</td></tr>
+      <tr><td>turn</td><td>الورقة الرابعة — الضغط يرتفع</td></tr>
+      <tr><td>river</td><td>الورقة الخامسة — آخر فرصة</td></tr>
+      <tr><td>check</td><td>مرور بدون رهان — إذا لم يُرهن أحد</td></tr>
+      <tr><td>call</td><td>مجاراة الرهان الحالي</td></tr>
+      <tr><td>raise</td><td>رفع الرهان — يُلزم الآخرين بالرد</td></tr>
+      <tr><td>fold</td><td>الانسحاب — خسارة الرقائق المدفوعة</td></tr>
+    </tbody>
+  </table>
+
+  <div class="rule-block">
+    <div class="rule-label">القاعدة</div>
+    <div class="rule-text">execute(Expression, HOLDEM.DICTIONARY) → Artifact</div>
+    <div class="rule-arabic">القاموس هو السياق. بدون سياق — لا تنفيذ.</div>
+  </div>
+
+</main>
+
+<footer>
+  AOS · MIT · juxitt.com · HOLDEM.TRAINING · اللغة هي البنية
+</footer>
+
+<div class="prizes-ar" id="arPrizes"></div>
+<div class="stripe-bar-ar">
+<a href="https://raw.githack.com/alissali/Learn/main/ARCADE.html">🎰 ARCADE</a>
+<a href="https://buy.stripe.com/dRm14pdv14VQ1qT7J41wY05">🎮 CHAMPION €6.66</a>
+<a href="https://buy.stripe.com/9B628tdv15ZUglNbZk1wY06">👑 MOGUL €22</a>
+<a href="https://buy.stripe.com/5kQ9AVgHdaga3z10gC1wY07">💎 FULL ARCADE €66</a>
+</div>
+<script>
+const AP=[{id:'first_hand',n:'اليد الأولى',i:'🃏'},{id:'pair',n:'زوج',i:'👫'},{id:'two_pair',n:'زوجان',i:'✌️'},{id:'trips',n:'ثلاثة',i:'🎯'},{id:'straight',n:'تسلسل',i:'📏'},{id:'flush',n:'لون',i:'💧'},{id:'full_house',n:'بيت كامل',i:'🏠'},{id:'quads',n:'أربعة',i:'🎰'},{id:'streak',n:'سلسلة حارة',i:'🔥'}];
+let aW=new Set(JSON.parse(localStorage.getItem('holdem_ar_prizes')||'[]'));
+function aS(){localStorage.setItem('holdem_ar_prizes',JSON.stringify([...aW]))}
+function aR(){const c=document.getElementById('arPrizes');c.innerHTML=AP.map(p=>'<div class="pa'+(aW.has(p.id)?' won':'')+'">'+p.i+' '+p.n+'</div>').join('')}
+aR();
+</script>
+<div style="text-align:center;padding:8px;font-family:monospace;font-size:.7em;border-top:1px solid #222;margin-top:10px">
+<a href="https://juxaos.com/privacy.html" style="color:#666;text-decoration:none">Privacy</a> ·
+<a href="https://juxaos.com/terms.html" style="color:#666;text-decoration:none">Terms</a> ·
+© JuX ITT</div>
+</body>
+</html>

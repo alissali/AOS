@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0EK0X213R9"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-0EK0X213R9');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>X — V-CAM MATRIX</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+:root{
+  --gold:#d4a843;--gold-bright:#f0c040;--gold-dim:#8a6e2a;
+  --grid-color:rgba(160,180,200,0.12);
+  --bg:#e8ecf0;--bg2:#dde2e8;
+  --text-tech:rgba(100,120,140,0.7);
+  --crosshair:rgba(120,150,180,0.35);
+}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:'Share Tech Mono',monospace}
+canvas#main{position:fixed;top:0;left:0;width:100%;height:100%}
+
+/* HUD overlays */
+.hud{position:fixed;color:var(--text-tech);font-size:11px;letter-spacing:2px;text-transform:uppercase;pointer-events:none;z-index:10}
+.hud-tl{top:20px;left:24px}
+.hud-tr{top:20px;right:24px;text-align:right}
+.hud-bl{bottom:20px;left:24px}
+.hud-br{bottom:20px;right:24px;text-align:right}
+.hud .title{font-size:16px;color:var(--gold);letter-spacing:4px;margin-bottom:4px}
+.hud .subtitle{font-size:13px;color:var(--gold-dim);letter-spacing:3px}
+.hud .label{color:var(--gold-dim);font-size:10px;margin-top:8px}
+.hud .big{font-size:14px;color:var(--gold)}
+
+/* Mini charts */
+.mini-chart{margin-top:6px}
+.mini-chart canvas{display:block}
+
+/* Gate indicator */
+#gate-display{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:5;pointer-events:none;text-align:center;opacity:0;transition:opacity 0.8s}
+#gate-display.show{opacity:1}
+#gate-display .gate-num{font-size:72px;color:var(--gold);text-shadow:0 0 40px rgba(212,168,67,0.4)}
+#gate-display .gate-name{font-size:14px;color:var(--gold-dim);letter-spacing:6px;margin-top:-8px}
+
+/* Node labels — float around */
+.node-label{position:fixed;font-size:9px;color:var(--gold-dim);letter-spacing:2px;pointer-events:none;z-index:8;opacity:0.7}
+.node-label::before{content:'—';margin-right:4px;color:var(--gold)}
+</style>
+</head>
+<body>
+
+<canvas id="main"></canvas>
+
+<!-- HUD corners -->
+<div class="hud hud-tl">
+  <div class="title">V-CAM MATRIX</div>
+  <div class="subtitle" id="gate-text">GATE 1: THE NOISE</div>
+  <div class="label">DESIGN X</div>
+</div>
+
+<div class="hud hud-tr">
+  <div id="frame-count" class="big">FRAME 00000</div>
+  <div id="clock"></div>
+</div>
+
+<div class="hud hud-bl">
+  <div class="label">CHAOS_INDEX</div>
+  <canvas id="chaos-chart" width="160" height="48" class="mini-chart"></canvas>
+  <div class="label" style="margin-top:4px">SPICE_SYNTHESIS</div>
+  <div id="spice-val" class="big">0.000</div>
+</div>
+
+<div class="hud hud-br">
+  <div class="label">OPAL_RESONANCE</div>
+  <canvas id="opal-chart" width="160" height="48" class="mini-chart"></canvas>
+  <div class="label" style="margin-top:4px">FREMEN_QUANTUM_COIL</div>
+  <div id="coil-val" class="big">∞</div>
+</div>
+
+<!-- Floating node labels -->
+<div class="node-label" id="nl1" style="top:28%;left:58%">CHANI_FRACT_NODE_A1</div>
+<div class="node-label" id="nl2" style="top:26%;right:18%">SENTENCE_CORE_LINK</div>
+<div class="node-label" id="nl3" style="top:55%;right:12%">FREMEN_QUANTUM_COIL</div>
+<div class="node-label" id="nl4" style="bottom:28%;left:32%">DATA_VECTOR_331</div>
+<div class="node-label" id="nl5" style="bottom:28%;right:25%">DATA_VECTOR_333</div>
+<div class="node-label" id="nl6" style="top:60%;left:10%">CHANI_FRACT_B5</div>
+
+<!-- Gate flash -->
+<div id="gate-display"><div class="gate-num" id="gn">1</div><div class="gate-name" id="gnm">NOISE</div></div>
+
+<script>
+// ═══════════════════════════════════════
+// X — V-CAM MATRIX
+// The Brain of M, animated
+// ═══════════════════════════════════════
+
+const C = document.getElementById('main');
+const ctx = C.getContext('2d');
+let W, H, cx, cy, frame = 0;
+const GOLD = '#d4a843', GOLD_B = '#f0c040', GOLD_D = '#8a6e2a';
+
+const GATES = [
+  'THE NOISE','THE DICTIONARY','THE FACT','THE SENTENCE',
+  'THE STORY','THE UNIVERSE','TAKEOFF'
+];
+let currentGate = 0, gateTimer = 0;
+
+function resize(){
+  W = C.width = window.innerWidth;
+  H = C.height = window.innerHeight;
+  cx = W/2; cy = H/2;
+}
+window.addEventListener('resize', resize);
+resize();
+
+// ── GRID ──
+function drawGrid(){
+  ctx.strokeStyle = 'rgba(160,180,200,0.08)';
+  ctx.lineWidth = 1;
+  const sp = 40;
+  for(let x = 0; x < W; x += sp){
+    ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke();
+  }
+  for(let y = 0; y < H; y += sp){
+    ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke();
+  }
+  // dots at intersections
+  ctx.fillStyle = 'rgba(140,160,180,0.15)';
+  for(let x = 0; x < W; x += sp){
+    for(let y = 0; y < H; y += sp){
+      ctx.fillRect(x-1, y-1, 2, 2);
+    }
+  }
+}
+
+// ── CROSSHAIR ──
+function drawCrosshair(){
+  const r = Math.min(W,H)*0.12;
+  ctx.strokeStyle = 'rgba(120,150,180,0.25)';
+  ctx.lineWidth = 1.5;
+  // circle
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx,cy,r*0.6,0,Math.PI*2); ctx.stroke();
+  // lines
+  const ext = r*1.6;
+  ctx.beginPath(); ctx.moveTo(cx-ext,cy); ctx.lineTo(cx-r*0.3,cy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx+r*0.3,cy); ctx.lineTo(cx+ext,cy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx,cy-ext); ctx.lineTo(cx,cy-r*0.3); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx,cy+r*0.3); ctx.lineTo(cx,cy+ext); ctx.stroke();
+  // tick marks
+  for(let i=0;i<12;i++){
+    const a = (Math.PI*2/12)*i;
+    ctx.beginPath();
+    ctx.moveTo(cx+Math.cos(a)*r*0.92, cy+Math.sin(a)*r*0.92);
+    ctx.lineTo(cx+Math.cos(a)*r, cy+Math.sin(a)*r);
+    ctx.stroke();
+  }
+}
+
+// ── X FRACTAL WINGS ──
+function drawXWing(angle, t){
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(angle);
+  
+  const wingLen = Math.min(W,H)*0.32;
+  const curves = 7;
+  const breathe = Math.sin(t*0.5)*0.03 + 1;
+  
+  for(let c=0; c<curves; c++){
+    const spread = (c - curves/2) * 0.08;
+    const alpha = 0.15 + (c/curves)*0.5;
+    ctx.strokeStyle = `rgba(212,168,67,${alpha})`;
+    ctx.lineWidth = 1 + (curves-c)*0.3;
+    ctx.beginPath();
+    
+    const cp1x = wingLen*0.3*Math.cos(spread + Math.sin(t*0.7+c)*0.1) * breathe;
+    const cp1y = wingLen*0.5*Math.sin(spread*2) * breathe - wingLen*0.15;
+    const cp2x = wingLen*0.7;
+    const cp2y = (spread*wingLen*1.5 + Math.sin(t*0.3+c*0.5)*wingLen*0.05) * breathe;
+    const ex = wingLen * breathe;
+    const ey = spread * wingLen * 0.8;
+    
+    ctx.moveTo(0, 0);
+    ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, ex, ey);
+    ctx.stroke();
+    
+    // Filigree nodes
+    if(c % 2 === 0){
+      const fx = ex * 0.6, fy = cp2y * 0.6;
+      ctx.fillStyle = `rgba(240,192,64,${alpha*0.5})`;
+      ctx.beginPath(); ctx.arc(fx, fy, 2, 0, Math.PI*2); ctx.fill();
+    }
+  }
+  
+  // Wing tip ornament
+  const tipX = wingLen * breathe;
+  ctx.fillStyle = `rgba(212,168,67,0.3)`;
+  ctx.beginPath(); ctx.arc(tipX, 0, 4 + Math.sin(t*2)*1.5, 0, Math.PI*2); ctx.fill();
+  
+  ctx.restore();
+}
+
+function drawAllWings(t){
+  // 4 wings forming X
+  const baseAngles = [-Math.PI*0.28, Math.PI*0.28, Math.PI-Math.PI*0.28, Math.PI+Math.PI*0.28];
+  for(const a of baseAngles){
+    drawXWing(a + Math.sin(t*0.2)*0.015, t);
+  }
+}
+
+// ── CENTER: Tiffany (geometric cat) ──
+function drawTiffany(t){
+  ctx.save();
+  ctx.translate(cx, cy);
+  const s = Math.min(W,H)*0.04;
+  const pulse = 1 + Math.sin(t*1.5)*0.05;
+  ctx.scale(pulse, pulse);
+  
+  ctx.strokeStyle = GOLD;
+  ctx.lineWidth = 1.5;
+  ctx.fillStyle = 'rgba(212,168,67,0.08)';
+  
+  // Head circle
+  ctx.beginPath(); ctx.arc(0, -s*0.2, s*0.7, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+  // Ears
+  ctx.beginPath(); ctx.moveTo(-s*0.5, -s*0.7); ctx.lineTo(-s*0.25, -s*1.3); ctx.lineTo(0, -s*0.7); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(s*0.5, -s*0.7); ctx.lineTo(s*0.25, -s*1.3); ctx.lineTo(0, -s*0.7); ctx.stroke();
+  // Eyes
+  ctx.fillStyle = GOLD_B;
+  ctx.beginPath(); ctx.arc(-s*0.22, -s*0.3, s*0.1, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(s*0.22, -s*0.3, s*0.1, 0, Math.PI*2); ctx.fill();
+  // Nose
+  ctx.beginPath(); ctx.moveTo(0, -s*0.1); ctx.lineTo(-s*0.06, s*0.02); ctx.lineTo(s*0.06, s*0.02); ctx.closePath(); ctx.fill();
+  // Body lines (geometric)
+  ctx.strokeStyle = `rgba(212,168,67,0.4)`;
+  ctx.beginPath(); ctx.moveTo(-s*0.3, s*0.3); ctx.lineTo(-s*0.5, s*1.2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(s*0.3, s*0.3); ctx.lineTo(s*0.5, s*1.2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(-s*0.5, s*1.2); ctx.lineTo(s*0.5, s*1.2); ctx.stroke();
+  // Tail
+  ctx.beginPath();
+  ctx.moveTo(s*0.5, s*1.0);
+  ctx.bezierCurveTo(s*1.0, s*0.8+Math.sin(t*2)*s*0.2, s*1.2, s*0.3, s*0.9, s*0.1);
+  ctx.stroke();
+  
+  ctx.restore();
+}
+
+// ── FRACTAL BRANCHES (top-left) ──
+function drawFractalBranch(x, y, len, angle, depth, t){
+  if(depth <= 0 || len < 3) return;
+  const ex = x + Math.cos(angle)*len;
+  const ey = y + Math.sin(angle)*len;
+  ctx.strokeStyle = `rgba(212,168,67,${0.15+depth*0.08})`;
+  ctx.lineWidth = depth*0.5;
+  ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(ex,ey); ctx.stroke();
+  
+  // dot at end
+  if(depth <= 2){
+    ctx.fillStyle = `rgba(240,192,64,${0.3+Math.sin(t*3+depth)*0.2})`;
+    ctx.beginPath(); ctx.arc(ex,ey,2,0,Math.PI*2); ctx.fill();
+  }
+  
+  const sway = Math.sin(t*0.8+depth)*0.1;
+  drawFractalBranch(ex, ey, len*0.68, angle - 0.5 + sway, depth-1, t);
+  drawFractalBranch(ex, ey, len*0.68, angle + 0.45 + sway, depth-1, t);
+}
+
+function drawFractalTree(t){
+  const bx = W*0.12, by = H*0.35;
+  drawFractalBranch(bx, by, 35, -Math.PI/2, 6, t);
+}
+
+// ── GLOW RING (around center) ──
+function drawGlowRing(t){
+  const r = Math.min(W,H)*0.15;
+  const grad = ctx.createRadialGradient(cx,cy,r*0.8,cx,cy,r*1.3);
+  grad.addColorStop(0, 'rgba(212,168,67,0)');
+  grad.addColorStop(0.5, `rgba(212,168,67,${0.04+Math.sin(t)*0.02})`);
+  grad.addColorStop(1, 'rgba(212,168,67,0)');
+  ctx.fillStyle = grad;
+  ctx.beginPath(); ctx.arc(cx,cy,r*1.3,0,Math.PI*2); ctx.fill();
+}
+
+// ── FLOATING PARTICLES ──
+const particles = Array.from({length:60}, () => ({
+  angle: Math.random()*Math.PI*2,
+  dist: 80 + Math.random()*200,
+  speed: 0.001 + Math.random()*0.003,
+  size: 1 + Math.random()*2,
+  phase: Math.random()*Math.PI*2
+}));
+
+function drawParticles(t){
+  for(const p of particles){
+    p.angle += p.speed;
+    const d = p.dist + Math.sin(t*0.5+p.phase)*20;
+    const px = cx + Math.cos(p.angle)*d;
+    const py = cy + Math.sin(p.angle)*d;
+    const a = 0.2 + Math.sin(t*2+p.phase)*0.15;
+    ctx.fillStyle = `rgba(212,168,67,${a})`;
+    ctx.beginPath(); ctx.arc(px,py,p.size,0,Math.PI*2); ctx.fill();
+  }
+}
+
+// ── SCRIPT GLYPHS (floating Fremen/Arabic-style marks) ──
+const glyphs = ['𐤀','𐤁','𐤂','𐤃','𐤄','𐤅','ش','ع','م','ن','ق','ح','ي','و'];
+const glyphPos = Array.from({length:14}, (_, i) => ({
+  angle: (Math.PI*2/14)*i,
+  dist: Math.min(W,H)*0.22 + (i%3)*20,
+  glyph: glyphs[i],
+  speed: 0.0005 + (i%5)*0.0003
+}));
+
+function drawGlyphs(t){
+  ctx.font = '14px serif';
+  for(const g of glyphPos){
+    g.angle += g.speed;
+    const px = cx + Math.cos(g.angle)*g.dist;
+    const py = cy + Math.sin(g.angle)*g.dist;
+    const a = 0.15 + Math.sin(t+g.angle)*0.1;
+    ctx.fillStyle = `rgba(212,168,67,${a})`;
+    ctx.fillText(g.glyph, px, py);
+  }
+}
+
+// ── MINI CHARTS ──
+const chaosData = Array.from({length:40}, () => Math.random());
+const opalData = Array.from({length:40}, () => Math.random()*0.5+0.3);
+
+function updateMiniChart(canvasId, data, color, t){
+  const mc = document.getElementById(canvasId);
+  const mctx = mc.getContext('2d');
+  const w = mc.width, h = mc.height;
+  mctx.clearRect(0,0,w,h);
+  
+  // shift data
+  data.push(data[0] + (Math.random()-0.5)*0.15);
+  data.shift();
+  
+  // bars or line
+  if(canvasId === 'chaos-chart'){
+    // bar chart
+    const bw = w/data.length;
+    for(let i=0;i<data.length;i++){
+      const v = Math.abs(data[i]) % 1;
+      mctx.fillStyle = `rgba(212,168,67,${0.4+v*0.4})`;
+      mctx.fillRect(i*bw, h-v*h, bw-1, v*h);
+    }
+  } else {
+    // line chart
+    mctx.strokeStyle = GOLD;
+    mctx.lineWidth = 1.5;
+    mctx.beginPath();
+    for(let i=0;i<data.length;i++){
+      const v = Math.abs(data[i]) % 1;
+      const px = (i/(data.length-1))*w;
+      const py = h - v*h*0.8 - h*0.1;
+      i===0 ? mctx.moveTo(px,py) : mctx.lineTo(px,py);
+    }
+    mctx.stroke();
+  }
+}
+
+// ── GATE CYCLING ──
+function updateGate(t){
+  gateTimer += 1/60;
+  if(gateTimer > 12){
+    gateTimer = 0;
+    currentGate = (currentGate + 1) % 7;
+    document.getElementById('gate-text').textContent = `GATE ${currentGate+1}: ${GATES[currentGate]}`;
+    // flash
+    const gd = document.getElementById('gate-display');
+    document.getElementById('gn').textContent = currentGate+1;
+    document.getElementById('gnm').textContent = GATES[currentGate];
+    gd.classList.add('show');
+    setTimeout(() => gd.classList.remove('show'), 2000);
+  }
+}
+
+// ── HUD UPDATES ──
+function updateHUD(){
+  document.getElementById('frame-count').textContent = `FRAME ${String(frame).padStart(5,'0')}`;
+  const now = new Date();
+  document.getElementById('clock').textContent = now.toLocaleTimeString('en-US',{hour12:true});
+  document.getElementById('spice-val').textContent = (Math.sin(frame*0.01)*0.5+0.5).toFixed(3);
+  document.getElementById('coil-val').textContent = ['∞','∿','◊','⟡','∞'][frame%5];
+}
+
+// ── NODE LABEL DRIFT ──
+function driftLabels(t){
+  const labels = document.querySelectorAll('.node-label');
+  labels.forEach((el, i) => {
+    const dx = Math.sin(t*0.3 + i*1.5)*8;
+    const dy = Math.cos(t*0.2 + i*2)*5;
+    el.style.transform = `translate(${dx}px, ${dy}px)`;
+    el.style.opacity = 0.4 + Math.sin(t*0.5+i)*0.3;
+  });
+}
+
+// ═══ MAIN LOOP ═══
+function animate(){
+  frame++;
+  const t = frame / 60;
+  
+  // Clear with light bg
+  ctx.fillStyle = '#e8ecf0';
+  ctx.fillRect(0,0,W,H);
+  
+  // Subtle radial gradient center
+  const bgGrad = ctx.createRadialGradient(cx,cy,0,cx,cy,Math.max(W,H)*0.5);
+  bgGrad.addColorStop(0, 'rgba(255,255,255,0.3)');
+  bgGrad.addColorStop(1, 'rgba(232,236,240,0)');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0,0,W,H);
+  
+  drawGrid();
+  drawGlowRing(t);
+  drawParticles(t);
+  drawGlyphs(t);
+  drawCrosshair();
+  drawAllWings(t);
+  drawTiffany(t);
+  drawFractalTree(t);
+  
+  updateGate(t);
+  updateHUD();
+  driftLabels(t);
+  
+  if(frame % 3 === 0){
+    updateMiniChart('chaos-chart', chaosData, GOLD, t);
+    updateMiniChart('opal-chart', opalData, GOLD, t);
+  }
+  
+  requestAnimationFrame(animate);
+}
+
+animate();
+
+// Click to advance gate
+document.addEventListener('click', () => {
+  gateTimer = 100; // force next gate
+});
+</script>
+</body>
+</html>
