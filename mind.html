@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>MIND — The 7th Brain | X</title>
+<!-- GA -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0EK0X213R9"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-0EK0X213R9');</script>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--mind:#00f0ff;--b1:#ff3366;--b2:#ff9900;--b3:#ffcc00;--b4:#33cc66;--b5:#3399ff;--b6:#cc66ff;--bg:#0a0a12}
+body{background:var(--bg);color:#fff;font-family:'Orbitron',monospace;overflow-x:hidden;min-height:100vh}
+
+/* DOUBLE SOLID BACKGROUND */
+.bg-layer{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
+.bg-solid-1{background:linear-gradient(180deg,#0a0a12 0%,#0d1117 50%,#0a0a12 100%)}
+.bg-solid-2{background:radial-gradient(ellipse at center,rgba(0,240,255,0.03) 0%,transparent 70%)}
+
+/* TORNADO CONTAINER */
+.tornado-stage{position:relative;width:100%;height:100vh;display:flex;align-items:center;justify-content:center;z-index:1}
+
+/* MIND EYE - 7th Brain */
+.mind-eye{position:absolute;z-index:10;width:160px;height:160px;border-radius:50%;
+  background:radial-gradient(circle,var(--mind) 0%,rgba(0,240,255,0.2) 40%,transparent 70%);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;
+  box-shadow:0 0 80px rgba(0,240,255,0.4),0 0 160px rgba(0,240,255,0.15);
+  animation:mind-pulse 3s ease-in-out infinite}
+.mind-eye .label{font-size:2rem;font-weight:900;color:var(--mind);text-shadow:0 0 30px var(--mind)}
+.mind-eye .sub{font-size:0.6rem;color:rgba(255,255,255,0.7);margin-top:4px;letter-spacing:3px}
+
+@keyframes mind-pulse{
+  0%,100%{box-shadow:0 0 80px rgba(0,240,255,0.4),0 0 160px rgba(0,240,255,0.15)}
+  50%{box-shadow:0 0 120px rgba(0,240,255,0.6),0 0 240px rgba(0,240,255,0.25)}
+}
+
+/* TORNADO RING */
+.tornado-ring{position:absolute;border:2px solid rgba(0,240,255,0.1);border-radius:50%;animation:tornado-spin linear infinite}
+.tornado-ring:nth-child(1){width:300px;height:300px;animation-duration:8s}
+.tornado-ring:nth-child(2){width:400px;height:400px;animation-duration:12s;animation-direction:reverse}
+.tornado-ring:nth-child(3){width:500px;height:500px;animation-duration:16s}
+
+@keyframes tornado-spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+/* 6 BRAINS orbiting */
+.brain-node{position:absolute;width:70px;height:70px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;
+  font-size:0.55rem;font-weight:700;letter-spacing:1px;
+  border:2px solid;transition:all 0.3s ease;cursor:default}
+.brain-node:hover{transform:scale(1.3)!important;z-index:20}
+.brain-node .b-icon{font-size:1.4rem;margin-bottom:2px}
+.brain-node .b-label{font-size:0.45rem;opacity:0.8}
+
+.b1{background:rgba(255,51,102,0.15);border-color:var(--b1);color:var(--b1);box-shadow:0 0 20px rgba(255,51,102,0.3)}
+.b2{background:rgba(255,153,0,0.15);border-color:var(--b2);color:var(--b2);box-shadow:0 0 20px rgba(255,153,0,0.3)}
+.b3{background:rgba(255,204,0,0.15);border-color:var(--b3);color:var(--b3);box-shadow:0 0 20px rgba(255,204,0,0.3)}
+.b4{background:rgba(51,204,102,0.15);border-color:var(--b4);color:var(--b4);box-shadow:0 0 20px rgba(51,204,102,0.3)}
+.b5{background:rgba(51,153,255,0.15);border-color:var(--b5);color:var(--b5);box-shadow:0 0 20px rgba(51,153,255,0.3)}
+.b6{background:rgba(204,102,255,0.15);border-color:var(--b6);color:var(--b6);box-shadow:0 0 20px rgba(204,102,255,0.3)}
+
+/* CONTROL BEAMS from MIND to each brain */
+.beam{position:absolute;height:2px;transform-origin:left center;opacity:0.3;z-index:5;animation:beam-pulse 2s ease-in-out infinite alternate}
+.beam-1{background:linear-gradient(90deg,var(--mind),var(--b1))}
+.beam-2{background:linear-gradient(90deg,var(--mind),var(--b2))}
+.beam-3{background:linear-gradient(90deg,var(--mind),var(--b3))}
+.beam-4{background:linear-gradient(90deg,var(--mind),var(--b4))}
+.beam-5{background:linear-gradient(90deg,var(--mind),var(--b5))}
+.beam-6{background:linear-gradient(90deg,var(--mind),var(--b6))}
+@keyframes beam-pulse{from{opacity:0.2}to{opacity:0.6}}
+
+/* STATUS BAR */
+.status-panel{position:fixed;bottom:0;left:0;width:100%;background:rgba(10,10,18,0.9);
+  border-top:1px solid rgba(0,240,255,0.2);padding:12px 20px;z-index:20;
+  display:flex;justify-content:space-between;align-items:center;font-size:0.65rem}
+.status-left{color:var(--mind)}
+.status-right{color:rgba(255,255,255,0.5)}
+.status-right a{color:var(--mind);text-decoration:none}
+
+/* TITLE */
+.page-title{position:fixed;top:30px;left:50%;transform:translateX(-50%);z-index:20;text-align:center}
+.page-title h1{font-size:0.8rem;letter-spacing:8px;color:var(--mind);opacity:0.6}
+.page-title .tagline{font-size:0.5rem;letter-spacing:4px;color:rgba(255,255,255,0.4);margin-top:6px}
+
+/* BACK LINK */
+.back-link{position:fixed;top:20px;left:20px;z-index:20;color:var(--mind);text-decoration:none;
+  font-size:0.7rem;opacity:0.5;transition:opacity 0.3s}
+.back-link:hover{opacity:1}
+
+@media(max-width:600px){
+  .mind-eye{width:100px;height:100px}
+  .mind-eye .label{font-size:1.3rem}
+  .tornado-ring:nth-child(1){width:200px;height:200px}
+  .tornado-ring:nth-child(2){width:280px;height:280px}
+  .tornado-ring:nth-child(3){width:360px;height:360px}
+  .brain-node{width:50px;height:50px}
+  .brain-node .b-icon{font-size:1rem}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-layer bg-solid-1"></div>
+<div class="bg-layer bg-solid-2"></div>
+
+<a class="back-link" href="x.html">&#x2190; X</a>
+
+<div class="page-title">
+<h1>THE 7TH BRAIN</h1>
+<div class="tagline">CONTROL LAYER — ABOVE THE TORNADO</div>
+</div>
+
+<div class="tornado-stage">
+  <div class="tornado-ring"></div>
+  <div class="tornado-ring"></div>
+  <div class="tornado-ring"></div>
+
+  <div class="mind-eye">
+    <div class="label">MIND</div>
+    <div class="sub">CONTROL</div>
+  </div>
+
+  <canvas id="beamCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:5;pointer-events:none"></canvas>
+
+  <div class="brain-node b1" id="brain1"><div class="b-icon">&#x1F30C;</div><div class="b-label">KU</div></div>
+  <div class="brain-node b2" id="brain2"><div class="b-icon">&#x1F3DC;&#xFE0F;</div><div class="b-label">DUNE</div></div>
+  <div class="brain-node b3" id="brain3"><div class="b-icon">&#x271A;&#xFE0F;</div><div class="b-label">TEMPLARS</div></div>
+  <div class="brain-node b4" id="brain4"><div class="b-icon">&#x1F6F8;</div><div class="b-label">SILVER</div></div>
+  <div class="brain-node b5" id="brain5"><div class="b-icon">&#x2697;&#xFE0F;</div><div class="b-label">ALCHEMY</div></div>
+  <div class="brain-node b6" id="brain6"><div class="b-icon">&#x26A1;</div><div class="b-label">LECTRIC</div></div>
+</div>
+
+<div class="status-panel">
+  <div class="status-left">MIND :: 7th BRAIN ACTIVE — 6 NODES LINKED</div>
+  <div class="status-right"><a href="x.html">X — THE IMPOSSIBILITY DRIVE</a></div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+var brains = [
+  document.getElementById('brain1'),
+  document.getElementById('brain2'),
+  document.getElementById('brain3'),
+  document.getElementById('brain4'),
+  document.getElementById('brain5'),
+  document.getElementById('brain6')
+];
+
+var colors = ['#ff3366','#ff9900','#ffcc00','#33cc66','#3399ff','#cc66ff'];
+var canvas = document.getElementById('beamCanvas');
+var ctx = canvas.getContext('2d');
+var centerX, centerY, radius = 220;
+var angleOffset = -Math.PI / 2;
+var rotationSpeed = 0.0003;
+var time = 0;
+
+function resize(){
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  centerX = canvas.width / 2;
+  centerY = canvas.height / 2;
+  radius = Math.min(canvas.width, canvas.height) * 0.28;
+}
+
+function animate(){
+  time += rotationSpeed;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  for(var i = 0; i < 6; i++){
+    var angle = angleOffset + (Math.PI * 2 / 6) * i + time * (i % 2 === 0 ? 1 : -0.7);
+    var bx = centerX + Math.cos(angle) * radius;
+    var by = centerY + Math.sin(angle) * radius;
+
+    // Position brain node
+    brains[i].style.left = (bx - 35) + 'px';
+    brains[i].style.top = (by - 35) + 'px';
+
+    // Draw beam
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerY);
+    ctx.lineTo(bx, by);
+    ctx.strokeStyle = colors[i];
+    ctx.globalAlpha = 0.15 + 0.1 * Math.sin(Date.now() * 0.002 + i);
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+
+    // Glow dot at brain position
+    ctx.beginPath();
+    ctx.arc(bx, by, 4, 0, Math.PI * 2);
+    ctx.fillStyle = colors[i];
+    ctx.globalAlpha = 0.4;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+
+  requestAnimationFrame(animate);
+}
+
+window.addEventListener('resize', resize);
+resize();
+animate();
+
+})();
+</script>
+</body>
+</html>
