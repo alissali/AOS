@@ -3,98 +3,155 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>MIND — The 7th Brain | X</title>
+<title>MIND — The 7th Brain | OPAL-Dynamics | X</title>
 <!-- GA -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-0EK0X213R9"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-0EK0X213R9');</script>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--mind:#00f0ff;--b1:#ff3366;--b2:#ff9900;--b3:#ffcc00;--b4:#33cc66;--b5:#3399ff;--b6:#cc66ff;--bg:#0a0a12}
-body{background:var(--bg);color:#fff;font-family:'Orbitron',monospace;overflow-x:hidden;min-height:100vh}
+:root{
+  /* OPAL Palette */
+  --opal-void:#05070f;
+  --opal-deep:#0a0f1e;
+  --opal-mid:#111827;
+  --opal-teal:#2ec4b6;
+  --opal-amber:#e8a045;
+  --opal-violet:#7b4fa6;
+  --opal-lavender:#b07fc4;
+  --opal-gold:#f5c842;
+  --opal-ice:#c8f0f5;
+  --opal-smoke:#667788;
+  --opal-frost:#b8c8d4;
+  --aos-diamond:#a0c4e0;
+  /* MIND Accent */
+  --mind:#00f0ff;
+  /* Brain Colors */
+  --b1:#ff3366;--b2:#ff9900;--b3:#ffcc00;--b4:#33cc66;--b5:#3399ff;--b6:#cc66ff;
+}
+body{background:var(--opal-void);color:var(--opal-ice);font-family:'Orbitron',monospace;overflow-x:hidden;min-height:100vh}
 
 /* DOUBLE SOLID BACKGROUND */
-.bg-layer{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
-.bg-solid-1{background:linear-gradient(180deg,#0a0a12 0%,#0d1117 50%,#0a0a12 100%)}
-.bg-solid-2{background:radial-gradient(ellipse at center,rgba(0,240,255,0.03) 0%,transparent 70%)}
+.bg-layer{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.bg-solid-1{background:linear-gradient(180deg,var(--opal-void) 0%,var(--opal-deep) 40%,var(--opal-void) 100%)}
+.bg-solid-2{background:radial-gradient(ellipse at center,rgba(0,240,255,0.04) 0%,transparent 60%)}
 
-/* TORNADO CONTAINER */
-.tornado-stage{position:relative;width:100%;height:100vh;display:flex;align-items:center;justify-content:center;z-index:1}
+/* MAIN LAYOUT */
+.main-container{position:relative;z-index:1;display:flex;flex-direction:column;min-height:100vh}
 
-/* MIND EYE - 7th Brain */
-.mind-eye{position:absolute;z-index:10;width:160px;height:160px;border-radius:50%;
-  background:radial-gradient(circle,var(--mind) 0%,rgba(0,240,255,0.2) 40%,transparent 70%);
-  display:flex;align-items:center;justify-content:center;flex-direction:column;
-  box-shadow:0 0 80px rgba(0,240,255,0.4),0 0 160px rgba(0,240,255,0.15);
-  animation:mind-pulse 3s ease-in-out infinite}
-.mind-eye .label{font-size:2rem;font-weight:900;color:var(--mind);text-shadow:0 0 30px var(--mind)}
-.mind-eye .sub{font-size:0.6rem;color:rgba(255,255,255,0.7);margin-top:4px;letter-spacing:3px}
-
-@keyframes mind-pulse{
-  0%,100%{box-shadow:0 0 80px rgba(0,240,255,0.4),0 0 160px rgba(0,240,255,0.15)}
-  50%{box-shadow:0 0 120px rgba(0,240,255,0.6),0 0 240px rgba(0,240,255,0.25)}
-}
-
-/* TORNADO RING */
-.tornado-ring{position:absolute;border:2px solid rgba(0,240,255,0.1);border-radius:50%;animation:tornado-spin linear infinite}
-.tornado-ring:nth-child(1){width:300px;height:300px;animation-duration:8s}
-.tornado-ring:nth-child(2){width:400px;height:400px;animation-duration:12s;animation-direction:reverse}
-.tornado-ring:nth-child(3){width:500px;height:500px;animation-duration:16s}
-
-@keyframes tornado-spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-
-/* 6 BRAINS orbiting */
-.brain-node{position:absolute;width:70px;height:70px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;flex-direction:column;
-  font-size:0.55rem;font-weight:700;letter-spacing:1px;
-  border:2px solid;transition:all 0.3s ease;cursor:default}
-.brain-node:hover{transform:scale(1.3)!important;z-index:20}
-.brain-node .b-icon{font-size:1.4rem;margin-bottom:2px}
-.brain-node .b-label{font-size:0.45rem;opacity:0.8}
-
-.b1{background:rgba(255,51,102,0.15);border-color:var(--b1);color:var(--b1);box-shadow:0 0 20px rgba(255,51,102,0.3)}
-.b2{background:rgba(255,153,0,0.15);border-color:var(--b2);color:var(--b2);box-shadow:0 0 20px rgba(255,153,0,0.3)}
-.b3{background:rgba(255,204,0,0.15);border-color:var(--b3);color:var(--b3);box-shadow:0 0 20px rgba(255,204,0,0.3)}
-.b4{background:rgba(51,204,102,0.15);border-color:var(--b4);color:var(--b4);box-shadow:0 0 20px rgba(51,204,102,0.3)}
-.b5{background:rgba(51,153,255,0.15);border-color:var(--b5);color:var(--b5);box-shadow:0 0 20px rgba(51,153,255,0.3)}
-.b6{background:rgba(204,102,255,0.15);border-color:var(--b6);color:var(--b6);box-shadow:0 0 20px rgba(204,102,255,0.3)}
-
-/* CONTROL BEAMS from MIND to each brain */
-.beam{position:absolute;height:2px;transform-origin:left center;opacity:0.3;z-index:5;animation:beam-pulse 2s ease-in-out infinite alternate}
-.beam-1{background:linear-gradient(90deg,var(--mind),var(--b1))}
-.beam-2{background:linear-gradient(90deg,var(--mind),var(--b2))}
-.beam-3{background:linear-gradient(90deg,var(--mind),var(--b3))}
-.beam-4{background:linear-gradient(90deg,var(--mind),var(--b4))}
-.beam-5{background:linear-gradient(90deg,var(--mind),var(--b5))}
-.beam-6{background:linear-gradient(90deg,var(--mind),var(--b6))}
-@keyframes beam-pulse{from{opacity:0.2}to{opacity:0.6}}
-
-/* STATUS BAR */
-.status-panel{position:fixed;bottom:0;left:0;width:100%;background:rgba(10,10,18,0.9);
-  border-top:1px solid rgba(0,240,255,0.2);padding:12px 20px;z-index:20;
-  display:flex;justify-content:space-between;align-items:center;font-size:0.65rem}
-.status-left{color:var(--mind)}
-.status-right{color:rgba(255,255,255,0.5)}
-.status-right a{color:var(--mind);text-decoration:none}
-
-/* TITLE */
-.page-title{position:fixed;top:30px;left:50%;transform:translateX(-50%);z-index:20;text-align:center}
-.page-title h1{font-size:0.8rem;letter-spacing:8px;color:var(--mind);opacity:0.6}
-.page-title .tagline{font-size:0.5rem;letter-spacing:4px;color:rgba(255,255,255,0.4);margin-top:6px}
+/* HEADER */
+.page-header{text-align:center;padding:30px 20px 10px;position:relative;z-index:20}
+.page-header h1{font-size:1.2rem;letter-spacing:10px;color:var(--mind);text-shadow:0 0 40px rgba(0,240,255,0.4)}
+.page-header .tagline{font-size:0.5rem;letter-spacing:5px;color:var(--opal-smoke);margin-top:6px}
+.page-header .opal-badge{display:inline-block;margin-top:10px;padding:4px 16px;border:1px solid var(--opal-teal);
+  border-radius:20px;font-size:0.45rem;letter-spacing:4px;color:var(--opal-teal);background:rgba(46,196,182,0.05)}
 
 /* BACK LINK */
-.back-link{position:fixed;top:20px;left:20px;z-index:20;color:var(--mind);text-decoration:none;
-  font-size:0.7rem;opacity:0.5;transition:opacity 0.3s}
+.back-link{position:fixed;top:20px;left:20px;z-index:30;color:var(--mind);text-decoration:none;
+  font-size:0.7rem;opacity:0.5;transition:opacity 0.3s;font-family:'IBM Plex Mono',monospace}
 .back-link:hover{opacity:1}
 
-@media(max-width:600px){
-  .mind-eye{width:100px;height:100px}
-  .mind-eye .label{font-size:1.3rem}
+/* TORNADO STAGE */
+.tornado-stage{flex:1;position:relative;display:flex;align-items:center;justify-content:center;min-height:55vh}
+
+/* MIND EYE */
+.mind-eye{position:absolute;z-index:10;width:140px;height:140px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,240,255,0.2) 0%,rgba(0,240,255,0.05) 50%,transparent 70%);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;
+  border:2px solid rgba(0,240,255,0.3);
+  box-shadow:0 0 60px rgba(0,240,255,0.3),inset 0 0 40px rgba(0,240,255,0.1);
+  animation:mind-pulse 3s ease-in-out infinite}
+.mind-eye .label{font-size:1.8rem;font-weight:900;color:var(--mind);text-shadow:0 0 30px var(--mind)}
+.mind-eye .sub{font-size:0.5rem;color:var(--opal-frost);margin-top:4px;letter-spacing:3px;opacity:0.7}
+.mind-eye .state{font-size:0.4rem;color:var(--opal-teal);margin-top:4px;letter-spacing:2px}
+
+@keyframes mind-pulse{
+  0%,100%{box-shadow:0 0 60px rgba(0,240,255,0.3),inset 0 0 40px rgba(0,240,255,0.1);border-color:rgba(0,240,255,0.3)}
+  50%{box-shadow:0 0 100px rgba(0,240,255,0.5),inset 0 0 60px rgba(0,240,255,0.15);border-color:rgba(0,240,255,0.6)}
+}
+
+/* TORNADO RINGS */
+.tornado-ring{position:absolute;border:1px solid rgba(0,240,255,0.06);border-radius:50%;animation:tornado-spin linear infinite}
+.tornado-ring:nth-child(1){width:300px;height:300px;animation-duration:10s}
+.tornado-ring:nth-child(2){width:380px;height:380px;animation-duration:15s;animation-direction:reverse;border-color:rgba(46,196,182,0.06)}
+.tornado-ring:nth-child(3){width:460px;height:460px;animation-duration:20s;border-color:rgba(123,79,166,0.06)}
+@keyframes tornado-spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+/* BRAIN NODES */
+.brain-node{position:absolute;width:66px;height:66px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;
+  font-size:0.5rem;font-weight:700;letter-spacing:1px;
+  border:2px solid;cursor:pointer;transition:all 0.4s ease;z-index:8}
+.brain-node:hover{transform:scale(1.4)!important;z-index:25}
+.brain-node .b-icon{font-size:1.3rem;margin-bottom:2px;pointer-events:none}
+.brain-node .b-label{font-size:0.4rem;opacity:0.8;pointer-events:none}
+.brain-node .b-state{font-size:0.3rem;opacity:0.5;pointer-events:none;margin-top:2px;font-family:'IBM Plex Mono',monospace}
+
+.b1{background:rgba(255,51,102,0.1);border-color:var(--b1);color:var(--b1);box-shadow:0 0 15px rgba(255,51,102,0.2)}
+.b2{background:rgba(255,153,0,0.1);border-color:var(--b2);color:var(--b2);box-shadow:0 0 15px rgba(255,153,0,0.2)}
+.b3{background:rgba(255,204,0,0.1);border-color:var(--b3);color:var(--b3);box-shadow:0 0 15px rgba(255,204,0,0.2)}
+.b4{background:rgba(51,204,102,0.1);border-color:var(--b4);color:var(--b4);box-shadow:0 0 15px rgba(51,204,102,0.2)}
+.b5{background:rgba(51,153,255,0.1);border-color:var(--b5);color:var(--b5);box-shadow:0 0 15px rgba(51,153,255,0.2)}
+.b6{background:rgba(204,102,255,0.1);border-color:var(--b6);color:var(--b6);box-shadow:0 0 15px rgba(204,102,255,0.2)}
+
+/* CANVAS for beams & data packets */
+canvas#beamCanvas{position:absolute;top:0;left:0;width:100%;height:100%;z-index:5;pointer-events:none}
+
+/* OPAL DYNAMICS PANEL */
+.dynamics-panel{position:relative;z-index:20;background:var(--opal-deep);border-top:1px solid rgba(46,196,182,0.15);
+  padding:20px;display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+
+.dyn-card{background:rgba(10,15,30,0.8);border:1px solid rgba(46,196,182,0.15);border-radius:8px;
+  padding:12px 16px;min-width:140px;flex:1;max-width:220px;font-family:'IBM Plex Mono',monospace}
+.dyn-card .dyn-title{font-size:0.45rem;letter-spacing:3px;color:var(--opal-smoke);margin-bottom:8px;text-transform:uppercase}
+.dyn-card .dyn-value{font-size:1.1rem;font-weight:700;font-family:'Orbitron',monospace}
+.dyn-card .dyn-sub{font-size:0.4rem;color:var(--opal-smoke);margin-top:4px}
+
+/* SIGNAL FLOW LOG */
+.signal-log{position:relative;z-index:20;background:rgba(5,7,15,0.95);border-top:1px solid rgba(46,196,182,0.1);
+  padding:12px 20px;max-height:120px;overflow-y:auto;font-family:'IBM Plex Mono',monospace;font-size:0.65rem}
+.signal-log .log-entry{padding:2px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
+.log-entry .log-time{color:var(--opal-smoke);margin-right:8px}
+.log-entry .log-from{font-weight:600;margin-right:4px}
+.log-entry .log-arrow{color:var(--opal-teal);margin:0 4px}
+.log-entry .log-to{font-weight:600;margin-right:8px}
+.log-entry .log-msg{color:var(--opal-frost);opacity:0.7}
+.log-entry.log-mind .log-msg{color:var(--mind)}
+.log-entry.log-route .log-msg{color:var(--opal-amber)}
+.log-entry.log-spice .log-msg{color:var(--opal-gold)}
+
+/* STATUS BAR */
+.status-bar{background:rgba(5,7,15,0.95);border-top:1px solid rgba(0,240,255,0.15);
+  padding:10px 20px;display:flex;justify-content:space-between;align-items:center;
+  font-size:0.55rem;z-index:20;position:relative}
+.status-left{color:var(--mind)}
+.status-right{color:var(--opal-smoke)}
+.status-right a{color:var(--opal-teal);text-decoration:none}
+
+/* ACTIVE BRAIN highlight */
+.brain-node.active{animation:brain-active 0.6s ease}
+@keyframes brain-active{
+  0%{filter:brightness(1)}
+  50%{filter:brightness(2.5)}
+  100%{filter:brightness(1)}
+}
+
+/* DATA PACKET animation on brain */
+.brain-node.receiving::after{content:'';position:absolute;width:100%;height:100%;border-radius:50%;
+  border:2px solid;animation:ripple 0.8s ease-out;opacity:0;pointer-events:none}
+@keyframes ripple{0%{transform:scale(1);opacity:0.8}100%{transform:scale(2);opacity:0}}
+
+@media(max-width:700px){
+  .mind-eye{width:90px;height:90px}
+  .mind-eye .label{font-size:1.2rem}
   .tornado-ring:nth-child(1){width:200px;height:200px}
-  .tornado-ring:nth-child(2){width:280px;height:280px}
-  .tornado-ring:nth-child(3){width:360px;height:360px}
-  .brain-node{width:50px;height:50px}
-  .brain-node .b-icon{font-size:1rem}
+  .tornado-ring:nth-child(2){width:260px;height:260px}
+  .tornado-ring:nth-child(3){width:320px;height:320px}
+  .brain-node{width:48px;height:48px}
+  .brain-node .b-icon{font-size:0.9rem}
+  .brain-node .b-label{font-size:0.35rem}
+  .dynamics-panel{flex-direction:column;align-items:center}
+  .dyn-card{max-width:90%;min-width:auto}
 }
 </style>
 </head>
@@ -105,9 +162,12 @@ body{background:var(--bg);color:#fff;font-family:'Orbitron',monospace;overflow-x
 
 <a class="back-link" href="x.html">&#x2190; X</a>
 
-<div class="page-title">
-<h1>THE 7TH BRAIN</h1>
-<div class="tagline">CONTROL LAYER — ABOVE THE TORNADO</div>
+<div class="main-container">
+
+<div class="page-header">
+  <h1>M I N D</h1>
+  <div class="tagline">THE 7TH BRAIN — CONTROL LAYER ABOVE THE TORNADO</div>
+  <div class="opal-badge">OPAL-DYNAMICS ACTIVE</div>
 </div>
 
 <div class="tornado-stage">
@@ -117,81 +177,282 @@ body{background:var(--bg);color:#fff;font-family:'Orbitron',monospace;overflow-x
 
   <div class="mind-eye">
     <div class="label">MIND</div>
-    <div class="sub">CONTROL</div>
+    <div class="sub">7TH BRAIN</div>
+    <div class="state" id="mindState">LISTENING</div>
   </div>
 
-  <canvas id="beamCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:5;pointer-events:none"></canvas>
+  <canvas id="beamCanvas"></canvas>
 
-  <div class="brain-node b1" id="brain1"><div class="b-icon">&#x1F30C;</div><div class="b-label">KU</div></div>
-  <div class="brain-node b2" id="brain2"><div class="b-icon">&#x1F3DC;&#xFE0F;</div><div class="b-label">DUNE</div></div>
-  <div class="brain-node b3" id="brain3"><div class="b-icon">&#x271A;&#xFE0F;</div><div class="b-label">TEMPLARS</div></div>
-  <div class="brain-node b4" id="brain4"><div class="b-icon">&#x1F6F8;</div><div class="b-label">SILVER</div></div>
-  <div class="brain-node b5" id="brain5"><div class="b-icon">&#x2697;&#xFE0F;</div><div class="b-label">ALCHEMY</div></div>
-  <div class="brain-node b6" id="brain6"><div class="b-icon">&#x26A1;</div><div class="b-label">LECTRIC</div></div>
+  <div class="brain-node b1" id="brain1"><div class="b-icon">&#x1F30C;</div><div class="b-label">KU</div><div class="b-state" id="s1">IDLE</div></div>
+  <div class="brain-node b2" id="brain2"><div class="b-icon">&#x1F3DC;&#xFE0F;</div><div class="b-label">DUNE</div><div class="b-state" id="s2">IDLE</div></div>
+  <div class="brain-node b3" id="brain3"><div class="b-icon">&#x271A;&#xFE0F;</div><div class="b-label">TEMPLARS</div><div class="b-state" id="s3">IDLE</div></div>
+  <div class="brain-node b4" id="brain4"><div class="b-icon">&#x1F6F8;</div><div class="b-label">SILVER</div><div class="b-state" id="s4">IDLE</div></div>
+  <div class="brain-node b5" id="brain5"><div class="b-icon">&#x2697;&#xFE0F;</div><div class="b-label">ALCHEMY</div><div class="b-state" id="s5">IDLE</div></div>
+  <div class="brain-node b6" id="brain6"><div class="b-icon">&#x26A1;</div><div class="b-label">LECTRIC</div><div class="b-state" id="s6">IDLE</div></div>
 </div>
 
-<div class="status-panel">
-  <div class="status-left">MIND :: 7th BRAIN ACTIVE — 6 NODES LINKED</div>
+<!-- OPAL-DYNAMICS DASHBOARD -->
+<div class="dynamics-panel">
+  <div class="dyn-card">
+    <div class="dyn-title">MIND State</div>
+    <div class="dyn-value" id="dynMindState" style="color:var(--mind)">ROUTING</div>
+    <div class="dyn-sub">Control decisions / min</div>
+  </div>
+  <div class="dyn-card">
+    <div class="dyn-title">Tornado RPM</div>
+    <div class="dyn-value" id="dynRPM" style="color:var(--opal-teal)">6.0</div>
+    <div class="dyn-sub">6-Brain rotation speed</div>
+  </div>
+  <div class="dyn-card">
+    <div class="dyn-title">Signal Packets</div>
+    <div class="dyn-value" id="dynPackets" style="color:var(--opal-amber)">0</div>
+    <div class="dyn-sub">Routed through MIND</div>
+  </div>
+  <div class="dyn-card">
+    <div class="dyn-title">SPICE Flow</div>
+    <div class="dyn-value" id="dynSpice" style="color:var(--opal-gold)">&#x2588;&#x2588;&#x2588;&#x2591;&#x2591;</div>
+    <div class="dyn-sub">Current melange level</div>
+  </div>
+  <div class="dyn-card">
+    <div class="dyn-title">Active Brains</div>
+    <div class="dyn-value" id="dynActive" style="color:var(--opal-violet)">0 / 6</div>
+    <div class="dyn-sub">Currently firing</div>
+  </div>
+  <div class="dyn-card">
+    <div class="dyn-title">OPAL Depth</div>
+    <div class="dyn-value" id="dynDepth" style="color:var(--opal-frost)">VOID</div>
+    <div class="dyn-sub">Current render layer</div>
+  </div>
+</div>
+
+<!-- SIGNAL FLOW LOG -->
+<div class="signal-log" id="signalLog">
+  <div class="log-entry log-mind"><span class="log-time">00:00:00</span><span class="log-from" style="color:var(--mind)">MIND</span><span class="log-arrow">&#x25B6;</span><span class="log-to" style="color:var(--opal-teal)">SYSTEM</span><span class="log-msg">OPAL-Dynamics initialized. 6 brains linked. TORNADO active.</span></div>
+</div>
+
+<div class="status-bar">
+  <div class="status-left">MIND :: 7TH BRAIN — OPAL-DYNAMICS LIVE</div>
   <div class="status-right"><a href="x.html">X — THE IMPOSSIBILITY DRIVE</a></div>
 </div>
+
+</div><!-- main-container -->
 
 <script>
 (function(){
 'use strict';
 
 var brains = [
-  document.getElementById('brain1'),
-  document.getElementById('brain2'),
-  document.getElementById('brain3'),
-  document.getElementById('brain4'),
-  document.getElementById('brain5'),
-  document.getElementById('brain6')
+  {el:document.getElementById('brain1'), name:'KU', color:'#ff3366', stateEl:document.getElementById('s1')},
+  {el:document.getElementById('brain2'), name:'DUNE', color:'#ff9900', stateEl:document.getElementById('s2')},
+  {el:document.getElementById('brain3'), name:'TEMPLARS', color:'#ffcc00', stateEl:document.getElementById('s3')},
+  {el:document.getElementById('brain4'), name:'SILVER', color:'#33cc66', stateEl:document.getElementById('s4')},
+  {el:document.getElementById('brain5'), name:'ALCHEMY', color:'#3399ff', stateEl:document.getElementById('s5')},
+  {el:document.getElementById('brain6'), name:'LECTRIC', color:'#cc66ff', stateEl:document.getElementById('s6')}
 ];
 
-var colors = ['#ff3366','#ff9900','#ffcc00','#33cc66','#3399ff','#cc66ff'];
+var MIND_COLOR = '#00f0ff';
+var OPAL_TEAL = '#2ec4b6';
+var OPAL_AMBER = '#e8a045';
+var OPAL_GOLD = '#f5c842';
+
 var canvas = document.getElementById('beamCanvas');
 var ctx = canvas.getContext('2d');
-var centerX, centerY, radius = 220;
-var angleOffset = -Math.PI / 2;
-var rotationSpeed = 0.0003;
+var centerX, centerY, radius;
 var time = 0;
+var packetCount = 0;
+var signalLog = document.getElementById('signalLog');
+var mindStateEl = document.getElementById('mindState');
+
+// Data packets in flight
+var packets = [];
+
+// OPAL depth layers
+var OPAL_DEPTHS = ['VOID','DEEP','MID','SURFACE','ICE','FROST'];
+var depthIndex = 0;
+
+// MIND states
+var MIND_STATES = ['LISTENING','ROUTING','ANALYZING','DECIDING','DISPATCHING','HARMONIZING'];
+var mindStateIndex = 0;
+
+// Dynamics display elements
+var dynMindState = document.getElementById('dynMindState');
+var dynRPM = document.getElementById('dynRPM');
+var dynPackets = document.getElementById('dynPackets');
+var dynSpice = document.getElementById('dynSpice');
+var dynActive = document.getElementById('dynActive');
+var dynDepth = document.getElementById('dynDepth');
 
 function resize(){
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  var stage = document.querySelector('.tornado-stage');
+  canvas.width = stage.offsetWidth;
+  canvas.height = stage.offsetHeight;
   centerX = canvas.width / 2;
   centerY = canvas.height / 2;
   radius = Math.min(canvas.width, canvas.height) * 0.28;
+  if(radius < 100) radius = 100;
 }
 
+// Create a signal packet from one brain to another through MIND
+function createPacket(fromIdx, toIdx){
+  var f = brains[fromIdx];
+  var t = brains[toIdx];
+  packets.push({
+    fromIdx: fromIdx,
+    toIdx: toIdx,
+    fromColor: f.color,
+    toColor: t.color,
+    phase: 0,    // 0 = going to MIND, 1 = going to target
+    progress: 0, // 0..1
+    speed: 0.015 + Math.random() * 0.01
+  });
+  packetCount++;
+
+  // Update brain states
+  f.stateEl.textContent = 'SEND';
+  f.el.classList.add('active');
+  setTimeout(function(){ f.el.classList.remove('active'); f.stateEl.textContent = 'IDLE'; }, 800);
+
+  // Log the signal
+  addSignalLog(f.name, t.name, getSignalMessage(fromIdx, toIdx), f.color, t.color);
+}
+
+function getSignalMessage(from, to){
+  var msgs = [
+    'Data stream routed via MIND',
+    'OPAL-packet delivered',
+    'Cross-brain sync initiated',
+    'SPICE resonance detected',
+    'Tornado vector aligned',
+    'Deep pattern transferred',
+    'Neural bridge established',
+    'Quantum entangle confirmed',
+    'Knowledge fragment shared',
+    'MIND decision propagated'
+  ];
+  return msgs[Math.floor(Math.random() * msgs.length)];
+}
+
+function addSignalLog(from, to, msg, fromColor, toColor){
+  var now = new Date();
+  var ts = pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
+  var classes = ['log-entry'];
+  if(from === 'MIND') classes.push('log-mind');
+  else if(msg.indexOf('route') > -1 || msg.indexOf('Route') > -1) classes.push('log-route');
+  else if(msg.indexOf('SPICE') > -1) classes.push('log-spice');
+
+  var div = document.createElement('div');
+  div.className = classes.join(' ');
+  div.innerHTML = '<span class="log-time">' + ts + '</span>' +
+    '<span class="log-from" style="color:' + (fromColor || MIND_COLOR) + '">' + from + '</span>' +
+    '<span class="log-arrow">&#x25B6;</span>' +
+    '<span class="log-to" style="color:' + (toColor || OPAL_TEAL) + '">' + to + '</span>' +
+    '<span class="log-msg">' + msg + '</span>';
+  signalLog.appendChild(div);
+  signalLog.scrollTop = signalLog.scrollHeight;
+
+  // Keep last 30 entries
+  while(signalLog.children.length > 30) signalLog.removeChild(signalLog.firstChild);
+}
+
+function pad(n){ return n < 10 ? '0' + n : '' + n; }
+
+// Get brain position at current time
+function getBrainPos(i){
+  var angle = -Math.PI/2 + (Math.PI*2/6)*i + time*(i%2===0?1:-0.7);
+  return {
+    x: centerX + Math.cos(angle) * radius,
+    y: centerY + Math.sin(angle) * radius
+  };
+}
+
+// Lerp
+function lerp(a, b, t){ return a + (b - a) * t; }
+
 function animate(){
-  time += rotationSpeed;
+  time += 0.0003;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+  // Draw tornado dust particles
+  for(var p = 0; p < 20; p++){
+    var pAngle = time * 2 + p * 0.314;
+    var pRadius = radius * (0.5 + 0.6 * ((p % 5) / 5));
+    var px = centerX + Math.cos(pAngle) * pRadius;
+    var py = centerY + Math.sin(pAngle) * pRadius;
+    ctx.beginPath();
+    ctx.arc(px, py, 1, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(0,240,255,' + (0.05 + 0.05 * Math.sin(Date.now() * 0.001 + p)) + ')';
+    ctx.fill();
+  }
+
+  // Position brains and draw beams
   for(var i = 0; i < 6; i++){
-    var angle = angleOffset + (Math.PI * 2 / 6) * i + time * (i % 2 === 0 ? 1 : -0.7);
-    var bx = centerX + Math.cos(angle) * radius;
-    var by = centerY + Math.sin(angle) * radius;
+    var pos = getBrainPos(i);
+    brains[i].el.style.left = (pos.x - 33) + 'px';
+    brains[i].el.style.top = (pos.y - 33) + 'px';
 
-    // Position brain node
-    brains[i].style.left = (bx - 35) + 'px';
-    brains[i].style.top = (by - 35) + 'px';
-
-    // Draw beam
+    // Beam from MIND to brain
+    var gradient = ctx.createLinearGradient(centerX, centerY, pos.x, pos.y);
+    gradient.addColorStop(0, MIND_COLOR);
+    gradient.addColorStop(1, brains[i].color);
     ctx.beginPath();
     ctx.moveTo(centerX, centerY);
-    ctx.lineTo(bx, by);
-    ctx.strokeStyle = colors[i];
-    ctx.globalAlpha = 0.15 + 0.1 * Math.sin(Date.now() * 0.002 + i);
-    ctx.lineWidth = 2;
+    ctx.lineTo(pos.x, pos.y);
+    ctx.strokeStyle = gradient;
+    ctx.globalAlpha = 0.08 + 0.06 * Math.sin(Date.now() * 0.002 + i);
+    ctx.lineWidth = 1.5;
     ctx.stroke();
     ctx.globalAlpha = 1;
+  }
 
-    // Glow dot at brain position
+  // Draw & update data packets
+  for(var j = packets.length - 1; j >= 0; j--){
+    var pkt = packets[j];
+    pkt.progress += pkt.speed;
+
+    var fromPos = getBrainPos(pkt.fromIdx);
+    var toPos = getBrainPos(pkt.toIdx);
+    var px, py, color;
+
+    if(pkt.phase === 0){
+      // Going to MIND
+      px = lerp(fromPos.x, centerX, pkt.progress);
+      py = lerp(fromPos.y, centerY, pkt.progress);
+      color = pkt.fromColor;
+      if(pkt.progress >= 1){
+        pkt.phase = 1;
+        pkt.progress = 0;
+        mindStateEl.textContent = 'ROUTING';
+        setTimeout(function(){ mindStateEl.textContent = 'LISTENING'; }, 500);
+      }
+    } else {
+      // Going to target
+      px = lerp(centerX, toPos.x, pkt.progress);
+      py = lerp(centerY, toPos.y, pkt.progress);
+      color = pkt.toColor;
+      if(pkt.progress >= 1){
+        // Arrived
+        var tb = brains[pkt.toIdx];
+        tb.stateEl.textContent = 'RECV';
+        tb.el.classList.add('active');
+        (function(b){setTimeout(function(){ b.el.classList.remove('active'); b.stateEl.textContent = 'IDLE'; }, 600);})(tb);
+        packets.splice(j, 1);
+        continue;
+      }
+    }
+
+    // Draw packet glow
     ctx.beginPath();
-    ctx.arc(bx, by, 4, 0, Math.PI * 2);
-    ctx.fillStyle = colors[i];
-    ctx.globalAlpha = 0.4;
+    ctx.arc(px, py, 5, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.globalAlpha = 0.9;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+
+    // Packet trail
+    ctx.beginPath();
+    ctx.arc(px, py, 10, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.globalAlpha = 0.15;
     ctx.fill();
     ctx.globalAlpha = 1;
   }
@@ -199,9 +460,79 @@ function animate(){
   requestAnimationFrame(animate);
 }
 
+// Periodically trigger signals between random brains
+function triggerDynamics(){
+  var from = Math.floor(Math.random() * 6);
+  var to = Math.floor(Math.random() * 6);
+  while(to === from) to = Math.floor(Math.random() * 6);
+  createPacket(from, to);
+}
+
+// Update OPAL dynamics dashboard
+function updateDynamics(){
+  // MIND state cycle
+  mindStateIndex = (mindStateIndex + 1) % MIND_STATES.length;
+  dynMindState.textContent = MIND_STATES[mindStateIndex];
+
+  // RPM fluctuation
+  var rpm = (5.5 + Math.random() * 1.5).toFixed(1);
+  dynRPM.textContent = rpm;
+
+  // Packets
+  dynPackets.textContent = packetCount;
+
+  // SPICE flow bar
+  var spiceLevel = Math.floor(Math.random() * 4) + 2;
+  var spiceBar = '';
+  for(var i = 0; i < 5; i++) spiceBar += i < spiceLevel ? '\u2588' : '\u2591';
+  dynSpice.textContent = spiceBar;
+
+  // Active brains (based on recent packets)
+  var active = Math.min(packets.length + 1, 6);
+  dynActive.textContent = active + ' / 6';
+
+  // OPAL depth
+  depthIndex = (depthIndex + 1) % OPAL_DEPTHS.length;
+  dynDepth.textContent = OPAL_DEPTHS[depthIndex];
+}
+
+// MIND self-signals
+function mindBroadcast(){
+  var targets = [];
+  var count = 2 + Math.floor(Math.random() * 3);
+  for(var i = 0; i < count; i++){
+    var t = Math.floor(Math.random() * 6);
+    if(targets.indexOf(t) === -1) targets.push(t);
+  }
+  var msgs = ['MIND broadcast: Tornado sync pulse','MIND broadcast: OPAL depth recalibrated','MIND broadcast: SPICE flow redistributed','MIND broadcast: Cross-brain harmony check'];
+  addSignalLog('MIND', targets.map(function(t){return brains[t].name}).join('+'), msgs[Math.floor(Math.random()*msgs.length)], MIND_COLOR, OPAL_TEAL);
+  targets.forEach(function(t){
+    packets.push({fromIdx:0, toIdx:t, fromColor:MIND_COLOR, toColor:brains[t].color, phase:1, progress:0, speed:0.02});
+  });
+  packetCount += targets.length;
+}
+
 window.addEventListener('resize', resize);
 resize();
 animate();
+
+// Signal dynamics every 2-4 seconds
+setInterval(triggerDynamics, 2500);
+setInterval(triggerDynamics, 3700);
+
+// Dashboard update every 3 seconds
+setInterval(updateDynamics, 3000);
+
+// MIND broadcast every 8 seconds
+setInterval(mindBroadcast, 8000);
+
+// Initial burst
+setTimeout(function(){
+  triggerDynamics();
+  setTimeout(triggerDynamics, 400);
+  setTimeout(triggerDynamics, 800);
+  updateDynamics();
+}, 500);
 
 })();
 </script>
