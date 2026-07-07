@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>X — THE IMPOSSIBILITY DRIVE</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap');
+
+  :root {
+    --opal-void: #0a0a12;
+    --opal-deep: #0d1b2a;
+    --opal-core: #1b2838;
+    --opal-blue: #00b4d8;
+    --opal-frost: #90e0ef;
+    --gold: #d4a017;
+    --gold-bright: #ffd700;
+    --diamond: #b9f2ff;
+    --orange: #ff6b35;
+    --deep-blue: #0047ab;
+    --spice: #c2813d;
+    --pulse-hz: 66666;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--opal-void);
+    color: #fff;
+    font-family: 'Rajdhani', sans-serif;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  canvas#bgCanvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+  }
+
+  .overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .title-block {
+    text-align: center;
+    margin-bottom: 20px;
+    animation: fadeInDown 2s ease-out;
+  }
+
+  .title-x {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(60px, 12vw, 140px);
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--gold-bright), var(--orange), var(--gold-bright), var(--diamond));
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.5));
+    letter-spacing: 0.1em;
+  }
+
+  .title-sub {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(14px, 3vw, 28px);
+    font-weight: 400;
+    letter-spacing: 0.6em;
+    color: var(--opal-frost);
+    opacity: 0.8;
+    margin-top: -10px;
+    animation: breathe 3s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  @keyframes breathe {
+    0%, 100% { opacity: 0.5; letter-spacing: 0.6em; }
+    50% { opacity: 1; letter-spacing: 0.8em; }
+  }
+
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* HUD readouts */
+  .hud {
+    position: fixed;
+    z-index: 2;
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(9px, 1.2vw, 13px);
+    pointer-events: none;
+  }
+
+  .hud-left {
+    top: 20px; left: 20px;
+    text-align: left;
+  }
+
+  .hud-right {
+    top: 20px; right: 20px;
+    text-align: right;
+  }
+
+  .hud-bottom {
+    bottom: 20px; left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+
+  .hud-line {
+    margin: 6px 0;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+  }
+
+  .hud-label {
+    color: var(--opal-frost);
+    opacity: 0.5;
+  }
+
+  .hud-value {
+    color: var(--gold-bright);
+    font-weight: 700;
+  }
+
+  .hud-value.blue { color: var(--opal-blue); }
+  .hud-value.orange { color: var(--orange); }
+  .hud-value.diamond { color: var(--diamond); }
+  .hud-value.spice { color: var(--spice); }
+
+  .status-engaged {
+    color: var(--gold-bright);
+    font-size: clamp(10px, 1.4vw, 16px);
+    animation: statusPulse 2s ease-in-out infinite;
+    letter-spacing: 0.3em;
+  }
+
+  @keyframes statusPulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; text-shadow: 0 0 20px var(--gold-bright); }
+  }
+
+  /* Coil labels */
+  .coil-label {
+    position: fixed;
+    z-index: 2;
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(11px, 1.5vw, 16px);
+    font-weight: 700;
+    opacity: 0.6;
+    pointer-events: none;
+    animation: coilPulse 3s ease-in-out infinite;
+  }
+
+  .coil-left {
+    top: 50%; left: 8%;
+    transform: translateY(-50%);
+    color: var(--opal-blue);
+  }
+
+  .coil-right {
+    top: 50%; right: 8%;
+    transform: translateY(-50%);
+    color: var(--orange);
+  }
+
+  @keyframes coilPulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.8; }
+  }
+
+  .brain-ring {
+    position: fixed;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .brain-node {
+    position: absolute;
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(8px, 1vw, 12px);
+    font-weight: 700;
+    padding: 4px 8px;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 4px;
+    background: rgba(10,10,18,0.7);
+    white-space: nowrap;
+    animation: nodeFloat 4s ease-in-out infinite;
+  }
+
+  @keyframes nodeFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<div class="overlay">
+  <div class="title-block">
+    <div class="title-x">X</div>
+    <div class="title-sub">IMPOSSIBILITY DRIVE</div>
+  </div>
+</div>
+
+<!-- HUD LEFT -->
+<div class="hud hud-left">
+  <div class="hud-line"><span class="hud-label">FREQ </span><span class="hud-value" id="freq">66666</span><span class="hud-label"> Hz</span></div>
+  <div class="hud-line"><span class="hud-label">LOGIC BUS </span><span class="hud-value blue" id="logicBus">AOS</span></div>
+  <div class="hud-line"><span class="hud-label">COIL L </span><span class="hud-value blue">X</span> <span class="hud-label">/ R </span><span class="hud-value orange">Y</span></div>
+  <div class="hud-line"><span class="hud-label">CHAOS_IDX </span><span class="hud-value spice" id="chaosIdx">0.000</span></div>
+  <div class="hud-line"><span class="hud-label">OPAL_RES </span><span class="hud-value diamond" id="opalRes">0.000</span></div>
+</div>
+
+<!-- HUD RIGHT -->
+<div class="hud hud-right">
+  <div class="hud-line"><span class="hud-label">MIND STATE </span><span class="hud-value" id="mindState">LISTENING</span></div>
+  <div class="hud-line"><span class="hud-label">TORNADO </span><span class="hud-value orange" id="tornadoRPM">0</span><span class="hud-label"> RPM</span></div>
+  <div class="hud-line"><span class="hud-label">SPICE FLOW </span><span class="hud-value spice" id="spiceFlow">0.0</span><span class="hud-label"> ml/s</span></div>
+  <div class="hud-line"><span class="hud-label">BRAINS </span><span class="hud-value blue" id="activeBrains">6/6</span></div>
+  <div class="hud-line"><span class="hud-label">DEPTH </span><span class="hud-value diamond" id="opalDepth">7</span></div>
+</div>
+
+<!-- HUD BOTTOM -->
+<div class="hud hud-bottom">
+  <div class="status-engaged" id="statusLine">ENGINE CORE: CHARGING</div>
+</div>
+
+<!-- COIL LABELS -->
+<div class="coil-label coil-left">◄ COIL X</div>
+<div class="coil-label coil-right">COIL Y ►</div>
+
+<script>
+const canvas = document.getElementById('bgCanvas');
+const ctx = canvas.getContext('2d');
+let W, H, cx, cy;
+let t = 0;
+const TAU = Math.PI * 2;
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  cx = W / 2;
+  cy = H / 2;
+}
+window.addEventListener('resize', resize);
+resize();
+
+// --- STARS ---
+const stars = Array.from({length: 200}, () => ({
+  x: Math.random() * W,
+  y: Math.random() * H,
+  r: Math.random() * 1.5 + 0.3,
+  speed: Math.random() * 0.3 + 0.05,
+  phase: Math.random() * TAU
+}));
+
+function drawStars() {
+  stars.forEach(s => {
+    const bright = 0.3 + 0.7 * Math.abs(Math.sin(t * s.speed + s.phase));
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, TAU);
+    ctx.fillStyle = `rgba(180,220,255,${bright})`;
+    ctx.fill();
+  });
+}
+
+// --- TORNADO VORTEX PARTICLES ---
+const vortexParticles = Array.from({length: 120}, (_, i) => ({
+  angle: Math.random() * TAU,
+  radius: 30 + Math.random() * 250,
+  speed: (0.3 + Math.random() * 1.5) * (Math.random() > 0.5 ? 1 : -1),
+  y: (Math.random() - 0.5) * 300,
+  ySpeed: (Math.random() - 0.5) * 0.5,
+  size: Math.random() * 3 + 1,
+  hue: Math.random() > 0.5 ? 38 : 200, // gold or blue
+  life: Math.random()
+}));
+
+function drawVortex() {
+  vortexParticles.forEach(p => {
+    p.angle += p.speed * 0.008;
+    p.y += p.ySpeed;
+    if (p.y > 200) p.y = -200;
+    if (p.y < -200) p.y = 200;
+
+    const wobble = Math.sin(t * 0.02 + p.angle * 3) * 15;
+    const r = p.radius + wobble;
+    const x = cx + Math.cos(p.angle) * r;
+    const y = cy + Math.sin(p.angle) * r * 0.35 + p.y;
+    const alpha = 0.15 + 0.5 * Math.abs(Math.sin(t * 0.01 + p.life * TAU));
+
+    ctx.beginPath();
+    ctx.arc(x, y, p.size, 0, TAU);
+    ctx.fillStyle = `hsla(${p.hue}, 80%, 60%, ${alpha})`;
+    ctx.fill();
+  });
+}
+
+// --- COILS (electromagnetic rings) ---
+function drawCoils() {
+  // Left coil (X) — blue
+  for (let i = 0; i < 60; i++) {
+    const a = (i / 60) * TAU + t * 0.015;
+    const rx = 180 + Math.sin(a * 3 + t * 0.01) * 20;
+    const x = cx + Math.cos(a) * rx - 80;
+    const y = cy + Math.sin(a) * rx * 0.12 + Math.cos(a * 2 + t * 0.02) * 30;
+    const alpha = 0.1 + 0.3 * Math.abs(Math.sin(a + t * 0.02));
+    ctx.beginPath();
+    ctx.arc(x, y, 2, 0, TAU);
+    ctx.fillStyle = `rgba(0, 180, 216, ${alpha})`;
+    ctx.fill();
+  }
+
+  // Right coil (Y) — orange
+  for (let i = 0; i < 60; i++) {
+    const a = (i / 60) * TAU - t * 0.015;
+    const rx = 180 + Math.sin(a * 3 - t * 0.01) * 20;
+    const x = cx + Math.cos(a) * rx + 80;
+    const y = cy + Math.sin(a) * rx * 0.12 + Math.cos(a * 2 - t * 0.02) * 30;
+    const alpha = 0.1 + 0.3 * Math.abs(Math.sin(a - t * 0.02));
+    ctx.beginPath();
+    ctx.arc(x, y, 2, 0, TAU);
+    ctx.fillStyle = `rgba(255, 107, 53, ${alpha})`;
+    ctx.fill();
+  }
+}
+
+// --- DIAMOND CORE ---
+function drawDiamondCore() {
+  const pulse = 1 + 0.15 * Math.sin(t * 0.04);
+  const size = 22 * pulse;
+
+  // Glow
+  const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, size * 5);
+  grad.addColorStop(0, 'rgba(185, 242, 255, 0.3)');
+  grad.addColorStop(0.3, 'rgba(255, 215, 0, 0.15)');
+  grad.addColorStop(0.6, 'rgba(0, 71, 171, 0.08)');
+  grad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.beginPath();
+  ctx.arc(cx, cy, size * 5, 0, TAU);
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Diamond shape
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(t * 0.005);
+
+  ctx.beginPath();
+  ctx.moveTo(0, -size);
+  ctx.lineTo(size * 0.7, 0);
+  ctx.lineTo(0, size);
+  ctx.lineTo(-size * 0.7, 0);
+  ctx.closePath();
+
+  const dGrad = ctx.createLinearGradient(-size, -size, size, size);
+  dGrad.addColorStop(0, '#b9f2ff');
+  dGrad.addColorStop(0.5, '#ffd700');
+  dGrad.addColorStop(1, '#b9f2ff');
+  ctx.fillStyle = dGrad;
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,215,0,0.6)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+// --- DATA PACKETS (flying between core and outer brains) ---
+const packets = Array.from({length: 18}, (_, i) => ({
+  angle: (i / 18) * TAU,
+  progress: Math.random(),
+  speed: 0.003 + Math.random() * 0.005,
+  outward: Math.random() > 0.5,
+  hue: [38, 200, 170, 15, 280, 50][i % 6],
+  size: 3 + Math.random() * 3
+}));
+
+function drawPackets() {
+  packets.forEach(p => {
+    p.progress += p.speed;
+    if (p.progress > 1) {
+      p.progress = 0;
+      p.outward = !p.outward;
+      p.angle += (Math.random() - 0.5) * 0.5;
+    }
+
+    const dist = p.outward ? p.progress : (1 - p.progress);
+    const r = 30 + dist * 220;
+    const x = cx + Math.cos(p.angle + t * 0.002) * r;
+    const y = cy + Math.sin(p.angle + t * 0.002) * r * 0.6;
+    const alpha = 0.4 + 0.6 * Math.sin(p.progress * Math.PI);
+
+    // Trail
+    for (let tr = 1; tr <= 4; tr++) {
+      const trDist = dist - tr * 0.02 * (p.outward ? 1 : -1);
+      if (trDist < 0 || trDist > 1) continue;
+      const trR = 30 + trDist * 220;
+      const tx = cx + Math.cos(p.angle + t * 0.002) * trR;
+      const ty = cy + Math.sin(p.angle + t * 0.002) * trR * 0.6;
+      ctx.beginPath();
+      ctx.arc(tx, ty, p.size * (1 - tr * 0.2), 0, TAU);
+      ctx.fillStyle = `hsla(${p.hue}, 80%, 60%, ${alpha * (1 - tr * 0.25)})`;
+      ctx.fill();
+    }
+
+    ctx.beginPath();
+    ctx.arc(x, y, p.size, 0, TAU);
+    ctx.fillStyle = `hsla(${p.hue}, 90%, 70%, ${alpha})`;
+    ctx.fill();
+  });
+}
+
+// --- FRACTAL WINGS ---
+function drawFractalWings() {
+  ctx.save();
+  ctx.globalAlpha = 0.08 + 0.04 * Math.sin(t * 0.01);
+
+  for (let wing = -1; wing <= 1; wing += 2) {
+    ctx.beginPath();
+    for (let i = 0; i < 200; i++) {
+      const a = (i / 200) * Math.PI * 0.8 - Math.PI * 0.4;
+      const r = 80 + i * 1.2 + Math.sin(i * 0.1 + t * 0.01) * 20;
+      const x = cx + Math.cos(a) * r * wing;
+      const y = cy + Math.sin(a) * r * 0.4 - 20;
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = `rgba(212, 160, 23, 0.4)`;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  ctx.restore();
+}
+
+// --- SINE WAVE (66666 Hz representation) ---
+function drawSineWave() {
+  ctx.save();
+  ctx.globalAlpha = 0.15 + 0.1 * Math.sin(t * 0.02);
+  ctx.beginPath();
+
+  for (let x = 0; x < W; x += 2) {
+    const normalized = (x - cx) / (W * 0.4);
+    const envelope = Math.exp(-normalized * normalized * 2);
+    const y = cy + Math.sin(x * 0.05 + t * 0.06) * 40 * envelope;
+    if (x === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+
+  ctx.strokeStyle = 'rgba(255, 215, 0, 0.5)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+  ctx.restore();
+}
+
+// --- BRAIN NODES (6 around the core) ---
+const brains = [
+  { name: 'KU', emoji: '🌌', color: '#9b59b6' },
+  { name: 'DUNE', emoji: '🏜️', color: '#c2813d' },
+  { name: 'TEMPLARS', emoji: '✚', color: '#e74c3c' },
+  { name: 'SILVER', emoji: '🛸', color: '#95a5a6' },
+  { name: 'ALCHEMY', emoji: '⚗️', color: '#f39c12' },
+  { name: 'LECTRIC', emoji: '⚡', color: '#00b4d8' }
+];
+
+function drawBrainNodes() {
+  brains.forEach((b, i) => {
+    const a = (i / 6) * TAU - Math.PI / 2 + t * 0.002;
+    const r = Math.min(W, H) * 0.32;
+    const x = cx + Math.cos(a) * r;
+    const y = cy + Math.sin(a) * r * 0.5;
+
+    // Connection line to core
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(x, y);
+    ctx.strokeStyle = `rgba(255,255,255,0.06)`;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Node glow
+    const glow = ctx.createRadialGradient(x, y, 0, x, y, 25);
+    glow.addColorStop(0, b.color + '60');
+    glow.addColorStop(1, 'transparent');
+    ctx.beginPath();
+    ctx.arc(x, y, 25, 0, TAU);
+    ctx.fillStyle = glow;
+    ctx.fill();
+
+    // Label
+    ctx.fillStyle = b.color;
+    ctx.font = `bold ${Math.max(10, W * 0.01)}px Orbitron, monospace`;
+    ctx.textAlign = 'center';
+    ctx.fillText(`${b.emoji} ${b.name}`, x, y + 4);
+  });
+}
+
+// --- MIND label at center ---
+function drawMindLabel() {
+  const pulse = 0.6 + 0.4 * Math.sin(t * 0.03);
+  ctx.fillStyle = `rgba(185, 242, 255, ${pulse})`;
+  ctx.font = `bold ${Math.max(11, W * 0.012)}px Orbitron, monospace`;
+  ctx.textAlign = 'center';
+  ctx.fillText('🧠 MIND', cx, cy + 50);
+}
+
+// --- HUD UPDATES ---
+const mindStates = ['LISTENING', 'ROUTING', 'ANALYZING', 'DECIDING', 'DISPATCHING', 'HARMONIZING'];
+const statusLines = [
+  'ENGINE CORE: CHARGING',
+  'LOGIC BUS: ACTIVE',
+  'IMPOSSIBILITY FIELD: STABLE',
+  'COGNITIVE LENS: ENGAGED',
+  'THRUST PROTOCOL: READY',
+  'VOLTAGE POTENTIAL: SECURED',
+  'ARCHITECTURE IS THE ENGINE',
+  'COMBUSTION IS LEGACY',
+  '66666 Hz PURE SINE: LOCKED'
+];
+
+let lastHudUpdate = 0;
+function updateHUD() {
+  if (t - lastHudUpdate < 120) return;
+  lastHudUpdate = t;
+
+  const ms = mindStates[Math.floor(t / 120) % mindStates.length];
+  document.getElementById('mindState').textContent = ms;
+  document.getElementById('chaosIdx').textContent = (Math.sin(t * 0.007) * 0.5 + 0.5).toFixed(3);
+  document.getElementById('opalRes').textContent = (Math.cos(t * 0.005) * 0.3 + 0.7).toFixed(3);
+  document.getElementById('tornadoRPM').textContent = Math.floor(6000 + Math.sin(t * 0.003) * 600);
+  document.getElementById('spiceFlow').textContent = (4.2 + Math.sin(t * 0.009) * 1.8).toFixed(1);
+  document.getElementById('freq').textContent = Math.floor(66666 + Math.sin(t * 0.01) * 33);
+  document.getElementById('statusLine').textContent = statusLines[Math.floor(t / 120) % statusLines.length];
+}
+
+// --- MAIN LOOP ---
+function frame() {
+  t++;
+  ctx.fillStyle = 'rgba(10, 10, 18, 0.15)';
+  ctx.fillRect(0, 0, W, H);
+
+  drawStars();
+  drawSineWave();
+  drawFractalWings();
+  drawCoils();
+  drawVortex();
+  drawPackets();
+  drawBrainNodes();
+  drawDiamondCore();
+  drawMindLabel();
+  updateHUD();
+
+  requestAnimationFrame(frame);
+}
+
+// Clear once fully then start
+ctx.fillStyle = 'var(--opal-void)';
+ctx.fillRect(0, 0, W, H);
+frame();
+</script>
+</body>
+</html>
