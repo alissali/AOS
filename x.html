@@ -102,6 +102,26 @@ border:1px solid var(--tag-color,var(--accent));color:var(--tag-color,var(--acce
 .hud-corner{width:60px;height:60px}
 }
 </style>
+<!-- X-Cockpit Tracker -->
+<script>
+(function(){
+  var s='UNKNOWN';
+  var p=location.pathname.toLowerCase();
+  var h=location.hostname;
+  if(p.indexOf('ku-')>-1||p.indexOf('knowledge-universe')>-1) s='KU';
+  else if(p.indexOf('arcade')>-1||p.indexOf('silver-ship')>-1||p.indexOf('snake')>-1||p.indexOf('game')>-1) s='ARCADE';
+  else if(h.indexOf('alissali.github.io')>-1) s='X';
+  else s='AOS';
+  try{
+    fetch('https://x-cockpit-production-94f0.up.railway.app/v1/gateway/visit',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({sector:s,page:location.pathname,referrer:document.referrer}),
+      mode:'cors'
+    }).catch(function(){});
+  }catch(e){}
+})();
+</script>
 </head>
 <body>
 

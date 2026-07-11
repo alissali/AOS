@@ -52,6 +52,26 @@ h2{font-family:'Cinzel',serif;font-size:1.8rem;color:var(--gold);margin:60px 0 2
 .nav a:hover{transform:translateY(-2px);box-shadow:0 6px 25px rgba(0,212,255,.3)}
 @media(max-width:600px){h1{font-size:1.8rem}.facts-grid{grid-template-columns:1fr}.step-text .drop{font-size:2.5rem}}
 </style>
+<!-- X-Cockpit Tracker -->
+<script>
+(function(){
+  var s='UNKNOWN';
+  var p=location.pathname.toLowerCase();
+  var h=location.hostname;
+  if(p.indexOf('ku-')>-1||p.indexOf('knowledge-universe')>-1) s='KU';
+  else if(p.indexOf('arcade')>-1||p.indexOf('silver-ship')>-1||p.indexOf('snake')>-1||p.indexOf('game')>-1) s='ARCADE';
+  else if(h.indexOf('alissali.github.io')>-1) s='X';
+  else s='AOS';
+  try{
+    fetch('https://x-cockpit-production-94f0.up.railway.app/v1/gateway/visit',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({sector:s,page:location.pathname,referrer:document.referrer}),
+      mode:'cors'
+    }).catch(function(){});
+  }catch(e){}
+})();
+</script>
 </head>
 <body>
 <div class="starfield" id="stars"></div>

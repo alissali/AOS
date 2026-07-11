@@ -86,6 +86,26 @@ body { background: #0a0a1a; color: #e0e0e0; font-family: 'Courier New', monospac
 .player-bar .xp-fill { height: 100%; background: linear-gradient(90deg, #c9a84c, #e040fb); transition: width 0.5s; border-radius: 4px; }
 .player-bar .xp-label { font-size: 0.75em; color: #888; min-width: 80px; }
 </style>
+<!-- X-Cockpit Tracker -->
+<script>
+(function(){
+  var s='UNKNOWN';
+  var p=location.pathname.toLowerCase();
+  var h=location.hostname;
+  if(p.indexOf('ku-')>-1||p.indexOf('knowledge-universe')>-1) s='KU';
+  else if(p.indexOf('arcade')>-1||p.indexOf('silver-ship')>-1||p.indexOf('snake')>-1||p.indexOf('game')>-1) s='ARCADE';
+  else if(h.indexOf('alissali.github.io')>-1) s='X';
+  else s='AOS';
+  try{
+    fetch('https://x-cockpit-production-94f0.up.railway.app/v1/gateway/visit',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({sector:s,page:location.pathname,referrer:document.referrer}),
+      mode:'cors'
+    }).catch(function(){});
+  }catch(e){}
+})();
+</script>
 </head>
 <body>
 

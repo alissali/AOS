@@ -229,6 +229,26 @@ a:focus,button:focus{outline:2px solid #ff6600;outline-offset:2px}
 </script>
 <meta name="theme-color" content="#0a0a0f">
 <link rel="canonical" href="https://raw.githack.com/alissali/Learn/main/HOLDEM.TRAINING.html">
+<!-- X-Cockpit Tracker -->
+<script>
+(function(){
+  var s='UNKNOWN';
+  var p=location.pathname.toLowerCase();
+  var h=location.hostname;
+  if(p.indexOf('ku-')>-1||p.indexOf('knowledge-universe')>-1) s='KU';
+  else if(p.indexOf('arcade')>-1||p.indexOf('silver-ship')>-1||p.indexOf('snake')>-1||p.indexOf('game')>-1) s='ARCADE';
+  else if(h.indexOf('alissali.github.io')>-1) s='X';
+  else s='AOS';
+  try{
+    fetch('https://x-cockpit-production-94f0.up.railway.app/v1/gateway/visit',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({sector:s,page:location.pathname,referrer:document.referrer}),
+      mode:'cors'
+    }).catch(function(){});
+  }catch(e){}
+})();
+</script>
 </head>
 <body>
 <a href="#main" class="skip-link" style="position:absolute;top:-40px;left:0;background:#ff6600;color:#0a0a0f;padding:8px;z-index:9999;font-family:monospace;text-decoration:none;transition:top .3s" onfocus="this.style.top='0'" onblur="this.style.top='-40px'">Skip to content</a>

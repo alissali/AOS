@@ -125,6 +125,26 @@ body{background:#040810;color:#b0c8e0;font-family:'Courier New',monospace;min-he
 .overlay .o-btn{background:linear-gradient(135deg,#00ffaa,#00ccff);color:#040810;border:none;
   padding:10px 30px;border-radius:8px;font-family:inherit;cursor:pointer;letter-spacing:2px;font-size:.8em}
 </style>
+<!-- X-Cockpit Tracker -->
+<script>
+(function(){
+  var s='UNKNOWN';
+  var p=location.pathname.toLowerCase();
+  var h=location.hostname;
+  if(p.indexOf('ku-')>-1||p.indexOf('knowledge-universe')>-1) s='KU';
+  else if(p.indexOf('arcade')>-1||p.indexOf('silver-ship')>-1||p.indexOf('snake')>-1||p.indexOf('game')>-1) s='ARCADE';
+  else if(h.indexOf('alissali.github.io')>-1) s='X';
+  else s='AOS';
+  try{
+    fetch('https://x-cockpit-production-94f0.up.railway.app/v1/gateway/visit',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({sector:s,page:location.pathname,referrer:document.referrer}),
+      mode:'cors'
+    }).catch(function(){});
+  }catch(e){}
+})();
+</script>
 </head>
 <body>
 <div class="aurora-bar"></div>
