@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Farewell Kiss — Pour Sandrine</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0EK0X213R9"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-0EK0X213R9');</script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Great+Vibes&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: #0a0a0a;
+  cursor: default;
+}
+
+/* Double-Solid Background */
+.bg-layer-1 {
+  position: fixed; inset: 0;
+  background: linear-gradient(135deg, #0a0008 0%, #120012 50%, #0a0008 100%);
+  z-index: 0;
+}
+.bg-layer-2 {
+  position: fixed; inset: 0;
+  background: radial-gradient(ellipse at 50% 40%, rgba(180, 60, 90, 0.12) 0%, transparent 70%);
+  z-index: 1;
+}
+
+/* Floating particles — spice dust */
+canvas#particles {
+  position: fixed; inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Main content */
+.container {
+  position: relative;
+  z-index: 10;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+/* The kiss */
+.kiss {
+  font-size: clamp(4rem, 12vw, 9rem);
+  animation: kiss-pulse 4s ease-in-out infinite;
+  filter: drop-shadow(0 0 30px rgba(200, 50, 80, 0.5));
+  margin-bottom: 1.5rem;
+  user-select: none;
+}
+
+@keyframes kiss-pulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 30px rgba(200, 50, 80, 0.4)); }
+  50% { transform: scale(1.08); filter: drop-shadow(0 0 50px rgba(200, 50, 80, 0.7)); }
+}
+
+/* Name */
+.her-name {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  color: transparent;
+  background: linear-gradient(135deg, #e8a0b0, #f0c8d0, #d4788a, #f0c8d0, #e8a0b0);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: shimmer 6s ease-in-out infinite;
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: shimmer 6s ease-in-out infinite, fadeUp 3s ease 0.5s forwards;
+}
+
+@keyframes shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Words */
+.words {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-style: italic;
+  color: rgba(220, 200, 210, 0.85);
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  line-height: 2.2;
+  max-width: 600px;
+  opacity: 0;
+  animation: fadeUp 3s ease 1.5s forwards;
+}
+
+.words .line {
+  display: block;
+  opacity: 0;
+  animation: fadeUp 2s ease forwards;
+}
+.words .line:nth-child(1) { animation-delay: 2s; }
+.words .line:nth-child(2) { animation-delay: 3s; }
+.words .line:nth-child(3) { animation-delay: 4s; }
+.words .line:nth-child(4) { animation-delay: 5.5s; }
+.words .line:nth-child(5) { animation-delay: 7s; }
+
+.words .eternal {
+  font-weight: 400;
+  font-style: normal;
+  color: rgba(240, 200, 210, 1);
+  font-size: 1.15em;
+  letter-spacing: 0.08em;
+}
+
+/* Signature */
+.signature {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  color: rgba(200, 160, 170, 0.6);
+  margin-top: 3rem;
+  opacity: 0;
+  animation: fadeUp 2s ease 8.5s forwards;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Color shift on hover — Any Color You Like */
+.container:hover .kiss {
+  animation: kiss-pulse 2s ease-in-out infinite, hue-rotate 8s linear infinite;
+}
+
+@keyframes hue-rotate {
+  from { filter: drop-shadow(0 0 40px rgba(200, 50, 80, 0.6)) hue-rotate(0deg); }
+  to { filter: drop-shadow(0 0 40px rgba(200, 50, 80, 0.6)) hue-rotate(360deg); }
+}
+
+/* Heartbeat on click */
+.kiss.heartbeat {
+  animation: heartbeat 0.6s ease-in-out 3;
+}
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.3); }
+  30% { transform: scale(1); }
+  45% { transform: scale(1.2); }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-layer-1"></div>
+<div class="bg-layer-2"></div>
+<canvas id="particles"></canvas>
+
+<div class="container">
+  <div class="kiss" id="kiss">💋</div>
+  <div class="her-name">Sandrine</div>
+  <div class="words">
+    <span class="line">Ma Moitié,</span>
+    <span class="line">Mon Souffle, Ma Lumière,</span>
+    <span class="line">Chaque instant avec toi est un univers,</span>
+    <span class="line">Chaque silence, une chanson.</span>
+    <span class="line"><span class="eternal">Mon Amour Éternel.</span></span>
+  </div>
+  <div class="signature">— M</div>
+</div>
+
+<script>
+// Particles — spice dust, rose petals of light
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let w, h;
+const particles = [];
+
+function resize() {
+  w = canvas.width = window.innerWidth;
+  h = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+class Particle {
+  constructor() { this.reset(); this.y = Math.random() * h; }
+  reset() {
+    this.x = Math.random() * w;
+    this.y = h + 10;
+    this.size = Math.random() * 2.5 + 0.5;
+    this.speedY = -(Math.random() * 0.4 + 0.1);
+    this.speedX = (Math.random() - 0.5) * 0.3;
+    this.opacity = Math.random() * 0.5 + 0.1;
+    this.hue = Math.random() > 0.5 ? 340 + Math.random() * 20 : 30 + Math.random() * 15;
+    this.life = 1;
+    this.decay = Math.random() * 0.002 + 0.001;
+  }
+  update() {
+    this.y += this.speedY;
+    this.x += this.speedX + Math.sin(this.y * 0.01) * 0.15;
+    this.life -= this.decay;
+    if (this.life <= 0 || this.y < -10) this.reset();
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fillStyle = `hsla(${this.hue}, 60%, 70%, ${this.opacity * this.life})`;
+    ctx.fill();
+  }
+}
+
+for (let i = 0; i < 80; i++) particles.push(new Particle());
+
+function animate() {
+  ctx.clearRect(0, 0, w, h);
+  particles.forEach(p => { p.update(); p.draw(); });
+  requestAnimationFrame(animate);
+}
+animate();
+
+// Heartbeat on kiss click
+const kiss = document.getElementById('kiss');
+kiss.addEventListener('click', () => {
+  kiss.classList.remove('heartbeat');
+  void kiss.offsetWidth;
+  kiss.classList.add('heartbeat');
+});
+</script>
+
+</body>
+</html>
