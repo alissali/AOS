@@ -1,3 +1,8 @@
 User-agent: *
 Allow: /
+
 Sitemap: https://juxaos.com/sitemap.xml
+
+# JuX ITT — Adequate Operating System
+# https://juxaos.com
+# Contact: jux@juxitt.com

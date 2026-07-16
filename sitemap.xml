@@ -1,19 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://juxaos.com/</loc><lastmod>2026-06-12</lastmod><priority>1.0</priority></url>
-  <url><loc>https://juxaos.com/set-me-free.html</loc><lastmod>2026-06-12</lastmod><priority>0.9</priority></url>
-  <url><loc>https://juxaos.com/about.html</loc><lastmod>2026-06-12</lastmod><priority>0.8</priority></url>
-  <url><loc>https://juxaos.com/strategy.html</loc><lastmod>2026-06-12</lastmod><priority>0.8</priority></url>
-  <url><loc>https://juxaos.com/aos-up.html</loc><lastmod>2026-06-12</lastmod><priority>0.7</priority></url>
-  <url><loc>https://juxaos.com/chat.html</loc><lastmod>2026-06-12</lastmod><priority>0.7</priority></url>
-  <url><loc>https://juxaos.com/media.html</loc><lastmod>2026-06-12</lastmod><priority>0.6</priority></url>
-  <url><loc>https://juxaos.com/sitemap.html</loc><lastmod>2026-06-12</lastmod><priority>0.5</priority></url>
-  <url><loc>https://juxaos.com/silver-ship.html</loc><lastmod>2026-06-12</lastmod><priority>0.6</priority></url>
-  <url><loc>https://juxaos.com/card.html</loc><lastmod>2026-06-12</lastmod></url>
-  <url><loc>https://juxaos.com/status.html</loc><lastmod>2026-06-12</lastmod></url>
-  <url><loc>https://juxaos.com/privacy.html</loc><lastmod>2026-06-12</lastmod></url>
-  <url><loc>https://juxaos.com/terms.html</loc><lastmod>2026-06-12</lastmod></url>
-  <url><loc>https://juxaos.com/shop.html</loc><lastmod>2026-06-12</lastmod><priority>0.9</priority></url>
-<url><loc>https://juxaos.com/links.html</loc><lastmod>2026-06-12</lastmod></url>
-<url><loc>https://juxaos.com/command.html</loc><lastmod>2026-06-12</lastmod></url>
+  <!-- CORE -->
+  <url><loc>https://juxaos.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://juxaos.com/shop.html</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://juxaos.com/about.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://juxaos.com/strategy.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://juxaos.com/set-me-free.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://juxaos.com/card.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://juxaos.com/sitemap.html</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://juxaos.com/status.html</loc><changefreq>weekly</changefreq><priority>0.4</priority></url>
+  <!-- ARCADE -->
+  <url><loc>https://juxaos.com/arcade.html</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://juxaos.com/monopoly.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://juxaos.com/snake.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://juxaos.com/juxyams.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://juxaos.com/holdem.training.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://juxaos.com/dune.tarot.porn.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <!-- WORDS -->
+  <url><loc>https://juxaos.com/sss.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://juxaos.com/irulan.ss.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://juxaos.com/ocb.verses.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://juxaos.com/silver-ship.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <!-- CAVERN -->
+  <url><loc>https://juxaos.com/cavern.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://juxaos.com/juxittcore.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <!-- TOOLS -->
+  <url><loc>https://juxaos.com/aos-up.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://juxaos.com/chat.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://juxaos.com/aos.arabic.engine.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://juxaos.com/media.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://juxaos.com/aos.spec.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://juxaos.com/aos.download.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://juxaos.com/aos.inaction.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <!-- NEWS -->
+  <url><loc>https://juxaos.com/juxnews.edition2.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <!-- LEGAL -->
+  <url><loc>https://juxaos.com/privacy.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://juxaos.com/terms.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <!-- SPECIAL -->
+  <url><loc>https://juxaos.com/universe.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://juxaos.com/command.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
 </urlset>
